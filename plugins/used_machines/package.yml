@@ -1,0 +1,21 @@
+package: d2u_machinery/used_machines
+version: '1.0.0'
+author: Tobias Krais
+supportpage: http://github.com/tobiaskrais/d2u_machinery
+
+page:
+    title: 'translate:d2u_machinery_used_machines'
+    perm: d2u_machinery[used_machines]
+    icon: rex-icon rex-icon-module
+    subpages:
+        used_machines: { title: 'translate:d2u_machinery_used_machines' }
+        settings: { title: 'translate:d2u_machinery_used_machines_settings', perm: d2u_machinery[settings] }
+
+requires:
+    redaxo: '>=5.1.0'
+    php:
+        version: '>=5.3'
+    packages:
+        media_manager: '>=2.0.2'
+        rex_redactor: '>=1.6.1'
+        yform: '>=1.0-beta4'
