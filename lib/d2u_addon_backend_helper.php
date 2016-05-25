@@ -6,6 +6,24 @@ if(!class_exists('d2u_addon_backend_helper')) {
 	class d2u_addon_backend_helper {
 
 		/**
+		 * Create a HTML String with Redaxo Media Buttons for managing the element
+		 * postition
+		 * @param string $field_id Name of die media field
+		 * @return string HTML String with buttons
+		 */
+		private static function getLinkPositionButtons($field_id) {
+			$js_onclick_top = "moveREXLinklist('". $field_id ."', 'top');return false;";
+			$fields = '<a href="#" class="btn btn-popup" onclick="'. $js_onclick_top .'" title="'. rex_i18n::msg('var_linklist_move_top') .'"><i class="rex-icon rex-icon-top"></i></a>';
+			$js_onclick_up = "moveREXLinklist('". $field_id ."', 'up');return false;";
+			$fields .= '<a href="#" class="btn btn-popup" onclick="'. $js_onclick_up .'" title="'. rex_i18n::msg('var_linklist_move_up') .'"><i class="rex-icon rex-icon-up"></i></a>';
+			$js_onclick_down = "moveREXLinklist('". $field_id ."', 'down');return false;";
+			$fields .= '<a href="#" class="btn btn-popup" onclick="'. $js_onclick_down .'" title="'. rex_i18n::msg('var_linklist_move_down') .'"><i class="rex-icon rex-icon-down"></i></a>';
+			$js_onclick_bottom = "moveREXLinklist('". $field_id ."', 'bottom');return false;";
+			$fields .= '<a href="#" class="btn btn-popup" onclick="'. $js_onclick_bottom.'" title="'. rex_i18n::msg('var_linklist_move_bottom') .'"><i class="rex-icon rex-icon-bottom"></i></a>';
+			return $fields;
+		}
+		
+		/**
 		 * Create a HTML String with Redaxo Media Buttons for opening Mediapool,
 		 * add, delete and view medias
 		 * @param string $field_id Name of die media field
@@ -18,13 +36,13 @@ if(!class_exists('d2u_addon_backend_helper')) {
 				$type_html = "Medialist";
 			}
 			$js_onclick_open = "openREX". $type_html ."('". $field_id ."', '');return false;";
-			$fields = '<a href="#" class="btn btn-popup" onclick="'. $js_onclick_open .'" title="'. rex_i18n::msg('d2u_machinery_media_select') .'"><i class="rex-icon rex-icon-open-mediapool"></i></a>';
+			$fields = '<a href="#" class="btn btn-popup" onclick="'. $js_onclick_open .'" title="'. rex_i18n::msg('var_media_open') .'"><i class="rex-icon rex-icon-open-mediapool"></i></a>';
 			$js_onclick_add = "addREX". $type_html ."('". $field_id ."', '');return false;";
-			$fields .= '<a href="#" class="btn btn-popup" onclick="'. $js_onclick_add .'" title="'. rex_i18n::msg('d2u_machinery_media_add') .'"><i class="rex-icon rex-icon-add-media"></i></a>';
+			$fields .= '<a href="#" class="btn btn-popup" onclick="'. $js_onclick_add .'" title="'. rex_i18n::msg('var_media_new') .'"><i class="rex-icon rex-icon-add-media"></i></a>';
 			$js_onclick_delete = "deleteREX". $type_html ."('". $field_id ."');return false;";
-			$fields .= '<a href="#" class="btn btn-popup" onclick="'. $js_onclick_delete .'" title="'. rex_i18n::msg('d2u_machinery_media_delete') .'"><i class="rex-icon rex-icon-delete-media"></i></a>';
+			$fields .= '<a href="#" class="btn btn-popup" onclick="'. $js_onclick_delete .'" title="'. rex_i18n::msg('var_media_remove') .'"><i class="rex-icon rex-icon-delete-media"></i></a>';
 			$js_onclick_view = "viewREX". $type_html ."('". $field_id ."', '');return false;";
-			$fields .= '<a href="#" class="btn btn-popup" onclick="'. $js_onclick_view .'" title="'. rex_i18n::msg('d2u_machinery_media_show') .'"><i class="rex-icon rex-icon-view-media"></i></a>';
+			$fields .= '<a href="#" class="btn btn-popup" onclick="'. $js_onclick_view .'" title="'. rex_i18n::msg('var_media_view') .'"><i class="rex-icon rex-icon-view-media"></i></a>';
 			return $fields;
 		}
 
@@ -36,13 +54,13 @@ if(!class_exists('d2u_addon_backend_helper')) {
 		 */
 		private static function getMediaPositionButtons($field_id) {
 			$js_onclick_top = "moveREXMedialist('". $field_id ."', 'top');return false;";
-			$fields = '<a href="#" class="btn btn-popup" onclick="'. $js_onclick_top .'" title="'. rex_i18n::msg('d2u_machinery_media_move_top') .'"><i class="rex-icon rex-icon-top"></i></a>';
+			$fields = '<a href="#" class="btn btn-popup" onclick="'. $js_onclick_top .'" title="'. rex_i18n::msg('var_medialist_move_top') .'"><i class="rex-icon rex-icon-top"></i></a>';
 			$js_onclick_up = "moveREXMedialist('". $field_id ."', 'up');return false;";
-			$fields .= '<a href="#" class="btn btn-popup" onclick="'. $js_onclick_up .'" title="'. rex_i18n::msg('d2u_machinery_media_move_up') .'"><i class="rex-icon rex-icon-up"></i></a>';
+			$fields .= '<a href="#" class="btn btn-popup" onclick="'. $js_onclick_up .'" title="'. rex_i18n::msg('var_medialist_move_up') .'"><i class="rex-icon rex-icon-up"></i></a>';
 			$js_onclick_down = "moveREXMedialist('". $field_id ."', 'down');return false;";
-			$fields .= '<a href="#" class="btn btn-popup" onclick="'. $js_onclick_down .'" title="'. rex_i18n::msg('d2u_machinery_media_move_down') .'"><i class="rex-icon rex-icon-down"></i></a>';
+			$fields .= '<a href="#" class="btn btn-popup" onclick="'. $js_onclick_down .'" title="'. rex_i18n::msg('var_medialist_move_down') .'"><i class="rex-icon rex-icon-down"></i></a>';
 			$js_onclick_bottom = "moveREXMedialist('". $field_id ."', 'bottom');return false;";
-			$fields .= '<a href="#" class="btn btn-popup" onclick="'. $js_onclick_bottom .'" title="'. rex_i18n::msg('d2u_machinery_media_move_bottom') .'"><i class="rex-icon rex-icon-bottom"></i></a>';
+			$fields .= '<a href="#" class="btn btn-popup" onclick="'. $js_onclick_bottom .'" title="'. rex_i18n::msg('var_medialist_move_bottom') .'"><i class="rex-icon rex-icon-bottom"></i></a>';
 			return $fields;
 		}
 
@@ -138,24 +156,58 @@ if(!class_exists('d2u_addon_backend_helper')) {
 		 * Prints a row with an link map field
 		 * @param string $message_id rex_i18n message id for the label text.
 		 * @param string $fieldname Input field name (without REX_LINK_NAME part).
-		 * @param string $article_name Name of the selected Redaxo article.
 		 * @param int $article_id ID of the selected article.
+		 * @param int $clang_id ID of the selected language.
 		 * @param boolean $readonly TRUE if field should have readonly attribute.
 		 */
-		public static function form_linkfield($message_id, $fieldname, $article_name, $article_id, $readonly = FALSE) {
+		public static function form_linkfield($message_id, $fieldname, $article_id, $clang_id, $readonly = FALSE) {
 			print '<dl class="rex-form-group form-group">';
 			print '<dt><label>'. rex_i18n::msg($message_id) .'</label></dt>';
 			print '<dd><div class="input-group">';
+			$article_name = $article_id > 0 ? rex_article::get($article_id, $clang_id)->getValue('name') : "";
 			print '<input class="form-control" type="text" name="REX_LINK_NAME['. $fieldname .']" value="'. $article_name .'" id="REX_LINK_'. $fieldname .'_NAME" readonly="readonly">';
 			print '<input type="hidden" name="REX_INPUT_LINK['. $fieldname .']" id="REX_LINK_'. $fieldname .'" value="'. $article_id .'">';
 			print '<span class="input-group-btn">';
 			if(!$readonly) {
-				$js_onclick_open = "openLinkMap('REX_LINK_". $fieldname ."', '&amp;category_id=". $article_id ."');return false;";
-				print '<a href="#" class="btn btn-popup" onclick="'. $js_onclick_open .'" title="'. rex_i18n::msg('d2u_machinery_settings_open_linkmap') .'"><i class="rex-icon rex-icon-open-linkmap"></i></a>';
+				$js_onclick_open = "openLinkMap('REX_LINK_". $fieldname ."', '&category_id=". $article_id ."&clang=". $clang_id ."');return false;";
+				print '<a href="#" class="btn btn-popup" onclick="'. $js_onclick_open .'" title="'. rex_i18n::msg('var_link_open') .'"><i class="rex-icon rex-icon-open-linkmap"></i></a>';
 				$js_onclick_delete = "deleteREXLink('". $fieldname ."');return false;";
-				print '<a href="#" class="btn btn-popup" onclick="'. $js_onclick_delete .'" title="'. rex_i18n::msg('d2u_machinery_settings_remove_link') .'"><i class="rex-icon rex-icon-delete-link"></i></a>';
+				print '<a href="#" class="btn btn-popup" onclick="'. $js_onclick_delete .'" title="'. rex_i18n::msg('var_link_delete') .'"><i class="rex-icon rex-icon-delete-link"></i></a>';
 			}
 			print '</span>';
+			print '</div><div class="rex-js-media-preview"></div></dd>';
+			print '</dl>';
+		}
+
+		/**
+		 * Prints a row with an link map list field
+		 * @param string $message_id rex_i18n message id for the label text.
+		 * @param int $fieldnumber Input field name (without REX_MEDIALIST_SELECT part).
+		 * @param int[] $article_ids ID of the selected articles.
+		 * @param int $clang_id ID of the selected language.
+		 * @param boolean $readonly TRUE if field should have readonly attribute.
+		 */
+		public static function form_linklistfield($message_id, $fieldnumber, $article_ids, $clang_id, $readonly = FALSE) {
+			print '<dl class="rex-form-group form-group">';
+			print '<dt><label>'. rex_i18n::msg($message_id) .'</label></dt>';
+			print '<dd><div class="input-group">';
+            print '<select class="form-control" name="REX_LINKLIST_SELECT['. $fieldnumber .']" id="REX_LINKLIST_SELECT_'. $fieldnumber .'" size="10" style="margin: 0">';
+			foreach($article_ids as $article_id) {
+				print '<option value="'. $article_id .'">'. rex_article::get($article_id, $clang_id)->getValue('name') .'</option>';
+			}
+            print '</select>';
+            print '<input type="hidden" name="REX_INPUT_LINKLIST['. $fieldnumber .']" id="REX_LINKLIST_'. $fieldnumber .'" value="'. implode(",", $article_ids) .'">';
+			print '<span class="input-group-addon"><div class="btn-group-vertical">';
+			if(!$readonly) {
+				print d2u_addon_backend_helper::getLinkPositionButtons($fieldnumber);
+				print '</div>';
+				print '<div class="btn-group-vertical">';
+				$js_onclick_open = "openREXLinklist(". $fieldnumber .", '&clang=". $clang_id ."');return false;";
+				print '<a href="#" class="btn btn-popup" onclick="'. $js_onclick_open .'" title="'. rex_i18n::msg('var_link_open') .'"><i class="rex-icon rex-icon-open-linkmap"></i></a>';
+				$js_onclick_delete = "deleteREXLinklist(". $fieldnumber .");return false;";
+				print '<a href="#" class="btn btn-popup" onclick="'. $js_onclick_delete .'" title="'. rex_i18n::msg('var_link_delete') .'"><i class="rex-icon rex-icon-delete-link"></i></a>';
+			}
+			print '</div></span>';
 			print '</div><div class="rex-js-media-preview"></div></dd>';
 			print '</dl>';
 		}
@@ -251,7 +303,7 @@ if(!class_exists('d2u_addon_backend_helper')) {
 		public static function form_textarea($message_id, $fieldname, $value, $rows = 5, $required = FALSE, $readonly = FALSE, $use_redactor = TRUE) {
 			print '<dl class="rex-form-group form-group">';
 			print '<dt><label>'. rex_i18n::msg($message_id) .'</label></dt>';
-			print '<dd><textarea cols="1" rows="'. $rows .'" class="form-control redactorEditor-full" nname="'. $fieldname .'"';
+			print '<dd><textarea cols="1" rows="'. $rows .'" class="form-control redactorEditor-full" name="'. $fieldname .'"';
 			if($required) {
 				print ' required';
 			}

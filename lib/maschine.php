@@ -250,6 +250,7 @@ class Machine {
 	 * @param int $clang_id Redaxo language id
 	 */
 	 public function __construct($machine_id, $clang_id) {
+		$this->clang_id = $clang_id;
 		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_machines AS machines "
 				."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_machines_lang AS lang "
 					."ON machines.machine_id = lang.machine_id "
@@ -259,8 +260,7 @@ class Machine {
 		$num_rows = $result->getRows();
 
 		if($num_rows > 0) {
-			$this->machine_id = $machine_id;
-			$this->clang_id = $clang_id;
+			$this->machine_id = $result->getValue("machine_id");;
 			$this->internal_name = $result->getValue("internal_name");
 			$this->name = $result->getValue("name");
 			$this->pics = preg_grep('/^\s*$/s', explode(",", $result->getValue("pics")), PREG_GREP_INVERT);
@@ -274,7 +274,7 @@ class Machine {
 			$this->business_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("business_ids")), PREG_GREP_INVERT);
 			$this->article_id_software = $result->getValue("article_id_software");
 			$this->article_id_service = $result->getValue("article_id_service");
-			$this->article_ids_references = preg_grep('/^\s*$/s', explode("|", $result->getValue("article_ids_references")), PREG_GREP_INVERT);
+			$this->article_ids_references = preg_grep('/^\s*$/s', explode(",", $result->getValue("article_ids_references")), PREG_GREP_INVERT);
 			$this->online_status = $result->getValue("online_status");
 			$this->engine_power = $result->getValue("engine_power");
 			$this->length = $result->getValue("length");
@@ -298,6 +298,32 @@ class Machine {
 		}
 	}
 
+	/**
+	 * Changes the status of a machine
+	 */
+	public function changeStatus() {
+		if($this->online_status == "online") {
+			if($this->machine_id > 0) {
+				$query = "UPDATE ". rex::getTablePrefix() ."d2u_machinery_machines "
+					."SET online_status = 'offline' "
+					."WHERE machine_id = ". $this->machine_id;
+				$result = rex_sql::factory();
+				$result->setQuery($query);
+			}
+			$this->online_status = "offline";
+		}
+		else {
+			if($this->machine_id > 0) {
+				$query = "UPDATE ". rex::getTablePrefix() ."d2u_machinery_machines "
+					."SET online_status = 'online' "
+					."WHERE machine_id = ". $this->machine_id;
+				$result = rex_sql::factory();
+				$result->setQuery($query);
+			}
+			$this->online_status = "online";			
+		}
+	}
+	
 	/**
 	 * Deletes the object in all languages.
 	 */
@@ -434,7 +460,7 @@ class Machine {
 					."operating_voltage_v = '". $this->operating_voltage_v ."', "
 					."operating_voltage_hz = '". $this->operating_voltage_hz ."', "
 					."operating_voltage_a = '". $this->operating_voltage_a ."' ";
-			if($this->category_id == 0) {
+			if($this->machine_id == 0) {
 				$query = "INSERT INTO ". $query;
 			}
 			else {
@@ -451,7 +477,7 @@ class Machine {
 		
 		if($error == 0) {
 			// Save the language specific part
-			$pre_save_machine = new Machine($this->category_id, $this->clang_id);
+			$pre_save_machine = new Machine($this->machine_id, $this->clang_id);
 			if($pre_save_machine != $this) {
 				$query = "REPLACE INTO ". rex::getTablePrefix() ."d2u_machinery_machines_lang SET "
 						."machine_id = '". $this->machine_id ."', "
@@ -467,7 +493,6 @@ class Machine {
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = ". time() .", "
 						."updateuser = '". rex::getUser()->getLogin() ."' ";
-
 				$result = rex_sql::factory();
 				$result->setQuery($query);
 				$error = $result->hasError();

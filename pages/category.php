@@ -22,6 +22,25 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	foreach(rex_clang::getAll() as $rex_clang) {
 		if($category === FALSE) {
 			$category = new Category($category_id, $rex_clang->getId());
+			if(isset($form['parent_category_id']) && $form['parent_category_id'] > 0) {
+				$category->parent_category = new Category($form['parent_category_id'], $rex_clang->getId());
+			}
+			else {
+				$category->parent_category = FALSE;
+			}
+			$category->pic = $input_media[1];
+			$category->pic_usage = $input_media[2];
+
+			if(rex_addon::get("d2u_videos")->isAvailable()) {
+				$category->videomanager_ids = preg_grep('/^\s*$/s', explode(",", $form['videomanager_ids']), PREG_GREP_INVERT);
+			}
+
+			if(rex_plugin::get("d2u_machinery", "export")->isAvailable()) {
+				$category->export_machinerypark_category_id = $form['export_machinerypark_category_id'];
+				$category->export_europemachinery_category_id = $form['export_europemachinery_category_id'];
+				$category->export_europemachinery_category_name = $form['export_europemachinery_category_name'];
+				$category->export_mascus_category_name = $form['export_mascus_category_name'];
+			}
 		}
 		else {
 			$category->clang_id = $rex_clang->getId();
@@ -29,28 +48,9 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 		$category->name = $form['lang'][$rex_clang->getId()]['name'];
 		$category->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 		$category->usage_area = $form['lang'][$rex_clang->getId()]['usage_area'];
-		if(isset($form['parent_category_id']) && $form['parent_category_id'] > 0) {
-			$category->parent_category = new Category($form['parent_category_id'], $rex_clang->getId());
-		}
-		else {
-			$category->parent_category = FALSE;
-		}
 		$category->pdfs = preg_grep('/^\s*$/s', explode(",", $input_media_list['1'. $rex_clang->getId()]), PREG_GREP_INVERT);
-		$category->pic = $input_media[1];
-		$category->pic_usage = $input_media[2];
 		$category->pic_lang = $input_media['pic_lang_'. $rex_clang->getId()];
 		
-		if(rex_addon::get("d2u_videos")->isAvailable()) {
-			$category->videomanager_ids = preg_grep('/^\s*$/s', explode(",", $form['videomanager_ids']), PREG_GREP_INVERT);
-		}
-		
-		if(rex_plugin::get("d2u_machinery", "export")->isAvailable()) {
-			$category->export_machinerypark_category_id = $form['export_machinerypark_category_id'];
-			$category->export_europemachinery_category_id = $form['export_europemachinery_category_id'];
-			$category->export_europemachinery_category_name = $form['export_europemachinery_category_name'];
-			$category->export_mascus_category_name = $form['export_mascus_category_name'];
-		}
-
 		if($category->save() > 0){
 			$success = FALSE;
 		}
@@ -60,9 +60,9 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	}
 
 	// message output
-	$message = 'd2u_machinery_changes_not_saved';
+	$message = 'form_save_error';
 	if($success) {
-		$message = 'd2u_machinery_changes_saved';
+		$message = 'form_saved';
 	}
 	
 	// Redirect to make reload and thus double save impossible
@@ -191,10 +191,10 @@ if ($func == 'edit' || $func == 'add') {
 			<footer class="panel-footer">
 				<div class="rex-form-panel-footer">
 					<div class="btn-toolbar">
-						<button class="btn btn-save rex-form-aligned" type="submit" name="btn_save" value="1"><?php echo rex_i18n::msg('d2u_machinery_settings_save'); ?></button>
-						<button class="btn btn-apply" type="submit" name="btn_apply" value="1"><?php echo rex_i18n::msg('d2u_machinery_settings_apply'); ?></button>
-						<button class="btn btn-abort" type="submit" name="btn_abort" formnovalidate="formnovalidate" value="1"><?php echo rex_i18n::msg('d2u_machinery_settings_abort'); ?></button>
-						<button class="btn btn-delete" type="submit" name="btn_delete" formnovalidate="formnovalidate" data-confirm="<?php echo rex_i18n::msg('d2u_machinery_settings_delete'); ?>?" value="1"><?php echo rex_i18n::msg('d2u_machinery_settings_delete'); ?></button>
+						<button class="btn btn-save rex-form-aligned" type="submit" name="btn_save" value="1"><?php echo rex_i18n::msg('form_save'); ?></button>
+						<button class="btn btn-apply" type="submit" name="btn_apply" value="1"><?php echo rex_i18n::msg('form_apply'); ?></button>
+						<button class="btn btn-abort" type="submit" name="btn_abort" formnovalidate="formnovalidate" value="1"><?php echo rex_i18n::msg('form_abort'); ?></button>
+						<button class="btn btn-delete" type="submit" name="btn_delete" formnovalidate="formnovalidate" data-confirm="<?php echo rex_i18n::msg('form_delete'); ?>?" value="1"><?php echo rex_i18n::msg('form_delete'); ?></button>
 					</div>
 				</div>
 			</footer>
@@ -219,19 +219,19 @@ if ($func == '') {
     $list->addTableAttribute('class', 'table-striped table-hover');
 
     $tdIcon = '<i class="rex-icon rex-icon-open-category"></i>';
-    $thIcon = '<a href="' . $list->getUrl(['func' => 'add']) . '" title="' . rex_i18n::msg('d2u_machinery_add') . '"><i class="rex-icon rex-icon-add-module"></i></a>';
+    $thIcon = '<a href="' . $list->getUrl(['func' => 'add']) . '" title="' . rex_i18n::msg('add') . '"><i class="rex-icon rex-icon-add-module"></i></a>';
     $list->addColumn($thIcon, $tdIcon, 0, ['<th class="rex-table-icon">###VALUE###</th>', '<td class="rex-table-icon">###VALUE###</td>']);
     $list->setColumnParams($thIcon, ['func' => 'edit', 'entry_id' => '###category_id###']);
 
-    $list->setColumnLabel('category_id', rex_i18n::msg('d2u_machinery_id'));
-    $list->setColumnLayout('category_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id" data-title="' . rex_i18n::msg('id') . '">###VALUE###</td>']);
+    $list->setColumnLabel('category_id', rex_i18n::msg('id'));
+    $list->setColumnLayout('category_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
 
     $list->setColumnLabel('categoryname', rex_i18n::msg('d2u_machinery_name'));
     $list->setColumnParams('categoryname', ['func' => 'edit', 'entry_id' => '###category_id###']);
 
     $list->setColumnLabel('parentname', rex_i18n::msg('d2u_machinery_category_parent'));
 
-    $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
+    $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('system_update'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
     $list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###category_id###']);
 

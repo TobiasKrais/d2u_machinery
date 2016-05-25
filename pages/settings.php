@@ -12,10 +12,10 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 	
 	// Save settings
 	if(rex_config::set("d2u_machinery", $settings)) {
-		echo rex_view::success(rex_i18n::msg('d2u_machinery_changes_saved'));
+		echo rex_view::success(rex_i18n::msg('form_saved'));
 	}
 	else {
-		echo rex_view::error(rex_i18n::msg('d2u_machinery_changes_not_saved'));
+		echo rex_view::error(rex_i18n::msg('form_save_error'));
 	}
 }
 ?>
@@ -44,7 +44,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 		<footer class="panel-footer">
 			<div class="rex-form-panel-footer">
 				<div class="btn-toolbar">
-					<button class="btn btn-save rex-form-aligned" type="submit" name="btn_save" value="save"><?php echo rex_i18n::msg('d2u_machinery_settings_save'); ?></button>
+					<button class="btn btn-save rex-form-aligned" type="submit" name="btn_save" value="save"><?php echo rex_i18n::msg('form_save'); ?></button>
 				</div>
 			</div>
 		</footer>
