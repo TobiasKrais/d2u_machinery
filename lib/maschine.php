@@ -237,7 +237,7 @@ class Machine {
 	/**
 	 * @var string Needs translation update? "no" or "yes"
 	 */
-	var $translation_needs_update = "no";
+	var $translation_needs_update = "delete";
 
 	/**
 	 * @var String URL der Maschine
@@ -267,7 +267,6 @@ class Machine {
 			$this->pic_usage = $result->getValue("pic_usage");
 			$this->category = new Category($result->getValue("category_id"), $clang_id);
 			$this->alternative_machine_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("alternative_machine_ids")), PREG_GREP_INVERT);
-			$this->feature_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("feature_ids")), PREG_GREP_INVERT);
 			$this->service_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("service_ids")), PREG_GREP_INVERT);
 			$this->accessory_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("accessory_ids")), PREG_GREP_INVERT);
 			$this->product_number = $result->getValue("product_number");
@@ -295,6 +294,10 @@ class Machine {
 			$this->delivery_set_conversion = $result->getValue("delivery_set_conversion");
 			$this->delivery_set_full = $result->getValue("delivery_set_full");
 			$this->translation_needs_update = $result->getValue("translation_needs_update");
+
+			if(rex_plugin::get("d2u_machinery", "machine_features")->isAvailable()) {
+				$this->feature_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("feature_ids")), PREG_GREP_INVERT);
+			}
 		}
 	}
 
@@ -325,18 +328,28 @@ class Machine {
 	}
 	
 	/**
-	 * Deletes the object in all languages.
+	 * Deletes the object.
+	 * @param int $delete_all If TRUE, all translations and main object are deleted. If 
+	 * FALSE, only this translation will be deleted.
 	 */
-	public function delete() {
-		$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_machines_lang "
-			."WHERE machine_id = ". $this->machine_id;
-		$result_lang = rex_sql::factory();
-		$result_lang->setQuery($query_lang);
-		
-		$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_machines "
-			."WHERE machine_id = ". $this->machine_id;
-		$result = rex_sql::factory();
-		$result->setQuery($query);			
+	public function delete($delete_all = TRUE) {
+		if($delete_all) {
+			$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_machines_lang "
+				."WHERE machine_id = ". $this->machine_id;
+			$result_lang = rex_sql::factory();
+			$result_lang->setQuery($query_lang);
+
+			$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_machines "
+				."WHERE machine_id = ". $this->machine_id;
+			$result = rex_sql::factory();
+			$result->setQuery($query);
+		}
+		else {
+			$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_machines_lang "
+				."WHERE machine_id = ". $this->machine_id ." AND clang_id = ". $this->clang_id;
+			$result_lang = rex_sql::factory();
+			$result_lang->setQuery($query_lang);
+		}
 	}
 	
 	/**
@@ -442,7 +455,6 @@ class Machine {
 					."pic_usage = '". $this->pic_usage ."', "
 					."category_id = ". $this->category->category_id .", "
 					."alternative_machine_ids = '". implode(",", $this->alternative_machine_ids) ."', "
-					."feature_ids = '". implode(",", $this->feature_ids) ."', "
 					."service_ids = '". implode(",", $this->service_ids) ."', "
 					."accessory_ids = '". implode(",", $this->accessory_ids) ."', "
 					."product_number = '". $this->product_number ."', "
@@ -460,6 +472,10 @@ class Machine {
 					."operating_voltage_v = '". $this->operating_voltage_v ."', "
 					."operating_voltage_hz = '". $this->operating_voltage_hz ."', "
 					."operating_voltage_a = '". $this->operating_voltage_a ."' ";
+			if(rex_plugin::get("d2u_machinery", "machine_features")->isAvailable()) {
+				$query .= ", feature_ids = '". implode("|", $this->feature_ids) ."' ";
+			}
+
 			if($this->machine_id == 0) {
 				$query = "INSERT INTO ". $query;
 			}

@@ -6,7 +6,7 @@
  */
 
 /**
- * Machine Kategory
+ * Machine Category
  */
 class Category {
 	/**
@@ -25,27 +25,27 @@ class Category {
 	var $parent_category = FALSE;
 	
 	/**
-	 * @var String Name
+	 * @var string Name
 	 */
 	var $name = "";
 	
 	/**
-	 * @var String Name of Usage area
+	 * @var string Name of Usage area
 	 */
 	var $usage_area = "";
 	
 	/**
-	 * @var String Preview picture file name 
+	 * @var string Preview picture file name 
 	 */
 	var $pic = "";
 	
 	/**
-	 * @var String Language specific preview picture file name 
+	 * @var string Language specific preview picture file name 
 	 */
 	var $pic_lang = "";
 	
 	/**
-	 * @var String Usage area picture file name
+	 * @var string Usage area picture file name
 	 */
 	var $pic_usage = "";
 	
@@ -60,27 +60,27 @@ class Category {
 	var $export_europemachinery_category_id = 0;
 	
 	/**
-	 * @var String Name of the corresponding Europe Machinery category
+	 * @var string Name of the corresponding Europe Machinery category
 	 */
 	var $export_europemachinery_category_name = "";
 	
 	/**
-	 * @var String Name of the corresponding Mascus category
+	 * @var string Name of the corresponding Mascus category
 	 */
 	var $export_mascus_category_name = "";
 	
 	/**
-	 * @var String Title cutting range 
+	 * @var string Title cutting range 
 	 */
 	var $sawing_machines_cutting_range_title = "";
 		
 	/**
-	 * @var String Cutting range configurator file
+	 * @var string Cutting range configurator file
 	 */
 	var $sawing_machines_cutting_range_file = "";
 
 	/**
-	 * @var String[] Array with PDF file names.
+	 * @var string[] Array with PDF file names.
 	 */
 	var $pdfs = "";
 	
@@ -90,9 +90,9 @@ class Category {
 	var $videomanager_ids = array();
 	
 	/**
-	 * @var String "yes" if translation needs update
+	 * @var string "yes" if translation needs update
 	 */
-	var $translation_needs_update = "";
+	var $translation_needs_update = "delete";
 
 	/**
 	 * @var int Unix timestamp containing the last update date
@@ -100,17 +100,17 @@ class Category {
 	var $updatedate = 0;
 	
 	/**
-	 * @var String Redaxo update user name
+	 * @var string Redaxo update user name
 	 */
 	var $updateuser = "";
 	
 	/**
-	 * @var String URL
+	 * @var string URL
 	 */
 	var $url = "";
 
 	/**
-	 * @var String URL of cutting range configurator
+	 * @var string URL of cutting range configurator
 	 */
 	var $cutting_range_url = "";
 
@@ -163,23 +163,33 @@ class Category {
 	
 	/**
 	 * Deletes the object in all languages.
+	 * @param int $delete_all If TRUE, all translations and main object are deleted. If 
+	 * FALSE, only this translation will be deleted.
 	 */
-	public function delete() {
-		$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_categories_lang "
-			."WHERE category_id = ". $this->category_id;
-		$result_lang = rex_sql::factory();
-		$result_lang->setQuery($query_lang);
-		
-		$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_categories "
-			."WHERE category_id = ". $this->category_id;
-		$result = rex_sql::factory();
-		$result->setQuery($query);			
+	public function delete($delete_all = TRUE) {
+		if($delete_all) {
+			$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_categories_lang "
+				."WHERE category_id = ". $this->category_id;
+			$result_lang = rex_sql::factory();
+			$result_lang->setQuery($query_lang);
+
+			$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_categories "
+				."WHERE category_id = ". $this->category_id;
+			$result = rex_sql::factory();
+			$result->setQuery($query);
+		}
+		else {
+			$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_categories_lang "
+				."WHERE category_id = ". $this->category_id ." AND clang_id = ". $this->clang_id;
+			$result_lang = rex_sql::factory();
+			$result_lang->setQuery($query_lang);
+		}
 	}
 	
 	/**
 	 * Get all categories.
 	 * @param int $clang_id Redaxo clang id.
-	 * @return Categories[] Array with Category objects.
+	 * @return Category[] Array with Category objects.
 	 */
 	public static function getAll($clang_id) {
 		$query = "SELECT category_id FROM ". rex::getTablePrefix() ."d2u_machinery_categories_lang "
@@ -253,7 +263,7 @@ class Category {
 	
 	/*
 	 * Gibt die URL der Kategorie zurueck.
-	 * @return String URL für Kategorie
+	 * @return string URL für Kategorie
 	 */
 	public function getURL() {
 		if($this->url == "") {
@@ -310,7 +320,7 @@ class Category {
 	
 	/*
 	 * Gibt die URL für den Schnittbereichskonfigurator der Kategorie zurueck.
-	 * @return String URL für den Schnittbereichskonfigurator, false wenn nicht vorhanden
+	 * @return string URL für den Schnittbereichskonfigurator, false wenn nicht vorhanden
 	 */
 	function getURLSchnittbereichskonfigurator() {
 		if($this->sawing_machines_cutting_range_title == "" || $this->sawing_machines_cutting_range_file == "") {

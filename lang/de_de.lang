@@ -9,7 +9,10 @@ d2u_machinery_meta_title = D2U Maschinen
 d2u_machinery_name = Name
 d2u_machinery_online_status = Online
 d2u_machinery_text_lang = Texte in Sprache
-d2u_machinery_translation_needs_update = Übersetzung muss aktualisiert werden
+d2u_machinery_translation = Diese Übersetzung ...
+d2u_machinery_translation_needs_update = ... muss aktualisiert werden
+d2u_machinery_translation_is_uptodate = ... ist aktuell
+d2u_machinery_translation_delete = ... ist zur Zeit nicht vorgesehen und soll nicht gespeichert werden
 
 d2u_machinery_rights_all = D2U Maschinen Addon
 d2u_machinery_rights_edit_tech_data = D2U Maschinen Addon: Editierrechte für technische Daten und sprachübergreifende Inhalte

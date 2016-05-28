@@ -25,11 +25,11 @@ if ($func == '') {
     $list->addTableAttribute('class', 'table-striped table-hover');
 
     $tdIcon = '<i class="rex-icon rex-icon-module"></i>';
-    $thIcon = '<a href="' . $list->getUrl(['func' => 'add']) . '" title="' . rex_i18n::msg('d2u_machinery_add') . '"><i class="rex-icon rex-icon-add-module"></i></a>';
+    $thIcon = '<a href="' . $list->getUrl(['func' => 'add']) . '" title="' . rex_i18n::msg('add') . '"><i class="rex-icon rex-icon-add-module"></i></a>';
     $list->addColumn($thIcon, $tdIcon, 0, ['<th class="rex-table-icon">###VALUE###</th>', '<td class="rex-table-icon">###VALUE###</td>']);
     $list->setColumnParams($thIcon, ['func' => 'edit', 'entry_id' => '###used_machine_id###']);
 
-    $list->setColumnLabel('used_machine_id', rex_i18n::msg('d2u_machinery_id'));
+    $list->setColumnLabel('used_machine_id', rex_i18n::msg('id'));
     $list->setColumnLayout('used_machine_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id" data-title="' . rex_i18n::msg('id') . '">###VALUE###</td>']);
 
     $list->setColumnLabel('machinename', rex_i18n::msg('d2u_machinery_used_machines_name'));

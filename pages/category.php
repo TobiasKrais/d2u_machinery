@@ -51,12 +51,16 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 		$category->pdfs = preg_grep('/^\s*$/s', explode(",", $input_media_list['1'. $rex_clang->getId()]), PREG_GREP_INVERT);
 		$category->pic_lang = $input_media['pic_lang_'. $rex_clang->getId()];
 		
-		if($category->save() > 0){
+		if($category->translation_needs_update == "delete") {
+			$category->delete(FALSE);
+		}
+		else if($category->save() > 0){
 			$success = FALSE;
 		}
-
-		// remember category id, for each database lang object needs same category id
-		$category_id = $category->category_id;
+		else {
+			// remember category id, for each database lang object needs same category id
+			$category_id = $category->category_id;
+		}
 	}
 
 	// message output
@@ -99,7 +103,6 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 
 // Eingabeformular
 if ($func == 'edit' || $func == 'add') {
-	$category = FALSE;
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
@@ -121,7 +124,11 @@ if ($func == 'edit' || $func == 'add') {
 						<div class="panel-body-wrapper slide">
 							<?php
 								if($rex_clang->getId() != rex_config::get("d2u_machinery", "default_lang")) {
-									d2u_addon_backend_helper::form_checkbox('d2u_machinery_translation_needs_update', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', 'yes', $category->translation_needs_update == "yes", $readonly_lang);
+									$options_translations = array();
+									$options_translations["yes"] = rex_i18n::msg('d2u_machinery_translation_needs_update');
+									$options_translations["no"] = rex_i18n::msg('d2u_machinery_translation_is_uptodate');
+									$options_translations["delete"] = rex_i18n::msg('d2u_machinery_translation_delete');
+									d2u_addon_backend_helper::form_select('d2u_machinery_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, array($category->translation_needs_update), 1, FALSE, $readonly_lang);
 								}
 								else {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
@@ -141,6 +148,8 @@ if ($func == 'edit' || $func == 'add') {
 					<legend><?php echo rex_i18n::msg('d2u_machinery_category_data_all_lang'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
+							// Do not use last object from translations, because you don't know if it exists in DB
+							$category = new Category($entry_id, $rex_clang->getId());
 							$readonly = TRUE;
 							if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_machinery[edit_tech_data]')) {
 								$readonly = FALSE;

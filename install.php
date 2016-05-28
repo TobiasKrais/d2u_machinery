@@ -51,7 +51,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machin
 	delivery_set_basic varchar(255) collate utf8_general_ci default NULL,
 	delivery_set_conversion varchar(255) collate utf8_general_ci default NULL,
 	delivery_set_full varchar(255) collate utf8_general_ci default NULL,
-	translation_needs_update varchar(3) collate utf8_general_ci default NULL,
+	translation_needs_update varchar(7) collate utf8_general_ci default NULL,
 	updatedate int(11) default NULL,
 	updateuser varchar(255) collate utf8_general_ci default NULL,
 	PRIMARY KEY (machine_id, clang_id)
@@ -72,7 +72,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machin
 	usage_area varchar(255) collate utf8_general_ci default NULL,
 	pic_lang varchar(255) collate utf8_general_ci default NULL,
 	pdfs varchar(255) collate utf8_general_ci default NULL,
-	translation_needs_update varchar(3) collate utf8_general_ci default NULL,
+	translation_needs_update varchar(7) collate utf8_general_ci default NULL,
 	updatedate int(11) default NULL,
 	updateuser varchar(255) collate utf8_general_ci default NULL,
 	PRIMARY KEY (category_id, clang_id)

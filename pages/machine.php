@@ -25,7 +25,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 		if($machine === FALSE) {
 			$machine = new Machine($machine_id, $rex_clang->getId());
 			$machine->name = $form['name'];
-			$machine->internal_name = $form['name'];
+			$machine->internal_name = $form['internal_name'];
 			$machine->product_number = $form['product_number'];
 			$machine->pics = preg_grep('/^\s*$/s', explode(",", $input_media_list[1]), PREG_GREP_INVERT);
 			$machine->pic_usage = $input_media[1];
@@ -62,12 +62,16 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 		$machine->delivery_set_conversion = $form['lang'][$rex_clang->getId()]['delivery_set_conversion'];
 		$machine->delivery_set_full = $form['lang'][$rex_clang->getId()]['delivery_set_full'];
 
-		if($machine->save() > 0){
+		if($machine->translation_needs_update == "delete") {
+			$machine->delete(FALSE);
+		}
+		else if($machine->save() > 0){
 			$success = FALSE;
 		}
-
-		// remember category id, for each database lang object needs same category id
-		$machine_id = $machine->category_id;
+		else {
+			// remember category id, for each database lang object needs same category id
+			$machine_id = $machine->category_id;
+		}
 	}
 
 	// message output
@@ -132,7 +136,7 @@ if ($func == 'edit' || $func == 'add') {
 							
 							d2u_addon_backend_helper::form_input('d2u_machinery_name', "form[name]", $machine->name, $required, $readonly_lang, "text");
 							d2u_addon_backend_helper::form_input('d2u_machinery_machine_internal_name', "form[internal_name]", $machine->internal_name, $required, $readonly_lang, "text");
-							d2u_addon_backend_helper::form_input('d2u_machinery_machine_product_number', "form[product_number]", $machine->name, $required, $readonly_lang, "text");
+							d2u_addon_backend_helper::form_input('d2u_machinery_machine_product_number', "form[product_number]", $machine->product_number, $required, $readonly_lang, "text");
 							d2u_addon_backend_helper::form_medialistfield('d2u_machinery_machine_pics', 1, $machine->pics, $readonly_lang);
 							d2u_addon_backend_helper::form_mediafield('d2u_machinery_machine_pic_usage', 1, $machine->pic_usage, $readonly);
 							$options = array();
@@ -168,7 +172,7 @@ if ($func == 'edit' || $func == 'add') {
 				</fieldset>
 				<?php
 					foreach(rex_clang::getAll() as $rex_clang) {
-						$machine = new Machine($entry_id, $rex_clang->getId());
+						$machine_lang = new Machine($entry_id, $rex_clang->getId());
 						$required = $rex_clang->getId() == rex_config::get("d2u_machinery", "default_lang") ? TRUE : FALSE;
 						
 						$readonly_lang = TRUE;
@@ -181,19 +185,23 @@ if ($func == 'edit' || $func == 'add') {
 						<div class="panel-body-wrapper slide">
 							<?php
 								if($rex_clang->getId() != rex_config::get("d2u_machinery", "default_lang")) {
-									d2u_addon_backend_helper::form_checkbox('d2u_machinery_translation_needs_update', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', 'yes', $machine->translation_needs_update == "yes", $readonly_lang);
+									$options_translations = array();
+									$options_translations["yes"] = rex_i18n::msg('d2u_machinery_translation_needs_update');
+									$options_translations["no"] = rex_i18n::msg('d2u_machinery_translation_is_uptodate');
+									$options_translations["delete"] = rex_i18n::msg('d2u_machinery_translation_delete');
+									d2u_addon_backend_helper::form_select('d2u_machinery_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, array($machine_lang->translation_needs_update), 1, FALSE, $readonly_lang);
 								}
 								else {
-									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
+									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="no">';
 								}
-								d2u_addon_backend_helper::form_input('d2u_machinery_machine_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $machine->teaser, FALSE, $readonly_lang, "text");
-								d2u_addon_backend_helper::form_textarea('d2u_machinery_machine_description', "form[lang][". $rex_clang->getId() ."][description]", $machine->description, 5, FALSE, $readonly_lang, TRUE);
-								d2u_addon_backend_helper::form_textarea('d2u_machinery_machine_description_tech', "form[lang][". $rex_clang->getId() ."][description_technical]", $machine->description_technical, 5, FALSE, $readonly_lang, TRUE);
-								d2u_addon_backend_helper::form_medialistfield('d2u_machinery_machine_pdfs', '1'. $rex_clang->getId(), $machine->pdfs, $readonly_lang);
-								d2u_addon_backend_helper::form_input('d2u_machinery_machine_connection_infos', "form[lang][". $rex_clang->getId() ."][connection_infos]", $machine->connection_infos, FALSE, $readonly, "text");
-								d2u_addon_backend_helper::form_input('d2u_machinery_machine_delivery_set_basic', "form[lang][". $rex_clang->getId() ."][delivery_set_basic]", $machine->delivery_set_basic, FALSE, $readonly, "text");
-								d2u_addon_backend_helper::form_input('d2u_machinery_machine_delivery_set_conversion', "form[lang][". $rex_clang->getId() ."][delivery_set_conversion]", $machine->delivery_set_conversion, FALSE, $readonly, "text");
-								d2u_addon_backend_helper::form_input('d2u_machinery_machine_delivery_set_full', "form[lang][". $rex_clang->getId() ."][delivery_set_full]", $machine->delivery_set_full, FALSE, $readonly, "text");
+								d2u_addon_backend_helper::form_input('d2u_machinery_machine_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $machine_lang->teaser, FALSE, $readonly_lang, "text");
+								d2u_addon_backend_helper::form_textarea('d2u_machinery_machine_description', "form[lang][". $rex_clang->getId() ."][description]", $machine_lang->description, 5, FALSE, $readonly_lang, TRUE);
+								d2u_addon_backend_helper::form_textarea('d2u_machinery_machine_description_tech', "form[lang][". $rex_clang->getId() ."][description_technical]", $machine_lang->description_technical, 5, FALSE, $readonly_lang, TRUE);
+								d2u_addon_backend_helper::form_medialistfield('d2u_machinery_machine_pdfs', '1'. $rex_clang->getId(), $machine_lang->pdfs, $readonly_lang);
+								d2u_addon_backend_helper::form_input('d2u_machinery_machine_connection_infos', "form[lang][". $rex_clang->getId() ."][connection_infos]", $machine_lang->connection_infos, FALSE, $readonly, "text");
+								d2u_addon_backend_helper::form_input('d2u_machinery_machine_delivery_set_basic', "form[lang][". $rex_clang->getId() ."][delivery_set_basic]", $machine_lang->delivery_set_basic, FALSE, $readonly, "text");
+								d2u_addon_backend_helper::form_input('d2u_machinery_machine_delivery_set_conversion', "form[lang][". $rex_clang->getId() ."][delivery_set_conversion]", $machine_lang->delivery_set_conversion, FALSE, $readonly, "text");
+								d2u_addon_backend_helper::form_input('d2u_machinery_machine_delivery_set_full', "form[lang][". $rex_clang->getId() ."][delivery_set_full]", $machine_lang->delivery_set_full, FALSE, $readonly, "text");
 							?>
 						</div>
 					</fieldset>

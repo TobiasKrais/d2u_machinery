@@ -1,0 +1,17 @@
+package: d2u_machinery/machine_features
+version: '1.0.0'
+author: Tobias Krais
+supportpage: http://github.com/tobiaskrais/d2u_machinery
+
+page:
+    title: 'translate:d2u_machinery_features'
+    perm: d2u_machinery[]
+    icon: rex-icon rex-icon-module
+
+requires:
+    redaxo: '>=5.1.0'
+    php:
+        version: '>=5.3'
+    packages:
+        media_manager: '>=2.0.2'
+        rex_redactor: '>=1.6.1'
