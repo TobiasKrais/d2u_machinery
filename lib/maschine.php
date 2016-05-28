@@ -82,7 +82,7 @@ class Machine {
 	/**
 	 * @var int[] Machine business ids.
 	 */
-	var $business_ids = array();
+	var $industry_sector_ids = array();
 
 	/**
 	 * @var int Redaxo article id for additional software information
@@ -100,7 +100,7 @@ class Machine {
 	var $article_ids_references = array();
 
 	/**
-	 * @var String Machine status. Either "online" or "offline".
+	 * @var String Status. Either "online" or "offline".
 	 */
 	var $online_status = "offline";
 	
@@ -267,10 +267,9 @@ class Machine {
 			$this->pic_usage = $result->getValue("pic_usage");
 			$this->category = new Category($result->getValue("category_id"), $clang_id);
 			$this->alternative_machine_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("alternative_machine_ids")), PREG_GREP_INVERT);
-			$this->service_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("service_ids")), PREG_GREP_INVERT);
-			$this->accessory_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("accessory_ids")), PREG_GREP_INVERT);
+			$this->service_ids = preg_grep('/^\s*$/s', explode(",", $result->getValue("service_ids")), PREG_GREP_INVERT);
+			$this->accessory_ids = preg_grep('/^\s*$/s', explode(",", $result->getValue("accessory_ids")), PREG_GREP_INVERT);
 			$this->product_number = $result->getValue("product_number");
-			$this->business_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("business_ids")), PREG_GREP_INVERT);
 			$this->article_id_software = $result->getValue("article_id_software");
 			$this->article_id_service = $result->getValue("article_id_service");
 			$this->article_ids_references = preg_grep('/^\s*$/s', explode(",", $result->getValue("article_ids_references")), PREG_GREP_INVERT);
@@ -297,6 +296,10 @@ class Machine {
 
 			if(rex_plugin::get("d2u_machinery", "machine_features")->isAvailable()) {
 				$this->feature_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("feature_ids")), PREG_GREP_INVERT);
+			}
+
+			if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable()) {
+				$this->industry_sector_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("industry_sector_ids")), PREG_GREP_INVERT);
 			}
 		}
 	}
@@ -454,11 +457,10 @@ class Machine {
 					."pics = '". implode(",", $this->pics) ."', "
 					."pic_usage = '". $this->pic_usage ."', "
 					."category_id = ". $this->category->category_id .", "
-					."alternative_machine_ids = '". implode(",", $this->alternative_machine_ids) ."', "
+					."alternative_machine_ids = '|". implode("|", $this->alternative_machine_ids) ."|', "
 					."service_ids = '". implode(",", $this->service_ids) ."', "
 					."accessory_ids = '". implode(",", $this->accessory_ids) ."', "
 					."product_number = '". $this->product_number ."', "
-					."business_ids = '". implode(",", $this->business_ids) ."', "
 					."article_id_software = '". $this->article_id_software ."', "
 					."article_id_service = '". $this->article_id_service ."', "
 					."article_ids_references = '". implode(",", $this->article_ids_references) ."', "
@@ -473,7 +475,10 @@ class Machine {
 					."operating_voltage_hz = '". $this->operating_voltage_hz ."', "
 					."operating_voltage_a = '". $this->operating_voltage_a ."' ";
 			if(rex_plugin::get("d2u_machinery", "machine_features")->isAvailable()) {
-				$query .= ", feature_ids = '". implode("|", $this->feature_ids) ."' ";
+				$query .= ", feature_ids = '|". implode("|", $this->feature_ids) ."|' ";
+			}
+			if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable()) {
+				$query .= ", industry_sector_ids = '|". implode("|", $this->industry_sector_ids) ."|' ";
 			}
 
 			if($this->machine_id == 0) {

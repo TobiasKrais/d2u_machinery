@@ -107,7 +107,7 @@ class Feature {
 	 * @return Feature[] Array with Feature objects.
 	 */
 	public static function getAll($clang_id, $category_id = 0) {
-		$query = "SELECT feature_id FROM ". rex::getTablePrefix() ."d2u_machinery_features_lang AS lang "
+		$query = "SELECT lang.feature_id FROM ". rex::getTablePrefix() ."d2u_machinery_features_lang AS lang "
 			."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_features AS features "
 				."ON lang.feature_id = features.feature_id "
 			."WHERE clang_id = ". $clang_id ." ";
@@ -145,8 +145,8 @@ class Feature {
 		if($this->feature_id == 0 || $pre_save_feature != $this) {
 			$query = rex::getTablePrefix() ."d2u_machinery_features SET "
 					."pic = '". $this->pic ."', "
-					."category_ids = '". implode("|", $this->category_ids) ."', "
-					."prio = '". $this->prio ."' "; // TODO Sortierreihenfolge festlegen
+					."category_ids = '|". implode("|", $this->category_ids) ."|', "
+					."prio = '". $this->prio ."' ";
 
 			if($this->feature_id == 0) {
 				$query = "INSERT INTO ". $query;

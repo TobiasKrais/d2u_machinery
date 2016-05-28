@@ -58,7 +58,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$success = FALSE;
 		}
 		else {
-			// remember category id, for each database lang object needs same category id
+			// remember id, for each database lang object needs same id
 			$category_id = $category->category_id;
 		}
 	}

@@ -1,0 +1,187 @@
+<?php
+/**
+ * Redaxo D2U Machines Addon
+ * @author Tobias Krais
+ * @author <a href="http://www.design-to-use.de">www.design-to-use.de</a>
+ */
+
+/**
+ * Industry sector
+ */
+class IndustrySector {
+	/**
+	 * @var int Database ID
+	 */
+	var $industry_sector_id = 0;
+	
+	/**
+	 * @var int Redaxo clang id
+	 */
+	var $clang_id = 0;
+	
+	/**
+	 * @var string Name
+	 */
+	var $name = "";
+	
+	/**
+	 * @var string Preview picture file name 
+	 */
+	var $pic = "";
+	
+	/**
+	 * @var String Status. Either "online" or "offline".
+	 */
+	var $online_status = "offline";
+	
+	/**
+	 * @var string "yes" if translation needs update
+	 */
+	var $translation_needs_update = "delete";
+
+	/**
+	 * Constructor. Reads a industry_sectors stored in database.
+	 * @param int $industry_sector_id Feature ID.
+	 * @param int $clang_id Redaxo clang id.
+	 */
+	 public function __construct($industry_sector_id, $clang_id) {
+		$this->clang_id = $clang_id;
+		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_industry_sectors AS industry_sectors "
+				."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang AS lang "
+					."ON industry_sectors.industry_sector_id = lang.industry_sector_id "
+				."WHERE industry_sectors.industry_sector_id = ". $industry_sector_id ." AND clang_id = ". $this->clang_id ." ";
+		$result = rex_sql::factory();
+		$result->setQuery($query);
+		$num_rows = $result->getRows();
+
+		if ($num_rows > 0) {
+			$this->industry_sector_id = $result->getValue("industry_sector_id");
+			$this->name = $result->getValue("name");
+			$this->pic = $result->getValue("pic");
+			$this->online_status = $result->getValue("online_status");
+			$this->translation_needs_update = $result->getValue("translation_needs_update");
+		}
+	}
+	
+	/**
+	 * Changes the status of a machine
+	 */
+	public function changeStatus() {
+		if($this->online_status == "online") {
+			if($this->industry_sector_id > 0) {
+				$query = "UPDATE ". rex::getTablePrefix() ."d2u_machinery_industry_sectors "
+					."SET online_status = 'offline' "
+					."WHERE industry_sector_id = ". $this->industry_sector_id;
+				$result = rex_sql::factory();
+				$result->setQuery($query);
+			}
+			$this->online_status = "offline";
+		}
+		else {
+			if($this->industry_sector_id > 0) {
+				$query = "UPDATE ". rex::getTablePrefix() ."d2u_machinery_industry_sectors "
+					."SET online_status = 'online' "
+					."WHERE industry_sector_id = ". $this->industry_sector_id;
+				$result = rex_sql::factory();
+				$result->setQuery($query);
+			}
+			$this->online_status = "online";			
+		}
+	}
+	
+	/**
+	 * Deletes the object in all languages.
+	 * @param int $delete_all If TRUE, all translations and main object are deleted. If 
+	 * FALSE, only this translation will be deleted.
+	 */
+	public function delete($delete_all = TRUE) {
+		if($delete_all) {
+			$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang "
+				."WHERE industry_sector_id = ". $this->industry_sector_id;
+			$result_lang = rex_sql::factory();
+			$result_lang->setQuery($query_lang);
+
+			$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_industry_sectors "
+				."WHERE industry_sector_id = ". $this->industry_sector_id;
+			$result = rex_sql::factory();
+			$result->setQuery($query);
+		}
+		else {
+			$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang "
+				."WHERE industry_sector_id = ". $this->industry_sector_id ." AND clang_id = ". $this->clang_id;
+			$result_lang = rex_sql::factory();
+			$result_lang->setQuery($query_lang);
+		}
+	}
+	
+	/**
+	 * Get all industry sectors.
+	 * @param int $clang_id Redaxo clang id.
+	 * @return Feature[] Array with Feature objects.
+	 */
+	public static function getAll($clang_id) {
+		$query = "SELECT industry_sector_id FROM ". rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang "
+			."WHERE clang_id = ". $clang_id ." ";
+		$query .= "ORDER BY name";
+
+		$result = rex_sql::factory();
+		$result->setQuery($query);
+		
+		$industry_sectors = array();
+		for($i = 0; $i < $result->getRows(); $i++) {
+			$industry_sectors[] = new IndustrySector($result->getValue("industry_sector_id"), $clang_id);
+			$result->next();
+		}
+		return $industry_sectors;
+	}
+	
+	/**
+	 * Updates or inserts the object into database.
+	 * @return boolean TRUE if succesful
+	 */
+	public function save() {
+		$error = 0;
+
+		// Save the not language specific part
+		$pre_save_industry_sector = new IndustrySector($this->industry_sector_id, $this->clang_id);
+		
+		// saving the rest
+		if($this->industry_sector_id == 0 || $pre_save_industry_sector != $this) {
+			$query = rex::getTablePrefix() ."d2u_machinery_industry_sectors SET "
+					."online_status = '". $this->online_status ."', "
+					."pic = '". $this->pic ."' ";
+
+			if($this->industry_sector_id == 0) {
+				$query = "INSERT INTO ". $query;
+			}
+			else {
+				$query = "UPDATE ". $query ." WHERE industry_sector_id = ". $this->industry_sector_id;
+			}
+
+			$result = rex_sql::factory();
+			$result->setQuery($query);
+			if($this->industry_sector_id == 0) {
+				$this->industry_sector_id = $result->getLastId();
+				$error = $result->hasError();
+			}
+		}
+		
+		if($error == 0) {
+			// Save the language specific part
+			$pre_save_industry_sector = new IndustrySector($this->industry_sector_id, $this->clang_id);
+			if($pre_save_industry_sector != $this) {
+				$query = "REPLACE INTO ". rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang SET "
+						."industry_sector_id = '". $this->industry_sector_id ."', "
+						."clang_id = '". $this->clang_id ."', "
+						."name = '". $this->name ."', "
+						."translation_needs_update = '". $this->translation_needs_update ."' ";
+
+				$result = rex_sql::factory();
+				$result->setQuery($query);
+				$error = $result->hasError();
+			}
+		}
+ 
+		return $error;
+	}
+}
