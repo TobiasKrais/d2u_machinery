@@ -3,12 +3,17 @@
 if (filter_input(INPUT_POST, "btn_save") == 'save') {
 	$settings = (array) rex_post('settings', 'array', array());
 
-	// Linkmap Link braucht besondere Behandlung
+	// Linkmap Link needs special treatment
 	$link_ids = filter_input_array(INPUT_POST, array('REX_INPUT_LINK'=> array('filter' => FILTER_VALIDATE_INT, 'flags' => FILTER_REQUIRE_ARRAY)));
 	$link_names = filter_input_array(INPUT_POST, array('REX_LINK_NAME' => array('flags' => FILTER_REQUIRE_ARRAY)));
 
 	$settings['article_id'] = $link_ids["REX_INPUT_LINK"][1];
 	$settings['article_name'] = trim($link_names["REX_LINK_NAME"][1]);
+
+	// Checkbox also need special treatment if empty
+	if(!array_key_exists('show_categories_usage_area', $settings)) {
+		$settings['show_categories_usage_area'] = "hide";
+	}
 	
 	// Save settings
 	if(rex_config::set("d2u_machinery", $settings)) {
@@ -27,7 +32,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 				<legend><?php echo rex_i18n::msg('d2u_machinery_meta_settings'); ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
-						d2u_addon_backend_helper::form_linkfield('d2u_machinery_settings_article', '1', $this->getConfig('article_name'), $this->getConfig('article_id'));
+						d2u_addon_backend_helper::form_linkfield('d2u_machinery_settings_article', '1', $this->getConfig('article_id'), $this->getConfig('default_lang'));
 
 						// Ausgangssprache für Übersetzungen
 						if(count(rex_clang::getAll()) > 1) {
@@ -37,6 +42,14 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 							}
 							d2u_addon_backend_helper::form_select('d2u_machinery_settings_defaultlang', 'settings[default_lang]', $options, array($this->getConfig('default_lang')));
 						}
+					?>
+				</div>
+			</fieldset>
+			<fieldset>
+				<legend><?php echo rex_i18n::msg('d2u_machinery_meta_categories'); ?></legend>
+				<div class="panel-body-wrapper slide">
+					<?php
+						d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_categories_usage_area', 'settings[show_categories_usage_area]', 'show', $this->getConfig('show_categories_usage_area') == 'show')
 					?>
 				</div>
 			</fieldset>

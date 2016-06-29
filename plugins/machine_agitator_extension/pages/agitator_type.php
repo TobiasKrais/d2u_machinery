@@ -16,31 +16,29 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', array());
 
 	$success = TRUE;
-	$feature = FALSE;
-	$feature_id = $form['feature_id'];
+	$agitator_type = FALSE;
+	$agitator_type_id = $form['agitator_type_id'];
 	foreach(rex_clang::getAll() as $rex_clang) {
-		if($feature === FALSE) {
-			$feature = new Feature($feature_id, $rex_clang->getId());
-			$feature->category_ids = $form['category_ids'];
-			$feature->prio = $form['prio'];
-			$feature->pic = $input_media[1];
+		if($agitator_type === FALSE) {
+			$agitator_type = new AgitatorType($agitator_type_id, $rex_clang->getId());
+			$agitator_type->agitator_ids = $form['agitator_ids'];
+			$agitator_type->pic = $input_media[1];
 		}
 		else {
-			$feature->clang_id = $rex_clang->getId();
+			$agitator_type->clang_id = $rex_clang->getId();
 		}
-		$feature->title = $form['lang'][$rex_clang->getId()]['title'];
-		$feature->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
-		$feature->description = $form['lang'][$rex_clang->getId()]['description'];
+		$agitator_type->name = $form['lang'][$rex_clang->getId()]['name'];
+		$agitator_type->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 
-		if($feature->translation_needs_update == "delete") {
-			$feature->delete(FALSE);
+		if($agitator_type->translation_needs_update == "delete") {
+			$agitator_type->delete(FALSE);
 		}
-		else if($feature->save() > 0){
+		else if($agitator_type->save() > 0){
 			$success = FALSE;
 		}
 		else {
 			// remember id, for each database lang object needs same id
-			$feature_id = $feature->feature_id;
+			$agitator_type_id = $agitator_type->agitator_type_id;
 		}
 	}
 
@@ -51,8 +49,8 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	}
 	
 	// Redirect to make reload and thus double save impossible
-	if(filter_input(INPUT_POST, "btn_apply") == 1 && $feature !== FALSE) {
-		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$feature->feature_id, "func"=>'edit', "message"=>$message), FALSE));
+	if(filter_input(INPUT_POST, "btn_apply") == 1 && $agitator_type !== FALSE) {
+		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$agitator_type->agitator_type_id, "func"=>'edit', "message"=>$message), FALSE));
 	}
 	else {
 		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), FALSE));
@@ -61,22 +59,38 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 }
 // Delete
 else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
-	$feature_id = $entry_id;
-	if($feature_id == 0) {
+	$agitator_type_id = $entry_id;
+	if($agitator_type_id == 0) {
 		$form = (array) rex_post('form', 'array', array());
-		$feature_id = $form['feature_id'];
+		$agitator_type_id = $form['agitator_type_id'];
 	}
-	$feature = FALSE;
-	foreach(rex_clang::getAll() as $rex_clang) {
-		if($feature === FALSE) {
-			$feature = new Feature($feature_id, $rex_clang->getId());
-			// If object is not found in language, set feature_id anyway to be able to delete
-			$feature->feature_id = $feature_id;
+	$agitator_type = new AgitatorType($agitator_type_id, rex_config::get("d2u_machinery", "default_lang"));
+	
+	// Check if object is used
+	$reffering_machines = $agitator_type->getRefferingMachines();
+
+	// If not used, delete
+	if(count($reffering_machines) == 0) {
+		foreach(rex_clang::getAll() as $rex_clang) {
+			if($agitator_type === FALSE) {
+				$agitator_type = new AgitatorType($agitator_type_id, $rex_clang->getId());
+				// If object is not found in language, set agitator_type_id anyway to be able to delete
+				$agitator_type->agitator_type_id = $agitator_type_id;
+			}
+			else {
+				$agitator_type->clang_id = $rex_clang->getId();
+			}
+			$agitator_type->delete();
 		}
-		else {
-			$feature->clang_id = $rex_clang->getId();
+	}
+	else {
+		$message = '<ul>';
+		foreach($reffering_machines as $reffering_machine) {
+			$message .= '<li><a href="index.php?page=d2u_machinery/machine&func=edit&entry_id='. $reffering_machine->machine_id .'">'. $reffering_machine->name.'</a></li>';
 		}
-		$feature->delete();
+		$message .= '</ul>';
+
+		print rex_view::error(rex_i18n::msg('d2u_machinery_could_not_delete') . $message);
 	}
 	
 	$func = '';
@@ -87,12 +101,12 @@ if ($func == 'edit' || $func == 'add') {
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
-			<header class="panel-heading"><div class="panel-title"><?php print rex_i18n::msg('d2u_machinery_features'); ?></div></header>
+			<header class="panel-heading"><div class="panel-title"><?php print rex_i18n::msg('d2u_machinery_agitator_types'); ?></div></header>
 			<div class="panel-body">
-				<input type="hidden" name="form[feature_id]" value="<?php echo $entry_id; ?>">
+				<input type="hidden" name="form[agitator_type_id]" value="<?php echo $entry_id; ?>">
 				<?php
 					foreach(rex_clang::getAll() as $rex_clang) {
-						$feature = new Feature($entry_id, $rex_clang->getId());
+						$agitator_type = new AgitatorType($entry_id, $rex_clang->getId());
 						$required = $rex_clang->getId() == rex_config::get("d2u_machinery", "default_lang") ? TRUE : FALSE;
 						
 						$readonly_lang = TRUE;
@@ -109,14 +123,13 @@ if ($func == 'edit' || $func == 'add') {
 									$options_translations["yes"] = rex_i18n::msg('d2u_machinery_translation_needs_update');
 									$options_translations["no"] = rex_i18n::msg('d2u_machinery_translation_is_uptodate');
 									$options_translations["delete"] = rex_i18n::msg('d2u_machinery_translation_delete');
-									d2u_addon_backend_helper::form_select('d2u_machinery_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, array($feature->translation_needs_update), 1, FALSE, $readonly_lang);
+									d2u_addon_backend_helper::form_select('d2u_machinery_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, array($agitator_type->translation_needs_update), 1, FALSE, $readonly_lang);
 								}
 								else {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
 								}
 								
-								d2u_addon_backend_helper::form_input('d2u_machinery_features_title', "form[lang][". $rex_clang->getId() ."][title]", $feature->title, $required, $readonly_lang, "text");
-								d2u_addon_backend_helper::form_textarea('d2u_machinery_features_description', "form[lang][". $rex_clang->getId() ."][description]", $value, $rows, $readonly_lang, $success)
+								d2u_addon_backend_helper::form_input('d2u_machinery_name', "form[lang][". $rex_clang->getId() ."][name]", $agitator_type->name, $required, $readonly_lang, "text");
 							?>
 						</div>
 					</fieldset>
@@ -124,24 +137,23 @@ if ($func == 'edit' || $func == 'add') {
 					}
 				?>
 				<fieldset>
-					<legend><?php echo rex_i18n::msg('d2u_machinery_features_data_all_lang'); ?></legend>
+					<legend><?php echo rex_i18n::msg('d2u_machinery_agitators_data_all_lang'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
 							// Do not use last object from translations, because you don't know if it exists in DB
-							$feature = new Feature($entry_id, rex_config::get("d2u_machinery", "default_lang"));
+							$agitator_type = new AgitatorType($entry_id, rex_config::get("d2u_machinery", "default_lang"));
 							$readonly = TRUE;
 							if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_machinery[edit_tech_data]')) {
 								$readonly = FALSE;
 							}
 
-							d2u_addon_backend_helper::form_input('header_priority', 'form[prio]', $feature->prio, TRUE, $readonly, 'number');
-							d2u_addon_backend_helper::form_mediafield('d2u_machinery_features_pic', 1, $feature->pic, $readonly);
-							
-							$options = array();
-							foreach(Category::getAll(rex_config::get("d2u_machinery", "default_lang")) as $category) {
-								$options[$category->category_id] = $category->name;
+							d2u_addon_backend_helper::form_mediafield('d2u_machinery_agitators_pic', 1, $agitator_type->pic, $readonly);
+
+							$options_agitators = array();
+							foreach (Agitator::getAll(rex_config::get("d2u_machinery", "default_lang")) as $agitator) {
+								$options_agitators[$agitator->agitator_id] = $agitator->name;
 							}
-							d2u_addon_backend_helper::form_select('d2u_machinery_features_categories', 'form[category_ids][]', $options, $feature->category_ids, 10, TRUE, $readonly);
+							d2u_addon_backend_helper::form_select('d2u_machinery_agitators', 'form[agitator_ids][]', $options_agitators, $agitator_type->agitator_ids, 10, TRUE, $readonly);
 						?>
 					</div>
 				</fieldset>
@@ -164,41 +176,39 @@ if ($func == 'edit' || $func == 'add') {
 }
 
 if ($func == '') {
-	$query = 'SELECT features.feature_id, title, prio '
-		. 'FROM '. rex::getTablePrefix() .'d2u_machinery_features AS features '
-		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_features_lang AS lang '
-			. 'ON features.feature_id = lang.feature_id AND lang.clang_id = '. rex_config::get("d2u_machinery", "default_lang") .' '
-		. 'ORDER BY prio ASC';
+	$query = 'SELECT agitator_types.agitator_type_id, name '
+		. 'FROM '. rex::getTablePrefix() .'d2u_machinery_agitator_types AS agitator_types '
+		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_agitator_types_lang AS lang '
+			. 'ON agitator_types.agitator_type_id = lang.agitator_type_id AND lang.clang_id = '. rex_config::get("d2u_machinery", "default_lang") .' '
+		. 'ORDER BY name ASC';
     $list = rex_list::factory($query);
 
     $list->addTableAttribute('class', 'table-striped table-hover');
 
-    $tdIcon = '<i class="rex-icon rex-icon-module"></i>';
+    $tdIcon = '<i class="rex-icon fa-spoon"></i>';
     $thIcon = '<a href="' . $list->getUrl(['func' => 'add']) . '" title="' . rex_i18n::msg('add') . '"><i class="rex-icon rex-icon-add-module"></i></a>';
     $list->addColumn($thIcon, $tdIcon, 0, ['<th class="rex-table-icon">###VALUE###</th>', '<td class="rex-table-icon">###VALUE###</td>']);
-    $list->setColumnParams($thIcon, ['func' => 'edit', 'entry_id' => '###feature_id###']);
+    $list->setColumnParams($thIcon, ['func' => 'edit', 'entry_id' => '###agitator_type_id###']);
 
-    $list->setColumnLabel('feature_id', rex_i18n::msg('id'));
-    $list->setColumnLayout('feature_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
+    $list->setColumnLabel('agitator_type_id', rex_i18n::msg('id'));
+    $list->setColumnLayout('agitator_type_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
 
-    $list->setColumnLabel('title', rex_i18n::msg('d2u_machinery_features_title'));
-    $list->setColumnParams('title', ['func' => 'edit', 'entry_id' => '###feature_id###']);
-
-    $list->setColumnLabel('prio', rex_i18n::msg('header_priority'));
+    $list->setColumnLabel('name', rex_i18n::msg('d2u_machinery_agitators_name'));
+    $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###agitator_type_id###']);
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('system_update'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
-    $list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###feature_id###']);
+    $list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###agitator_type_id###']);
 
     $list->addColumn(rex_i18n::msg('delete_module'), '<i class="rex-icon rex-icon-delete"></i> ' . rex_i18n::msg('delete'));
     $list->setColumnLayout(rex_i18n::msg('delete_module'), ['', '<td class="rex-table-action">###VALUE###</td>']);
-    $list->setColumnParams(rex_i18n::msg('delete_module'), ['func' => 'delete', 'entry_id' => '###feature_id###']);
+    $list->setColumnParams(rex_i18n::msg('delete_module'), ['func' => 'delete', 'entry_id' => '###agitator_type_id###']);
     $list->addLinkAttribute(rex_i18n::msg('delete_module'), 'data-confirm', rex_i18n::msg('d2u_machinery_confirm_delete'));
 
-    $list->setNoRowsMessage(rex_i18n::msg('d2u_machinery_features_no_features_found'));
+	$list->setNoRowsMessage(rex_i18n::msg('d2u_machinery_agitators_no_agitator_types_found'));
 
     $fragment = new rex_fragment();
-    $fragment->setVar('title', rex_i18n::msg('d2u_machinery_features'), false);
+    $fragment->setVar('title', rex_i18n::msg('d2u_machinery_agitator_types'), false);
     $fragment->setVar('content', $list->get(), false);
     echo $fragment->parse('core/page/section.php');
 }

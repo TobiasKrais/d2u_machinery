@@ -47,9 +47,11 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 		}
 		$category->name = $form['lang'][$rex_clang->getId()]['name'];
 		$category->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
-		$category->usage_area = $form['lang'][$rex_clang->getId()]['usage_area'];
 		$category->pdfs = preg_grep('/^\s*$/s', explode(",", $input_media_list['1'. $rex_clang->getId()]), PREG_GREP_INVERT);
 		$category->pic_lang = $input_media['pic_lang_'. $rex_clang->getId()];
+		if($this->getConfig('show_categories_usage_area') == 'show') {
+			$category->usage_area = $form['lang'][$rex_clang->getId()]['usage_area'];
+		}
 		
 		if($category->translation_needs_update == "delete") {
 			$category->delete(FALSE);
@@ -85,17 +87,46 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		$form = (array) rex_post('form', 'array', array());
 		$category_id = $form['category_id'];
 	}
-	$category = FALSE;
-	foreach(rex_clang::getAll() as $rex_clang) {
-		if($category === FALSE) {
-			$category = new Category($category_id, $rex_clang->getId());
-			// If object is not found in language, set category_id anyway to be able to delete
-			$category->category_id = $category_id;
+	$category = new Category($category_id, rex_config::get("d2u_machinery", "default_lang"));
+	
+	// Check if category is used
+	$uses_machines = $category->getMachines();
+	$uses_used_machines = array();
+	if(rex_plugin::get("d2u_machinery", "used_machines")->isAvailable()) {
+		$uses_used_machines = $category->getUsedMachines();
+	}
+	$uses_categories = $category->getChildren();
+	
+	// If not used, delete
+	if(count($uses_machines) == 0 && count($uses_used_machines) == 0 && count($uses_categories) == 0) {
+		foreach(rex_clang::getAll() as $rex_clang) {
+			if($category === FALSE) {
+				$category = new Category($category_id, $rex_clang->getId());
+				// If object is not found in language, set category_id anyway to be able to delete
+				$category->category_id = $category_id;
+			}
+			else {
+				$category->clang_id = $rex_clang->getId();
+			}
+			$category->delete();
 		}
-		else {
-			$category->clang_id = $rex_clang->getId();
+	}
+	else {
+		$message = '<ul>';
+		foreach($uses_categories as $uses_category) {
+			$message .= '<li><a href="index.php?page=d2u_machinery/category&func=edit&entry_id='. $uses_category->category_id .'">'. $uses_category->name.'</a></li>';
 		}
-		$category->delete();
+		foreach($uses_machines as $uses_machine) {
+			$message .= '<li><a href="index.php?page=d2u_machinery/machine&func=edit&entry_id='. $uses_machine->machine_id .'">'. $uses_machine->name.'</a></li>';
+		}
+		if(rex_plugin::get("d2u_machinery", "used_machines")->isAvailable()) {
+			foreach($uses_used_machines as $uses_used_machine) {
+				$message .= '<li><a href="index.php?page=d2u_machinery/used_machines&func=edit&entry_id='. $uses_used_machine->used_machine_id .'">'. $uses_used_machine->name.'</a></li>';
+			}
+		}
+		$message .= '</ul>';
+
+		print rex_view::error(rex_i18n::msg('d2u_machinery_could_not_delete') . $message);
 	}
 	
 	$func = '';
@@ -135,7 +166,9 @@ if ($func == 'edit' || $func == 'add') {
 								}
 								
 								d2u_addon_backend_helper::form_input('d2u_machinery_name', "form[lang][". $rex_clang->getId() ."][name]", $category->name, $required, $readonly_lang, "text");
-								d2u_addon_backend_helper::form_input('d2u_machinery_category_usage_area', "form[lang][". $rex_clang->getId() ."][usage_area]", $category->usage_area, FALSE, $readonly_lang, "text");
+								if($this->getConfig('show_categories_usage_area') == 'show') {
+									d2u_addon_backend_helper::form_input('d2u_machinery_category_usage_area', "form[lang][". $rex_clang->getId() ."][usage_area]", $category->usage_area, FALSE, $readonly_lang, "text");
+								}
 								d2u_addon_backend_helper::form_mediafield('d2u_machinery_category_pic_lang', 'pic_lang_'. $rex_clang->getId(), $category->pic_lang, $readonly_lang);
 								d2u_addon_backend_helper::form_medialistfield('d2u_machinery_category_pdfs', intval('1'. $rex_clang->getId()), $category->pdfs, $readonly_lang)
 							?>
@@ -149,7 +182,7 @@ if ($func == 'edit' || $func == 'add') {
 					<div class="panel-body-wrapper slide">
 						<?php
 							// Do not use last object from translations, because you don't know if it exists in DB
-							$category = new Category($entry_id, $rex_clang->getId());
+							$category = new Category($entry_id, rex_config::get("d2u_machinery", "default_lang"));
 							$readonly = TRUE;
 							if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_machinery[edit_tech_data]')) {
 								$readonly = FALSE;
@@ -159,13 +192,10 @@ if ($func == 'edit' || $func == 'add') {
 							$selected_values = array();
 							foreach(Category::getAll(rex_config::get("d2u_machinery", "default_lang")) as $parent_category) {
 								if(!$parent_category->isChild() && $parent_category->category_id != $category->category_id) {
-									if($category->parent_category !== FALSE && $parent_category->category_id == $category->parent_category->category_id) {
-										$selected_values[] = $parent_category->category_id;
-									}
 									$options[$parent_category->category_id] = $parent_category->name;
 								}
 							}
-							d2u_addon_backend_helper::form_select('d2u_machinery_category_parent', 'form[parent_category_id]', $options, $selected_values, 1, FALSE, $readonly);
+							d2u_addon_backend_helper::form_select('d2u_machinery_category_parent', 'form[parent_category_id]', $options, array($category->parent_category->category_id), 1, FALSE, $readonly);
 							d2u_addon_backend_helper::form_mediafield('d2u_machinery_category_pic', '1', $category->pic, $readonly);
 							d2u_addon_backend_helper::form_mediafield('d2u_machinery_category_pic_usage', '2', $category->pic_usage, $readonly);
 

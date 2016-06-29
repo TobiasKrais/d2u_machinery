@@ -40,8 +40,8 @@ class IndustrySector {
 	var $translation_needs_update = "delete";
 
 	/**
-	 * Constructor. Reads a industry_sectors stored in database.
-	 * @param int $industry_sector_id Feature ID.
+	 * Constructor. Reads an Industry Sector stored in database.
+	 * @param int $industry_sector_id Object ID.
 	 * @param int $clang_id Redaxo clang id.
 	 */
 	 public function __construct($industry_sector_id, $clang_id) {
@@ -117,7 +117,7 @@ class IndustrySector {
 	/**
 	 * Get all industry sectors.
 	 * @param int $clang_id Redaxo clang id.
-	 * @return Feature[] Array with Feature objects.
+	 * @return IndustrySector[] Array with IndustrySector objects.
 	 */
 	public static function getAll($clang_id) {
 		$query = "SELECT industry_sector_id FROM ". rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang "
@@ -133,6 +133,24 @@ class IndustrySector {
 			$result->next();
 		}
 		return $industry_sectors;
+	}
+	
+	/**
+	 * Gets the machines reffering to this object.
+	 * @return Machine[] Machines reffering to this object.
+	 */
+	public function getRefferingMachines() {
+		$query = "SELECT machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_machines "
+			."WHERE industry_sector_ids LIKE '%|". $this->industry_sector_id ."|%'";
+		$result = rex_sql::factory();
+		$result->setQuery($query);
+		
+		$machines = array();
+		for($i = 0; $i < $result->getRows(); $i++) {
+			$machines[] = new Machine($result->getValue("machine_id"), $this->clang_id);
+			$result->next();
+		}
+		return $machines;
 	}
 	
 	/**

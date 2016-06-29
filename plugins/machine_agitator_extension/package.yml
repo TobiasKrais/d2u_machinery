@@ -1,0 +1,21 @@
+package: d2u_machinery/machine_agitator_extension
+version: '1.0.0'
+author: Tobias Krais
+supportpage: http://github.com/tobiaskrais/d2u_machinery
+
+page:
+    title: 'translate:d2u_machinery_agitator_extension'
+    perm: d2u_machinery[]
+    icon: rex-icon fa-spoon
+    subpages:
+        mechanical_construction: { title: 'translate:d2u_machinery_mechanical_constructions', icon: rex-icon fa-cube }
+        agitator_type: { title: 'translate:d2u_machinery_agitator_types', icon: rex-icon fa-spoon }
+        agitator: { title: 'translate:d2u_machinery_agitators', icon: rex-icon fa-spoon }
+
+requires:
+    redaxo: '>=5.1.0'
+    php:
+        version: '>=5.3'
+    packages:
+        media_manager: '>=2.0.2'
+        rex_redactor2: '>=2.0'

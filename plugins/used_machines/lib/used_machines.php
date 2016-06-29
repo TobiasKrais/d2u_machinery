@@ -86,7 +86,7 @@ class UsedMachine {
 	 * @param int $clang_id Redaxo SprachID.
 	 * @param String $table_prefix. Redaxo Tabellen Praefix ($REX['TABLE_PREFIX'])
 	 */
-	 public function __construct($gebrauchtmaschinen_id, $clang_id, $table_prefix = "rex_") {
+	 public function __construct($gebrauchtmaschinen_id, $clang_id) {
 		$this->table_prefix = $table_prefix;
 		
 		// Sprachfallback

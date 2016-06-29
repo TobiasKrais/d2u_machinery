@@ -28,7 +28,6 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$machine->internal_name = $form['internal_name'];
 			$machine->product_number = $form['product_number'];
 			$machine->pics = preg_grep('/^\s*$/s', explode(",", $input_media_list[1]), PREG_GREP_INVERT);
-			$machine->pic_usage = $input_media[1];
 			$machine->category = new Category($form['category_id'], $rex_clang->getId());
 			$machine->alternative_machine_ids = $form['alternative_machine_ids'];
 			$machine->online_status = $form['online_status'];
@@ -41,16 +40,22 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$machine->height = $form['height'];
 			$machine->depth = $form['depth'];
 			$machine->weight = $form['weight'];
-			$machine->weight_empty = $form['weight_empty'];
 			$machine->operating_voltage_v = $form['operating_voltage_v'];
 			$machine->operating_voltage_hz = $form['operating_voltage_hz'];
 			$machine->operating_voltage_a = $form['operating_voltage_a'];
 		
-			if(rex_plugin::get("d2u_machinery", "machine_features")->isAvailable()) {
+			if(rex_plugin::get("d2u_machinery", "machine_certificates_extension")->isAvailable()) {
+				$machine->certificate_ids = $form['certificate_ids'];
+			}
+			if(rex_plugin::get("d2u_machinery", "machine_features_extension")->isAvailable()) {
 				$machine->feature_ids = $form['feature_ids'];
 			}
 			if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable()) {
 				$machine->industry_sector_ids = $form['industry_sector_ids'];
+			}
+			if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable()) {
+				$machine->agitator_type_id = $form['agitator_type_id'] == '' ? 0 : $form['agitator_type_id'];
+				$machine->mechanical_construction_id = $form['mechanical_construction_id'] == '' ? 0 : $form['mechanical_construction_id'];
 			}
 		}
 		else {
@@ -59,12 +64,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 		$machine->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 		$machine->teaser = $form['lang'][$rex_clang->getId()]['teaser'];
 		$machine->description = $form['lang'][$rex_clang->getId()]['description'];
-		$machine->description_technical = $form['lang'][$rex_clang->getId()]['description_technical'];
 		$machine->pdfs = preg_grep('/^\s*$/s', explode(",", $input_media_list['1'. $rex_clang->getId()]), PREG_GREP_INVERT);
-		$machine->connection_infos = $form['lang'][$rex_clang->getId()]['connection_infos'];
-		$machine->delivery_set_basic = $form['lang'][$rex_clang->getId()]['delivery_set_basic'];
-		$machine->delivery_set_conversion = $form['lang'][$rex_clang->getId()]['delivery_set_conversion'];
-		$machine->delivery_set_full = $form['lang'][$rex_clang->getId()]['delivery_set_full'];
 		
 		if($machine->translation_needs_update == "delete") {
 			$machine->delete(FALSE);
@@ -100,17 +100,33 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		$form = (array) rex_post('form', 'array', array());
 		$machine_id = $form['machine_id'];
 	}
-	$machine = FALSE;
-	foreach(rex_clang::getAll() as $rex_clang) {
-		if($machine === FALSE) {
-			$machine = new Machine($machine_id, $rex_clang->getId());
-			// If object is not found in language, set category_id anyway to be able to delete
-			$machine->machine_id = $machine_id;
+	$machine = new Machine($machine_id, rex_config::get("d2u_machinery", "default_lang"));
+	
+	// Check if object is used
+	$reffering_machines = $machine->getRefferingMachines();
+	
+	// If not used, delete
+	if(count($reffering_machines) == 0) {
+		foreach(rex_clang::getAll() as $rex_clang) {
+			if($machine === FALSE) {
+				$machine = new Machine($machine_id, $rex_clang->getId());
+				// If object is not found in language, set category_id anyway to be able to delete
+				$machine->machine_id = $machine_id;
+			}
+			else {
+				$machine->clang_id = $rex_clang->getId();
+			}
+			$machine->delete();
 		}
-		else {
-			$machine->clang_id = $rex_clang->getId();
+	}
+	else {
+		$message = '<ul>';
+		foreach($reffering_machines as $reffering_machine) {
+			$message .= '<li><a href="index.php?page=d2u_machinery/machine&func=edit&entry_id='. $reffering_machine->machine_id .'">'. $reffering_machine->name.'</a></li>';
 		}
-		$machine->delete();
+		$message .= '</ul>';
+
+		print rex_view::error(rex_i18n::msg('d2u_machinery_could_not_delete') . $message);
 	}
 	
 	$func = '';
@@ -143,7 +159,6 @@ if ($func == 'edit' || $func == 'add') {
 							d2u_addon_backend_helper::form_input('d2u_machinery_machine_internal_name', "form[internal_name]", $machine->internal_name, $required, $readonly_lang, "text");
 							d2u_addon_backend_helper::form_input('d2u_machinery_machine_product_number', "form[product_number]", $machine->product_number, $required, $readonly_lang, "text");
 							d2u_addon_backend_helper::form_medialistfield('d2u_machinery_machine_pics', 1, $machine->pics, $readonly_lang);
-							d2u_addon_backend_helper::form_mediafield('d2u_machinery_machine_pic_usage', 1, $machine->pic_usage, $readonly);
 							$options = array();
 							foreach(Category::getAll(rex_config::get("d2u_machinery", "default_lang")) as $category) {
 								if($category->name != "") {
@@ -168,32 +183,67 @@ if ($func == 'edit' || $func == 'add') {
 							d2u_addon_backend_helper::form_input('d2u_machinery_machine_height', "form[height]", $machine->height, FALSE, $readonly, "number");
 							d2u_addon_backend_helper::form_input('d2u_machinery_machine_depth', "form[depth]", $machine->depth, FALSE, $readonly, "number");
 							d2u_addon_backend_helper::form_input('d2u_machinery_machine_weight', "form[weight]", $machine->weight, FALSE, $readonly, "text");
-							d2u_addon_backend_helper::form_input('d2u_machinery_machine_weight_empty', "form[weight_empty]", $machine->weight_empty, FALSE, $readonly, "text");
 							d2u_addon_backend_helper::form_input('d2u_machinery_machine_voltage_v', "form[operating_voltage_v]", $machine->operating_voltage_v, FALSE, $readonly, "text");
 							d2u_addon_backend_helper::form_input('d2u_machinery_machine_voltage_hz', "form[operating_voltage_hz]", $machine->operating_voltage_hz, FALSE, $readonly, "text");
 							d2u_addon_backend_helper::form_input('d2u_machinery_machine_voltage_a', "form[operating_voltage_a]", $machine->operating_voltage_a, FALSE, $readonly, "text");
-							
-							if(rex_plugin::get("d2u_machinery", "machine_features")->isAvailable()) {
-								$options_features = array();
-								foreach (Feature::getAll(rex_config::get("d2u_machinery", "default_lang"), $machine->category->category_id) as $feature) {
-									$feature = new Feature($feature->feature_id, rex_config::get("d2u_machinery", "default_lang"));
-									$options_features[$feature->feature_id] = $feature->title;
-								}
-								d2u_addon_backend_helper::form_select('d2u_machinery_features', 'form[feature_ids][]', $options_features, $machine->feature_ids, 10, TRUE, $readonly);
-							}
-							if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable()) {
-								$options_industry_sectors = array();
-								foreach (IndustrySector::getAll(rex_config::get("d2u_machinery", "default_lang")) as $industry_sector) {
-									$industry_sector = new IndustrySector($industry_sector->industry_sector_id, rex_config::get("d2u_machinery", "default_lang"));
-									$options_industry_sectors[$industry_sector->industry_sector_id] = $industry_sector->name;
-								}
-								d2u_addon_backend_helper::form_select('d2u_machinery_industry_sectors', 'form[industry_sector_ids][]', $options_industry_sectors, $machine->industry_sector_ids, 10, TRUE, $readonly);
-							}
-
 						?>
 					</div>
 				</fieldset>
 				<?php
+					if(rex_plugin::get("d2u_machinery", "machine_certificates_extension")->isAvailable()) {
+						print '<fieldset>';
+						print '<legend><small><i class="rex-icon fa-certificate"></i></small> '. rex_i18n::msg('d2u_machinery_certificates') .'</legend>';
+						print '<div class="panel-body-wrapper slide">';
+						$options_certificates = array();
+						foreach (Certificate::getAll(rex_config::get("d2u_machinery", "default_lang"), $machine->certificate_ids) as $certificate) {
+							$options_certificates[$certificate->certificate_id] = $certificate->name;
+						}
+						d2u_addon_backend_helper::form_select('d2u_machinery_certificates', 'form[certificate_ids][]', $options_certificates, $machine->certificate_ids, 10, TRUE, $readonly);
+						print '</div>';
+						print '</fieldset>';
+					}
+					if(rex_plugin::get("d2u_machinery", "machine_features_extension")->isAvailable()) {
+						print '<fieldset>';
+						print '<legend><small><i class="rex-icon fa-plug"></i></small> '. rex_i18n::msg('d2u_machinery_features') .'</legend>';
+						print '<div class="panel-body-wrapper slide">';
+						$options_features = array();
+						foreach (Feature::getAll(rex_config::get("d2u_machinery", "default_lang"), $machine->category->category_id) as $feature) {
+							$options_features[$feature->feature_id] = $feature->title;
+						}
+						d2u_addon_backend_helper::form_select('d2u_machinery_features', 'form[feature_ids][]', $options_features, $machine->feature_ids, 10, TRUE, $readonly);
+						print '</div>';
+						print '</fieldset>';
+					}
+					if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable()) {
+						print '<fieldset>';
+						print '<legend><small><i class="rex-icon fa-industry"></i></small> '. rex_i18n::msg('d2u_machinery_industry_sectors') .'</legend>';
+						print '<div class="panel-body-wrapper slide">';
+						$options_industry_sectors = array();
+						foreach (IndustrySector::getAll(rex_config::get("d2u_machinery", "default_lang")) as $industry_sector) {
+							$options_industry_sectors[$industry_sector->industry_sector_id] = $industry_sector->name;
+						}
+						d2u_addon_backend_helper::form_select('d2u_machinery_industry_sectors', 'form[industry_sector_ids][]', $options_industry_sectors, $machine->industry_sector_ids, 10, TRUE, $readonly);
+						print '</div>';
+						print '</fieldset>';
+					}
+					if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable()) {
+						print '<fieldset>';
+						print '<legend><small><i class="rex-icon fa-spoon"></i></small> '. rex_i18n::msg('d2u_machinery_agitator_extension') .'</legend>';
+						print '<div class="panel-body-wrapper slide">';
+						$options_agitator_types = array(0=>rex_i18n::msg('d2u_machinery_no_selection'));
+						foreach (AgitatorType::getAll(rex_config::get("d2u_machinery", "default_lang")) as $agitator_type) {
+							$options_agitator_types[$agitator_type->agitator_type_id] = $agitator_type->name;
+						}
+						d2u_addon_backend_helper::form_select('d2u_machinery_agitator_type', 'form[agitator_type_id]', $options_agitator_types, array($machine->agitator_type_id), 1, FALSE, $readonly);
+						$options_mechanical_constructions = array(0=>rex_i18n::msg('d2u_machinery_no_selection'));
+						foreach (MechanicalConstruction::getAll(rex_config::get("d2u_machinery", "default_lang")) as $mechanical_construction) {
+							$options_mechanical_constructions[$mechanical_construction->mechanical_construction_id] = $mechanical_construction->name;
+						}
+						d2u_addon_backend_helper::form_select('d2u_machinery_mechanical_construction', 'form[mechanical_construction_id]', $options_mechanical_constructions, array($machine->mechanical_construction_id), 1, FALSE, $readonly);
+						print '</div>';
+						print '</fieldset>';
+					}
+
 					foreach(rex_clang::getAll() as $rex_clang) {
 						$machine_lang = new Machine($entry_id, $rex_clang->getId());
 						$required = $rex_clang->getId() == rex_config::get("d2u_machinery", "default_lang") ? TRUE : FALSE;
@@ -219,12 +269,7 @@ if ($func == 'edit' || $func == 'add') {
 								}
 								d2u_addon_backend_helper::form_input('d2u_machinery_machine_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $machine_lang->teaser, FALSE, $readonly_lang, "text");
 								d2u_addon_backend_helper::form_textarea('d2u_machinery_machine_description', "form[lang][". $rex_clang->getId() ."][description]", $machine_lang->description, 5, FALSE, $readonly_lang, TRUE);
-								d2u_addon_backend_helper::form_textarea('d2u_machinery_machine_description_tech', "form[lang][". $rex_clang->getId() ."][description_technical]", $machine_lang->description_technical, 5, FALSE, $readonly_lang, TRUE);
 								d2u_addon_backend_helper::form_medialistfield('d2u_machinery_machine_pdfs', '1'. $rex_clang->getId(), $machine_lang->pdfs, $readonly_lang);
-								d2u_addon_backend_helper::form_input('d2u_machinery_machine_connection_infos', "form[lang][". $rex_clang->getId() ."][connection_infos]", $machine_lang->connection_infos, FALSE, $readonly, "text");
-								d2u_addon_backend_helper::form_input('d2u_machinery_machine_delivery_set_basic', "form[lang][". $rex_clang->getId() ."][delivery_set_basic]", $machine_lang->delivery_set_basic, FALSE, $readonly, "text");
-								d2u_addon_backend_helper::form_input('d2u_machinery_machine_delivery_set_conversion', "form[lang][". $rex_clang->getId() ."][delivery_set_conversion]", $machine_lang->delivery_set_conversion, FALSE, $readonly, "text");
-								d2u_addon_backend_helper::form_input('d2u_machinery_machine_delivery_set_full', "form[lang][". $rex_clang->getId() ."][delivery_set_full]", $machine_lang->delivery_set_full, FALSE, $readonly, "text");
 							?>
 						</div>
 					</fieldset>

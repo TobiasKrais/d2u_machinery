@@ -16,29 +16,29 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', array());
 
 	$success = TRUE;
-	$industry_sector = FALSE;
-	$industry_sector_id = $form['industry_sector_id'];
+	$certificate = FALSE;
+	$certificate_id = $form['certificate_id'];
 	foreach(rex_clang::getAll() as $rex_clang) {
-		if($industry_sector === FALSE) {
-			$industry_sector = new IndustrySector($industry_sector_id, $rex_clang->getId());
-			$industry_sector->online_status = $form['online_status'];
-			$industry_sector->pic = $input_media[1];
+		if($certificate === FALSE) {
+			$certificate = new Certificate($certificate_id, $rex_clang->getId());
+			$certificate->pic = $input_media[1];
 		}
 		else {
-			$industry_sector->clang_id = $rex_clang->getId();
+			$certificate->clang_id = $rex_clang->getId();
 		}
-		$industry_sector->name = $form['lang'][$rex_clang->getId()]['name'];
-		$industry_sector->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
+		$certificate->name = $form['lang'][$rex_clang->getId()]['name'];
+		$certificate->description = $form['lang'][$rex_clang->getId()]['description'];
+		$certificate->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 
-		if($industry_sector->translation_needs_update == "delete") {
-			$industry_sector->delete(FALSE);
+		if($certificate->translation_needs_update == "delete") {
+			$certificate->delete(FALSE);
 		}
-		else if($industry_sector->save() > 0){
+		else if($certificate->save() > 0){
 			$success = FALSE;
 		}
 		else {
 			// remember id, for each database lang object needs same id
-			$industry_sector_id = $industry_sector->industry_sector_id;
+			$certificate_id = $certificate->certificate_id;
 		}
 	}
 
@@ -49,8 +49,8 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	}
 	
 	// Redirect to make reload and thus double save impossible
-	if(filter_input(INPUT_POST, "btn_apply") == 1 && $industry_sector !== FALSE) {
-		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$industry_sector->industry_sector_id, "func"=>'edit', "message"=>$message), FALSE));
+	if(filter_input(INPUT_POST, "btn_apply") == 1 && $certificate !== FALSE) {
+		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$certificate->certificate_id, "func"=>'edit', "message"=>$message), FALSE));
 	}
 	else {
 		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), FALSE));
@@ -59,28 +59,28 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 }
 // Delete
 else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
-	$industry_sector_id = $entry_id;
-	if($industry_sector_id == 0) {
+	$certificate_id = $entry_id;
+	if($certificate_id == 0) {
 		$form = (array) rex_post('form', 'array', array());
-		$industry_sector_id = $form['industry_sector_id'];
+		$certificate_id = $form['certificate_id'];
 	}
-	$industry_sector = new IndustrySector($industry_sector_id, rex_config::get("d2u_machinery", "default_lang"));
+	$certificate = new Certificate($certificate_id, rex_config::get("d2u_machinery", "default_lang"));
 	
 	// Check if object is used
-	$reffering_machines = $industry_sector->getRefferingMachines();
+	$reffering_machines = $certificate->getRefferingMachines();
 
 	// If not used, delete
 	if(count($reffering_machines) == 0) {
 		foreach(rex_clang::getAll() as $rex_clang) {
-			if($industry_sector === FALSE) {
-				$industry_sector = new IndustrySector($industry_sector_id, $rex_clang->getId());
-				// If object is not found in language, set industry_sector_id anyway to be able to delete
-				$industry_sector->industry_sector_id = $industry_sector_id;
+			if($certificate === FALSE) {
+				$certificate = new Certificate($certificate_id, $rex_clang->getId());
+				// If object is not found in language, set certificate_id anyway to be able to delete
+				$certificate->certificate_id = $certificate_id;
 			}
 			else {
-				$industry_sector->clang_id = $rex_clang->getId();
+				$certificate->clang_id = $rex_clang->getId();
 			}
-			$industry_sector->delete();
+			$certificate->delete();
 		}
 	}
 	else {
@@ -95,26 +95,18 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	
 	$func = '';
 }
-// Change online status of machine
-else if($func == 'changestatus') {
-	$industry_sector = new IndustrySector($entry_id, rex_config::get("d2u_machinery", "default_lang"));
-	$industry_sector->changeStatus();
-	
-	header("Location: ". rex_url::currentBackendPage());
-	exit;
-}
 
 // Eingabeformular
 if ($func == 'edit' || $func == 'add') {
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
-			<header class="panel-heading"><div class="panel-title"><?php print rex_i18n::msg('d2u_machinery_industry_sectors'); ?></div></header>
+			<header class="panel-heading"><div class="panel-title"><?php print rex_i18n::msg('d2u_machinery_certificates'); ?></div></header>
 			<div class="panel-body">
-				<input type="hidden" name="form[industry_sector_id]" value="<?php echo $entry_id; ?>">
+				<input type="hidden" name="form[certificate_id]" value="<?php echo $entry_id; ?>">
 				<?php
 					foreach(rex_clang::getAll() as $rex_clang) {
-						$industry_sector = new IndustrySector($entry_id, $rex_clang->getId());
+						$certificate = new Certificate($entry_id, $rex_clang->getId());
 						$required = $rex_clang->getId() == rex_config::get("d2u_machinery", "default_lang") ? TRUE : FALSE;
 						
 						$readonly_lang = TRUE;
@@ -131,13 +123,14 @@ if ($func == 'edit' || $func == 'add') {
 									$options_translations["yes"] = rex_i18n::msg('d2u_machinery_translation_needs_update');
 									$options_translations["no"] = rex_i18n::msg('d2u_machinery_translation_is_uptodate');
 									$options_translations["delete"] = rex_i18n::msg('d2u_machinery_translation_delete');
-									d2u_addon_backend_helper::form_select('d2u_machinery_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, array($industry_sector->translation_needs_update), 1, FALSE, $readonly_lang);
+									d2u_addon_backend_helper::form_select('d2u_machinery_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, array($certificate->translation_needs_update), 1, FALSE, $readonly_lang);
 								}
 								else {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
 								}
 								
-								d2u_addon_backend_helper::form_input('d2u_machinery_name', "form[lang][". $rex_clang->getId() ."][name]", $industry_sector->name, $required, $readonly_lang, "text");
+								d2u_addon_backend_helper::form_input('d2u_machinery_name', "form[lang][". $rex_clang->getId() ."][name]", $certificate->name, $required, $readonly_lang, "text");
+								d2u_addon_backend_helper::form_textarea('d2u_machinery_certificates_description', "form[lang][". $rex_clang->getId() ."][description]", $certificate->description, 10, FALSE, $readonly_lang, TRUE)
 							?>
 						</div>
 					</fieldset>
@@ -145,18 +138,17 @@ if ($func == 'edit' || $func == 'add') {
 					}
 				?>
 				<fieldset>
-					<legend><?php echo rex_i18n::msg('d2u_machinery_industry_sectors_data_all_lang'); ?></legend>
+					<legend><?php echo rex_i18n::msg('d2u_machinery_certificates_data_all_lang'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
 							// Do not use last object from translations, because you don't know if it exists in DB
-							$industry_sector = new IndustrySector($entry_id, rex_config::get("d2u_machinery", "default_lang"));
+							$certificate = new Certificate($entry_id, rex_config::get("d2u_machinery", "default_lang"));
 							$readonly = TRUE;
 							if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_machinery[edit_tech_data]')) {
 								$readonly = FALSE;
 							}
 
-							d2u_addon_backend_helper::form_mediafield('d2u_machinery_industry_sectors_pic', 1, $industry_sector->pic, $readonly);
-							d2u_addon_backend_helper::form_checkbox('d2u_machinery_online_status', 'form[online_status]', 'online', $industry_sector->online_status == "online", $readonly);
+							d2u_addon_backend_helper::form_mediafield('d2u_machinery_certificates_pic', 1, $certificate->pic, $readonly);
 						?>
 					</div>
 				</fieldset>
@@ -179,43 +171,39 @@ if ($func == 'edit' || $func == 'add') {
 }
 
 if ($func == '') {
-	$query = 'SELECT industry_sectors.industry_sector_id, name, online_status '
-		. 'FROM '. rex::getTablePrefix() .'d2u_machinery_industry_sectors AS industry_sectors '
-		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_industry_sectors_lang AS lang '
-			. 'ON industry_sectors.industry_sector_id = lang.industry_sector_id AND lang.clang_id = '. rex_config::get("d2u_machinery", "default_lang") .' '
+	$query = 'SELECT certificates.certificate_id, name '
+		. 'FROM '. rex::getTablePrefix() .'d2u_machinery_certificates AS certificates '
+		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_certificates_lang AS lang '
+			. 'ON certificates.certificate_id = lang.certificate_id AND lang.clang_id = '. rex_config::get("d2u_machinery", "default_lang") .' '
 		. 'ORDER BY name ASC';
     $list = rex_list::factory($query);
 
     $list->addTableAttribute('class', 'table-striped table-hover');
 
-    $tdIcon = '<i class="rex-icon fa-industry"></i>';
+    $tdIcon = '<i class="rex-icon fa-certificate"></i>';
     $thIcon = '<a href="' . $list->getUrl(['func' => 'add']) . '" title="' . rex_i18n::msg('add') . '"><i class="rex-icon rex-icon-add-module"></i></a>';
     $list->addColumn($thIcon, $tdIcon, 0, ['<th class="rex-table-icon">###VALUE###</th>', '<td class="rex-table-icon">###VALUE###</td>']);
-    $list->setColumnParams($thIcon, ['func' => 'edit', 'entry_id' => '###industry_sector_id###']);
+    $list->setColumnParams($thIcon, ['func' => 'edit', 'entry_id' => '###certificate_id###']);
 
-    $list->setColumnLabel('industry_sector_id', rex_i18n::msg('id'));
-    $list->setColumnLayout('industry_sector_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
+    $list->setColumnLabel('certificate_id', rex_i18n::msg('id'));
+    $list->setColumnLayout('certificate_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
 
-    $list->setColumnLabel('name', rex_i18n::msg('d2u_machinery_industry_sectors_name'));
-    $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###industry_sector_id###']);
+    $list->setColumnLabel('name', rex_i18n::msg('d2u_machinery_certificates_name'));
+    $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###certificate_id###']);
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('system_update'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
-    $list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###industry_sector_id###']);
+    $list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###certificate_id###']);
 
     $list->addColumn(rex_i18n::msg('delete_module'), '<i class="rex-icon rex-icon-delete"></i> ' . rex_i18n::msg('delete'));
     $list->setColumnLayout(rex_i18n::msg('delete_module'), ['', '<td class="rex-table-action">###VALUE###</td>']);
-    $list->setColumnParams(rex_i18n::msg('delete_module'), ['func' => 'delete', 'entry_id' => '###industry_sector_id###']);
+    $list->setColumnParams(rex_i18n::msg('delete_module'), ['func' => 'delete', 'entry_id' => '###certificate_id###']);
     $list->addLinkAttribute(rex_i18n::msg('delete_module'), 'data-confirm', rex_i18n::msg('d2u_machinery_confirm_delete'));
 
-	$list->removeColumn('online_status');
-    $list->addColumn(rex_i18n::msg('status_online'), '<a class="rex-###online_status###" href="' . rex_url::currentBackendPage(['func' => 'changestatus']) . '&entry_id=###industry_sector_id###"><i class="rex-icon rex-icon-###online_status###"></i> ###online_status###</a>');
-	$list->setColumnLayout(rex_i18n::msg('status_online'), ['', '<td class="rex-table-action">###VALUE###</td>']);
-
-	$list->setNoRowsMessage(rex_i18n::msg('d2u_machinery_industry_sectors_no_industry_sectors_found'));
+	$list->setNoRowsMessage(rex_i18n::msg('d2u_machinery_certificates_no_certificates_found'));
 
     $fragment = new rex_fragment();
-    $fragment->setVar('title', rex_i18n::msg('d2u_machinery_industry_sectors'), false);
+    $fragment->setVar('title', rex_i18n::msg('d2u_machinery_certificates'), false);
     $fragment->setVar('content', $list->get(), false);
     echo $fragment->parse('core/page/section.php');
 }

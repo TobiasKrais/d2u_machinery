@@ -35,11 +35,6 @@ class Machine {
 	var $pics = array();
 
 	/**
-	 * @var string Machine usage picture
-	 */
-	var $pic_usage = "";
-
-	/**
 	 * @var Category Machine category
 	 */
 	var $category = FALSE;
@@ -117,7 +112,7 @@ class Machine {
 	/**
 	 * @var int Construction id
 	 */
-	var $construction_id = 0;
+	var $mechanical_construction_id = 0;
 
 	/**
 	 * @var int Agitator type id
@@ -175,11 +170,6 @@ class Machine {
 	var $weight = "";	
 	
 	/**
-	 * @var string Empty machine weight (if applicable)
-	 */
-	var $weight_empty = "";	
-	
-	/**
 	 * @var string Machine operating voltage (v)
 	 */
 	var $operating_voltage_v = "";	
@@ -205,34 +195,9 @@ class Machine {
 	var $description = "";
 
 	/**
-	 * @var string Machine technical description (if description is not sufficient)
-	 */
-	var $description_technical = "";
-
-	/**
 	 * @var string[] File names of PDF files for the machine
 	 */
 	var $pdfs = array();
-
-	/**
-	 * @var string Describes how machine is connected (if applicable)
-	 */
-	var $connection_infos = "";
-
-	/**
-	 * @var string Basic delivery set information
-	 */
-	var $delivery_set_basic = "";
-
-	/**
-	 * @var string Conversion delivery set information
-	 */
-	var $delivery_set_conversion = "";
-
-	/**
-	 * @var string Full delivery set information
-	 */
-	var $delivery_set_full = "";
 
 	/**
 	 * @var string Needs translation update? "no" or "yes"
@@ -264,11 +229,8 @@ class Machine {
 			$this->internal_name = $result->getValue("internal_name");
 			$this->name = $result->getValue("name");
 			$this->pics = preg_grep('/^\s*$/s', explode(",", $result->getValue("pics")), PREG_GREP_INVERT);
-			$this->pic_usage = $result->getValue("pic_usage");
 			$this->category = new Category($result->getValue("category_id"), $clang_id);
 			$this->alternative_machine_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("alternative_machine_ids")), PREG_GREP_INVERT);
-			$this->service_ids = preg_grep('/^\s*$/s', explode(",", $result->getValue("service_ids")), PREG_GREP_INVERT);
-			$this->accessory_ids = preg_grep('/^\s*$/s', explode(",", $result->getValue("accessory_ids")), PREG_GREP_INVERT);
 			$this->product_number = $result->getValue("product_number");
 			$this->article_id_software = $result->getValue("article_id_software");
 			$this->article_id_service = $result->getValue("article_id_service");
@@ -280,26 +242,29 @@ class Machine {
 			$this->height = $result->getValue("height");
 			$this->depth = $result->getValue("depth");
 			$this->weight = $result->getValue("weight");
-			$this->weight_empty = $result->getValue("weight_empty");
 			$this->operating_voltage_v = $result->getValue("operating_voltage_v");
 			$this->operating_voltage_hz = $result->getValue("operating_voltage_hz");
 			$this->operating_voltage_a = $result->getValue("operating_voltage_a");
 			$this->teaser = $result->getValue("teaser");
 			$this->description = $result->getValue("description");
-			$this->description_technical = $result->getValue("description_technical");
 			$this->pdfs = preg_grep('/^\s*$/s', explode(",", $result->getValue("pdfs")), PREG_GREP_INVERT);
-			$this->connection_infos = $result->getValue("connection_infos");
-			$this->delivery_set_basic = $result->getValue("delivery_set_basic");
-			$this->delivery_set_conversion = $result->getValue("delivery_set_conversion");
-			$this->delivery_set_full = $result->getValue("delivery_set_full");
 			$this->translation_needs_update = $result->getValue("translation_needs_update");
 
-			if(rex_plugin::get("d2u_machinery", "machine_features")->isAvailable()) {
+			if(rex_plugin::get("d2u_machinery", "machine_certificates_extension")->isAvailable()) {
+				$this->certificate_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("certificate_ids")), PREG_GREP_INVERT);
+			}
+
+			if(rex_plugin::get("d2u_machinery", "machine_features_extension")->isAvailable()) {
 				$this->feature_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("feature_ids")), PREG_GREP_INVERT);
 			}
 
 			if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable()) {
 				$this->industry_sector_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("industry_sector_ids")), PREG_GREP_INVERT);
+			}
+
+			if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable()) {
+				$this->agitator_type_id = $result->getValue("agitator_type_id");
+				$this->mechanical_construction_id = $result->getValue("mechanical_construction_id");
 			}
 		}
 	}
@@ -373,6 +338,24 @@ class Machine {
 		$machines = array();
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$machines[] = new Machine($result->getValue("machine_id"), $clang_id);
+			$result->next();
+		}
+		return $machines;
+	}
+	
+	/**
+	 * Gets the machines reffering to this machine as alternate machine.
+	 * @return Machine[] Machines reffering to this machine as alternate machine.
+	 */
+	public function getRefferingMachines() {
+		$query = "SELECT machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_machines "
+			."WHERE alternative_machine_ids LIKE '%|". $this->machine_id ."|%'";
+		$result = rex_sql::factory();
+		$result->setQuery($query);
+		
+		$machines = array();
+		for($i = 0; $i < $result->getRows(); $i++) {
+			$machines[] = new Machine($result->getValue("machine_id"), $this->clang_id);
 			$result->next();
 		}
 		return $machines;
@@ -455,11 +438,8 @@ class Machine {
 					."name = '". $this->name ."', "
 					."internal_name = '". $this->internal_name ."', "
 					."pics = '". implode(",", $this->pics) ."', "
-					."pic_usage = '". $this->pic_usage ."', "
 					."category_id = ". $this->category->category_id .", "
 					."alternative_machine_ids = '|". implode("|", $this->alternative_machine_ids) ."|', "
-					."service_ids = '". implode(",", $this->service_ids) ."', "
-					."accessory_ids = '". implode(",", $this->accessory_ids) ."', "
 					."product_number = '". $this->product_number ."', "
 					."article_id_software = '". $this->article_id_software ."', "
 					."article_id_service = '". $this->article_id_service ."', "
@@ -470,15 +450,21 @@ class Machine {
 					."height = '". $this->height ."', "
 					."depth = '". $this->depth ."', "
 					."weight = '". $this->weight ."', "
-					."weight_empty = '". $this->weight_empty ."', "
 					."operating_voltage_v = '". $this->operating_voltage_v ."', "
 					."operating_voltage_hz = '". $this->operating_voltage_hz ."', "
 					."operating_voltage_a = '". $this->operating_voltage_a ."' ";
-			if(rex_plugin::get("d2u_machinery", "machine_features")->isAvailable()) {
+			if(rex_plugin::get("d2u_machinery", "machine_certificates_extension")->isAvailable()) {
+				$query .= ", certificate_ids = '|". implode("|", $this->certificate_ids) ."|' ";
+			}
+			if(rex_plugin::get("d2u_machinery", "machine_features_extension")->isAvailable()) {
 				$query .= ", feature_ids = '|". implode("|", $this->feature_ids) ."|' ";
 			}
 			if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable()) {
 				$query .= ", industry_sector_ids = '|". implode("|", $this->industry_sector_ids) ."|' ";
+			}
+			if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable()) {
+				$query .= ", agitator_type_id = ". $this->agitator_type_id ." ";
+				$query .= ", mechanical_construction_id = ". $this->mechanical_construction_id ." ";
 			}
 
 			if($this->machine_id == 0) {
@@ -505,12 +491,7 @@ class Machine {
 						."clang_id = '". $this->clang_id ."', "
 						."teaser = '". htmlspecialchars($this->teaser) ."', "
 						."description = '". htmlspecialchars($this->description) ."', "
-						."description_technical = '". htmlspecialchars($this->description_technical) ."', "
 						."pdfs = '". implode(",", $this->pdfs) ."', "
-						."connection_infos = '". htmlspecialchars($this->connection_infos) ."', "
-						."delivery_set_basic = '". htmlspecialchars($this->delivery_set_basic) ."', "
-						."delivery_set_conversion = '". htmlspecialchars($this->delivery_set_conversion) ."', "
-						."delivery_set_full = '". htmlspecialchars($this->delivery_set_full) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = ". time() .", "
 						."updateuser = '". rex::getUser()->getLogin() ."' ";

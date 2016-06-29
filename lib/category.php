@@ -82,7 +82,7 @@ class Category {
 	/**
 	 * @var string[] Array with PDF file names.
 	 */
-	var $pdfs = "";
+	var $pdfs = array();
 	
 	/**
 	 * @var int[] Array with Videomanager IDs
@@ -131,7 +131,7 @@ class Category {
 
 		if ($num_rows > 0) {
 			$this->category_id = $result->getValue("category_id");
-			if($result->getValue("parent_category_id") != "") {
+			if($result->getValue("parent_category_id") > 0) {
 				$this->parent_category = new Category($result->getValue("parent_category_id"), $clang_id);
 			}
 			$this->name = $result->getValue("name");
@@ -207,6 +207,24 @@ class Category {
 	}
 
 	/**
+	 * Detects usage of this category as parent category and returns categories.
+	 * @return Category[] Child categories.
+	 */
+	public function getChildren() {
+		$query = "SELECT category_id FROM ". rex::getTablePrefix() ."d2u_machinery_categories "
+			."WHERE parent_category_id = ". $this->category_id;
+		$result = rex_sql::factory();
+		$result->setQuery($query);
+		
+		$children =  array();
+		for($i = 0; $i < $result->getRows(); $i++) {
+			$children[] = new Category($result->getValue("category_id"), $this->clang_id);
+			$result->next();
+		}
+		return $children;
+	}
+	
+	/**
 	 * Detects whether category is child or not.
 	 * @return boolean TRUE if category has father.
 	 */
@@ -220,45 +238,41 @@ class Category {
 	}
 	
 	/**
-	 * Detects usage of this category by machines.
-	 * @return boolean TRUE if used.
+	 * Gets the machines of the category.
+	 * @return Machine[] Machines in this category
 	 */
-	public function isUsedByMachines() {
-		$query = "SELECT category_id FROM ". rex::getTablePrefix() ."d2u_machinery_machines_lang "
-			."WHERE clang_id = ". $this->clang_id;
+	public function getMachines() {
+		$query = "SELECT machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_machines "
+			."WHERE category_id = ". $this->category_id;
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		if($result->getRows() > 0) {
-			return TRUE;
+		$machines = array();
+		for($i = 0; $i < $result->getRows(); $i++) {
+			$machines[] = new Machine($result->getValue("machine_id"), $this->clang_id);
+			$result->next();
 		}
-		else {
-			return FALSE;
-		}
+		return $machines;
 	}
 
 	/**
-	 * Detects usage of this category by used_machines plugin. If not installed,
-	 * FALSE ist returned.
-	 * @return boolean TRUE if used.
+	 * Gets the UsedMachines of the category if plugin ist installed.
+	 * @return UsedMachine[] Used machines of this category
 	 */
-	public function isUsedByUsedMachines() {
+	public function getUsedMachines() {
+		$usedMachines = array();
 		if(rex_plugin::get("d2u_machinery", "used_machines")->isAvailable()) {
-			$query = "SELECT category_id FROM ". rex::getTablePrefix() ."d2u_machinery_used_machines_lang "
-				."WHERE clang_id = ". $this->clang_id;
+			$query = "SELECT used_machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_used_machines "
+				."WHERE category_id = ". $this->category_id;
 			$result = rex_sql::factory();
 			$result->setQuery($query);
 
-			if($result->getRows() > 0) {
-				return TRUE;
-			}
-			else {
-				return FALSE;
+			for($i = 0; $i < $result->getRows(); $i++) {
+				$usedMachines = new UsedMachine($result->getValue("used_machine_id"), $this->clang_id);
+				$result->next();
 			}
 		}
-		else {
-			return FALSE;
-		}
+		return $usedMachines;
 	}
 	
 	/*

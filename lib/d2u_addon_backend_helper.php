@@ -83,7 +83,7 @@ if(!class_exists('d2u_addon_backend_helper')) {
 					.'background-position: 0px -36px;'
 				.'}'
 				.'.panel-body-wrapper.slide {'
-					.'/* display: none; */'
+					.'display: none;'
 				.'}'
 				.'</style>';
 			return $css;
@@ -116,15 +116,15 @@ if(!class_exists('d2u_addon_backend_helper')) {
 		 */
 		public static function form_checkbox($message_id, $fieldname, $value, $checked = FALSE, $readonly = FALSE) {
 			print '<dl class="rex-form-group form-group">';
-			print '<dt><label>'. rex_i18n::msg($message_id) .'</label></dt>';
-			print '<dd><input class="form-control" type="checkbox" name="'. $fieldname .'" value="'. $value .'"';
+			print '<dt><input class="form-control" type="checkbox" name="'. $fieldname .'" value="'. $value .'"';
 			if($checked) {
 				print ' checked="checked"';
 			}
 			if($readonly) {
 				print ' readonly';
 			}
-			print '/></dd>';
+			print ' style="float: right; height: auto; width: auto;" /></dt>';
+			print '<dd><label>'. rex_i18n::msg($message_id) .'</label></dd>';
 			print '</dl>';
 		}
 		
@@ -298,12 +298,12 @@ if(!class_exists('d2u_addon_backend_helper')) {
 		 * @param int $rows Number rows
 		 * @param boolean $required TRUE if field should have required attribute.
 		 * @param boolean $readonly TRUE if field should have readonly attribute.
-		 * @param string $use_redactor Use Rex Rdactor as WYSIWYG Editor
+		 * @param string $use_redactor Use Rex Redactor 2 as WYSIWYG Editor
 		 */
 		public static function form_textarea($message_id, $fieldname, $value, $rows = 5, $required = FALSE, $readonly = FALSE, $use_redactor = TRUE) {
 			print '<dl class="rex-form-group form-group">';
 			print '<dt><label>'. rex_i18n::msg($message_id) .'</label></dt>';
-			print '<dd><textarea cols="1" rows="'. $rows .'" class="form-control redactorEditor-full" name="'. $fieldname .'"';
+			print '<dd><textarea cols="1" rows="'. $rows .'" class="form-control redactorEditor2-full" name="'. $fieldname .'"';
 			if($required) {
 				print ' required';
 			}

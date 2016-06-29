@@ -1,4 +1,4 @@
-package: d2u_machinery/sawing_machines
+package: d2u_machinery/machine_saw_extension
 version: '1.0.0'
 author: Tobias Krais
 supportpage: http://github.com/tobiaskrais/d2u_machinery
@@ -6,7 +6,7 @@ supportpage: http://github.com/tobiaskrais/d2u_machinery
 page:
     title: 'translate:d2u_machinery_sawing_machines'
     perm: d2u_machinery[sawing_machines]
-    icon: rex-icon rex-icon-module
+    icon: rex-icon fa-cog
 
 requires:
     redaxo: '>=5.1.0'

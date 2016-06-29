@@ -6,7 +6,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machin
 	used_machine_id int(10) unsigned NOT NULL auto_increment,
 	name varchar(255) collate utf8_general_ci default NULL,
 	category_id int(10) default NULL,
-	contact_id int(10) default NULL,
+	availability varchar(10) collate utf8_general_ci default NULL,
 	product_number varchar(255) collate utf8_general_ci default NULL,
 	product_number_dealer varchar(255) collate utf8_general_ci default NULL,
 	manufacturer varchar(255) collate utf8_general_ci default NULL,

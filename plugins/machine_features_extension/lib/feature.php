@@ -127,6 +127,24 @@ class Feature {
 	}
 	
 	/**
+	 * Gets the machines reffering to this object.
+	 * @return Machine[] Machines reffering to this object.
+	 */
+	public function getRefferingMachines() {
+		$query = "SELECT machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_machines "
+			."WHERE feature_ids LIKE '%|". $this->feature_id ."|%'";
+		$result = rex_sql::factory();
+		$result->setQuery($query);
+		
+		$machines = array();
+		for($i = 0; $i < $result->getRows(); $i++) {
+			$machines[] = new Machine($result->getValue("machine_id"), $this->clang_id);
+			$result->next();
+		}
+		return $machines;
+	}
+	
+	/**
 	 * Updates or inserts the object into database.
 	 * @return boolean TRUE if successful
 	 */
