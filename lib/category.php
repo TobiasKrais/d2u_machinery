@@ -276,123 +276,20 @@ class Category {
 	}
 	
 	/*
-	 * Gibt die URL der Kategorie zurueck.
-	 * @return string URL für Kategorie
+	 * Returns the URL of this object.
+	 * @return string URL
 	 */
 	public function getURL() {
 		if($this->url == "") {
-			global $REX;
-
-			$url = $REX['SERVER'];
-			
-			$pathname = '';
-			if($REX['MOD_REWRITE'] == true && OOAddon::isActivated('seo42')) {
-				// Mit SEO42
-				require_once dirname(__FILE__) ."/../../seo42/classes/class.seo42_rewrite.inc.php";
-
-				if (count($REX['CLANG']) > 1 && $this->clang_id != $REX['ADDON']['seo42']['settings']['hide_langslug']) {
-					// Sprachkuerzel
-					$pathname = seo42_appendToPath($pathname, $REX['ADDON']['seo42']['settings']['lang'][$this->clang_id]['code'],
-							$REX['START_ARTICLE_ID'], $this->clang_id);
-				}
-
-				// Dann Redaxo Artikelfolge
-				if($this->artikel_id > 0) {
-					$kategorie = OOCategory::getCategoryById($this->artikel_id, $this->clang_id);
-					$hauptkategorien = $kategorie->getPathAsArray();
-					for($i = 0; $i < count($hauptkategorien); $i++) {
-						$hauptkategorie = OOCategory::getCategoryById($hauptkategorien[$i],
-								$this->clang_id);
-						if($hauptkategorie instanceof OOCategory) {
-							$pathname = seo42_appendToPath($pathname, $hauptkategorie->getName(),
-									$hauptkategorie->getId(), $this->clang_id);
-						}
-					}
-					$pathname = seo42_appendToPath($pathname, $kategorie->getName(),
-							$kategorie->getId(), $this->clang_id);
-				}
-
-				// Die Kategorie
-				$pathname = seo42_appendToPath($pathname, $this->name,
-						$this->artikel_id, $this->clang_id);
-				$pathname = substr($pathname, 0, -1) . $REX['ADDON']['seo42']['settings']['url_ending'];
-			}
-			else {
-				// Ohne SEO42
-				$parameterArray = array();
-				$parameterArray['category_id'] = $this->category_id;
-				$pathname = rex_getUrl($this->artikel_id, $this->clang_id, $parameterArray, "&");
-			}
-
-			$url .= $pathname;
-
-			$this->url = $url;
+			// Without SEO Plugins
+			$d2u_machinery = rex_addon::get("d2u_machinery");
+				
+			$parameterArray = array();
+			$parameterArray['category_id'] = $this->category_id;
+			$this->url = rex_getUrl($d2u_machinery->getConfig('article_id'), $this->clang_id, $parameterArray, "&");
 		}
 
 		return $this->url;
-	}
-	
-	/*
-	 * Gibt die URL für den Schnittbereichskonfigurator der Kategorie zurueck.
-	 * @return string URL für den Schnittbereichskonfigurator, false wenn nicht vorhanden
-	 */
-	function getURLSchnittbereichskonfigurator() {
-		if($this->sawing_machines_cutting_range_title == "" || $this->sawing_machines_cutting_range_file == "") {
-			return false;
-		}
-		if($this->cutting_range_url == "") {
-			global $REX;
-
-			$url = $REX['SERVER'];
-			
-			$pathname = '';
-			if($REX['MOD_REWRITE'] == true && OOAddon::isActivated('seo42')) {
-				// Mit SEO42
-				require_once dirname(__FILE__) ."/../../seo42/classes/class.seo42_rewrite.inc.php";
-
-				if (count($REX['CLANG']) > 1 && $this->clang_id != $REX['ADDON']['seo42']['settings']['hide_langslug']) {
-					// Sprachkuerzel
-					$pathname = seo42_appendToPath($pathname, $REX['ADDON']['seo42']['settings']['lang'][$this->clang_id]['code'],
-							$REX['START_ARTICLE_ID'], $this->clang_id);
-				}
-
-				// Dann Redaxo Artikelfolge
-				if($this->artikel_id > 0) {
-					$kategorie = OOCategory::getCategoryById($this->artikel_id, $this->clang_id);
-					$hauptkategorien = $kategorie->getPathAsArray();
-					for($i = 0; $i < count($hauptkategorien); $i++) {
-						$hauptkategorie = OOCategory::getCategoryById($hauptkategorien[$i],
-								$this->clang_id);
-						if($hauptkategorie instanceof OOCategory) {
-							$pathname = seo42_appendToPath($pathname, $hauptkategorie->getName(),
-									$hauptkategorie->getId(), $this->clang_id);
-						}
-					}
-					$pathname = seo42_appendToPath($pathname, $kategorie->getName(),
-							$kategorie->getId(), $this->clang_id);
-				}
-
-				// Die Kategorie
-				$pathname = seo42_appendToPath($pathname, $this->name,
-						$this->artikel_id, $this->clang_id);
-				// Der Konfigurator
-				$pathname = seo42_appendToPath($pathname, $this->sawing_machines_cutting_range_title,
-						$this->artikel_id, $this->clang_id);
-				$pathname = substr($pathname, 0, -1) . $REX['ADDON']['seo42']['settings']['url_ending'];
-			}
-			else {
-				// without SEO42
-				$parameterArray = array();
-				$parameterArray['category_id'] = $this->category_id;
-				$parameterArray['schnittbereichskonfigurator'] = $this->sawing_machines_cutting_range_file;
-				$pathname = rex_getUrl($this->artikel_id, $this->clang_id, $parameterArray, "&");
-			}
-
-			$url .= $pathname;
-			$this->cutting_range_url = $url;
-		}
-
-		return $this->cutting_range_url;
 	}
 	
 	/**

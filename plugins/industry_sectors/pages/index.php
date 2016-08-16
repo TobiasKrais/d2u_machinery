@@ -21,7 +21,12 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	foreach(rex_clang::getAll() as $rex_clang) {
 		if($industry_sector === FALSE) {
 			$industry_sector = new IndustrySector($industry_sector_id, $rex_clang->getId());
-			$industry_sector->online_status = $form['online_status'];
+			if($form['online_status'] == '') {
+				$industry_sector->online_status = 'offline';
+			}
+			else {
+				$industry_sector->online_status = $form['online_status'];
+			}
 			$industry_sector->pic = $input_media[1];
 		}
 		else {
@@ -67,7 +72,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$industry_sector = new IndustrySector($industry_sector_id, rex_config::get("d2u_machinery", "default_lang"));
 	
 	// Check if object is used
-	$reffering_machines = $industry_sector->getRefferingMachines();
+	$reffering_machines = $industry_sector->getMachines();
 
 	// If not used, delete
 	if(count($reffering_machines) == 0) {

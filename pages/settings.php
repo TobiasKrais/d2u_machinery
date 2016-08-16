@@ -34,7 +34,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 					<?php
 						d2u_addon_backend_helper::form_linkfield('d2u_machinery_settings_article', '1', $this->getConfig('article_id'), $this->getConfig('default_lang'));
 
-						// Ausgangssprache für Übersetzungen
+						// Default language for translations
 						if(count(rex_clang::getAll()) > 1) {
 							$options = array();
 							foreach(rex_clang::getAll() as $rex_clang) {
@@ -42,6 +42,8 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 							}
 							d2u_addon_backend_helper::form_select('d2u_machinery_settings_defaultlang', 'settings[default_lang]', $options, array($this->getConfig('default_lang')));
 						}
+						
+						d2u_addon_backend_helper::form_input('d2u_machinery_settings_request_form_email', 'settings[request_form_email]', $this->getConfig('request_form_email'), TRUE, FALSE, 'email')
 					?>
 				</div>
 			</fieldset>

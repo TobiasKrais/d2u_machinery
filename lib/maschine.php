@@ -245,8 +245,8 @@ class Machine {
 			$this->operating_voltage_v = $result->getValue("operating_voltage_v");
 			$this->operating_voltage_hz = $result->getValue("operating_voltage_hz");
 			$this->operating_voltage_a = $result->getValue("operating_voltage_a");
-			$this->teaser = $result->getValue("teaser");
-			$this->description = $result->getValue("description");
+			$this->teaser = htmlspecialchars_decode($result->getValue("teaser"));
+			$this->description = htmlspecialchars_decode($result->getValue("description"));
 			$this->pdfs = preg_grep('/^\s*$/s', explode(",", $result->getValue("pdfs")), PREG_GREP_INVERT);
 			$this->translation_needs_update = $result->getValue("translation_needs_update");
 
@@ -344,6 +344,18 @@ class Machine {
 	}
 	
 	/**
+	 * Get Feature objects related to this machine.
+	 * @return Feature[] Array with Feature objects.
+	 */
+	public function getFeatures() {
+		$features = array();
+		foreach ($this->feature_ids as $feature_id) {
+			$features[] = new Feature($feature_id, $this->clang_id);
+		}
+		return $features;
+	}
+	
+	/**
 	 * Gets the machines reffering to this machine as alternate machine.
 	 * @return Machine[] Machines reffering to this machine as alternate machine.
 	 */
@@ -361,67 +373,63 @@ class Machine {
 		return $machines;
 	}
 	
-	/*
-	 * Gibt die URL einer Maschine zurueck.
-	 * @return String URL für Maschine
+	/**
+	 * Get Technical Data as array.
+	 * @return string[] Array with technical data. The key is the translation
+	 * placeholder, the value is the value.
 	 */
-	function getURL() {
-		if($this->url != "") {
-			return $this->url;
+	public function getTechnicalData() {
+		$tech_data = array();
+		
+		// Get placeholder wildcard tags
+		$sprog = rex_addon::get("sprog");
+		$tag_open = $sprog->getConfig('wildcard_open_tag');
+		$tag_close = $sprog->getConfig('wildcard_close_tag');
+		
+		// Engine power
+		if($this->engine_power != "") {
+			$tech_data[$tag_open . "d2u_machinery_engine_power" . $tag_close] = $this->engine_power ." ". $tag_open . "d2u_machinery_unit_kw" . $tag_close;
 		}
-		else {
-			global $REX;
 
-			$url = $REX['SERVER'];
-
-			$pathname = '';
-			if($REX['MOD_REWRITE'] == true && OOAddon::isActivated('seo42')) {
-				// Mit SEO42
-				require_once dirname(__FILE__) ."/../../seo42/classes/class.seo42_rewrite.inc.php";
-
-				if (count($REX['CLANG']) > 1 && $this->clang_id != $REX['ADDON']['seo42']['settings']['hide_langslug']) {
-					// Sprachkuerzel
-					$pathname = seo42_appendToPath($pathname, $REX['ADDON']['seo42']['settings']['lang'][$this->clang_id]['code'],
-							$REX['START_ARTICLE_ID'], $this->clang_id);
-				}
-
-				// Dann Redaxo Artikelfolge
-				if($this->category->artikel_id) {
-					$kategorie = OOCategory::getCategoryById($this->category->artikel_id,
-							$this->clang_id);
-					$hauptkategorien = $kategorie->getPathAsArray();
-					for($i = 0; $i < count($hauptkategorien); $i++) {
-						$hauptkategorie = OOCategory::getCategoryById($hauptkategorien[$i],
-								$this->clang_id);
-						if($hauptkategorie instanceof OOCategory) {
-							$pathname = seo42_appendToPath($pathname, $hauptkategorie->getName(),
-									$hauptkategorie->getId(), $this->clang_id);
-						}
-					}
-					$pathname = seo42_appendToPath($pathname, $kategorie->getName(),
-							$kategorie->getId(), $this->clang_id);
-				}
-
-				// Die Maschinenkategorie
-				$pathname = seo42_appendToPath($pathname, $this->category->name,
-						$this->category->artikel_id, $this->clang_id);
-
-				// Jetzt endlich die Maschine
-				$pathname = seo42_appendToPath($pathname, $this->name,
-						$this->category->artikel_id, $this->clang_id);
-				$pathname = substr($pathname, 0, -1) . $REX['ADDON']['seo42']['settings']['url_ending'];
-			}
-			else {
-				// Ohne SEO42
-				$parameterArray = array();
-				$parameterArray['maschinen_id'] = $this->machine_id;
-				$pathname = rex_getUrl($this->category->artikel_id, $this->clang_id, $parameterArray, "&");
-			}
-
-			$url .= $pathname;
-
-			return $url;
+		// Operating voltage
+		if($this->operating_voltage_v != "") {
+			$v = $this->operating_voltage_v ." ". $tag_open . "d2u_machinery_unit_v" . $tag_close;
+			$h = $this->operating_voltage_hz == "" ? "" : " / ". $this->operating_voltage_hz ." ". $tag_open . "d2u_machinery_unit_hz" . $tag_close;
+			$a = $this->operating_voltage_a == "" ? "" : " / ". $this->operating_voltage_a ." ". $tag_open . "d2u_machinery_unit_a" . $tag_close;
+			$tech_data[$tag_open . "d2u_machinery_operating_voltage" . $tag_close] = $v . $h . $a;
 		}
+		
+		// Dimensions
+		if($this->length > 0 && $this->width > 0 && $this->height > 0) {
+			$tech_data[$tag_open . "d2u_machinery_dimensions_length_width_height" . $tag_close] = $this->length .' x '. $this->width .' x '. $this->height ." ". $tag_open . "d2u_machinery_unit_mm" . $tag_close;
+		}
+		if($this->depth > 0 && $this->width > 0 && $this->height > 0) {
+			$tech_data[$tag_open . "d2u_machinery_dimensions_width_height_depth" . $tag_close] = $this->width .' x '. $this->height	.' x '. $this->depth ." ". $tag_open . "d2u_machinery_unit_mm" . $tag_close;
+		}
+
+		// Weight
+		if($this->weight != "") {
+			$tech_data[$tag_open . "d2u_machinery_weight" . $tag_close] = $this->weight ." ". $tag_open . "d2u_machinery_unit_kg" . $tag_close;
+		}
+
+		return $tech_data;
+	}
+	
+	/**
+	 * Returns the URL of this object.
+	 * @return string URL
+	 */
+	public function getURL() {
+		if($this->url == "") {
+			// Without SEO Plugins
+			$d2u_machinery = rex_addon::get("d2u_machinery");
+				
+			$parameterArray = array();
+			$parameterArray['machine_id'] = $this->machine_id;
+			$this->url = rex_getUrl($d2u_machinery->getConfig('article_id'), $this->clang_id, $parameterArray, "&");
+		}
+
+		return $this->url;
 	}
 
 	/**

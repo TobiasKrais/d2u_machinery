@@ -70,7 +70,7 @@ class Feature {
 			$this->title = $result->getValue("title");
 			$this->pic = $result->getValue("pic");
 			$this->category_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("category_ids")), PREG_GREP_INVERT);
-			$this->description = $result->getValue("description");
+			$this->description = htmlspecialchars_decode($result->getValue("description"));
 			$this->translation_needs_update = $result->getValue("translation_needs_update");
 		}
 	}
@@ -211,8 +211,13 @@ class Feature {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
+		// When prio is too small, set at beginning
+		if($this->prio <= 0) {
+			$this->prio = 1;
+		}
+		
+		// When prio is too high, simply add at end 
 		if($this->prio > $result->getRows()) {
-			// When prio is too high, simply add at end 
 			$this->prio = $result->getRows() + 1;
 		}
 

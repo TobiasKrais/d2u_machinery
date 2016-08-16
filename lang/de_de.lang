@@ -20,8 +20,9 @@ d2u_machinery_rights_edit_lang = D2U Maschinen Addon: Editierrechte für Überse
 d2u_machinery_rights_settings = D2U Maschinen Addon: Einstellungen
 
 d2u_machinery_settings_article = Maschinen Artikel
-d2u_machinery_settings_defaultlang = Ausgangssprache
 d2u_machinery_settings_categories_usage_area = In der Navigation zusätzlich zu den Kategorien deren Anwendungsgebiete anzeigen
+d2u_machinery_settings_defaultlang = Ausgangssprache
+d2u_machinery_settings_request_form_email = Empfänger E-Mail Addresse für Anfrageformular
 
 d2u_machinery_category = Kategorie
 d2u_machinery_category_data_all_lang = Daten für alle Sprachen

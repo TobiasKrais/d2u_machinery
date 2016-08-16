@@ -40,6 +40,11 @@ class IndustrySector {
 	var $translation_needs_update = "delete";
 
 	/**
+	 * @var string URL
+	 */
+	var $url = "";
+	
+	/**
 	 * Constructor. Reads an Industry Sector stored in database.
 	 * @param int $industry_sector_id Object ID.
 	 * @param int $clang_id Redaxo clang id.
@@ -139,7 +144,7 @@ class IndustrySector {
 	 * Gets the machines reffering to this object.
 	 * @return Machine[] Machines reffering to this object.
 	 */
-	public function getRefferingMachines() {
+	public function getMachines() {
 		$query = "SELECT machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_machines "
 			."WHERE industry_sector_ids LIKE '%|". $this->industry_sector_id ."|%'";
 		$result = rex_sql::factory();
@@ -151,6 +156,23 @@ class IndustrySector {
 			$result->next();
 		}
 		return $machines;
+	}
+	
+	/*
+	 * Returns the URL of this object.
+	 * @return string URL
+	 */
+	public function getURL() {
+		if($this->url == "") {
+			// Without SEO Plugins
+			$d2u_machinery = rex_addon::get("d2u_machinery");
+				
+			$parameterArray = array();
+			$parameterArray['industry_sector_id'] = $this->industry_sector_id;
+			$this->url = rex_getUrl($d2u_machinery->getConfig('article_id'), $this->clang_id, $parameterArray, "&");
+		}
+
+		return $this->url;
 	}
 	
 	/**
