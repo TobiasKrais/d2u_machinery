@@ -12,7 +12,3 @@ d2u_machinery_agitators_no_agitators_found = Es wurden noch keine Rührwerke ang
 d2u_machinery_agitator_type = Rührwerkstyp
 d2u_machinery_agitator_types = Rührwerkstypen
 d2u_machinery_agitators_no_agitator_types_found = Es wurden noch keine Rührwerkstypen angelegt.
-
-d2u_machinery_mechanical_construction = Mechanischer Aufbau des Rührwerks
-d2u_machinery_mechanical_constructions = Mechanischer Aufbau von Rührwerken
-d2u_machinery_mechanical_constructions_no_mechanical_constructions_found = Es wurden noch keine mechanische Aufbauten angelegt.

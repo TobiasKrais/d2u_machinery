@@ -10,3 +10,6 @@ $sql->setQuery('DROP TABLE IF EXISTS ' . rex::getTablePrefix() . 'd2u_machinery_
 // Delete Media Manager media types
 $sql->setQuery("DELETE FROM ". rex::getTablePrefix() ."media_manager_type WHERE name LIKE 'd2u_machinery%'");
 $sql->setQuery("DELETE FROM ". rex::getTablePrefix() ."media_manager_type_effect WHERE createuser = 'd2u_machinery'");
+
+// Delete e-mail template
+$sql->setQuery("DELETE FROM ". rex::getTablePrefix() ."yform_email_template WHERE name LIKE 'd2u_machinery%'");

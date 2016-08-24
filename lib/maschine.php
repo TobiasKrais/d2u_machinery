@@ -40,14 +40,9 @@ class Machine {
 	var $category = FALSE;
 
 	/**
-	 * @var Contact Machine contact person
+	 * @var int[] Usage area IDs
 	 */
-	var $contact = FALSE;
-
-	/**
-	 * @var UsageAreas[] Usage areas
-	 */
-	var $usage_areas = array();
+	var $usage_area_ids = array();
 
 	/**
 	 * @var int[] IDs of alternative machines
@@ -58,16 +53,6 @@ class Machine {
 	 * @var int[] Machine feature ids
 	 */
 	var $feature_ids = array();
-
-	/**
-	 * @var int[] Machine service ids.
-	 */
-	var $service_ids = array();
-
-	/**
-	 * @var int[] Machine accessory ids.
-	 */
-	var $accessory_ids = array();
 
 	/**
 	 * @var string Machine accessory ids.
@@ -100,44 +85,14 @@ class Machine {
 	var $online_status = "offline";
 	
 	/**
-	 * @var int[] Videomanager ids
-	 */
-	var $videomanager_ids = array();
-
-	/**
 	 * @var int[] Certificate ids
 	 */
 	var $certificate_ids = array();
 
 	/**
-	 * @var int Construction id
-	 */
-	var $mechanical_construction_id = 0;
-
-	/**
 	 * @var int Agitator type id
 	 */
 	var $agitator_type_id = 0;
-
-	/**
-	 * @var int[] Process type ids
-	 */
-	var $process_ids = 0;
-
-	/**
-	 * @var int[] Application ids
-	 */
-	var $application_ids = 0;
-
-	/**
-	 * @var int[] Material class ids
-	 */
-	var $material_class_ids = 0;
-
-	/**
-	 * @var int[] Tool ids
-	 */
-	var $tool_ids = 0;
 
 	/**
 	 * @var string Engine power
@@ -250,6 +205,10 @@ class Machine {
 			$this->pdfs = preg_grep('/^\s*$/s', explode(",", $result->getValue("pdfs")), PREG_GREP_INVERT);
 			$this->translation_needs_update = $result->getValue("translation_needs_update");
 
+			if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable()) {
+				$this->industry_sector_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("industry_sector_ids")), PREG_GREP_INVERT);
+			}
+
 			if(rex_plugin::get("d2u_machinery", "machine_certificates_extension")->isAvailable()) {
 				$this->certificate_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("certificate_ids")), PREG_GREP_INVERT);
 			}
@@ -258,13 +217,12 @@ class Machine {
 				$this->feature_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("feature_ids")), PREG_GREP_INVERT);
 			}
 
-			if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable()) {
-				$this->industry_sector_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("industry_sector_ids")), PREG_GREP_INVERT);
-			}
-
 			if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable()) {
 				$this->agitator_type_id = $result->getValue("agitator_type_id");
-				$this->mechanical_construction_id = $result->getValue("mechanical_construction_id");
+			}
+
+			if(rex_plugin::get("d2u_machinery", "machine_usage_area_extension")->isAvailable()) {
+				$this->usage_area_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("usage_area_ids")), PREG_GREP_INVERT);
 			}
 		}
 	}
@@ -461,18 +419,20 @@ class Machine {
 					."operating_voltage_v = '". $this->operating_voltage_v ."', "
 					."operating_voltage_hz = '". $this->operating_voltage_hz ."', "
 					."operating_voltage_a = '". $this->operating_voltage_a ."' ";
+			if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable()) {
+				$query .= ", industry_sector_ids = '|". implode("|", $this->industry_sector_ids) ."|' ";
+			}
 			if(rex_plugin::get("d2u_machinery", "machine_certificates_extension")->isAvailable()) {
 				$query .= ", certificate_ids = '|". implode("|", $this->certificate_ids) ."|' ";
 			}
 			if(rex_plugin::get("d2u_machinery", "machine_features_extension")->isAvailable()) {
 				$query .= ", feature_ids = '|". implode("|", $this->feature_ids) ."|' ";
 			}
-			if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable()) {
-				$query .= ", industry_sector_ids = '|". implode("|", $this->industry_sector_ids) ."|' ";
-			}
 			if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable()) {
 				$query .= ", agitator_type_id = ". $this->agitator_type_id ." ";
-				$query .= ", mechanical_construction_id = ". $this->mechanical_construction_id ." ";
+			}
+			if(rex_plugin::get("d2u_machinery", "machine_usage_area_extension")->isAvailable()) {
+				$query .= ", usage_area_ids = '|". implode("|", $this->usage_area_ids) ."|' ";
 			}
 
 			if($this->machine_id == 0) {
@@ -481,7 +441,6 @@ class Machine {
 			else {
 				$query = "UPDATE ". $query ." WHERE machine_id = ". $this->machine_id;
 			}
-
 			$result = rex_sql::factory();
 			$result->setQuery($query);
 			if($this->machine_id == 0) {

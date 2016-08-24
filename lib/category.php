@@ -85,11 +85,6 @@ class Category {
 	var $pdfs = array();
 	
 	/**
-	 * @var int[] Array with Videomanager IDs
-	 */
-	var $videomanager_ids = array();
-	
-	/**
 	 * @var string "yes" if translation needs update
 	 */
 	var $translation_needs_update = "delete";
@@ -222,6 +217,62 @@ class Category {
 			$result->next();
 		}
 		return $children;
+	}
+	
+	/**
+	 * Get technical data matrix for this category.
+	 * @return mixed[] Key is the name of the sprog wildcard describing the field.
+	 * Values are an array with the machine id as key and the value as value.
+	 */
+	public function getTechDataMatrix() {
+		$machines = $this->getMachines();
+		$matrix = array();
+		$tech_data_arrays = array();
+		$tech_data_wildcards = array();
+		// Get technical data
+		foreach($machines as $machine) {
+			$tech_data_arrays[$machine->machine_id] = $machine->getTechnicalData();
+		}
+		// Get wildcards
+		foreach($tech_data_arrays as $tech_data_array) {
+			$tech_data_wildcards = array_unique(array_merge(array_keys($tech_data_array), $tech_data_wildcards));
+		}
+		// Create matrix
+		foreach($tech_data_wildcards as $wildcard) {
+			$matrix[$wildcard] = array();
+			foreach($machines as $machine) {
+				$tech_data_array = $tech_data_arrays[$machine->machine_id];
+				if(array_key_exists($wildcard, $tech_data_array)) {
+					$matrix[$wildcard][$machine->machine_id] = $tech_data_array[$wildcard];
+				}
+				else {
+					$matrix[$wildcard][$machine->machine_id] = "";
+				}
+			}
+		}
+		return $matrix;
+	}
+	
+	/**
+	 * Get UsageArea matrix for this category.
+	 * @return mixed[] Key is the name of the UsageArea. Values are the machine
+	 * ids that use the UsageArea.
+	 */
+	public function getUsageAreaMatrix() {
+		$usage_areas = UsageArea::getAll($this->clang_id, $this->category_id);
+		$machines = $this->getMachines();
+		
+		$matrix = array();
+		foreach($usage_areas as $usage_area) {
+			$values = array();
+			foreach($machines as $machine) {
+				if(in_array($usage_area->usage_area_id, $machine->usage_area_ids)) {
+					$values[] = $machine->machine_id;
+				}
+			}
+			$matrix[$usage_area->name] = $values;
+		}
+		return $matrix;
 	}
 	
 	/**

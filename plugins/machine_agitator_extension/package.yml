@@ -8,7 +8,6 @@ page:
     perm: d2u_machinery[]
     icon: rex-icon fa-spoon
     subpages:
-        mechanical_construction: { title: 'translate:d2u_machinery_mechanical_constructions', icon: rex-icon fa-cube }
         agitator_type: { title: 'translate:d2u_machinery_agitator_types', icon: rex-icon fa-spoon }
         agitator: { title: 'translate:d2u_machinery_agitators', icon: rex-icon fa-spoon }
 

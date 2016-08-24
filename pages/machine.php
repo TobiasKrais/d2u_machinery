@@ -44,18 +44,20 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$machine->operating_voltage_hz = $form['operating_voltage_hz'];
 			$machine->operating_voltage_a = $form['operating_voltage_a'];
 		
+			if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable()) {
+				$machine->industry_sector_ids = $form['industry_sector_ids'];
+			}
 			if(rex_plugin::get("d2u_machinery", "machine_certificates_extension")->isAvailable()) {
 				$machine->certificate_ids = $form['certificate_ids'];
 			}
 			if(rex_plugin::get("d2u_machinery", "machine_features_extension")->isAvailable()) {
 				$machine->feature_ids = $form['feature_ids'];
 			}
-			if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable()) {
-				$machine->industry_sector_ids = $form['industry_sector_ids'];
-			}
 			if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable()) {
 				$machine->agitator_type_id = $form['agitator_type_id'] == '' ? 0 : $form['agitator_type_id'];
-				$machine->mechanical_construction_id = $form['mechanical_construction_id'] == '' ? 0 : $form['mechanical_construction_id'];
+			}
+			if(rex_plugin::get("d2u_machinery", "machine_usage_area_extension")->isAvailable()) {
+				$machine->usage_area_ids = $form['usage_area_ids'];
 			}
 		}
 		else {
@@ -190,6 +192,30 @@ if ($func == 'edit' || $func == 'add') {
 					</div>
 				</fieldset>
 				<?php
+					if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable()) {
+						print '<fieldset>';
+						print '<legend><small><i class="rex-icon fa-industry"></i></small> '. rex_i18n::msg('d2u_machinery_industry_sectors') .'</legend>';
+						print '<div class="panel-body-wrapper slide">';
+						$options_industry_sectors = array();
+						foreach (IndustrySector::getAll(rex_config::get("d2u_machinery", "default_lang")) as $industry_sector) {
+							$options_industry_sectors[$industry_sector->industry_sector_id] = $industry_sector->name;
+						}
+						d2u_addon_backend_helper::form_select('d2u_machinery_industry_sectors', 'form[industry_sector_ids][]', $options_industry_sectors, $machine->industry_sector_ids, 10, TRUE, $readonly);
+						print '</div>';
+						print '</fieldset>';
+					}
+					if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable()) {
+						print '<fieldset>';
+						print '<legend><small><i class="rex-icon fa-spoon"></i></small> '. rex_i18n::msg('d2u_machinery_agitator_extension') .'</legend>';
+						print '<div class="panel-body-wrapper slide">';
+						$options_agitator_types = array(0=>rex_i18n::msg('d2u_machinery_no_selection'));
+						foreach (AgitatorType::getAll(rex_config::get("d2u_machinery", "default_lang")) as $agitator_type) {
+							$options_agitator_types[$agitator_type->agitator_type_id] = $agitator_type->name;
+						}
+						d2u_addon_backend_helper::form_select('d2u_machinery_agitator_type', 'form[agitator_type_id]', $options_agitator_types, array($machine->agitator_type_id), 1, FALSE, $readonly);
+						print '</div>';
+						print '</fieldset>';
+					}
 					if(rex_plugin::get("d2u_machinery", "machine_certificates_extension")->isAvailable()) {
 						print '<fieldset>';
 						print '<legend><small><i class="rex-icon fa-certificate"></i></small> '. rex_i18n::msg('d2u_machinery_certificates') .'</legend>';
@@ -214,32 +240,15 @@ if ($func == 'edit' || $func == 'add') {
 						print '</div>';
 						print '</fieldset>';
 					}
-					if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable()) {
+					if(rex_plugin::get("d2u_machinery", "machine_usage_area_extension")->isAvailable()) {
 						print '<fieldset>';
-						print '<legend><small><i class="rex-icon fa-industry"></i></small> '. rex_i18n::msg('d2u_machinery_industry_sectors') .'</legend>';
+						print '<legend><small><i class="rex-icon fa-codepen"></i></small> '. rex_i18n::msg('d2u_machinery_usage_areas') .'</legend>';
 						print '<div class="panel-body-wrapper slide">';
-						$options_industry_sectors = array();
-						foreach (IndustrySector::getAll(rex_config::get("d2u_machinery", "default_lang")) as $industry_sector) {
-							$options_industry_sectors[$industry_sector->industry_sector_id] = $industry_sector->name;
+						$options_usage_areas = array();
+						foreach (UsageArea::getAll(rex_config::get("d2u_machinery", "default_lang"), $machine->category->category_id) as $usage_area) {
+							$options_usage_areas[$usage_area->usage_area_id] = $usage_area->name;
 						}
-						d2u_addon_backend_helper::form_select('d2u_machinery_industry_sectors', 'form[industry_sector_ids][]', $options_industry_sectors, $machine->industry_sector_ids, 10, TRUE, $readonly);
-						print '</div>';
-						print '</fieldset>';
-					}
-					if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable()) {
-						print '<fieldset>';
-						print '<legend><small><i class="rex-icon fa-spoon"></i></small> '. rex_i18n::msg('d2u_machinery_agitator_extension') .'</legend>';
-						print '<div class="panel-body-wrapper slide">';
-						$options_agitator_types = array(0=>rex_i18n::msg('d2u_machinery_no_selection'));
-						foreach (AgitatorType::getAll(rex_config::get("d2u_machinery", "default_lang")) as $agitator_type) {
-							$options_agitator_types[$agitator_type->agitator_type_id] = $agitator_type->name;
-						}
-						d2u_addon_backend_helper::form_select('d2u_machinery_agitator_type', 'form[agitator_type_id]', $options_agitator_types, array($machine->agitator_type_id), 1, FALSE, $readonly);
-						$options_mechanical_constructions = array(0=>rex_i18n::msg('d2u_machinery_no_selection'));
-						foreach (MechanicalConstruction::getAll(rex_config::get("d2u_machinery", "default_lang")) as $mechanical_construction) {
-							$options_mechanical_constructions[$mechanical_construction->mechanical_construction_id] = $mechanical_construction->name;
-						}
-						d2u_addon_backend_helper::form_select('d2u_machinery_mechanical_construction', 'form[mechanical_construction_id]', $options_mechanical_constructions, array($machine->mechanical_construction_id), 1, FALSE, $readonly);
+						d2u_addon_backend_helper::form_select('d2u_machinery_usage_areas', 'form[usage_area_ids][]', $options_usage_areas, $machine->usage_area_ids, 10, TRUE, $readonly);
 						print '</div>';
 						print '</fieldset>';
 					}

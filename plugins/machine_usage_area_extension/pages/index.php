@@ -12,33 +12,30 @@ if($message != "") {
 if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_apply") == 1) {
 	$form = (array) rex_post('form', 'array', array());
 
-	// Media fields and links need special treatment
-	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', array());
-
 	$success = TRUE;
-	$mechanical_construction = FALSE;
-	$mechanical_construction_id = $form['mechanical_construction_id'];
+	$usage_area = FALSE;
+	$usage_area_id = $form['usage_area_id'];
 	foreach(rex_clang::getAll() as $rex_clang) {
-		if($mechanical_construction === FALSE) {
-			$mechanical_construction = new MechanicalConstruction($mechanical_construction_id, $rex_clang->getId());
-			$mechanical_construction->pic = $input_media[1];
+		if($usage_area === FALSE) {
+			$usage_area = new UsageArea($usage_area_id, $rex_clang->getId());
+			$usage_area->category_ids = $form['category_ids'];
+			$usage_area->prio = $form['prio'];
 		}
 		else {
-			$mechanical_construction->clang_id = $rex_clang->getId();
+			$usage_area->clang_id = $rex_clang->getId();
 		}
-		$mechanical_construction->name = $form['lang'][$rex_clang->getId()]['name'];
-		$mechanical_construction->description = $form['lang'][$rex_clang->getId()]['description'];
-		$mechanical_construction->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
+		$usage_area->name = $form['lang'][$rex_clang->getId()]['name'];
+		$usage_area->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 
-		if($mechanical_construction->translation_needs_update == "delete") {
-			$mechanical_construction->delete(FALSE);
+		if($usage_area->translation_needs_update == "delete") {
+			$usage_area->delete(FALSE);
 		}
-		else if($mechanical_construction->save() > 0){
+		else if($usage_area->save() > 0){
 			$success = FALSE;
 		}
 		else {
 			// remember id, for each database lang object needs same id
-			$mechanical_construction_id = $mechanical_construction->mechanical_construction_id;
+			$usage_area_id = $usage_area->usage_area_id;
 		}
 	}
 
@@ -49,8 +46,8 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	}
 	
 	// Redirect to make reload and thus double save impossible
-	if(filter_input(INPUT_POST, "btn_apply") == 1 && $mechanical_construction !== FALSE) {
-		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$mechanical_construction->mechanical_construction_id, "func"=>'edit', "message"=>$message), FALSE));
+	if(filter_input(INPUT_POST, "btn_apply") == 1 && $usage_area !== FALSE) {
+		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$usage_area->usage_area_id, "func"=>'edit', "message"=>$message), FALSE));
 	}
 	else {
 		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), FALSE));
@@ -59,28 +56,28 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 }
 // Delete
 else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
-	$mechanical_construction_id = $entry_id;
-	if($mechanical_construction_id == 0) {
+	$usage_area_id = $entry_id;
+	if($usage_area_id == 0) {
 		$form = (array) rex_post('form', 'array', array());
-		$mechanical_construction_id = $form['mechanical_construction_id'];
+		$usage_area_id = $form['usage_area_id'];
 	}
-	$mechanical_construction = new MechanicalConstruction($mechanical_construction_id, rex_config::get("d2u_machinery", "default_lang"));
+	$usage_area = new UsageArea($usage_area_id, rex_config::get("d2u_machinery", "default_lang"));
 	
 	// Check if object is used
-	$reffering_machines = $mechanical_construction->getRefferingMachines();
+	$reffering_machines = $usage_area->getMachines();
 
 	// If not used, delete
 	if(count($reffering_machines) == 0) {
 		foreach(rex_clang::getAll() as $rex_clang) {
-			if($mechanical_construction === FALSE) {
-				$mechanical_construction = new MechanicalConstruction($mechanical_construction_id, $rex_clang->getId());
-				// If object is not found in language, set mechanical_construction_id anyway to be able to delete
-				$mechanical_construction->mechanical_construction_id = $mechanical_construction_id;
+			if($usage_area === FALSE) {
+				$usage_area = new UsageArea($usage_area_id, $rex_clang->getId());
+				// If object is not found in language, set usage_area_id anyway to be able to delete
+				$usage_area->usage_area_id = $usage_area_id;
 			}
 			else {
-				$mechanical_construction->clang_id = $rex_clang->getId();
+				$usage_area->clang_id = $rex_clang->getId();
 			}
-			$mechanical_construction->delete();
+			$usage_area->delete();
 		}
 	}
 	else {
@@ -101,12 +98,12 @@ if ($func == 'edit' || $func == 'add') {
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
-			<header class="panel-heading"><div class="panel-title"><?php print rex_i18n::msg('d2u_machinery_mechanical_constructions'); ?></div></header>
+			<header class="panel-heading"><div class="panel-title"><?php print rex_i18n::msg('d2u_machinery_usage_areas'); ?></div></header>
 			<div class="panel-body">
-				<input type="hidden" name="form[mechanical_construction_id]" value="<?php echo $entry_id; ?>">
+				<input type="hidden" name="form[usage_area_id]" value="<?php echo $entry_id; ?>">
 				<?php
 					foreach(rex_clang::getAll() as $rex_clang) {
-						$mechanical_construction = new MechanicalConstruction($entry_id, $rex_clang->getId());
+						$usage_area = new UsageArea($entry_id, $rex_clang->getId());
 						$required = $rex_clang->getId() == rex_config::get("d2u_machinery", "default_lang") ? TRUE : FALSE;
 						
 						$readonly_lang = TRUE;
@@ -123,14 +120,13 @@ if ($func == 'edit' || $func == 'add') {
 									$options_translations["yes"] = rex_i18n::msg('d2u_machinery_translation_needs_update');
 									$options_translations["no"] = rex_i18n::msg('d2u_machinery_translation_is_uptodate');
 									$options_translations["delete"] = rex_i18n::msg('d2u_machinery_translation_delete');
-									d2u_addon_backend_helper::form_select('d2u_machinery_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, array($mechanical_construction->translation_needs_update), 1, FALSE, $readonly_lang);
+									d2u_addon_backend_helper::form_select('d2u_machinery_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, array($usage_area->translation_needs_update), 1, FALSE, $readonly_lang);
 								}
 								else {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
 								}
 								
-								d2u_addon_backend_helper::form_input('d2u_machinery_name', "form[lang][". $rex_clang->getId() ."][name]", $mechanical_construction->name, $required, $readonly_lang, "text");
-								d2u_addon_backend_helper::form_textarea('d2u_machinery_agitators_description', "form[lang][". $rex_clang->getId() ."][description]", $mechanical_construction->description, 5, FALSE, $readonly_lang, TRUE);
+								d2u_addon_backend_helper::form_input('d2u_machinery_name', "form[lang][". $rex_clang->getId() ."][name]", $usage_area->name, $required, $readonly_lang, "text");
 							?>
 						</div>
 					</fieldset>
@@ -138,20 +134,27 @@ if ($func == 'edit' || $func == 'add') {
 					}
 				?>
 				<fieldset>
-					<legend><?php echo rex_i18n::msg('d2u_machinery_agitators_data_all_lang'); ?></legend>
+					<legend><?php echo rex_i18n::msg('d2u_machinery_usage_areas_data_all_lang'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
 							// Do not use last object from translations, because you don't know if it exists in DB
-							$mechanical_construction = new MechanicalConstruction($entry_id, rex_config::get("d2u_machinery", "default_lang"));
+							$usage_area = new UsageArea($entry_id, rex_config::get("d2u_machinery", "default_lang"));
 							$readonly = TRUE;
 							if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_machinery[edit_tech_data]')) {
 								$readonly = FALSE;
 							}
 
-							d2u_addon_backend_helper::form_mediafield('d2u_machinery_agitators_pic', 1, $mechanical_construction->pic, $readonly);
+							d2u_addon_backend_helper::form_input('header_priority', 'form[prio]', $usage_area->prio, TRUE, $readonly, 'number');
+							
+							$options = array();
+							foreach(Category::getAll(rex_config::get("d2u_machinery", "default_lang")) as $category) {
+								$options[$category->category_id] = $category->name;
+							}
+							d2u_addon_backend_helper::form_select('d2u_machinery_usage_areas_categories', 'form[category_ids][]', $options, $usage_area->category_ids, 10, TRUE, $readonly);
 						?>
 					</div>
 				</fieldset>
+			</div>
 			<footer class="panel-footer">
 				<div class="rex-form-panel-footer">
 					<div class="btn-toolbar">
@@ -171,39 +174,41 @@ if ($func == 'edit' || $func == 'add') {
 }
 
 if ($func == '') {
-	$query = 'SELECT mechanical_constructions.mechanical_construction_id, name '
-		. 'FROM '. rex::getTablePrefix() .'d2u_machinery_mechanical_constructions AS mechanical_constructions '
-		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_mechanical_constructions_lang AS lang '
-			. 'ON mechanical_constructions.mechanical_construction_id = lang.mechanical_construction_id AND lang.clang_id = '. rex_config::get("d2u_machinery", "default_lang") .' '
+	$query = 'SELECT usage_areas.usage_area_id, name, prio '
+		. 'FROM '. rex::getTablePrefix() .'d2u_machinery_usage_areas AS usage_areas '
+		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_usage_areas_lang AS lang '
+			. 'ON usage_areas.usage_area_id = lang.usage_area_id AND lang.clang_id = '. rex_config::get("d2u_machinery", "default_lang") .' '
 		. 'ORDER BY name ASC';
     $list = rex_list::factory($query);
 
     $list->addTableAttribute('class', 'table-striped table-hover');
 
-    $tdIcon = '<i class="rex-icon fa-cube"></i>';
+    $tdIcon = '<i class="rex-icon fa-codepen"></i>';
     $thIcon = '<a href="' . $list->getUrl(['func' => 'add']) . '" title="' . rex_i18n::msg('add') . '"><i class="rex-icon rex-icon-add-module"></i></a>';
     $list->addColumn($thIcon, $tdIcon, 0, ['<th class="rex-table-icon">###VALUE###</th>', '<td class="rex-table-icon">###VALUE###</td>']);
-    $list->setColumnParams($thIcon, ['func' => 'edit', 'entry_id' => '###mechanical_construction_id###']);
+    $list->setColumnParams($thIcon, ['func' => 'edit', 'entry_id' => '###usage_area_id###']);
 
-    $list->setColumnLabel('mechanical_construction_id', rex_i18n::msg('id'));
-    $list->setColumnLayout('mechanical_construction_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
+    $list->setColumnLabel('usage_area_id', rex_i18n::msg('id'));
+    $list->setColumnLayout('usage_area_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
 
-    $list->setColumnLabel('name', rex_i18n::msg('d2u_machinery_agitators_name'));
-    $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###mechanical_construction_id###']);
+    $list->setColumnLabel('name', rex_i18n::msg('d2u_machinery_usage_areas_name'));
+    $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###usage_area_id###']);
+
+    $list->setColumnLabel('prio', rex_i18n::msg('header_priority'));
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('system_update'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
-    $list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###mechanical_construction_id###']);
+    $list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###usage_area_id###']);
 
     $list->addColumn(rex_i18n::msg('delete_module'), '<i class="rex-icon rex-icon-delete"></i> ' . rex_i18n::msg('delete'));
     $list->setColumnLayout(rex_i18n::msg('delete_module'), ['', '<td class="rex-table-action">###VALUE###</td>']);
-    $list->setColumnParams(rex_i18n::msg('delete_module'), ['func' => 'delete', 'entry_id' => '###mechanical_construction_id###']);
+    $list->setColumnParams(rex_i18n::msg('delete_module'), ['func' => 'delete', 'entry_id' => '###usage_area_id###']);
     $list->addLinkAttribute(rex_i18n::msg('delete_module'), 'data-confirm', rex_i18n::msg('d2u_machinery_confirm_delete'));
 
-	$list->setNoRowsMessage(rex_i18n::msg('d2u_machinery_mechanical_constructions_no_mechanical_constructions_found'));
+	$list->setNoRowsMessage(rex_i18n::msg('d2u_machinery_usage_areas_no_usage_areas_found'));
 
     $fragment = new rex_fragment();
-    $fragment->setVar('title', rex_i18n::msg('d2u_machinery_mechanical_constructions'), false);
+    $fragment->setVar('title', rex_i18n::msg('d2u_machinery_usage_areas'), false);
     $fragment->setVar('content', $list->get(), false);
     echo $fragment->parse('core/page/section.php');
 }

@@ -9,9 +9,14 @@
 		if(!$category->isChild() && count($category->getMachines()) > 0) {
 			print '<div class="col-xs-6 col-sm-4 col-md-3 abstand">';
 			print '<a href="'. $category->getURL() .'">';
-			print '<div class="box">';
-			print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
-				$category->pic .'" alt='. $category->name .' style="max-width:100%;">';
+			print '<div class="box" data-height-watch>';
+			if($category->pic != "") {
+				print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
+					$category->pic .'" alt="'. $category->name .'">';
+			}
+			else {
+				print '<img src="'.	rex_addon::get("d2u_machinery")->getAssetsUrl("white_tile.gif") .'" alt="Placeholder">';
+			}
 			print '<div>'. $category->name .'</div>';
 			print '</div>';
 			print '</a>';

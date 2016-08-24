@@ -69,7 +69,7 @@ class IndustrySector {
 	}
 	
 	/**
-	 * Changes the status of a machine
+	 * Changes the online status.
 	 */
 	public function changeStatus() {
 		if($this->online_status == "online") {

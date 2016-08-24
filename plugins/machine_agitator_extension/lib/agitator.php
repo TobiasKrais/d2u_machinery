@@ -58,7 +58,7 @@ class Agitator {
 			$this->agitator_id = $result->getValue("agitator_id");
 			$this->name = $result->getValue("name");
 			$this->pic = $result->getValue("pic");
-			$this->description = $result->getValue("description");
+			$this->description = htmlspecialchars_decode($result->getValue("description"));
 			$this->translation_needs_update = $result->getValue("translation_needs_update");
 		}
 	}
@@ -165,7 +165,7 @@ class Agitator {
 						."agitator_id = '". $this->agitator_id ."', "
 						."clang_id = '". $this->clang_id ."', "
 						."name = '". $this->name ."', "
-						."description = '". $this->description ."', "
+						."description = '". htmlspecialchars($this->description) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."' ";
 
 				$result = rex_sql::factory();

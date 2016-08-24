@@ -89,6 +89,18 @@ class AgitatorType {
 	}
 	
 	/**
+	 * Get all agitator for this type.
+	 * @return Agitator[] Array with Agitator objects.
+	 */
+	public function getAgitators() {
+		$agitators = array();
+		foreach($this->agitator_ids as $agitator_id) {
+			$agitators[] = new Agitator($agitator_id, $this->clang_id);
+		}
+		return $agitators;
+	}
+	
+	/**
 	 * Get all agitator types.
 	 * @param int $clang_id Redaxo clang id.
 	 * @return AgitatorType[] Array with AgitatorType objects.
