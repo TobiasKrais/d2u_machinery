@@ -161,6 +161,9 @@ if(!class_exists('d2u_addon_backend_helper')) {
 		 * @param boolean $readonly TRUE if field should have readonly attribute.
 		 */
 		public static function form_linkfield($message_id, $fieldname, $article_id, $clang_id, $readonly = FALSE) {
+			if(!in_array($clang_id, rex_clang::getAllIds())) {
+				$clang_id = rex_clang::getStartId();
+			}
 			print '<dl class="rex-form-group form-group">';
 			print '<dt><label>'. rex_i18n::msg($message_id) .'</label></dt>';
 			print '<dd><div class="input-group">';
