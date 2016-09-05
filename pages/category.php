@@ -46,6 +46,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$category->clang_id = $rex_clang->getId();
 		}
 		$category->name = $form['lang'][$rex_clang->getId()]['name'];
+		$category->teaser = $form['lang'][$rex_clang->getId()]['teaser'];
 		$category->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 		$category->pdfs = preg_grep('/^\s*$/s', explode(",", $input_media_list['1'. $rex_clang->getId()]), PREG_GREP_INVERT);
 		$category->pic_lang = $input_media['pic_lang_'. $rex_clang->getId()];
@@ -166,6 +167,7 @@ if ($func == 'edit' || $func == 'add') {
 								}
 								
 								d2u_addon_backend_helper::form_input('d2u_machinery_name', "form[lang][". $rex_clang->getId() ."][name]", $category->name, $required, $readonly_lang, "text");
+								d2u_addon_backend_helper::form_input('d2u_machinery_machine_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $category->teaser, FALSE, $readonly_lang, "text");
 								if($this->getConfig('show_categories_usage_area') == 'show') {
 									d2u_addon_backend_helper::form_input('d2u_machinery_category_usage_area', "form[lang][". $rex_clang->getId() ."][usage_area]", $category->usage_area, FALSE, $readonly_lang, "text");
 								}

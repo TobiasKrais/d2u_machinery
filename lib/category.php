@@ -30,6 +30,11 @@ class Category {
 	var $name = "";
 	
 	/**
+	 * @var string Teaser
+	 */
+	var $teaser = "";
+
+	/**
 	 * @var string Name of Usage area
 	 */
 	var $usage_area = "";
@@ -130,6 +135,7 @@ class Category {
 				$this->parent_category = new Category($result->getValue("parent_category_id"), $clang_id);
 			}
 			$this->name = $result->getValue("name");
+			$this->teaser = htmlspecialchars_decode($result->getValue("teaser"));
 			$this->usage_area = $result->getValue("usage_area");
 			$this->pic = $result->getValue("pic");
 			$this->pic_lang = $result->getValue("pic_lang");
@@ -200,7 +206,15 @@ class Category {
 		}
 		return $categories;
 	}
-
+	
+	/**
+	 * Get the <link rel="canonical"> tag for page header.
+	 * @return Complete tag.
+	 */
+	public function getCanonicalTag() {
+		return '<link rel="canonical" href="'. $this->getURL() .'">';
+	}
+	
 	/**
 	 * Detects usage of this category as parent category and returns categories.
 	 * @return Category[] Child categories.
@@ -251,6 +265,14 @@ class Category {
 			}
 		}
 		return $matrix;
+	}
+	
+	/**
+	 * Get the <title> tag for page header.
+	 * @return Complete title tag.
+	 */
+	public function getTitleTag() {
+		return '<title>'. $this->name .' / '. rex::getServerName() .'</title>';
 	}
 	
 	/**
@@ -307,6 +329,34 @@ class Category {
 	}
 
 	/**
+	 * Get the <meta rel="alternate" hreflang=""> tags for page header.
+	 * @return Complete tags.
+	 */
+	public function getMetaAlternateHreflangTags() {
+		$hreflang_tags = "";
+		foreach(rex_clang::getAll() as $rex_clang) {
+			if($rex_clang->getId() == $this->clang_id && $this->translation_needs_update != "delete") {
+				$hreflang_tags .= '<link rel="alternate" type="text/html" hreflang="'. $rex_clang->getCode() .'" href="'. $this->getURL() .'" title="'. str_replace('"', '', $this->name) .'">';
+			}
+			else {
+				$category = new Category($this->category_id, $rex_clang->getId());
+				if($category->translation_needs_update != "delete") {
+					$hreflang_tags .= '<link rel="alternate" type="text/html" hreflang="'. $rex_clang->getCode() .'" href="'. $category->getURL() .'" title="'. str_replace('"', '', $category->name) .'">';
+				}
+			}
+		}
+		return $hreflang_tags;
+	}
+	
+	/**
+	 * Get the <meta name="description"> tag for page header.
+	 * @return Complete tag.
+	 */
+	public function getMetaDescriptionTag() {
+		return '<meta name="description" content="'. $this->teaser .'">';
+	}
+	
+	/**
 	 * Gets the UsedMachines of the category if plugin ist installed.
 	 * @return UsedMachine[] Used machines of this category
 	 */
@@ -328,9 +378,10 @@ class Category {
 	
 	/*
 	 * Returns the URL of this object.
+	 * @param string $including_domain TRUE if Domain name should be included
 	 * @return string URL
 	 */
-	public function getURL() {
+	public function getURL($including_domain = TRUE) {
 		if($this->url == "") {
 			// Without SEO Plugins
 			$d2u_machinery = rex_addon::get("d2u_machinery");
@@ -340,7 +391,12 @@ class Category {
 			$this->url = rex_getUrl($d2u_machinery->getConfig('article_id'), $this->clang_id, $parameterArray, "&");
 		}
 
-		return $this->url;
+		if($including_domain) {
+			return str_replace(rex::getServer(). '/', rex::getServer(), rex::getServer() . $this->url) ;
+		}
+		else {
+			return $this->url;
+		}
 	}
 	
 	/**
@@ -390,6 +446,7 @@ class Category {
 						."category_id = '". $this->category_id ."', "
 						."clang_id = '". $this->clang_id ."', "
 						."name = '". htmlspecialchars($this->name) ."', "
+						."teaser = '". htmlspecialchars($this->teaser) ."', "
 						."usage_area = '". htmlspecialchars($this->usage_area) ."', "
 						."pic_lang = '". $this->pic_lang ."', "
 						."pdfs = '". implode(",", $this->pdfs) ."', "
@@ -402,6 +459,12 @@ class Category {
 				$error = $result->hasError();
 			}
 		}
+		
+		// Update URLs
+		if(rex_addon::get("url")->isAvailable()) {
+			UrlGenerator::generatePathFile([]);
+		}
+		
 		return $error;
 	}
 }

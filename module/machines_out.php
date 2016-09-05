@@ -27,6 +27,29 @@ if(!function_exists('print_categories')) {
 	}
 }
 
+if(!function_exists('print_consulation_hint')) {
+	/**
+	 * Prints consulation hint.
+	 */
+	function print_consulation_hint() {
+		$d2u_machinery = rex_addon::get("d2u_machinery");
+		// Get placeholder wildcard tags
+		$sprog = rex_addon::get("sprog");
+
+		print '<div class="col-xs-12 col-sm-8 col-md-12">';
+		print '<br><br><br><br><br>';
+		print '<a href="'. rex_getUrl($d2u_machinery->getConfig('consultation_article_id')) .'">';
+		print '<div class="abstand">';
+		if($d2u_machinery->getConfig('consultation_pic') != "") {
+			print '<img src="'. rex_url::media($d2u_machinery->getConfig('consultation_pic')) .'" alt=""><br><br>';
+		}
+		print '<p>'. $sprog->getConfig('wildcard_open_tag') .'d2u_machinery_consultation_hint'. $sprog->getConfig('wildcard_close_tag') .'</p>';
+		print '</div>';
+		print '</a>';
+		print '</div>';
+	}
+}
+
 if(!function_exists('print_industry_sectors')) {
 	/**
 	 * Prints industry sector list.
@@ -92,13 +115,18 @@ if(!function_exists('print_machines')) {
 		}
 	}
 }
+
 // Get placeholder wildcard tags
 $sprog = rex_addon::get("sprog");
 $tag_open = $sprog->getConfig('wildcard_open_tag');
 $tag_close = $sprog->getConfig('wildcard_close_tag');
 
-if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT) > 0) {
-	$category = new Category(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT), rex_clang::getCurrentId());
+if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT) > 0 || (rex_addon::get("url")->isAvailable() && UrlGenerator::getUrlParamKey() === "category_id")) {
+	$category_id = filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT);
+	if(rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
+		$category_id = UrlGenerator::getId();
+	}
+	$category = new Category($category_id, rex_clang::getCurrentId());
 	$child_categories = $category->getChildren();
 	if(count($child_categories) > 0) {
 		// Print child categories
@@ -194,9 +222,13 @@ if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT) > 0) {
 		print '</div>';
 	}
 }
-else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT) > 0) {
+else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT) > 0 || (rex_addon::get("url")->isAvailable() && UrlGenerator::getUrlParamKey() === "machine_id")) {
 	// Print machine
-	$machine = new Machine(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT), rex_clang::getCurrentId());
+	$machine_id = filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT);
+	if(rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
+		$machine_id = UrlGenerator::getId();
+	}
+	$machine = new Machine($machine_id, rex_clang::getCurrentId());
 	print '<div class="col-xs-12">';
 	print '<div class="tab-content">';
 	
@@ -316,27 +348,29 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT) > 0) {
 	print '</div>';
 	
 	// Agitators
-	print '<div id="tab_agitator" class="tab-pane fade machine-tab">';
-	$agitator_type = new AgitatorType($machine->agitator_type_id, $machine->clang_id);
-	print '<div class="row">';
-	print '<div class="col-xs-12"><h3>'. $agitator_type->name .'</h3><br><br></div>';
-	print '</div>';
-	$agitators = $agitator_type->getAgitators();
-	foreach($agitators as $agitator) {
+	if($machine->agitator_type_id > 0) {
+		print '<div id="tab_agitator" class="tab-pane fade machine-tab">';
+		$agitator_type = new AgitatorType($machine->agitator_type_id, $machine->clang_id);
 		print '<div class="row">';
-		print '<div class="col-xs-12 col-sm-6 col-md-2">';
-		if($agitator->pic != "") {
-			print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
-					$agitator->pic .'" alt='. $agitator->name .' class="featurepic">';
+		print '<div class="col-xs-12"><h3>'. $agitator_type->name .'</h3><br><br></div>';
+		print '</div>';
+		$agitators = $agitator_type->getAgitators();
+		foreach($agitators as $agitator) {
+			print '<div class="row">';
+			print '<div class="col-xs-12 col-sm-6 col-md-2">';
+			if($agitator->pic != "") {
+				print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
+						$agitator->pic .'" alt='. $agitator->name .' class="featurepic">';
+			}
+			print '</div>';
+			print '<div class="col-xs-12 col-sm-6 col-md-10 col-lg-8">';
+			print '<p><b>'. $agitator->name .'</b></p>';
+			print $agitator->description;
+			print '</div>';
+			print '</div>';
 		}
 		print '</div>';
-		print '<div class="col-xs-12 col-sm-6 col-md-10 col-lg-8">';
-		print '<p><b>'. $agitator->name .'</b></p>';
-		print $agitator->description;
-		print '</div>';
-		print '</div>';
 	}
-	print '</div>';
 	
 	// Features
 	if(count($machine->feature_ids) > 0) {
@@ -396,7 +430,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT) > 0) {
 			textarea|message|'. $tag_open .'d2u_machinery_form_message'. $tag_close .'
 
 			html||<br>* '. $tag_open .'d2u_machinery_form_required'. $tag_close .'<br><br>
-			captcha|'. $tag_open .'d2u_machinery_form_captcha'. $tag_close .'|'. $tag_open .'d2u_machinery_form_validate_captcha'. $tag_close .'|'. substr($machine->getUrl(), 0 , strrpos($machine->getUrl(), '?')) .'
+			captcha_calc|'. $tag_open .'d2u_machinery_form_captcha'. $tag_close .'|'. $tag_open .'d2u_machinery_form_validate_captcha'. $tag_close .'|'. rex_getUrl('', '', ['machine_id' => $machine->machine_id]) .'
 
 			submit|submit|'. $tag_open .'d2u_machinery_form_send'. $tag_close .'|no_db
 
@@ -429,8 +463,12 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT) > 0) {
 	print '</div>';
 	print '</div>';
 }
-else if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable() && filter_input(INPUT_GET, 'industry_sector_id', FILTER_VALIDATE_INT) > 0) {
-	$industry_sector = new IndustrySector(filter_input(INPUT_GET, 'industry_sector_id', FILTER_VALIDATE_INT), rex_clang::getCurrentId());
+else if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable() && (filter_input(INPUT_GET, 'industry_sector_id', FILTER_VALIDATE_INT) > 0 || (rex_addon::get("url")->isAvailable() && UrlGenerator::getUrlParamKey() === "industry_sector_id"))) {
+	$industry_sector_id = filter_input(INPUT_GET, 'industry_sector_id', FILTER_VALIDATE_INT);
+	if(rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
+		$industry_sector_id = UrlGenerator::getId();
+	}
+	$industry_sector = new IndustrySector($industry_sector_id, rex_clang::getCurrentId());
 	// Print machine list
 	print '<div class="col-xs-12">';
 	print '<div class="row" data-match-height>';
@@ -455,6 +493,8 @@ else {
 	print '</div>';
 	print '</div>';
 }
+
+print_consulation_hint();
 ?>
 <script>
 	// Allow activation of bootstrap tab via URL

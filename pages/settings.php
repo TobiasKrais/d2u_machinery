@@ -3,12 +3,17 @@
 if (filter_input(INPUT_POST, "btn_save") == 'save') {
 	$settings = (array) rex_post('settings', 'array', array());
 
-	// Linkmap Link needs special treatment
+	// Linkmap Link and media needs special treatment
 	$link_ids = filter_input_array(INPUT_POST, array('REX_INPUT_LINK'=> array('filter' => FILTER_VALIDATE_INT, 'flags' => FILTER_REQUIRE_ARRAY)));
 	$link_names = filter_input_array(INPUT_POST, array('REX_LINK_NAME' => array('flags' => FILTER_REQUIRE_ARRAY)));
 
 	$settings['article_id'] = $link_ids["REX_INPUT_LINK"][1];
 	$settings['article_name'] = trim($link_names["REX_LINK_NAME"][1]);
+
+	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', array());
+	$settings['consultation_pic'] = $input_media['consultation_pic'];
+	$settings['consultation_article_id'] = $link_ids["REX_INPUT_LINK"][2];
+	$settings['consultation_article_name'] = trim($link_names["REX_LINK_NAME"][2]);
 
 	// Checkbox also need special treatment if empty
 	if(!array_key_exists('show_categories_usage_area', $settings)) {
@@ -43,7 +48,9 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 							d2u_addon_backend_helper::form_select('d2u_machinery_settings_defaultlang', 'settings[default_lang]', $options, array($this->getConfig('default_lang')));
 						}
 						
-						d2u_addon_backend_helper::form_input('d2u_machinery_settings_request_form_email', 'settings[request_form_email]', $this->getConfig('request_form_email'), TRUE, FALSE, 'email')
+						d2u_addon_backend_helper::form_input('d2u_machinery_settings_request_form_email', 'settings[request_form_email]', $this->getConfig('request_form_email'), TRUE, FALSE, 'email');
+						d2u_addon_backend_helper::form_mediafield('d2u_machinery_settings_consultation_pic', 'consultation_pic', $this->getConfig('consultation_pic'));
+						d2u_addon_backend_helper::form_linkfield('d2u_machinery_settings_consultation_article', '2', $this->getConfig('consultation_article_id'), $this->getConfig('default_lang'));
 					?>
 				</div>
 			</fieldset>

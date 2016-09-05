@@ -13,12 +13,20 @@ class d2u_machinery_frontend_helper {
 		// Prepare objects first for sorting in correct order
 		$category = FALSE;
 		$machine = FALSE;
-		if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT) > 0) {
-			$machine = new Machine(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT), rex_clang::getCurrentId());
+		if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT) > 0 || (rex_addon::get("url")->isAvailable() && UrlGenerator::getUrlParamKey() === "machine_id")) {
+			$machine_id = filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT);
+			if(rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
+				$machine_id = UrlGenerator::getId();
+			}
+			$machine = new Machine($machine_id, rex_clang::getCurrentId());
 			$category = $machine->category;
 		}
-		if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT) > 0 ) {
-			$category = new Category(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT), rex_clang::getCurrentId());
+		if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT) > 0 || (rex_addon::get("url")->isAvailable() && UrlGenerator::getUrlParamKey() === "category_id")) {
+			$category_id = filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT);
+			if(rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
+				$category_id = UrlGenerator::getId();
+			}
+			$category = new Category($category_id, rex_clang::getCurrentId());
 		}
 
 		// Breadcrumbs
@@ -33,8 +41,12 @@ class d2u_machinery_frontend_helper {
 		}
 		
 		// Industry sectors
-		if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable() && filter_input(INPUT_GET, 'industry_sector_id', FILTER_VALIDATE_INT) > 0) {
-			$industry_sector = new IndustrySector(filter_input(INPUT_GET, 'industry_sector_id', FILTER_VALIDATE_INT), rex_clang::getCurrentId());
+		if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable() && (filter_input(INPUT_GET, 'industry_sector_id', FILTER_VALIDATE_INT) > 0 || (rex_addon::get("url")->isAvailable() && UrlGenerator::getUrlParamKey() === "industry_sector_id"))) {
+			$industry_sector_id = filter_input(INPUT_GET, 'industry_sector_id', FILTER_VALIDATE_INT);
+			if(rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
+				$industry_sector_id = UrlGenerator::getId();
+			}
+			$industry_sector = new IndustrySector($industry_sector_id, rex_clang::getCurrentId());
 			$breadcrumbs[] = '<a href="' . $industry_sector->getUrl() . '">' . $industry_sector->name . '</a>';
 		}
 		

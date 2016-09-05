@@ -33,6 +33,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$industry_sector->clang_id = $rex_clang->getId();
 		}
 		$industry_sector->name = $form['lang'][$rex_clang->getId()]['name'];
+		$industry_sector->teaser = $form['lang'][$rex_clang->getId()]['teaser'];
 		$industry_sector->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 
 		if($industry_sector->translation_needs_update == "delete") {
@@ -143,6 +144,7 @@ if ($func == 'edit' || $func == 'add') {
 								}
 								
 								d2u_addon_backend_helper::form_input('d2u_machinery_name', "form[lang][". $rex_clang->getId() ."][name]", $industry_sector->name, $required, $readonly_lang, "text");
+								d2u_addon_backend_helper::form_input('d2u_machinery_machine_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $industry_sector->teaser, FALSE, $readonly_lang, "text");
 							?>
 						</div>
 					</fieldset>

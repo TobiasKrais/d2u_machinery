@@ -22,6 +22,8 @@ d2u_machinery_rights_settings = D2U Maschinen Addon: Einstellungen
 d2u_machinery_settings_article = Maschinen Artikel
 d2u_machinery_settings_categories_usage_area = In der Navigation zusätzlich zu den Kategorien deren Anwendungsgebiete anzeigen
 d2u_machinery_settings_defaultlang = Ausgangssprache
+d2u_machinery_settings_consultation_article = Link hinter "Lassen Sie sich beraten"
+d2u_machinery_settings_consultation_pic = Bild zu "Lassen Sie sich beraten"
 d2u_machinery_settings_request_form_email = Empfänger E-Mail Adresse für Anfrageformular
 
 d2u_machinery_category = Kategorie
@@ -33,7 +35,6 @@ d2u_machinery_category_export_machinerypark_category_id = EuropeMachinery Katego
 d2u_machinery_category_export_mascus_category_name_category_id = Mascus Kategorie Name
 d2u_machinery_category_no_categories_found = Es wurden noch keine Kategorien angelegt.
 d2u_machinery_category_parent = Elternkategorie
-d2u_machinery_category_parent_none = Ohne Elternkategorie
 d2u_machinery_category_pdfs = PDF Dateien
 d2u_machinery_category_pic = Bild
 d2u_machinery_category_pic_lang = Bild (überschreibt allg. Bild)

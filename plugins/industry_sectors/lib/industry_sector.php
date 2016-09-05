@@ -25,6 +25,11 @@ class IndustrySector {
 	var $name = "";
 	
 	/**
+	 * @var string Teaser
+	 */
+	var $teaser = "";
+
+	/**
 	 * @var string Preview picture file name 
 	 */
 	var $pic = "";
@@ -62,6 +67,7 @@ class IndustrySector {
 		if ($num_rows > 0) {
 			$this->industry_sector_id = $result->getValue("industry_sector_id");
 			$this->name = $result->getValue("name");
+			$this->teaser = htmlspecialchars_decode($result->getValue("teaser"));
 			$this->pic = $result->getValue("pic");
 			$this->online_status = $result->getValue("online_status");
 			$this->translation_needs_update = $result->getValue("translation_needs_update");
@@ -141,6 +147,14 @@ class IndustrySector {
 	}
 	
 	/**
+	 * Get the <link rel="canonical"> tag for page header.
+	 * @return Complete tag.
+	 */
+	public function getCanonicalTag() {
+		return '<link rel="canonical" href="'. $this->getURL() .'">';
+	}
+	
+	/**
 	 * Gets the machines reffering to this object.
 	 * @return Machine[] Machines reffering to this object.
 	 */
@@ -158,11 +172,48 @@ class IndustrySector {
 		return $machines;
 	}
 	
-	/*
+	/**
+	 * Get the <meta rel="alternate" hreflang=""> tags for page header.
+	 * @return Complete tags.
+	 */
+	public function getMetaAlternateHreflangTags() {
+		$hreflang_tags = "";
+		foreach(rex_clang::getAll() as $rex_clang) {
+			if($rex_clang->getId() == $this->clang_id && $this->translation_needs_update != "delete") {
+				$hreflang_tags .= '<link rel="alternate" type="text/html" hreflang="'. $rex_clang->getCode() .'" href="'. $this->getURL() .'" title="'. str_replace('"', '', $this->name) .'">';
+			}
+			else {
+				$industry_sector = new IndustrySector($this->industry_sector_id, $rex_clang->getId());
+				if($industry_sector->translation_needs_update != "delete" && $industry_sector->online_status == "online") {
+					$hreflang_tags .= '<link rel="alternate" type="text/html" hreflang="'. $rex_clang->getCode() .'" href="'. $industry_sector->getURL() .'" title="'. str_replace('"', '', $industry_sector->name) .'">';
+				}
+			}
+		}
+		return $hreflang_tags;
+	}
+	
+	/**
+	 * Get the <meta name="description"> tag for page header.
+	 * @return Complete tag.
+	 */
+	public function getMetaDescriptionTag() {
+		return '<meta name="description" content="'. $this->teaser .'">';
+	}
+	
+	/**
+	 * Get the <title> tag for page header.
+	 * @return Complete title tag.
+	 */
+	public function getTitleTag() {
+		return '<title>'. $this->name .' / '. rex::getServerName() .'</title>';
+	}
+	
+	/**
 	 * Returns the URL of this object.
+	 * @param string $including_domain TRUE if Domain name should be included
 	 * @return string URL
 	 */
-	public function getURL() {
+	public function getURL($including_domain = TRUE) {
 		if($this->url == "") {
 			// Without SEO Plugins
 			$d2u_machinery = rex_addon::get("d2u_machinery");
@@ -172,7 +223,12 @@ class IndustrySector {
 			$this->url = rex_getUrl($d2u_machinery->getConfig('article_id'), $this->clang_id, $parameterArray, "&");
 		}
 
-		return $this->url;
+		if($including_domain) {
+			return str_replace(rex::getServer(). '/', rex::getServer(), rex::getServer() . $this->url) ;
+		}
+		else {
+			return $this->url;
+		}
 	}
 	
 	/**
@@ -214,6 +270,7 @@ class IndustrySector {
 						."industry_sector_id = '". $this->industry_sector_id ."', "
 						."clang_id = '". $this->clang_id ."', "
 						."name = '". $this->name ."', "
+						."teaser = '". htmlspecialchars($this->teaser) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."' ";
 
 				$result = rex_sql::factory();

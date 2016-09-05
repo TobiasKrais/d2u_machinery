@@ -155,7 +155,7 @@ class Machine {
 	var $pdfs = array();
 
 	/**
-	 * @var string Needs translation update? "no" or "yes"
+	 * @var string Needs translation update? "no", "yes" or "delete"
 	 */
 	var $translation_needs_update = "delete";
 
@@ -302,6 +302,14 @@ class Machine {
 	}
 	
 	/**
+	 * Get the <link rel="canonical"> tag for page header.
+	 * @return Complete tag.
+	 */
+	public function getCanonicalTag() {
+		return '<link rel="canonical" href="'. $this->getURL() .'">';
+	}
+	
+	/**
 	 * Get Feature objects related to this machine.
 	 * @return Feature[] Array with Feature objects.
 	 */
@@ -311,6 +319,34 @@ class Machine {
 			$features[] = new Feature($feature_id, $this->clang_id);
 		}
 		return $features;
+	}
+
+	/**
+	 * Get the <meta rel="alternate" hreflang=""> tags for page header.
+	 * @return Complete tags.
+	 */
+	public function getMetaAlternateHreflangTags() {
+		$hreflang_tags = "";
+		foreach(rex_clang::getAll() as $rex_clang) {
+			if($rex_clang->getId() == $this->clang_id && $this->translation_needs_update != "delete") {
+				$hreflang_tags .= '<link rel="alternate" type="text/html" hreflang="'. $rex_clang->getCode() .'" href="'. $this->getURL() .'" title="'. str_replace('"', '', $this->category->name .': '. $this->name) .'">';
+			}
+			else {
+				$machine = new Machine($this->machine_id, $rex_clang->getId());
+				if($machine->translation_needs_update != "delete") {
+					$hreflang_tags .= '<link rel="alternate" type="text/html" hreflang="'. $rex_clang->getCode() .'" href="'. $machine->getURL() .'" title="'. str_replace('"', '', $machine->category->name .': '. $machine->name) .'">';
+				}
+			}
+		}
+		return $hreflang_tags;
+	}
+	
+	/**
+	 * Get the <meta name="description"> tag for page header.
+	 * @return Complete tag.
+	 */
+	public function getMetaDescriptionTag() {
+		return '<meta name="description" content="'. $this->teaser .'">';
 	}
 	
 	/**
@@ -374,10 +410,19 @@ class Machine {
 	}
 	
 	/**
+	 * Get the <title> tag for page header.
+	 * @return Complete title tag.
+	 */
+	public function getTitleTag() {
+		return '<title>'. $this->name .' / '. $this->category->name .' / '. rex::getServerName() .'</title>';
+	}
+	
+	/**
 	 * Returns the URL of this object.
+	 * @param string $including_domain TRUE if Domain name should be included
 	 * @return string URL
 	 */
-	public function getURL() {
+	public function getURL($including_domain = TRUE) {
 		if($this->url == "") {
 			// Without SEO Plugins
 			$d2u_machinery = rex_addon::get("d2u_machinery");
@@ -387,7 +432,12 @@ class Machine {
 			$this->url = rex_getUrl($d2u_machinery->getConfig('article_id'), $this->clang_id, $parameterArray, "&");
 		}
 
-		return $this->url;
+		if($including_domain) {
+			return str_replace(rex::getServer(). '/', rex::getServer(), rex::getServer() . $this->url) ;
+		}
+		else {
+			return $this->url;
+		}
 	}
 
 	/**

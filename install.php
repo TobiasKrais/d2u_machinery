@@ -48,6 +48,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machin
 	category_id int(10) NOT NULL,
 	clang_id int(10) NOT NULL,
 	name varchar(255) collate utf8_general_ci default NULL,
+	teaser varchar(255) collate utf8_general_ci default NULL,
 	usage_area varchar(255) collate utf8_general_ci default NULL,
 	pic_lang varchar(255) collate utf8_general_ci default NULL,
 	pdfs varchar(255) collate utf8_general_ci default NULL,
@@ -56,6 +57,15 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machin
 	updateuser varchar(255) collate utf8_general_ci default NULL,
 	PRIMARY KEY (category_id, clang_id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
+
+// TODO
+$view_sql = 'CREATE VIEW '. rex::getTablePrefix() .'d2u_machinery_url_machines AS
+	SELECT lang.machine_id, lang.clang_id, machines.name, lang.teaser, machines.category_id, machines.online_status
+	FROM '. rex::getTablePrefix() .'d2u_machinery_machines_lang AS lang
+	LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_machines AS machines ON lang.machine_id = machines.machine_id';
+
+// TODO
+$category_view_sql = "SELECT machines.name, cat_lang.name, parent_lang.name FROM rex_d2u_machinery_machines_lang AS machines_lang LEFT JOIN rex_d2u_machinery_machines AS machines ON machines_lang.machine_id = machines.machine_id LEFT JOIN rex_d2u_machinery_categories_lang AS cat_lang ON machines.category_id = cat_lang.category_id AND machines_lang.clang_id = cat_lang.clang_id LEFT JOIN rex_d2u_machinery_categories AS cat ON machines.category_id = cat.category_id LEFT JOIN rex_d2u_machinery_categories_lang AS parent_lang ON cat.parent_category_id = parent_lang.category_id AND machines_lang.clang_id = parent_lang.clang_id";
 
 // Media Manager media types
 $sql->setQuery("SELECT * FROM ". rex::getTablePrefix() ."media_manager_type WHERE name = 'd2u_machinery_list_tile'");
