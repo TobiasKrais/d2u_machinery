@@ -174,7 +174,7 @@ class Machine {
 		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_machines AS machines "
 				."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_machines_lang AS lang "
 					."ON machines.machine_id = lang.machine_id "
-				."WHERE machines.machine_id = ". $machine_id ." AND clang_id = ". $clang_id;
+				."WHERE machines.machine_id = ". $machine_id ." AND clang_id = ". $this->clang_id;
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		$num_rows = $result->getRows();
@@ -205,6 +205,16 @@ class Machine {
 			$this->pdfs = preg_grep('/^\s*$/s', explode(",", $result->getValue("pdfs")), PREG_GREP_INVERT);
 			$this->translation_needs_update = $result->getValue("translation_needs_update");
 
+			// Convert redaxo://123 to URL
+			$this->description = preg_replace_callback(
+					'@redaxo://(\d+)(?:-(\d+))?/?@i',
+					create_function(
+							'$matches',
+							'return rex_getUrl($matches[1], isset($matches[2]) ? $matches[2] : "");'
+					),
+					$this->description
+			);
+			
 			if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable()) {
 				$this->industry_sector_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("industry_sector_ids")), PREG_GREP_INVERT);
 			}
@@ -282,12 +292,12 @@ class Machine {
 	 * Get all machines.
 	 * @param int $clang_id Redaxo clang id.
 	 * @param boolean $only_online Show only online machines
-	 * @return Categories[] Array with Category objects.
+	 * @return Machines[] Array with Machine objects.
 	 */
 	public static function getAll($clang_id, $only_online = FALSE) {
 		$query = "SELECT machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_machines ";
 		if($only_online) {
-			$query .= "WHERE online_status = 'yes' ";
+			$query .= "WHERE online_status = 'online' ";
 		}
 		$query .= "ORDER BY name";
 		$result = rex_sql::factory();
