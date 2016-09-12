@@ -8,7 +8,6 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machin
 	category_id int(10) default NULL,
 	availability varchar(10) collate utf8_general_ci default NULL,
 	product_number varchar(255) collate utf8_general_ci default NULL,
-	product_number_dealer varchar(255) collate utf8_general_ci default NULL,
 	manufacturer varchar(255) collate utf8_general_ci default NULL,
 	year_built int(4) default NULL,
 	price decimal(10,2) default NULL,

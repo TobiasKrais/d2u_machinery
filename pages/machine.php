@@ -166,7 +166,7 @@ if ($func == 'edit' || $func == 'add') {
 									$options[$category->category_id] = $category->name;
 								}
 							}
-							d2u_addon_backend_helper::form_select('d2u_machinery_category', 'form[category_id]', $options, $machine->category->category_id, 1, FALSE, $readonly);
+							d2u_addon_backend_helper::form_select('d2u_machinery_category', 'form[category_id]', $options, array($machine->category->category_id), 1, FALSE, $readonly);
 							$options_alt_machines = array();
 							foreach(Machine::getAll(rex_config::get("d2u_machinery", "default_lang")) as $alt_machine) {
 								if($alt_machine->machine_id != $machine->machine_id) {

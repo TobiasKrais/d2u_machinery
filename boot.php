@@ -46,6 +46,13 @@ function rex_d2u_machinery_media_is_in_use(rex_extension_point $ep) {
 		$warning[] = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/category&func=edit&entry_id='. $sql_categories->getValue('category_id') .'\')">'.
 			 rex_i18n::msg('d2u_machinery_rights_all') ." - ". rex_i18n::msg('d2u_machinery_meta_categories') .': '. $sql_categories->getValue('name') . '</a>';
     }
+	
+	// Settings
+	$addon = rex_addon::get("d2u_machinery");
+	if($addon->hasConfig("consultation_pic") && $addon->getConfig("consultation_pic") == $filename) {
+		$warning[] = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/settings\')">'.
+			 rex_i18n::msg('d2u_machinery_rights_all') ." - ". rex_i18n::msg('d2u_machinery_meta_settings') . '</a>';
+	}
 
 	return $warning;
 }

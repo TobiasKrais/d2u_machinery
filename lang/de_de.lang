@@ -35,6 +35,7 @@ d2u_machinery_category_export_machinerypark_category_id = EuropeMachinery Katego
 d2u_machinery_category_export_mascus_category_name_category_id = Mascus Kategorie Name
 d2u_machinery_category_no_categories_found = Es wurden noch keine Kategorien angelegt.
 d2u_machinery_category_parent = Elternkategorie
+d2u_machinery_category_parent_none = Hat keine Elternkategorie
 d2u_machinery_category_pdfs = PDF Dateien
 d2u_machinery_category_pic = Bild
 d2u_machinery_category_pic_lang = Bild (überschreibt allg. Bild)

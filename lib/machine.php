@@ -517,6 +517,12 @@ class Machine {
 				$error = $result->hasError();
 			}
 		}
+
+		// Update URLs
+		if(rex_addon::get("url")->isAvailable()) {
+			UrlGenerator::generatePathFile([]);
+		}
+		
 		return $error;
 	}
 }

@@ -24,7 +24,7 @@ if ($func == '') {
 		. 'ORDER BY machines.name ASC');
     $list->addTableAttribute('class', 'table-striped table-hover');
 
-    $tdIcon = '<i class="rex-icon rex-icon-module"></i>';
+    $tdIcon = '<i class="rex-icon fa-truck"></i>';
     $thIcon = '<a href="' . $list->getUrl(['func' => 'add']) . '" title="' . rex_i18n::msg('add') . '"><i class="rex-icon rex-icon-add-module"></i></a>';
     $list->addColumn($thIcon, $tdIcon, 0, ['<th class="rex-table-icon">###VALUE###</th>', '<td class="rex-table-icon">###VALUE###</td>']);
     $list->setColumnParams($thIcon, ['func' => 'edit', 'entry_id' => '###used_machine_id###']);
