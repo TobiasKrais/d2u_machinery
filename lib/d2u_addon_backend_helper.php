@@ -306,7 +306,8 @@ if(!class_exists('d2u_addon_backend_helper')) {
 		public static function form_textarea($message_id, $fieldname, $value, $rows = 5, $required = FALSE, $readonly = FALSE, $use_redactor = TRUE) {
 			print '<dl class="rex-form-group form-group">';
 			print '<dt><label>'. rex_i18n::msg($message_id) .'</label></dt>';
-			print '<dd><textarea cols="1" rows="'. $rows .'" class="form-control redactorEditor2-full" name="'. $fieldname .'"';
+			$redactor_class = $use_redactor ? ' redactorEditor2-full' : '';
+			print '<dd><textarea cols="1" rows="'. $rows .'" class="form-control'. $redactor_class .'" name="'. $fieldname .'"';
 			if($required) {
 				print ' required';
 			}
