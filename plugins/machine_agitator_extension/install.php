@@ -18,6 +18,8 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machin
 // Alter machine table
 $sql->setQuery("ALTER TABLE ". rex::getTablePrefix() ."d2u_machinery_machines "
 	. "ADD agitator_type_id INT(10) NULL DEFAULT NULL;");
+$sql->setQuery("ALTER TABLE ". rex::getTablePrefix() ."d2u_machinery_machines "
+	. "ADD viscosity INT(10) NULL DEFAULT NULL;");
 
 // Create tables: agitators
 $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machinery_agitators (

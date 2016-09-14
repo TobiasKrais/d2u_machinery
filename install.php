@@ -38,10 +38,10 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machin
 
 $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machinery_categories (
 	category_id int(10) unsigned NOT NULL auto_increment,
+	prio int(10) default NULL,
 	parent_category_id varchar(255) collate utf8_general_ci default NULL,
 	pic varchar(255) collate utf8_general_ci default NULL,
 	pic_usage varchar(255) collate utf8_general_ci default NULL,
-	videomanager_ids varchar(255) collate utf8_general_ci default NULL,
 	PRIMARY KEY (category_id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
 $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machinery_categories_lang (
@@ -60,7 +60,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machin
 
 // TODO
 $view_sql = 'CREATE VIEW '. rex::getTablePrefix() .'d2u_machinery_url_machines AS
-	SELECT lang.machine_id, lang.clang_id, machines.name, lang.teaser, machines.category_id, machines.online_status
+	SELECT lang.machine_id, lang.clang_id, machines.name, lang.teaser, machines.category_id, machines.online_status, lang.updatedate
 	FROM '. rex::getTablePrefix() .'d2u_machinery_machines_lang AS lang
 	LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_machines AS machines ON lang.machine_id = machines.machine_id';
 
@@ -97,5 +97,6 @@ if (!$this->hasConfig()) {
 	
     $this->setConfig('article_id', rex_article::getSiteStartArticleId());
 	$this->setConfig('default_lang', $default_clang_id);
+	$this->setConfig('default_category_sort', 'name');
 	$this->setConfig('show_categories_usage_area', 'hide');
 }

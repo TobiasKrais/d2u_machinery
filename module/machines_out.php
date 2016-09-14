@@ -107,7 +107,7 @@ if(!function_exists('print_machines')) {
 					print '<img src="'.	rex_addon::get("d2u_machinery")->getAssetsUrl("white_tile.gif") .'" alt="Placeholder">';
 				}
 				print '<div><b>'. $machine->name .'</b></div>';
-				print '<div class="teaser">'. $machine->teaser .'</div>';
+				print '<div class="teaser">'. nl2br($machine->teaser) .'</div>';
 				print '</div>';
 				print '</a>';
 				print '</div>';
@@ -120,8 +120,13 @@ if(!function_exists('print_machines')) {
 $sprog = rex_addon::get("sprog");
 $tag_open = $sprog->getConfig('wildcard_open_tag');
 $tag_close = $sprog->getConfig('wildcard_close_tag');
+$urlParamKey = "";
+if(rex_addon::get("url")->isAvailable()) {
+	$url_data = UrlGenerator::getData();
+	$urlParamKey = $url_data->urlParamKey;
+}
 
-if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT) > 0 || (rex_addon::get("url")->isAvailable() && UrlGenerator::getUrlParamKey() === "category_id")) {
+if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "category_id")) {
 	$category_id = filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT);
 	if(rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
 		$category_id = UrlGenerator::getId();
@@ -222,7 +227,7 @@ if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT) > 0 || (rex_addon
 		print '</div>';
 	}
 }
-else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT) > 0 || (rex_addon::get("url")->isAvailable() && UrlGenerator::getUrlParamKey() === "machine_id")) {
+else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "machine_id")) {
 	// Print machine
 	$machine_id = filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT);
 	if(rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
@@ -463,7 +468,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT) > 0 || (rex_a
 	print '</div>';
 	print '</div>';
 }
-else if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable() && (filter_input(INPUT_GET, 'industry_sector_id', FILTER_VALIDATE_INT) > 0 || (rex_addon::get("url")->isAvailable() && UrlGenerator::getUrlParamKey() === "industry_sector_id"))) {
+else if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable() && (filter_input(INPUT_GET, 'industry_sector_id', FILTER_VALIDATE_INT) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "industry_sector_id"))) {
 	$industry_sector_id = filter_input(INPUT_GET, 'industry_sector_id', FILTER_VALIDATE_INT);
 	if(rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
 		$industry_sector_id = UrlGenerator::getId();

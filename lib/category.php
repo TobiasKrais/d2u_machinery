@@ -90,6 +90,11 @@ class Category {
 	var $pdfs = array();
 	
 	/**
+	 * @var int Sort Priority
+	 */
+	var $prio = 0;
+	
+	/**
 	 * @var string "yes" if translation needs update
 	 */
 	var $translation_needs_update = "delete";
@@ -141,7 +146,7 @@ class Category {
 			$this->pic_lang = $result->getValue("pic_lang");
 			$this->pic_usage = $result->getValue("pic_usage");
 			$this->pdfs = preg_grep('/^\s*$/s', explode(",", $result->getValue("pdfs")), PREG_GREP_INVERT);
-			$this->videomanager_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("videomanager_ids")), PREG_GREP_INVERT); // TODO
+			$this->prio = $result->getValue("prio");
 			$this->translation_needs_update = $result->getValue("translation_needs_update");
 			$this->updatedate = $result->getValue("updatedate");
 			$this->updateuser = $result->getValue("updateuser");
@@ -193,9 +198,16 @@ class Category {
 	 * @return Category[] Array with Category objects.
 	 */
 	public static function getAll($clang_id) {
-		$query = "SELECT category_id FROM ". rex::getTablePrefix() ."d2u_machinery_categories_lang "
-			."WHERE clang_id = ". $clang_id ." "
-			."ORDER BY name";
+		$query = "SELECT lang.category_id FROM ". rex::getTablePrefix() ."d2u_machinery_categories_lang AS lang "
+			."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_categories AS categories "
+				."ON lang.category_id = categories.category_id "
+			."WHERE clang_id = ". $clang_id ." ";
+		if(rex_addon::get('d2u_machinery')->getConfig('default_category_sort') == 'prio') {
+			$query .= 'ORDER BY prio';
+		}
+		else {
+			$query .= 'ORDER BY name';
+		}
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
@@ -381,7 +393,7 @@ class Category {
 	 * @param string $including_domain TRUE if Domain name should be included
 	 * @return string URL
 	 */
-	public function getURL($including_domain = TRUE) {
+	public function getURL($including_domain = FALSE) {
 		if($this->url == "") {
 			// Without SEO Plugins
 			$d2u_machinery = rex_addon::get("d2u_machinery");
@@ -392,7 +404,7 @@ class Category {
 		}
 
 		if($including_domain) {
-			return str_replace(rex::getServer(). '/', rex::getServer(), rex::getServer() . $this->url) ;
+			return str_replace(rex::getServer(). '/', rex::getServer(), rex::getServer() . $this->url);
 		}
 		else {
 			return $this->url;
@@ -408,9 +420,16 @@ class Category {
 
 		// Save the not language specific part
 		$pre_save_category = new Category($this->category_id, $this->clang_id);
+	
+		// save priority, but only if new or changed
+		if($this->prio != $pre_save_category->prio || $this->category_id == 0) {
+			$this->setPrio();
+		}
+
 		if($this->category_id == 0 || $pre_save_category != $this) {
 			$query = rex::getTablePrefix() ."d2u_machinery_categories SET "
 					."parent_category_id = '". $this->parent_category->category_id ."', "
+					."prio = '". $this->prio ."', "
 					."pic = '". $this->pic ."', "
 					."pic_usage = '". $this->pic_usage ."' ";
 			if(rex_plugin::get("d2u_machinery", "export")->isAvailable()) {
@@ -418,9 +437,6 @@ class Category {
 					."export_europemachinery_category_name = '". $this->export_europemachinery_category_name ."', "
 					."export_machinerypark_category_id = '". $this->export_machinerypark_category_id ."', "
 					."export_mascus_category_name = '". $this->export_mascus_category_name ."' ";
-			}
-			if(rex_addon::get("d2u_videos")->isAvailable()) {
-				$query .= ", videomanager_ids = '". implode(",", $this->videomanager_ids) ."' ";
 			}
 
 			if($this->category_id == 0) {
@@ -466,5 +482,42 @@ class Category {
 		}
 		
 		return $error;
+	}
+		
+	/**
+	 * Reassigns priority to all Categories in database.
+	 */
+	private function setPrio() {
+		// Pull prios from database
+		$query = "SELECT category_id, prio FROM ". rex::getTablePrefix() ."d2u_machinery_categories "
+			."WHERE category_id <> ". $this->category_id ." ORDER BY prio";
+		$result = rex_sql::factory();
+		$result->setQuery($query);
+		
+		// When prio is too small, set at beginning
+		if($this->prio <= 0) {
+			$this->prio = 1;
+		}
+		
+		// When prio is too high, simply add at end 
+		if($this->prio > $result->getRows()) {
+			$this->prio = $result->getRows() + 1;
+		}
+
+		$categories = array();
+		for($i = 0; $i < $result->getRows(); $i++) {
+			$categories[$result->getValue("prio")] = $result->getValue("category_id");
+			$result->next();
+		}
+		array_splice($categories, ($this->prio - 1), 0, array($this->category_id));
+
+		// Save all prios
+		foreach($categories as $prio => $category_id) {
+			$query = "UPDATE ". rex::getTablePrefix() ."d2u_machinery_categories "
+					."SET prio = ". ($prio + 1) ." " // +1 because array_splice recounts at zero
+					."WHERE category_id = ". $category_id;
+			$result = rex_sql::factory();
+			$result->setQuery($query);
+		}
 	}
 }

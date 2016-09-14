@@ -28,6 +28,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			else {
 				$category->parent_category = FALSE;
 			}
+			$category->prio = $form['prio'];
 			$category->pic = $input_media[1];
 			$category->pic_usage = $input_media[2];
 
@@ -180,7 +181,7 @@ if ($func == 'edit' || $func == 'add') {
 					}
 				?>
 				<fieldset>
-					<legend><?php echo rex_i18n::msg('d2u_machinery_category_data_all_lang'); ?></legend>
+					<legend><?php echo rex_i18n::msg('d2u_machinery_data_all_lang'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
 							// Do not use last object from translations, because you don't know if it exists in DB
@@ -198,6 +199,7 @@ if ($func == 'edit' || $func == 'add') {
 								}
 							}
 							d2u_addon_backend_helper::form_select('d2u_machinery_category_parent', 'form[parent_category_id]', $options, array($category->parent_category->category_id), 1, FALSE, $readonly);
+							d2u_addon_backend_helper::form_input('header_priority', 'form[prio]', $category->prio, TRUE, $readonly, 'number');
 							d2u_addon_backend_helper::form_mediafield('d2u_machinery_category_pic', '1', $category->pic, $readonly);
 							d2u_addon_backend_helper::form_mediafield('d2u_machinery_category_pic_usage', '2', $category->pic_usage, $readonly);
 
@@ -248,13 +250,18 @@ if ($func == 'edit' || $func == 'add') {
 }
 
 if ($func == '') {
-	$query = 'SELECT categories.category_id, lang.name AS categoryname, parents_lang.name AS parentname '
+	$query = 'SELECT categories.category_id, lang.name AS categoryname, parents_lang.name AS parentname, prio '
 		. 'FROM '. rex::getTablePrefix() .'d2u_machinery_categories AS categories '
 		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_categories_lang AS lang '
 			. 'ON categories.category_id = lang.category_id AND lang.clang_id = '. rex_config::get("d2u_machinery", "default_lang") .' '
 		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_categories_lang AS parents_lang '
-			. 'ON categories.parent_category_id = parents_lang.category_id AND parents_lang.clang_id = '. rex_config::get("d2u_machinery", "default_lang") .' '
-		. 'ORDER BY categoryname ASC';
+			. 'ON categories.parent_category_id = parents_lang.category_id AND parents_lang.clang_id = '. rex_config::get("d2u_machinery", "default_lang") .' ';
+	if($this->getConfig('default_category_sort') == 'prio') {
+		$query .= 'ORDER BY prio ASC';
+	}
+	else {
+		$query .= 'ORDER BY categoryname ASC';
+	}
     $list = rex_list::factory($query);
 
     $list->addTableAttribute('class', 'table-striped table-hover');
@@ -271,6 +278,8 @@ if ($func == '') {
     $list->setColumnParams('categoryname', ['func' => 'edit', 'entry_id' => '###category_id###']);
 
     $list->setColumnLabel('parentname', rex_i18n::msg('d2u_machinery_category_parent'));
+
+	$list->setColumnLabel('prio', rex_i18n::msg('header_priority'));
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('system_update'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);

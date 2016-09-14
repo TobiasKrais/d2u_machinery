@@ -54,6 +54,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			}
 			if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable()) {
 				$machine->agitator_type_id = $form['agitator_type_id'] == '' ? 0 : $form['agitator_type_id'];
+				$machine->viscosity = $form['viscosity'] == '' ? 0 : $form['viscosity'];
 			}
 			if(rex_plugin::get("d2u_machinery", "machine_usage_area_extension")->isAvailable()) {
 				$machine->usage_area_ids = $form['usage_area_ids'];
@@ -151,7 +152,7 @@ if ($func == 'edit' || $func == 'add') {
 			<div class="panel-body">
 				<input type="hidden" name="form[machine_id]" value="<?php echo $entry_id; ?>">
 				<fieldset>
-					<legend><?php echo rex_i18n::msg('d2u_machinery_category_data_all_lang'); ?></legend>
+					<legend><?php echo rex_i18n::msg('d2u_machinery_data_all_lang'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
 							$readonly = (rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_machinery[edit_tech_data]')) ? FALSE : TRUE;
@@ -212,6 +213,7 @@ if ($func == 'edit' || $func == 'add') {
 							$options_agitator_types[$agitator_type->agitator_type_id] = $agitator_type->name;
 						}
 						d2u_addon_backend_helper::form_select('d2u_machinery_agitator_type', 'form[agitator_type_id]', $options_agitator_types, array($machine->agitator_type_id), 1, FALSE, $readonly);
+						d2u_addon_backend_helper::form_input('d2u_machinery_agitators_viscosity', "form[viscosity]", $machine->viscosity, FALSE, $readonly, "number");
 						print '</div>';
 						print '</fieldset>';
 					}
@@ -275,7 +277,7 @@ if ($func == 'edit' || $func == 'add') {
 								else {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="no">';
 								}
-								d2u_addon_backend_helper::form_input('d2u_machinery_machine_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $machine_lang->teaser, FALSE, $readonly_lang, "text");
+								d2u_addon_backend_helper::form_textarea('d2u_machinery_machine_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $machine_lang->teaser, 3, FALSE, $readonly_lang, FALSE);
 								d2u_addon_backend_helper::form_textarea('d2u_machinery_machine_description', "form[lang][". $rex_clang->getId() ."][description]", $machine_lang->description, 5, FALSE, $readonly_lang, TRUE);
 								d2u_addon_backend_helper::form_medialistfield('d2u_machinery_machine_pdfs', '1'. $rex_clang->getId(), $machine_lang->pdfs, $readonly_lang);
 							?>

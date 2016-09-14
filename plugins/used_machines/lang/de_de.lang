@@ -1,9 +1,20 @@
 d2u_machinery_used_machines = Gebrauchtmaschinen
 d2u_machinery_used_machines_article = Gebrauchtmaschinen Artikel
+d2u_machinery_used_machines_availability = Verfügbar ab
 d2u_machinery_used_machines_category = Kategorie
+d2u_machinery_used_machines_currency_code = Währungscode
+d2u_machinery_used_machines_external_url = Externe URL
+d2u_machinery_used_machines_linked_machine = Verknüpfung zu Maschine
+d2u_machinery_used_machines_location = Standort
+d2u_machinery_used_machines_machine = Gebrauchtmaschine
+d2u_machinery_used_machines_manufacturer = Hersteller
 d2u_machinery_used_machines_name = Name
 d2u_machinery_used_machines_no_used_machines_found = Keine Gebrauchtmaschinen gefunden.
+d2u_machinery_used_machines_price = Preis
+d2u_machinery_used_machines_product_number = Produktnummer
 d2u_machinery_used_machines_settings = Einstellungen
 d2u_machinery_used_machines_technical_data = Technische Daten
+d2u_machinery_used_machines_vat = Prozentsatz im Preis enthaltene MwSt
+d2u_machinery_used_machines_year_built = Baujahr
 
 d2u_machinery_used_machines_rights_used_machines = D2U Maschinen Addon: Gebrauchtmaschinen

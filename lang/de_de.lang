@@ -5,6 +5,7 @@ d2u_machinery_meta_title = D2U Maschinen
 
 d2u_machinery_confirm_delete = Wirklich löschen?
 d2u_machinery_could_not_delete = Löschen fehlgeschlagen! Objekt wird derzeit noch verwendet von:
+d2u_machinery_data_all_lang = Daten für alle Sprachen
 d2u_machinery_name = Name
 d2u_machinery_no_selection = Keine Auswahl
 d2u_machinery_online_status = Online
@@ -22,12 +23,12 @@ d2u_machinery_rights_settings = D2U Maschinen Addon: Einstellungen
 d2u_machinery_settings_article = Maschinen Artikel
 d2u_machinery_settings_categories_usage_area = In der Navigation zusätzlich zu den Kategorien deren Anwendungsgebiete anzeigen
 d2u_machinery_settings_defaultlang = Ausgangssprache
+d2u_machinery_settings_default_sort = Sortierung der Kategorien
 d2u_machinery_settings_consultation_article = Link hinter "Lassen Sie sich beraten"
 d2u_machinery_settings_consultation_pic = Bild zu "Lassen Sie sich beraten"
 d2u_machinery_settings_request_form_email = Empfänger E-Mail Adresse für Anfrageformular
 
 d2u_machinery_category = Kategorie
-d2u_machinery_category_data_all_lang = Daten für alle Sprachen
 d2u_machinery_category_export = Exporteinstellungen
 d2u_machinery_category_export_machinerypark_category_id = MachineryPark.com Kategorie ID
 d2u_machinery_category_export_europemachinery_category_id = EuropeMachinery Kategorie ID

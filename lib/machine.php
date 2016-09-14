@@ -95,6 +95,11 @@ class Machine {
 	var $agitator_type_id = 0;
 
 	/**
+	 * @var int Max. viscosity in mPas
+	 */
+	var $viscosity = 0;
+
+	/**
 	 * @var string Engine power
 	 */
 	var $engine_power = "";
@@ -229,6 +234,7 @@ class Machine {
 
 			if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable()) {
 				$this->agitator_type_id = $result->getValue("agitator_type_id");
+				$this->viscosity = $result->getValue("viscosity");
 			}
 
 			if(rex_plugin::get("d2u_machinery", "machine_usage_area_extension")->isAvailable()) {
@@ -390,6 +396,11 @@ class Machine {
 		$tag_open = $sprog->getConfig('wildcard_open_tag');
 		$tag_close = $sprog->getConfig('wildcard_close_tag');
 		
+		// Max. viscosity
+		if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable() && $this->viscosity > 0) {
+			$tech_data[$tag_open . "d2u_machinery_agitators_viscosity" . $tag_close] = $this->viscosity ." ". $tag_open . "d2u_machinery_agitators_mpas" . $tag_close;
+		}
+
 		// Engine power
 		if($this->engine_power != "") {
 			$tech_data[$tag_open . "d2u_machinery_engine_power" . $tag_close] = $this->engine_power ." ". $tag_open . "d2u_machinery_unit_kw" . $tag_close;
@@ -415,7 +426,7 @@ class Machine {
 		if($this->weight != "") {
 			$tech_data[$tag_open . "d2u_machinery_weight" . $tag_close] = $this->weight ." ". $tag_open . "d2u_machinery_unit_kg" . $tag_close;
 		}
-
+		
 		return $tech_data;
 	}
 	
@@ -432,7 +443,7 @@ class Machine {
 	 * @param string $including_domain TRUE if Domain name should be included
 	 * @return string URL
 	 */
-	public function getURL($including_domain = TRUE) {
+	public function getURL($including_domain = FALSE) {
 		if($this->url == "") {
 			// Without SEO Plugins
 			$d2u_machinery = rex_addon::get("d2u_machinery");
@@ -490,6 +501,7 @@ class Machine {
 			}
 			if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable()) {
 				$query .= ", agitator_type_id = ". $this->agitator_type_id ." ";
+				$query .= ", viscosity = ". $this->viscosity ." ";
 			}
 			if(rex_plugin::get("d2u_machinery", "machine_usage_area_extension")->isAvailable()) {
 				$query .= ", usage_area_ids = '|". implode("|", $this->usage_area_ids) ."|' ";

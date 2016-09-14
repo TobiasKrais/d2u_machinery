@@ -58,6 +58,8 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 				<legend><?php echo rex_i18n::msg('d2u_machinery_meta_categories'); ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
+						$options = array('name' => rex_i18n::msg('d2u_machinery_name'), 'prio' => rex_i18n::msg('header_priority'));
+						d2u_addon_backend_helper::form_select('d2u_machinery_settings_default_sort', 'settings[default_category_sort]', $options, array($this->getConfig('default_category_sort')));
 						d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_categories_usage_area', 'settings[show_categories_usage_area]', 'show', $this->getConfig('show_categories_usage_area') == 'show')
 					?>
 				</div>
