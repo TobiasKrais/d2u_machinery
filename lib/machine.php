@@ -167,7 +167,7 @@ class Machine {
 	/**
 	 * @var String URL der Maschine
 	 */
-	var $url = "";
+	private $url = "";
 
 	/**
 	 * Fetches a machine object from database or creates an empty machine object.
@@ -179,7 +179,8 @@ class Machine {
 		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_machines AS machines "
 				."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_machines_lang AS lang "
 					."ON machines.machine_id = lang.machine_id "
-				."WHERE machines.machine_id = ". $machine_id ." AND clang_id = ". $this->clang_id;
+					."AND clang_id = ". $this->clang_id ." "
+				."WHERE machines.machine_id = ". $machine_id;
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		$num_rows = $result->getRows();

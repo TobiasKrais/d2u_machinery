@@ -47,7 +47,7 @@ class IndustrySector {
 	/**
 	 * @var string URL
 	 */
-	var $url = "";
+	private $url = "";
 	
 	/**
 	 * Constructor. Reads an Industry Sector stored in database.
@@ -59,7 +59,8 @@ class IndustrySector {
 		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_industry_sectors AS industry_sectors "
 				."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang AS lang "
 					."ON industry_sectors.industry_sector_id = lang.industry_sector_id "
-				."WHERE industry_sectors.industry_sector_id = ". $industry_sector_id ." AND clang_id = ". $this->clang_id ." ";
+					."AND clang_id = ". $this->clang_id ." "
+				."WHERE industry_sectors.industry_sector_id = ". $industry_sector_id;
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		$num_rows = $result->getRows();

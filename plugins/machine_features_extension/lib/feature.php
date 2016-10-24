@@ -59,7 +59,8 @@ class Feature {
 		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_features AS features "
 				."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_features_lang AS lang "
 					."ON features.feature_id = lang.feature_id "
-				."WHERE features.feature_id = ". $feature_id ." AND clang_id = ". $this->clang_id ." ";
+					."AND clang_id = ". $this->clang_id ." "
+				."WHERE features.feature_id = ". $feature_id;
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		$num_rows = $result->getRows();

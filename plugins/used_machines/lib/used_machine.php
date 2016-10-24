@@ -107,7 +107,7 @@ class UsedMachine {
 	/**
 	 * @var string URL of the used machine
 	 */
-	var $url = "";
+	private $url = "";
 
 	/**
 	 * Constructor. Fetches the object from database
@@ -119,8 +119,8 @@ class UsedMachine {
 		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_used_machines AS used_machines "
 				."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_used_machines_lang AS lang "
 					."ON used_machines.used_machine_id = lang.used_machine_id "
-				."WHERE used_machines.used_machine_id = ". $used_machine_id ." "
-					."AND clang_id = ". $this->clang_id;
+					."AND clang_id = ". $this->clang_id ." "
+				."WHERE used_machines.used_machine_id = ". $used_machine_id;
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		$num_rows = $result->getRows();

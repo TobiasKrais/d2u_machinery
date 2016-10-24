@@ -49,7 +49,8 @@ class Certificate {
 		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_certificates AS certificates "
 				."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_certificates_lang AS lang "
 					."ON certificates.certificate_id = lang.certificate_id "
-				."WHERE certificates.certificate_id = ". $certificate_id ." AND clang_id = ". $this->clang_id ." ";
+					."AND clang_id = ". $this->clang_id ." "
+				."WHERE certificates.certificate_id = ". $certificate_id;
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		$num_rows = $result->getRows();

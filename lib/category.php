@@ -131,7 +131,8 @@ class Category {
 		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_categories AS categories "
 				."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_categories_lang AS lang "
 					."ON categories.category_id = lang.category_id "
-				."WHERE categories.category_id = ". $category_id ." AND clang_id = ". $this->clang_id ." ";
+					."AND clang_id = ". $this->clang_id ." "
+				."WHERE categories.category_id = ". $category_id;
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		$num_rows = $result->getRows();

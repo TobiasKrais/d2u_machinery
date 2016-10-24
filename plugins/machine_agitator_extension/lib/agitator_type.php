@@ -49,7 +49,8 @@ class AgitatorType {
 		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_agitator_types AS agitator_types "
 				."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_agitator_types_lang AS lang "
 					."ON agitator_types.agitator_type_id = lang.agitator_type_id "
-				."WHERE agitator_types.agitator_type_id = ". $agitator_type_id ." AND clang_id = ". $this->clang_id ." ";
+					."AND clang_id = ". $this->clang_id ." "
+				."WHERE agitator_types.agitator_type_id = ". $agitator_type_id;
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		$num_rows = $result->getRows();

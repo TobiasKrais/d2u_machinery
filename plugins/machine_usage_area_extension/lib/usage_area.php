@@ -49,7 +49,8 @@ class UsageArea {
 		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_usage_areas AS usage_areas "
 				."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_usage_areas_lang AS lang "
 					."ON usage_areas.usage_area_id = lang.usage_area_id "
-				."WHERE usage_areas.usage_area_id = ". $usage_area_id ." AND clang_id = ". $this->clang_id ." ";
+					."AND clang_id = ". $this->clang_id ." "
+				."WHERE usage_areas.usage_area_id = ". $usage_area_id;
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		$num_rows = $result->getRows();
