@@ -12,9 +12,8 @@ d2u_machinery_used_machines_name = Name
 d2u_machinery_used_machines_no_used_machines_found = Keine Gebrauchtmaschinen gefunden.
 d2u_machinery_used_machines_price = Preis
 d2u_machinery_used_machines_product_number = Produktnummer
-d2u_machinery_used_machines_settings = Einstellungen
 d2u_machinery_used_machines_technical_data = Technische Daten
-d2u_machinery_used_machines_vat = Prozentsatz im Preis enthaltene MwSt
+d2u_machinery_used_machines_vat = % enthaltene MwSt
 d2u_machinery_used_machines_year_built = Baujahr
 
 d2u_machinery_used_machines_rights_used_machines = D2U Maschinen Addon: Gebrauchtmaschinen

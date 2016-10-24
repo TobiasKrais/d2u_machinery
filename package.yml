@@ -18,5 +18,8 @@ requires:
         version: '>=5.3'
     packages:
         media_manager: '>=2.0.2'
-        rex_redactor2: '>=2.0'
-        yform: '>=1.0'
+        redactor2: '>=3.0'
+        sprog: '>=1.0.0beta4'
+        url: '>=1.0.0beta4'
+        yform: '>=2.0'
+        yrewrite: '>=2.2'

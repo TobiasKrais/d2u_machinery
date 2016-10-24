@@ -60,12 +60,14 @@ class Category {
 	var $export_machinerypark_category_id = 0;
 	
 	/**
-	 * @var int ID of the corresponding Europe Machinery category
+	 * @var int ID of the corresponding Europe Machinery category,
+	 * @link http://www.agriaffaires.com/html/rubtableauliste_compact_de.html Full List
 	 */
 	var $export_europemachinery_category_id = 0;
 	
 	/**
 	 * @var string Name of the corresponding Europe Machinery category
+	 * @link http://www.agriaffaires.com/html/rubtableauliste_compact_de.html Full List
 	 */
 	var $export_europemachinery_category_name = "";
 	
@@ -92,7 +94,7 @@ class Category {
 	/**
 	 * @var int Sort Priority
 	 */
-	var $prio = 0;
+	var $priority = 0;
 	
 	/**
 	 * @var string "yes" if translation needs update
@@ -146,7 +148,7 @@ class Category {
 			$this->pic_lang = $result->getValue("pic_lang");
 			$this->pic_usage = $result->getValue("pic_usage");
 			$this->pdfs = preg_grep('/^\s*$/s', explode(",", $result->getValue("pdfs")), PREG_GREP_INVERT);
-			$this->prio = $result->getValue("prio");
+			$this->priority = $result->getValue("priority");
 			$this->translation_needs_update = $result->getValue("translation_needs_update");
 			$this->updatedate = $result->getValue("updatedate");
 			$this->updateuser = $result->getValue("updateuser");
@@ -202,8 +204,8 @@ class Category {
 			."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_categories AS categories "
 				."ON lang.category_id = categories.category_id "
 			."WHERE clang_id = ". $clang_id ." ";
-		if(rex_addon::get('d2u_machinery')->getConfig('default_category_sort') == 'prio') {
-			$query .= 'ORDER BY prio';
+		if(rex_addon::get('d2u_machinery')->getConfig('default_category_sort') == 'priority') {
+			$query .= 'ORDER BY priority';
 		}
 		else {
 			$query .= 'ORDER BY name';
@@ -422,14 +424,14 @@ class Category {
 		$pre_save_category = new Category($this->category_id, $this->clang_id);
 	
 		// save priority, but only if new or changed
-		if($this->prio != $pre_save_category->prio || $this->category_id == 0) {
-			$this->setPrio();
+		if($this->priority != $pre_save_category->priority || $this->category_id == 0) {
+			$this->setPriority();
 		}
 
 		if($this->category_id == 0 || $pre_save_category != $this) {
 			$query = rex::getTablePrefix() ."d2u_machinery_categories SET "
 					."parent_category_id = '". $this->parent_category->category_id ."', "
-					."prio = '". $this->prio ."', "
+					."priority = '". $this->priority ."', "
 					."pic = '". $this->pic ."', "
 					."pic_usage = '". $this->pic_usage ."' ";
 			if(rex_plugin::get("d2u_machinery", "export")->isAvailable()) {
@@ -487,34 +489,34 @@ class Category {
 	/**
 	 * Reassigns priority to all Categories in database.
 	 */
-	private function setPrio() {
+	private function setPriority() {
 		// Pull prios from database
-		$query = "SELECT category_id, prio FROM ". rex::getTablePrefix() ."d2u_machinery_categories "
-			."WHERE category_id <> ". $this->category_id ." ORDER BY prio";
+		$query = "SELECT category_id, priority FROM ". rex::getTablePrefix() ."d2u_machinery_categories "
+			."WHERE category_id <> ". $this->category_id ." ORDER BY priority";
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		// When prio is too small, set at beginning
-		if($this->prio <= 0) {
-			$this->prio = 1;
+		// When priority is too small, set at beginning
+		if($this->priority <= 0) {
+			$this->priority = 1;
 		}
 		
 		// When prio is too high, simply add at end 
-		if($this->prio > $result->getRows()) {
-			$this->prio = $result->getRows() + 1;
+		if($this->priority > $result->getRows()) {
+			$this->priority = $result->getRows() + 1;
 		}
 
 		$categories = array();
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$categories[$result->getValue("prio")] = $result->getValue("category_id");
+			$categories[$result->getValue("priority")] = $result->getValue("category_id");
 			$result->next();
 		}
-		array_splice($categories, ($this->prio - 1), 0, array($this->category_id));
+		array_splice($categories, ($this->priority - 1), 0, array($this->category_id));
 
 		// Save all prios
 		foreach($categories as $prio => $category_id) {
 			$query = "UPDATE ". rex::getTablePrefix() ."d2u_machinery_categories "
-					."SET prio = ". ($prio + 1) ." " // +1 because array_splice recounts at zero
+					."SET priority = ". ($prio + 1) ." " // +1 because array_splice recounts at zero
 					."WHERE category_id = ". $category_id;
 			$result = rex_sql::factory();
 			$result->setQuery($query);

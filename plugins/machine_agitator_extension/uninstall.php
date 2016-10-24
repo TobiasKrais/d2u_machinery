@@ -9,3 +9,6 @@ $sql->setQuery('DROP TABLE IF EXISTS ' . rex::getTablePrefix() . 'd2u_machinery_
 
 $sql->setQuery('ALTER TABLE ' . rex::getTablePrefix() . 'd2u_machinery_machines DROP agitator_type_id;');
 $sql->setQuery('ALTER TABLE ' . rex::getTablePrefix() . 'd2u_machinery_machines DROP viscosity;');
+
+// Delete language replacements
+machine_agitator_extension_lang_helper::factory()->uninstall();

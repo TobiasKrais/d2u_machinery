@@ -22,7 +22,7 @@ class Feature {
 	/**
 	 * @var int Sort Priority
 	 */
-	var $prio = 0;
+	var $priority = 0;
 	
 	/**
 	 * @var string Title
@@ -66,7 +66,7 @@ class Feature {
 
 		if ($num_rows > 0) {
 			$this->feature_id = $result->getValue("feature_id");
-			$this->prio = $result->getValue("prio");
+			$this->priority = $result->getValue("priority");
 			$this->title = $result->getValue("title");
 			$this->pic = $result->getValue("pic");
 			$this->category_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("category_ids")), PREG_GREP_INVERT);
@@ -124,7 +124,7 @@ class Feature {
 		if($category_id > 0) {
 			$query .= "AND category_ids LIKE '%|". $category_id ."|%' ";
 		}
-		$query .= "ORDER BY prio";
+		$query .= "ORDER BY priority";
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
@@ -165,8 +165,8 @@ class Feature {
 		$pre_save_feature = new Feature($this->feature_id, $this->clang_id);
 		
 		// save priority, but only if new or changed
-		if($this->prio != $pre_save_feature->prio || $this->feature_id == 0) {
-			$this->setPrio();
+		if($this->priority != $pre_save_feature->priority || $this->feature_id == 0) {
+			$this->setPriority();
 		}
 		
 		// saving the rest
@@ -174,7 +174,7 @@ class Feature {
 			$query = rex::getTablePrefix() ."d2u_machinery_features SET "
 					."pic = '". $this->pic ."', "
 					."category_ids = '|". implode("|", $this->category_ids) ."|', "
-					."prio = '". $this->prio ."' ";
+					."priority = '". $this->priority ."' ";
 
 			if($this->feature_id == 0) {
 				$query = "INSERT INTO ". $query;
@@ -214,21 +214,21 @@ class Feature {
 	/**
 	 * Reassigns priority to all Features in database.
 	 */
-	private function setPrio() {
-		// Pull prios from database
-		$query = "SELECT feature_id, prio FROM ". rex::getTablePrefix() ."d2u_machinery_features "
-			."WHERE feature_id <> ". $this->feature_id ." ORDER BY prio";
+	private function setPriority() {
+		// Pull priorities from database
+		$query = "SELECT feature_id, priority FROM ". rex::getTablePrefix() ."d2u_machinery_features "
+			."WHERE feature_id <> ". $this->feature_id ." ORDER BY priority";
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
 		// When prio is too small, set at beginning
-		if($this->prio <= 0) {
-			$this->prio = 1;
+		if($this->priority <= 0) {
+			$this->priority = 1;
 		}
 		
 		// When prio is too high, simply add at end 
-		if($this->prio > $result->getRows()) {
-			$this->prio = $result->getRows() + 1;
+		if($this->priority > $result->getRows()) {
+			$this->priority = $result->getRows() + 1;
 		}
 
 		$features = array();
@@ -236,12 +236,12 @@ class Feature {
 			$features[$result->getValue("prio")] = $result->getValue("feature_id");
 			$result->next();
 		}
-		array_splice($features, ($this->prio - 1), 0, array($this->feature_id));
+		array_splice($features, ($this->priority - 1), 0, array($this->feature_id));
 
 		// Save all prios
 		foreach($features as $prio => $feature_id) {
 			$query = "UPDATE ". rex::getTablePrefix() ."d2u_machinery_features "
-					."SET prio = ". ($prio + 1) ." " // +1 because array_splice recounts at zero
+					."SET priority = ". ($prio + 1) ." " // +1 because array_splice recounts at zero
 					."WHERE feature_id = ". $feature_id;
 			$result = rex_sql::factory();
 			$result->setQuery($query);

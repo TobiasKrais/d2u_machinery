@@ -19,7 +19,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 		if($usage_area === FALSE) {
 			$usage_area = new UsageArea($usage_area_id, $rex_clang->getId());
 			$usage_area->category_ids = $form['category_ids'];
-			$usage_area->prio = $form['prio'];
+			$usage_area->priority = $form['priority'];
 		}
 		else {
 			$usage_area->clang_id = $rex_clang->getId();
@@ -144,7 +144,7 @@ if ($func == 'edit' || $func == 'add') {
 								$readonly = FALSE;
 							}
 
-							d2u_addon_backend_helper::form_input('header_priority', 'form[prio]', $usage_area->prio, TRUE, $readonly, 'number');
+							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $usage_area->priority, TRUE, $readonly, 'number');
 							
 							$options = array();
 							foreach(Category::getAll(rex_config::get("d2u_machinery", "default_lang")) as $category) {
@@ -174,7 +174,7 @@ if ($func == 'edit' || $func == 'add') {
 }
 
 if ($func == '') {
-	$query = 'SELECT usage_areas.usage_area_id, name, prio '
+	$query = 'SELECT usage_areas.usage_area_id, name, priority '
 		. 'FROM '. rex::getTablePrefix() .'d2u_machinery_usage_areas AS usage_areas '
 		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_usage_areas_lang AS lang '
 			. 'ON usage_areas.usage_area_id = lang.usage_area_id AND lang.clang_id = '. rex_config::get("d2u_machinery", "default_lang") .' '
@@ -194,7 +194,7 @@ if ($func == '') {
     $list->setColumnLabel('name', rex_i18n::msg('d2u_machinery_usage_areas_name'));
     $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###usage_area_id###']);
 
-    $list->setColumnLabel('prio', rex_i18n::msg('header_priority'));
+    $list->setColumnLabel('priority', rex_i18n::msg('header_priority'));
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('system_update'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);

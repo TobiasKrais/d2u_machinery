@@ -22,7 +22,7 @@ class UsageArea {
 	/**
 	 * @var int Sort Priority
 	 */
-	var $prio = 0;
+	var $priority = 0;
 	
 	/**
 	 * @var string Name
@@ -57,7 +57,7 @@ class UsageArea {
 		if ($num_rows > 0) {
 			$this->usage_area_id = $result->getValue("usage_area_id");
 			$this->name = $result->getValue("name");
-			$this->prio = $result->getValue("prio");
+			$this->priority = $result->getValue("priority");
 			$this->category_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("category_ids")), PREG_GREP_INVERT);
 			$this->translation_needs_update = $result->getValue("translation_needs_update");
 		}
@@ -144,14 +144,14 @@ class UsageArea {
 		$pre_save_usage_area = new UsageArea($this->usage_area_id, $this->clang_id);
 		
 		// save priority, but only if new or changed
-		if($this->prio != $pre_save_usage_area->prio || $this->usage_area_id == 0) {
-			$this->setPrio();
+		if($this->priority != $pre_save_usage_area->priority || $this->usage_area_id == 0) {
+			$this->setPriority();
 		}
 
 		if($this->usage_area_id == 0 || $pre_save_usage_area != $this) {
 			$query = rex::getTablePrefix() ."d2u_machinery_usage_areas SET "
 					."category_ids = '|". implode("|", $this->category_ids) ."|', "
-					."prio = '". $this->prio ."' ";
+					."priority = '". $this->priority ."' ";
 
 			if($this->usage_area_id == 0) {
 				$query = "INSERT INTO ". $query;
@@ -190,34 +190,34 @@ class UsageArea {
 	/**
 	 * Reassigns priority to all Usage Areas in database.
 	 */
-	private function setPrio() {
+	private function setPriority() {
 		// Pull prios from database
-		$query = "SELECT usage_area_id, prio FROM ". rex::getTablePrefix() ."d2u_machinery_usage_areas "
-			."WHERE usage_area_id <> ". $this->usage_area_id ." ORDER BY prio";
+		$query = "SELECT usage_area_id, priority FROM ". rex::getTablePrefix() ."d2u_machinery_usage_areas "
+			."WHERE usage_area_id <> ". $this->usage_area_id ." ORDER BY priority";
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
 		// When prio is too small, set at beginning
-		if($this->prio <= 0) {
-			$this->prio = 1;
+		if($this->priority <= 0) {
+			$this->priority = 1;
 		}
 		
 		// When prio is too high, simply add at end 
-		if($this->prio > $result->getRows()) {
-			$this->prio = $result->getRows() + 1;
+		if($this->priority > $result->getRows()) {
+			$this->priority = $result->getRows() + 1;
 		}
 
 		$usage_areas = array();
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$usage_areas[$result->getValue("prio")] = $result->getValue("usage_area_id");
+			$usage_areas[$result->getValue("priority")] = $result->getValue("usage_area_id");
 			$result->next();
 		}
-		array_splice($usage_areas, ($this->prio - 1), 0, array($this->usage_area_id));
+		array_splice($usage_areas, ($this->priority - 1), 0, array($this->usage_area_id));
 
-		// Save all prios
+		// Save all priorities
 		foreach($usage_areas as $prio => $usage_area_id) {
 			$query = "UPDATE ". rex::getTablePrefix() ."d2u_machinery_usage_areas "
-					."SET prio = ". ($prio + 1) ." " // +1 because array_splice recounts at zero
+					."SET priority = ". ($prio + 1) ." " // +1 because array_splice recounts at zero
 					."WHERE usage_area_id = ". $usage_area_id;
 			$result = rex_sql::factory();
 			$result->setQuery($query);

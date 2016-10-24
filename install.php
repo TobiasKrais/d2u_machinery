@@ -38,8 +38,8 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machin
 
 $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machinery_categories (
 	category_id int(10) unsigned NOT NULL auto_increment,
-	prio int(10) default NULL,
-	parent_category_id varchar(255) collate utf8_general_ci default NULL,
+	priority int(10) default NULL,
+	parent_category_id int(10) default NULL,
 	pic varchar(255) collate utf8_general_ci default NULL,
 	pic_usage varchar(255) collate utf8_general_ci default NULL,
 	PRIMARY KEY (category_id)
@@ -58,14 +58,31 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machin
 	PRIMARY KEY (category_id, clang_id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
 
-// TODO
-$view_sql = 'CREATE VIEW '. rex::getTablePrefix() .'d2u_machinery_url_machines AS
-	SELECT lang.machine_id, lang.clang_id, machines.name, lang.teaser, machines.category_id, machines.online_status, lang.updatedate
+// Create views for url addon
+$sql->setQuery('CREATE OR REPLACE VIEW '. rex::getTablePrefix() .'d2u_machinery_url_machines AS
+	SELECT lang.machine_id, lang.clang_id, machines.name, CONCAT(machines.name, " - ", categories.name) AS seo_title, lang.teaser AS seo_description, machines.category_id, lang.updatedate
 	FROM '. rex::getTablePrefix() .'d2u_machinery_machines_lang AS lang
-	LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_machines AS machines ON lang.machine_id = machines.machine_id';
+	LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_machines AS machines ON lang.machine_id = machines.machine_id
+	LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_categories_lang AS categories ON machines.category_id = categories.category_id
+	WHERE machines.online_status = "online"');
+$sql->setQuery('CREATE OR REPLACE VIEW '. rex::getTablePrefix() .'d2u_machinery_url_machine_categories AS
+	SELECT machines.category_id, categories_lang.clang_id, categories_lang.name, parent_categories.name AS parent_name, CONCAT_WS(" - ", categories_lang.name, parent_categories.name) AS seo_title, categories_lang.teaser AS seo_description, categories_lang.updatedate
+	FROM '. rex::getTablePrefix() .'d2u_machinery_machines_lang AS lang
+	LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_machines AS machines ON lang.machine_id = machines.machine_id
+	LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_categories_lang AS categories_lang ON machines.category_id = categories_lang.category_id
+	LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_categories AS categories ON categories_lang.category_id = categories.category_id
+	LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_categories_lang AS parent_categories ON categories.parent_category_id = parent_categories.category_id
+	WHERE machines.online_status = "online"
+	GROUP BY GROUP BY category_id, clang_id, name, parent_name, seo_title, seo_description, updatedate');
+// Insert url schemes
+if(rex_addon::get('url')->isAvailable()) {
+	$sql->setQuery("INSERT INTO `". rex::getTablePrefix() ."url_generate` (`article_id`, `clang_id`, `url`, `table`, `table_parameters`, `relation_table`, `relation_table_parameters`, `relation_insert`, `createdate`, `createuser`, `updatedate`, `updateuser`) VALUES
+		(". rex_article::getSiteStartArticleId() .", 0, '', '1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machine_categories', '{\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machine_categories_field_1\":\"parent_name\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machine_categories_field_2\":\"name\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machine_categories_field_3\":\"\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machine_categories_id\":\"category_id\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machine_categories_clang_id\":\"clang_id\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machine_categories_restriction_field\":\"\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machine_categories_restriction_operator\":\"=\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machine_categories_restriction_value\":\"\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machine_categories_url_param_key\":\"category_id\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machine_categories_seo_title\":\"seo_title\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machine_categories_seo_description\":\"seo_description\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machine_categories_sitemap_add\":\"1\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machine_categories_sitemap_frequency\":\"always\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machine_categories_sitemap_priority\":\"0.7\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machine_categories_sitemap_lastmod\":\"updatedate\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machine_categories_path_names\":\"\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machine_categories_path_categories\":\"0\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machine_categories_relation_field\":\"\"}', '', '[]', 'before', UNIX_TIMESTAMP(), 'd2u_machinery_addon_installer', UNIX_TIMESTAMP(), 'd2u_machinery_addon_installer'),
+		(". rex_article::getSiteStartArticleId() .", 0, '', '1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machines', '{\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machines_field_1\":\"name\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machines_field_2\":\"\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machines_field_3\":\"\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machines_id\":\"machine_id\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machines_clang_id\":\"clang_id\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machines_restriction_field\":\"\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machines_restriction_operator\":\"=\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machines_restriction_value\":\"\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machines_url_param_key\":\"machine_id\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machines_seo_title\":\"seo_title\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machines_seo_description\":\"seo_description\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machines_sitemap_add\":\"1\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machines_sitemap_frequency\":\"monthly\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machines_sitemap_priority\":\"1.0\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machines_sitemap_lastmod\":\"updatedate\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machines_path_names\":\"\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machines_path_categories\":\"0\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_machines_relation_field\":\"category_id\"}', '1_xxx_relation_". rex::getTablePrefix() ."d2u_machinery_url_machine_categories', '{\"1_xxx_relation_". rex::getTablePrefix() ."d2u_machinery_url_machine_categories_field_1\":\"parent_name\",\"1_xxx_relation_". rex::getTablePrefix() ."d2u_machinery_url_machine_categories_field_2\":\"name\",\"1_xxx_relation_". rex::getTablePrefix() ."d2u_machinery_url_machine_categories_field_3\":\"\",\"1_xxx_relation_". rex::getTablePrefix() ."d2u_machinery_url_machine_categories_id\":\"category_id\",\"1_xxx_relation_". rex::getTablePrefix() ."d2u_machinery_url_machine_categories_clang_id\":\"clang_id\"}', 'before', UNIX_TIMESTAMP(), 'd2u_machinery_addon_installer', UNIX_TIMESTAMP(), 'd2u_machinery_addon_installer');");
+}
 
-// TODO
-$category_view_sql = "SELECT machines.name, cat_lang.name, parent_lang.name FROM rex_d2u_machinery_machines_lang AS machines_lang LEFT JOIN rex_d2u_machinery_machines AS machines ON machines_lang.machine_id = machines.machine_id LEFT JOIN rex_d2u_machinery_categories_lang AS cat_lang ON machines.category_id = cat_lang.category_id AND machines_lang.clang_id = cat_lang.clang_id LEFT JOIN rex_d2u_machinery_categories AS cat ON machines.category_id = cat.category_id LEFT JOIN rex_d2u_machinery_categories_lang AS parent_lang ON cat.parent_category_id = parent_lang.category_id AND machines_lang.clang_id = parent_lang.clang_id";
+// Insert frontend translations
+d2u_machinery_lang_helper::factory()->install();
 
 // Media Manager media types
 $sql->setQuery("SELECT * FROM ". rex::getTablePrefix() ."media_manager_type WHERE name = 'd2u_machinery_list_tile'");

@@ -1,4 +1,18 @@
 <?php
+/**
+ * Updates url addon scheme article id.
+ * @param string $table Table/view name used for url scheme. Parameter is used as identifier.
+ * @param int $article_id Redaxo article id
+ */
+function d2u_machinery_update_url_scheme($table, $article_id) {
+	if(rex_addon::get('url')->isAvailable()) {
+		$query = "UPDATE `". rex::getTablePrefix() ."url_generate` SET `article_id` = ".$article_id ." "
+			."WHERE `table` LIKE '%". $table ."'";
+		$sql = rex_sql::factory();
+		$sql->setQuery($query);
+	}
+}
+
 // save settings
 if (filter_input(INPUT_POST, "btn_save") == 'save') {
 	$settings = (array) rex_post('settings', 'array', array());
@@ -15,6 +29,11 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 	$settings['consultation_article_id'] = $link_ids["REX_INPUT_LINK"][2];
 	$settings['consultation_article_name'] = trim($link_names["REX_LINK_NAME"][2]);
 
+	if(rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
+		$settings['used_machine_article_id'] = $link_ids["REX_INPUT_LINK"][3];
+		$settings['used_machine_article_name'] = trim($link_names["REX_LINK_NAME"][3]);
+	}
+
 	// Checkbox also need special treatment if empty
 	if(!array_key_exists('show_categories_usage_area', $settings)) {
 		$settings['show_categories_usage_area'] = "hide";
@@ -23,6 +42,38 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 	// Save settings
 	if(rex_config::set("d2u_machinery", $settings)) {
 		echo rex_view::success(rex_i18n::msg('form_saved'));
+
+		// Update url schemes
+		if(rex_addon::get('url')->isAvailable()) {
+			d2u_machinery_update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_machine_categories", $settings['article_id']);
+			d2u_machinery_update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_machines", $settings['article_id']);
+			if(rex_plugin::get('d2u_machinery', 'industry_sectors')->isAvailable()) {
+				d2u_machinery_update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_industry_sectors", $settings['article_id']);
+			}
+			if(rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
+				d2u_machinery_update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_used_machines", $settings['used_machine_article_id']);
+				d2u_machinery_update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_used_machine_categories", $settings['used_machine_article_id']);		
+			}
+			UrlGenerator::generatePathFile([]);
+		}
+		
+		// Install / update language replacements
+		d2u_machinery_lang_helper::factory()->install();
+		if(rex_plugin::get('d2u_machinery', 'industry_sectors')->isAvailable()) {
+			industry_sectors_lang_helper::factory()->install();
+		}
+		if(rex_plugin::get('d2u_machinery', 'machine_agitator_extension')->isAvailable()) {
+			machine_agitator_extension_lang_helper::factory()->install();
+		}
+		if(rex_plugin::get('d2u_machinery', 'machine_features_extension')->isAvailable()) {
+			machine_features_extension_lang_helper::factory()->install();
+		}
+		if(rex_plugin::get('d2u_machinery', 'machine_usage_area_extension')->isAvailable()) {
+			machine_usage_area_extension_lang_helper::factory()->install();
+		}
+		if(rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
+			used_machines_lang_helper::factory()->install();
+		}
 	}
 	else {
 		echo rex_view::error(rex_i18n::msg('form_save_error'));
@@ -34,18 +85,18 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 		<header class="panel-heading"><div class="panel-title"><?php print rex_i18n::msg('d2u_machinery_meta_settings'); ?></div></header>
 		<div class="panel-body">
 			<fieldset>
-				<legend><?php echo rex_i18n::msg('d2u_machinery_meta_settings'); ?></legend>
+				<legend><small><i class="rex-icon rex-icon-database"></i></small> <?php echo rex_i18n::msg('d2u_machinery_meta_settings'); ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
 						d2u_addon_backend_helper::form_linkfield('d2u_machinery_settings_article', '1', $this->getConfig('article_id'), $this->getConfig('default_lang'));
 
 						// Default language for translations
 						if(count(rex_clang::getAll()) > 1) {
-							$options = array();
+							$lang_options = array();
 							foreach(rex_clang::getAll() as $rex_clang) {
-								$options[$rex_clang->getId()] = $rex_clang->getName();
+								$lang_options[$rex_clang->getId()] = $rex_clang->getName();
 							}
-							d2u_addon_backend_helper::form_select('d2u_machinery_settings_defaultlang', 'settings[default_lang]', $options, array($this->getConfig('default_lang')));
+							d2u_addon_backend_helper::form_select('d2u_machinery_settings_defaultlang', 'settings[default_lang]', $lang_options, array($this->getConfig('default_lang')));
 						}
 						
 						d2u_addon_backend_helper::form_input('d2u_machinery_settings_request_form_email', 'settings[request_form_email]', $this->getConfig('request_form_email'), TRUE, FALSE, 'email');
@@ -55,15 +106,52 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 				</div>
 			</fieldset>
 			<fieldset>
-				<legend><?php echo rex_i18n::msg('d2u_machinery_meta_categories'); ?></legend>
+				<legend><small><i class="rex-icon rex-icon-language"></i></small> <?php echo rex_i18n::msg('d2u_machinery_settings_lang_replacments'); ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
-						$options = array('name' => rex_i18n::msg('d2u_machinery_name'), 'prio' => rex_i18n::msg('header_priority'));
+						foreach(rex_clang::getAll() as $rex_clang) {
+							print '<dl class="rex-form-group form-group">';
+							print '<dt><label>'. $rex_clang->getName() .'</label></dt>';
+							print '<dd>';
+							print '<select class="form-control" name="settings[lang_replacement_'. $rex_clang->getId() .']">';
+							$replacement_options = array(
+								'd2u_machinery_settings_german' => 'german',
+								'd2u_machinery_settings_english' => 'english'
+							);
+							foreach($replacement_options as $key => $value) {
+								$selected = $value == $this->getConfig('lang_replacement_'. $rex_clang->getId()) ? ' selected="selected"' : '';
+								print '<option value="'. $value .'"'. $selected .'>'. rex_i18n::msg('d2u_machinery_settings_lang_replacments_install') .' '. rex_i18n::msg($key) .'</option>';
+							}
+							print '</select>';
+							print '</dl>';
+						}
+					?>
+				</div>
+			</fieldset>
+			<fieldset>
+				<legend><small><i class="rex-icon rex-icon-open-category"></i></small> <?php echo rex_i18n::msg('d2u_machinery_meta_categories'); ?></legend>
+				<div class="panel-body-wrapper slide">
+					<?php
+						$options = array('name' => rex_i18n::msg('d2u_machinery_name'), 'priority' => rex_i18n::msg('header_priority'));
 						d2u_addon_backend_helper::form_select('d2u_machinery_settings_default_sort', 'settings[default_category_sort]', $options, array($this->getConfig('default_category_sort')));
 						d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_categories_usage_area', 'settings[show_categories_usage_area]', 'show', $this->getConfig('show_categories_usage_area') == 'show')
 					?>
 				</div>
 			</fieldset>
+			<?php
+				if(rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
+			?>
+				<fieldset>
+					<legend><small><i class="rex-icon fa-truck"></i></small> <?php echo rex_i18n::msg('d2u_machinery_used_machines'); ?></legend>
+					<div class="panel-body-wrapper slide">
+						<?php
+							d2u_addon_backend_helper::form_linkfield('d2u_machinery_used_machines_article', '3', $this->getConfig('used_machine_article_id'), $this->getConfig('default_lang'));
+						?>
+					</div>
+				</fieldset>
+			<?php
+				}
+			?>
 		</div>
 		<footer class="panel-footer">
 			<div class="rex-form-panel-footer">

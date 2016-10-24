@@ -28,7 +28,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			else {
 				$category->parent_category = FALSE;
 			}
-			$category->prio = $form['prio'];
+			$category->priority = $form['priority'];
 			$category->pic = $input_media[1];
 			$category->pic_usage = $input_media[2];
 
@@ -199,7 +199,7 @@ if ($func == 'edit' || $func == 'add') {
 								}
 							}
 							d2u_addon_backend_helper::form_select('d2u_machinery_category_parent', 'form[parent_category_id]', $options, array($category->parent_category->category_id), 1, FALSE, $readonly);
-							d2u_addon_backend_helper::form_input('header_priority', 'form[prio]', $category->prio, TRUE, $readonly, 'number');
+							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $category->priority, TRUE, $readonly, 'number');
 							d2u_addon_backend_helper::form_mediafield('d2u_machinery_category_pic', '1', $category->pic, $readonly);
 							d2u_addon_backend_helper::form_mediafield('d2u_machinery_category_pic_usage', '2', $category->pic_usage, $readonly);
 
@@ -250,14 +250,14 @@ if ($func == 'edit' || $func == 'add') {
 }
 
 if ($func == '') {
-	$query = 'SELECT categories.category_id, lang.name AS categoryname, parents_lang.name AS parentname, prio '
+	$query = 'SELECT categories.category_id, lang.name AS categoryname, parents_lang.name AS parentname, priority '
 		. 'FROM '. rex::getTablePrefix() .'d2u_machinery_categories AS categories '
 		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_categories_lang AS lang '
 			. 'ON categories.category_id = lang.category_id AND lang.clang_id = '. rex_config::get("d2u_machinery", "default_lang") .' '
 		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_categories_lang AS parents_lang '
 			. 'ON categories.parent_category_id = parents_lang.category_id AND parents_lang.clang_id = '. rex_config::get("d2u_machinery", "default_lang") .' ';
-	if($this->getConfig('default_category_sort') == 'prio') {
-		$query .= 'ORDER BY prio ASC';
+	if($this->getConfig('default_category_sort') == 'priority') {
+		$query .= 'ORDER BY priority ASC';
 	}
 	else {
 		$query .= 'ORDER BY categoryname ASC';
@@ -279,7 +279,7 @@ if ($func == '') {
 
     $list->setColumnLabel('parentname', rex_i18n::msg('d2u_machinery_category_parent'));
 
-	$list->setColumnLabel('prio', rex_i18n::msg('header_priority'));
+	$list->setColumnLabel('priority', rex_i18n::msg('header_priority'));
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('system_update'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);

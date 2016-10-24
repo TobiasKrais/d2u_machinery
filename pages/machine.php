@@ -3,7 +3,7 @@ $func = rex_request('func', 'string');
 $entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
 
-// 
+// Print message
 if($message != "") {
 	print rex_view::success(rex_i18n::msg($message));
 }
@@ -75,8 +75,8 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$success = FALSE;
 		}
 		else {
-			// remember category id, for each database lang object needs same category id
-			$machine_id = $machine->category_id;
+			// remember id, for each database lang object needs same id
+			$machine_id = $machine->machine_id;
 		}
 	}
 
@@ -106,13 +106,17 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	
 	// Check if object is used
 	$reffering_machines = $machine->getRefferingMachines();
+	$reffering_used_machines = array();
+	if(rex_plugin::get("d2u_machinery", "used_machines")->isAvailable()) {
+		$reffering_used_machines = $machine->getRefferingUsedMachines();
+	}
 	
 	// If not used, delete
-	if(count($reffering_machines) == 0) {
+	if(count($reffering_machines) == 0 && count($reffering_used_machines) == 0) {
 		foreach(rex_clang::getAll() as $rex_clang) {
 			if($machine === FALSE) {
 				$machine = new Machine($machine_id, $rex_clang->getId());
-				// If object is not found in language, set category_id anyway to be able to delete
+				// If object is not found in language, set id anyway to be able to delete
 				$machine->machine_id = $machine_id;
 			}
 			else {
@@ -123,8 +127,15 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	}
 	else {
 		$message = '<ul>';
-		foreach($reffering_machines as $reffering_machine) {
-			$message .= '<li><a href="index.php?page=d2u_machinery/machine&func=edit&entry_id='. $reffering_machine->machine_id .'">'. $reffering_machine->name.'</a></li>';
+		if(count($reffering_machines) > 0) {
+			foreach($reffering_machines as $reffering_machine) {
+				$message .= '<li><a href="index.php?page=d2u_machinery/machine&func=edit&entry_id='. $reffering_machine->machine_id .'">'. $reffering_machine->name.'</a></li>';
+			}
+		}
+		if(count($reffering_used_machines) > 0) {
+			foreach($reffering_used_machines as $reffering_used_machine) {
+				$message .= '<li><a href="index.php?page=d2u_machinery/used_machine&func=edit&entry_id='. $reffering_used_machine->used_machine_id .'">'. $reffering_used_machine->name.'</a></li>';
+			}
 		}
 		$message .= '</ul>';
 

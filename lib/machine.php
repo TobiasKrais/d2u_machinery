@@ -384,6 +384,29 @@ class Machine {
 	}
 	
 	/**
+	 * Gets the used machines reffering to this machine.
+	 * @return UsedMachine[] Used machines reffering to this machine.
+	 */
+	public function getRefferingUsedMachines() {
+		if(rex_plugin::get("d2u_machinery", "used_machines")->isAvailable()) {
+			$query = "SELECT used_machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_used_machines "
+				."WHERE machine_id =  ". $this->machine_id;
+			$result = rex_sql::factory();
+			$result->setQuery($query);
+
+			$used_machines = array();
+			for($i = 0; $i < $result->getRows(); $i++) {
+				$used_machines[] = new UsedMachine($result->getValue("used_machine_id"), $this->clang_id);
+				$result->next();
+			}
+			return $used_machines;
+		}
+		else {
+			return array();
+		}
+	}
+	
+	/**
 	 * Get Technical Data as array.
 	 * @return string[] Array with technical data. The key is the translation
 	 * placeholder, the value is the value.

@@ -21,11 +21,15 @@ d2u_machinery_rights_edit_lang = D2U Maschinen Addon: Editierrechte für Überse
 d2u_machinery_rights_settings = D2U Maschinen Addon: Einstellungen
 
 d2u_machinery_settings_article = Maschinen Artikel
-d2u_machinery_settings_categories_usage_area = In der Navigation zusätzlich zu den Kategorien deren Anwendungsgebiete anzeigen
-d2u_machinery_settings_defaultlang = Ausgangssprache
-d2u_machinery_settings_default_sort = Sortierung der Kategorien
+d2u_machinery_settings_categories_usage_area = In der Navigation zusätzlich zu den Kategorien deren umschreibende Anwendung anzeigen
 d2u_machinery_settings_consultation_article = Link hinter "Lassen Sie sich beraten"
 d2u_machinery_settings_consultation_pic = Bild zu "Lassen Sie sich beraten"
+d2u_machinery_settings_defaultlang = Ausgangssprache
+d2u_machinery_settings_default_sort = Sortierung der Kategorien
+d2u_machinery_settings_english = English
+d2u_machinery_settings_german = Deutsch
+d2u_machinery_settings_lang_replacments = Sprachersetzungen
+d2u_machinery_settings_lang_replacments_install = Voreingestellte Sprachersetzungen aus folgender Sprache übernehmen:
 d2u_machinery_settings_request_form_email = Empfänger E-Mail Adresse für Anfrageformular
 
 d2u_machinery_category = Kategorie
@@ -42,7 +46,7 @@ d2u_machinery_category_pic = Bild
 d2u_machinery_category_pic_lang = Bild (überschreibt allg. Bild)
 d2u_machinery_category_pic_usage = Anwendungsbild
 d2u_machinery_category_videos = Videos
-d2u_machinery_category_usage_area = Zusätzliches Anwendungsgebiet für Navigation
+d2u_machinery_category_usage_area = Umschreibende Anwendung für Navigation
 
 d2u_machinery_machine = Maschine
 d2u_machinery_machine_alternatives = Alternative Maschinen

@@ -6,3 +6,6 @@ $sql->setQuery('DROP TABLE IF EXISTS ' . rex::getTablePrefix() . 'd2u_machinery_
 $sql->setQuery('DROP TABLE IF EXISTS ' . rex::getTablePrefix() . 'd2u_machinery_features_lang');
 
 $sql->setQuery('ALTER TABLE ' . rex::getTablePrefix() . 'd2u_machinery_machines DROP feature_ids;');
+
+// Delete language replacements
+machine_features_extension_lang_helper::factory()->uninstall();

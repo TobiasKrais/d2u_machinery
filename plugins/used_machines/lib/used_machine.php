@@ -20,29 +20,29 @@ class UsedMachine {
 	var $clang_id = 0;
 	
 	/**
-	 * @var String Name or machine model
+	 * @var string Machine manufacturer.
+	 */
+	var $manufacturer = "";
+
+	/**
+	 * @var string Name or machine model
 	 */
 	var $name = "";
 	
 	/**
-	 * @var Category Machine category
+	 * @var Category Used machine category
 	 */
 	var $category = false;
 
 	/**
-	 * @var String Date string with information concerning the availability of the machine.
+	 * @var string Date string with information concerning the availability of the machine.
 	 */
 	var $availability = "";
 
 	/**
-	 * @var String Internal product number of the machine.
+	 * @var string Internal product number of the machine.
 	 */
 	var $product_number = "";
-
-	/**
-	 * @var String Machine manufacturer.
-	 */
-	var $manufacturer = "";
 
 	/**
 	 * @var int Year of construction
@@ -55,7 +55,7 @@ class UsedMachine {
 	var $price = 0;
 
 	/**
-	 * @var String ISO 4217 currency code. Default is EUR.
+	 * @var string ISO 4217 currency code. Default is EUR.
 	 */
 	var $currency_code = "EUR";
 
@@ -65,37 +65,37 @@ class UsedMachine {
 	var $vat = 0;
 
 	/**
-	 * @var String Online online_status. Either "online" or "offline"
+	 * @var string Online online_status. Either "online" or "offline"
 	 */
 	var $online_status = "online";
 	
 	/**
-	 * @var String[] Picture filenames
+	 * @var string[] Picture filenames
 	 */
 	var $pics = array();
 	
 	/**
 	 * @var Machine Machine objekt for technical data reference
 	 */
-	var $machine = false;
+	var $machine = FALSE;
 	
 	/**
-	 * @var String Place, where used machine is currently located.
+	 * @var string Place, where used machine is currently located.
 	 */
 	var $location = "";
 	
 	/**
-	 * @var String URL with additional information, e.g. an advertisement of the machine.
+	 * @var string URL with additional information, e.g. an advertisement of the machine.
 	 */
 	var $external_url = "";
 
 	/**
-	 * @var String Teaser. Used for SEO purposes or as teaser in machine list..
+	 * @var string Teaser. Used for SEO purposes or as teaser in machine list..
 	 */
 	var $teaser = "";
 
 	/**
-	 * @var String Detailed description.
+	 * @var string Detailed description.
 	 */
 	var $description = "";
 
@@ -105,7 +105,7 @@ class UsedMachine {
 	var $translation_needs_update = "delete";
 
 	/**
-	 * @var String URL of the used machine
+	 * @var string URL of the used machine
 	 */
 	var $url = "";
 
@@ -118,28 +118,28 @@ class UsedMachine {
 		$this->clang_id = $clang_id;
 		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_used_machines AS used_machines "
 				."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_used_machines_lang AS lang "
-					."ON used_machines.used_machines_id = lang.used_machines_id "
-				."WHERE used_machines.used_machines_id = ". $used_machine_id ." "
+					."ON used_machines.used_machine_id = lang.used_machine_id "
+				."WHERE used_machines.used_machine_id = ". $used_machine_id ." "
 					."AND clang_id = ". $this->clang_id;
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		$num_rows = $result->getRows();
 
 		if ($num_rows > 0) {
-			$this->used_machine_id = $result->getValue("used_machines.used_machines_id");
+			$this->used_machine_id = $result->getValue("used_machines.used_machine_id");
 			$this->name = $result->getValue("name");
 			$this->category = new Category($result->getValue("category_id"), $this->clang_id);
 			$this->availability = $result->getValue("availability");
 			$this->product_number = $result->getValue("product_number");
 			$this->manufacturer = $result->getValue("manufacturer");
-			$this->year_built = $result->getValue("baujahr");
+			$this->year_built = $result->getValue("year_built");
 			$this->price = $result->getValue("price");
 			$this->currency_code = $result->getValue("currency_code");
 			$this->vat = $result->getValue("vat");
 			if($result->getValue("online_status") != "") {
 				$this->online_status = $result->getValue("online_status");
 			}
-			$this->pics = preg_grep('/^\s*$/s', explode(",", $result->getValue("bilder")), PREG_GREP_INVERT);
+			$this->pics = preg_grep('/^\s*$/s', explode(",", $result->getValue("pics")), PREG_GREP_INVERT);
 			if($result->getValue("machine_id") > 0) {
 				$this->machine = new Maschine($result->getValue("machine_id"), $clang_id);
 			}
@@ -221,7 +221,7 @@ class UsedMachine {
 	 * Get all used machines.
 	 * @param int $clang_id Redaxo clang id.
 	 * @param boolean $only_online Show only online used machines
-	 * @return UsedMachines[] Array with UsedMachines objects.
+	 * @return UsedMachine[] Array with UsedMachines objects. The key is used_machine_id
 	 */
 	public static function getAll($clang_id, $only_online = FALSE) {
 		$query = "SELECT used_machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_used_machines ";
@@ -234,7 +234,7 @@ class UsedMachine {
 		
 		$used_machines = array();
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$used_machines[] = new UsedMachine($result->getValue("used_machine_id"), $clang_id);
+			$used_machines[$result->getValue("used_machine_id")] = new UsedMachine($result->getValue("used_machine_id"), $clang_id);
 			$result->next();
 		}
 		return $used_machines;
@@ -291,7 +291,7 @@ class UsedMachine {
 	 * @return UsedMachine[] Array full of used machines ;-)
 	 */
 	static function getUsedMachinesForMachine($machine) {
-		$query = "SELECT used_machines_id FROM ". rex::getTablePrefix() ."d2u_machinery_used_machines "
+		$query = "SELECT used_machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_used_machines "
 				."WHERE machine_id = ". $machine->machine_id ." "
 					."AND online_status = 'online'";
 
@@ -300,7 +300,7 @@ class UsedMachine {
 		
 		$used_machines = array();
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$used_machines[] = new UsedMachine($result->getValue("used_machines_id"), $machine->clang_id);
+			$used_machines[] = new UsedMachine($result->getValue("used_machine_id"), $machine->clang_id);
 			$result->next();
 		}
 		
@@ -315,7 +315,7 @@ class UsedMachine {
 	 * @return UsedMachine[] Array full of used machines ;-)
 	 */
 	static function getUsedMachinesForCategory($category) {
-		$query = "SELECT used_machines_id FROM ". rex::getTablePrefix() ."d2u_machinery_used_machines "
+		$query = "SELECT used_machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_used_machines "
 				."WHERE category_id = ". $category->category_id ." "
 					."AND online_status = 'online'";
 		$result = rex_sql::factory();
@@ -323,7 +323,7 @@ class UsedMachine {
 		
 		$used_machines = array();
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$used_machines[] = new UsedMachine($result->getValue("used_machines_id"), $category->clang_id);
+			$used_machines[] = new UsedMachine($result->getValue("used_machine_id"), $category->clang_id);
 			$result->next();
 		}
 		
@@ -359,6 +359,10 @@ class UsedMachine {
 	 */
 	public function save() {
 		$error = 0;
+		
+		$this->price = $this->price == "" ? 0 : $this->price;
+		$this->vat = $this->vat == "" ? 0 : $this->vat;
+		$this->year_built = $this->year_built == "" ? 0 : $this->year_built;
 
 		// Save the not language specific part
 		$pre_save_used_machine = new UsedMachine($this->used_machine_id, $this->clang_id);
@@ -372,10 +376,10 @@ class UsedMachine {
 					."year_built = ". $this->year_built .", "
 					."price = ". $this->price .", "
 					."currency_code = '". $this->currency_code ."', "
-					."vat = '". $this->vat ."', "
+					."vat = ". $this->vat .", "
 					."online_status = '". $this->online_status ."', "
 					."pics = '". implode(",", $this->pics) ."', "
-					."machine_id = ". $this->machine->machine_id .", "
+					."machine_id = ". $this->machine_id .", "
 					."location = '". $this->location ."', "
 					."external_url = '". $this->external_url ."' ";
 

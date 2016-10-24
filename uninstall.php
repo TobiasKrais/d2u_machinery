@@ -1,7 +1,18 @@
 <?php
 $sql = rex_sql::factory();
 
-// delete tables
+// Delete views
+$sql->setQuery('DROP VIEW IF EXISTS ' . rex::getTablePrefix() . 'd2u_machinery_url_machines');
+$sql->setQuery('DROP VIEW IF EXISTS ' . rex::getTablePrefix() . 'd2u_machinery_url_machine_categories');
+// Delete url schemes
+if(rex_addon::get('url')->isAvailable()) {
+	$sql->setQuery("DELETE FROM `". rex::getTablePrefix() ."url_generate` WHERE `table` LIKE '%d2u_machinery_url_machine%'");
+}
+
+// Delete language replacements
+d2u_machinery_lang_helper::factory()->uninstall();
+
+// Delete tables
 $sql->setQuery('DROP TABLE IF EXISTS ' . rex::getTablePrefix() . 'd2u_machinery_machines');
 $sql->setQuery('DROP TABLE IF EXISTS ' . rex::getTablePrefix() . 'd2u_machinery_machines_lang');
 $sql->setQuery('DROP TABLE IF EXISTS ' . rex::getTablePrefix() . 'd2u_machinery_categories');

@@ -16,6 +16,26 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machin
 	translation_needs_update varchar(7) collate utf8_general_ci default NULL,
 	PRIMARY KEY (industry_sector_id, clang_id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
+
 // Alter machine table
-$sql->setQuery("ALTER TABLE ". rex::getTablePrefix() ."d2u_machinery_machines "
-	. "ADD industry_sector_ids VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;");
+$sql->setQuery("SHOW COLUMNS FROM ". rex::getTablePrefix() ."d2u_machinery_machines LIKE 'industry_sector_ids';");
+if($sql->getRows() == 0) {
+	$sql->setQuery("ALTER TABLE ". rex::getTablePrefix() ."d2u_machinery_machines "
+		. "ADD industry_sector_ids VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;");
+}
+
+// Create views for url addon
+$sql->setQuery('CREATE OR REPLACE VIEW '. rex::getTablePrefix() .'d2u_machinery_url_industry_sectors AS
+	SELECT industries.industry_sector_id, industries.clang_id, industries.name, industries.name AS seo_title, industries.teaser AS seo_description, machines_lang.updatedate
+	FROM '. rex::getTablePrefix() .'d2u_machinery_industry_sectors_lang AS industries
+	LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_machines AS machines ON machines.industry_sector_ids LIKE CONCAT("%|", industries.industry_sector_id ,"|%")
+	LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_machines_lang AS machines_lang ON machines.machine_id = machines_lang.machine_id AND machines_lang.clang_id = industries.clang_id
+	WHERE machines.online_status = "online"');
+// Insert url scheme
+if(rex_addon::get('url')->isAvailable()) {
+	$sql->setQuery("INSERT INTO `". rex::getTablePrefix() ."url_generate` (`article_id`, `clang_id`, `url`, `table`, `table_parameters`, `relation_table`, `relation_table_parameters`, `relation_insert`, `createdate`, `createuser`, `updatedate`, `updateuser`) VALUES
+		(". rex_article::getSiteStartArticleId() .", 0, '', '1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_industry_sectors', '{\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_industry_sectors_field_1\":\"name\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_industry_sectors_field_2\":\"\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_industry_sectors_field_3\":\"\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_industry_sectors_id\":\"industry_sector_id\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_industry_sectors_clang_id\":\"clang_id\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_industry_sectors_restriction_field\":\"\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_industry_sectors_restriction_operator\":\"=\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_industry_sectors_restriction_value\":\"\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_industry_sectors_url_param_key\":\"industry_sector_id\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_industry_sectors_seo_title\":\"seo_title\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_industry_sectors_seo_description\":\"seo_description\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_industry_sectors_sitemap_add\":\"1\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_industry_sectors_sitemap_frequency\":\"always\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_industry_sectors_sitemap_priority\":\"0.5\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_industry_sectors_sitemap_lastmod\":\"updatedate\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_industry_sectors_path_names\":\"\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_industry_sectors_path_categories\":\"0\",\"1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_industry_sectors_relation_field\":\"\"}', '', '[]', 'before', UNIX_TIMESTAMP(), 'd2u_machinery_addon_installer', UNIX_TIMESTAMP(), 'd2u_machinery_addon_installer');");
+}
+
+// Insert frontend translations
+industry_sectors_lang_helper::factory()->install();

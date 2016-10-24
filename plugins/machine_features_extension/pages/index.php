@@ -22,7 +22,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 		if($feature === FALSE) {
 			$feature = new Feature($feature_id, $rex_clang->getId());
 			$feature->category_ids = $form['category_ids'];
-			$feature->prio = $form['prio'];
+			$feature->priority = $form['priority'];
 			$feature->pic = $input_media[1];
 		}
 		else {
@@ -150,7 +150,7 @@ if ($func == 'edit' || $func == 'add') {
 								$readonly = FALSE;
 							}
 
-							d2u_addon_backend_helper::form_input('header_priority', 'form[prio]', $feature->prio, TRUE, $readonly, 'number');
+							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $feature->priority, TRUE, $readonly, 'number');
 							d2u_addon_backend_helper::form_mediafield('d2u_machinery_features_pic', 1, $feature->pic, $readonly);
 							
 							$options = array();
@@ -180,11 +180,11 @@ if ($func == 'edit' || $func == 'add') {
 }
 
 if ($func == '') {
-	$query = 'SELECT features.feature_id, title, prio '
+	$query = 'SELECT features.feature_id, title, priority '
 		. 'FROM '. rex::getTablePrefix() .'d2u_machinery_features AS features '
 		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_features_lang AS lang '
 			. 'ON features.feature_id = lang.feature_id AND lang.clang_id = '. rex_config::get("d2u_machinery", "default_lang") .' '
-		. 'ORDER BY prio ASC';
+		. 'ORDER BY priority ASC';
     $list = rex_list::factory($query);
 
     $list->addTableAttribute('class', 'table-striped table-hover');
@@ -200,7 +200,7 @@ if ($func == '') {
     $list->setColumnLabel('title', rex_i18n::msg('d2u_machinery_features_title'));
     $list->setColumnParams('title', ['func' => 'edit', 'entry_id' => '###feature_id###']);
 
-    $list->setColumnLabel('prio', rex_i18n::msg('header_priority'));
+    $list->setColumnLabel('priority', rex_i18n::msg('header_priority'));
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('system_update'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
