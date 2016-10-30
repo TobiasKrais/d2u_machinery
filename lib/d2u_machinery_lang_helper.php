@@ -8,7 +8,7 @@ class d2u_machinery_lang_helper {
 	 * value the replacement. 
 	 */
 	protected $replacements_english = ['d2u_machinery_alternative_machines' => 'Alternative machines',
-		'd2u_machinery_consultation_hint' => 'Together we will find the best agitator solution for you.<br><b>Get counsel.</b>',
+		'd2u_machinery_consultation_hint' => 'Together we will find the best solution for you.<br><b>Get counsel.</b>',
 		'd2u_machinery_dimensions_length_width_height' => 'Dimensions (L x W x H)',
 		'd2u_machinery_dimensions_width_height_depth' => 'Dimensions (W x H x D)',
 		'd2u_machinery_downloads' => 'Downloads',
@@ -37,6 +37,7 @@ class d2u_machinery_lang_helper {
 		'd2u_machinery_form_validate_title' => 'Error. Please fix:',
 		'd2u_machinery_form_validate_zip' => 'Please enter your zip code.',
 		'd2u_machinery_form_zip' => 'ZIP code',
+		'd2u_machinery_no_machines' => 'We are sorry. Currently we have no machines available. Please try again later.',
 		'd2u_machinery_operating_voltage' => 'Operating voltage',
 		'd2u_machinery_our_products' => 'Our Products',
 		'd2u_machinery_overview' => 'Overview',
@@ -59,7 +60,7 @@ class d2u_machinery_lang_helper {
 	 * value the replacement. 
 	 */
 	protected $replacements_german = ['d2u_machinery_alternative_machines' => 'Alternative Maschinen',
-		'd2u_machinery_consultation_hint' => 'Wir finden gemeinsam mit Ihnen die optimale Rührwerkslösung.<br><b>Lassen Sie sich beraten.</b>',
+		'd2u_machinery_consultation_hint' => 'Wir finden gemeinsam mit Ihnen die optimale Lösung.<br><b>Lassen Sie sich beraten.</b>',
 		'd2u_machinery_dimensions_length_width_height' => 'Abmessungen (L x B x H)',
 		'd2u_machinery_dimensions_width_height_depth' => 'Abmessungen (B x H x T)',
 		'd2u_machinery_downloads' => 'Downloads',
@@ -88,6 +89,7 @@ class d2u_machinery_lang_helper {
 		'd2u_machinery_form_validate_title' => 'Fehler beim Senden:',
 		'd2u_machinery_form_validate_zip' => 'Bitte geben Sie Ihre Postleitzahl ein.',
 		'd2u_machinery_form_zip' => 'PLZ',
+		'd2u_machinery_no_machines' => 'Es tut uns Leid. Im Moment haben wir keine Angebote verfügbar. Bitte versuchen Sie es später nocheinmal.',
 		'd2u_machinery_operating_voltage' => 'Betriebsspannung',
 		'd2u_machinery_our_products' => 'Unsere Produkte',
 		'd2u_machinery_overview' => 'Übersicht',

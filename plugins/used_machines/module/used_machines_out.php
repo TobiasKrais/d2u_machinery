@@ -5,6 +5,9 @@ if(!function_exists('print_used_machine_categories')) {
 	 * @param Category[] $categories Array with category objects.
 	 */
 	function print_used_machine_categories($categories) {
+		// Get placeholder wildcard tags
+		$sprog = rex_addon::get("sprog");
+		$counter = 0;
 		foreach($categories as $category) {
 			// Only use used categories
 			if(count($category->getUsedMachines()) > 0) {
@@ -22,7 +25,15 @@ if(!function_exists('print_used_machine_categories')) {
 				print '</div>';
 				print '</a>';
 				print '</div>';
+				$counter++;
 			}
+		}
+		
+		// If no categories are used
+		if($counter == 0) {
+			print '<div class="col-xs-12 abstand">';
+			print '<p>'. $sprog->getConfig('wildcard_open_tag') .'d2u_machinery_no_machines'. $sprog->getConfig('wildcard_close_tag') .'</p>';
+			print '</div>';
 		}
 	}
 }
@@ -36,8 +47,7 @@ if(!function_exists('print_consulation_hint')) {
 		// Get placeholder wildcard tags
 		$sprog = rex_addon::get("sprog");
 
-		print '<div class="col-xs-12 col-sm-8 col-md-12">';
-		print '<br><br><br><br><br>';
+		print '<div class="col-xs-12 col-md-9 consultation">';
 		print '<a href="'. rex_getUrl($d2u_machinery->getConfig('consultation_article_id')) .'">';
 		print '<div class="abstand">';
 		if($d2u_machinery->getConfig('consultation_pic') != "") {
@@ -52,19 +62,16 @@ if(!function_exists('print_consulation_hint')) {
 
 if(!function_exists('print_used_machines')) {
 	/**
-	 * Prints category list.
-	 * @param Machine[] $used_machines Machines.
+	 * Prints used machine list.
+	 * @param UsedMachine[] $used_machines Used Machines.
 	 * @param string $title Title for the list
 	 */
 	function print_used_machines($used_machines, $title) {
-		print '<div class="col-xs-12 abstand">';
-		print '<h1>'. $title.'</h1>';
-		print '</div>';
-
+		$d2u_machinery = rex_addon::get("d2u_machinery");
 		foreach($used_machines as $used_machine) {
 			if($used_machine->online_status == 'online') {
 				print '<div class="col-xs-6 col-sm-4 col-md-3 abstand">';
-				print '<a href="'. $used_machine->getURL() .'">';
+				print '<a href="'. $used_machine->getURL(FALSE) .'">';
 				print '<div class="box" data-height-watch>';
 				if(count($used_machine->pics) > 0 && $used_machine->pics[0] != "") {
 					print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
@@ -73,8 +80,10 @@ if(!function_exists('print_used_machines')) {
 				else {
 					print '<img src="'.	rex_addon::get("d2u_machinery")->getAssetsUrl("white_tile.gif") .'" alt="Placeholder">';
 				}
-				print '<div><b>'. $used_machine->name .'</b></div>';
-				print '<div class="teaser">'. nl2br($used_machine->teaser) .'</div>';
+				print '<div><b>'. $used_machine->manufacturer .' '. $used_machine->name .'</b></div>';
+				if($d2u_machinery->hasConfig('show_teaser') && $d2u_machinery->getConfig('show_teaser') == 'show') {
+					print '<div class="teaser">'. nl2br($used_machine->teaser) .'</div>';
+				}
 				print '</div>';
 				print '</a>';
 				print '</div>';
@@ -83,6 +92,7 @@ if(!function_exists('print_used_machines')) {
 	}
 }
 
+$d2u_machinery = rex_addon::get("d2u_machinery");
 // Get placeholder wildcard tags
 $sprog = rex_addon::get("sprog");
 $tag_open = $sprog->getConfig('wildcard_open_tag');
@@ -184,94 +194,71 @@ else if(filter_input(INPUT_GET, 'used_machine_id', FILTER_VALIDATE_INT) > 0 || (
 			print '</div>';
 		}
 		print '</div>';
+	}
 
-		// Text
-		print '<div class="col-xs-12 col-sm-6">'. $used_machine->description .'</div>';
-		print '<div class="col-xs-12"></div>';
+	// Text
+	print '<div class="col-xs-12 col-sm-6">'. $used_machine->description .'</div>';
+	print '<div class="col-xs-12">&nbsp;</div>';
 		
-		// Link to machine TODO
-		if($used_machine->machine !== FALSE) {
-			print '<div class="col-xs-12 col-sm-6">';
-			print '<h3>'. $tag_open .'d2u_machinery_service'. $tag_close .'</h3>';
-			$article = rex_article::get($used_machine->article_id_service, $used_machine->clang_id);
-			print '<a href="'. rex_getUrl($used_machine->article_id_service, $used_machine->clang_id).'">'. $article->getValue('name') .'</a>';
-			print '</div>';
+	// Link to machine
+	if($used_machine->machine !== FALSE) {
+		print '<div class="col-xs-12">';
+		print '<b>'. $tag_open .'d2u_machinery_used_machines_link_machine'. $tag_close .':</b>';
+		print '<a href="'. $used_machine->machine->getURL() .'">'. $used_machine->machine->name .'</a>';
+		print '</div>';
+	}
+	// Availability
+	if($used_machine->availability != "") {
+		print '<div class="col-xs-12">';
+		print '<b>'. $tag_open .'d2u_machinery_used_machines_availability'. $tag_close .':</b> ';
+		if($d2u_machinery->hasConfig('lang_replacement_'. rex_clang::getCurrentId()) && $d2u_machinery->getConfig('lang_replacement_'. rex_clang::getCurrentId()) == "german") {
+			print date_format(date_create($used_machine->availability),"d.m.Y");
 		}
+		else {
+			print date_format(date_create($used_machine->availability),"Y/m/d");
+		}
+		print '</div>';
+	}
+	// Year built
+	if($used_machine->year_built != "") {
+		print '<div class="col-xs-12">';
+		print '<b>'. $tag_open .'d2u_machinery_used_machines_year_built'. $tag_close .':</b> '. $used_machine->year_built;
+		print '</div>';
+	}
+	// Price
+	if($used_machine->price != "") {
+		print '<div class="col-xs-12">';
+		print '<b>'. $tag_open .'d2u_machinery_used_machines_price'. $tag_close .':</b> '
+			. $used_machine->price .' '. $used_machine->currency_code;
+		if($used_machine->vat > 0) {
+			print ' ('. $used_machine->vat .'% '.$tag_open .'d2u_machinery_used_machines_vat_included'. $tag_close .')';
+		}
+		else {
+			print ' ('. $tag_open .'d2u_machinery_used_machines_vat_excluded'. $tag_close .')';
+		}
+		print '</div>';
+	}
+	// Location
+	if($used_machine->location != "") {
+		print '<div class="col-xs-12">';
+		print '<b>'. $tag_open .'d2u_machinery_used_machines_location'. $tag_close .':</b> '. $used_machine->location;
+		print '</div>';
+	}
+	// External URL
+	if($used_machine->external_url != "" && filter_var($used_machine->external_url, FILTER_VALIDATE_URL)) {
+		print '<div class="col-xs-12">';
+		print '<b>'. $tag_open .'d2u_machinery_used_machines_external_url'. $tag_close .':</b> <a href="'. $used_machine->external_url .'" target="_blank">'. $used_machine->external_url .'</a>';
+		print '</div>';
 	}
 	print '</div>';
 	print '</div>';
-	
-	// Agitators
-	if($used_machine->agitator_type_id > 0) {
-		print '<div id="tab_agitator" class="tab-pane fade machine-tab">';
-		$agitator_type = new AgitatorType($used_machine->agitator_type_id, $used_machine->clang_id);
-		print '<div class="row">';
-		print '<div class="col-xs-12"><h3>'. $agitator_type->name .'</h3><br><br></div>';
-		print '</div>';
-		$agitators = $agitator_type->getAgitators();
-		foreach($agitators as $agitator) {
-			print '<div class="row">';
-			print '<div class="col-xs-12 col-sm-6 col-md-2">';
-			if($agitator->pic != "") {
-				print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
-						$agitator->pic .'" alt='. $agitator->name .' class="featurepic">';
-			}
-			print '</div>';
-			print '<div class="col-xs-12 col-sm-6 col-md-10 col-lg-8">';
-			print '<p><b>'. $agitator->name .'</b></p>';
-			print $agitator->description;
-			print '</div>';
-			print '</div>';
-		}
-		print '</div>';
-	}
-	
-	// Features
-	if(count($used_machine->feature_ids) > 0) {
-		print '<div id="tab_features" class="tab-pane fade machine-tab">';
-		$features = $used_machine->getFeatures();
-		foreach($features as $feature) {
-			print '<div class="row">';
-			print '<div class="col-xs-12 col-sm-6 col-md-2">';
-			if($feature->pic != "") {
-				print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
-						$feature->pic .'" alt='. $feature->title .' class="featurepic">';
-			}
-			print '</div>';
-			print '<div class="col-xs-12 col-sm-6 col-md-10 col-lg-8">';
-			print '<p><b>'. $feature->title .'</b></p>';
-			print $feature->description;
-			print '</div>';
-			print '</div>';
-		}
-		print '</div>';
-	}
-	
-	// Technical data
-	print '<div id="tab_tech_data" class="tab-pane fade machine-tab">';
-	$tech_data = $used_machine->getTechnicalData();
-	if(count($tech_data) > 0) {
-		print '<div class="row">';
-		print '<div class="col-xs-12 col-md-8">';
-		print '<table class="techdata">';
-		foreach ($tech_data as $description_wildcard => $value) {
-			print '<tr>';
-			print '<td class="description">'. $description_wildcard .'</td>';
-			print '<td class="value">'. $value .'</td>';
-			print '</tr>';
-		}
-		print '</table>';
-		print '</div>';
-		print '</div>';
-	}
-	print '</div>';
-	
+
 	// Contact Request form
 	$d2u_machinery = rex_addon::get("d2u_machinery");
 	print '<div id="tab_request" class="tab-pane fade machine-tab">';
 	print '<div class="row">';
 	print '<div class="col-xs-12 col-md-8">';
-	$form_data = 'hidden|machine_name|'. $used_machine->name .'|REQUEST
+	$form_data = 'hidden|machine_name|'. $used_machine->manufacturer .' '. $used_machine->name .' (Gebrauchtmaschine)|REQUEST
 
 			text|name|'. $tag_open .'d2u_machinery_form_name'. $tag_close .' *
 			text|company|'. $tag_open .'d2u_machinery_form_company'. $tag_close .' *
@@ -317,19 +304,6 @@ else if(filter_input(INPUT_GET, 'used_machine_id', FILTER_VALIDATE_INT) > 0 || (
 	print '</div>';
 	print '</div>';
 }
-else if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable() && (filter_input(INPUT_GET, 'industry_sector_id', FILTER_VALIDATE_INT) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "industry_sector_id"))) {
-	$industry_sector_id = filter_input(INPUT_GET, 'industry_sector_id', FILTER_VALIDATE_INT);
-	if(rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
-		$industry_sector_id = UrlGenerator::getId();
-	}
-	$industry_sector = new IndustrySector($industry_sector_id, rex_clang::getCurrentId());
-	// Print machine list
-	print '<div class="col-xs-12">';
-	print '<div class="row" data-match-height>';
-	print_used_machines($industry_sector->getMachines(), $industry_sector->name);
-	print '</div>';
-	print '</div>';
-}
 else {
 	// Categories
 	print '<div class="col-xs-12">';
@@ -339,13 +313,6 @@ else {
 	print '</div>';
 	
 	print '<div class="col-xs-12 abstand"></div>';
-	
-	// Industry sectors
-	print '<div class="col-xs-12">';
-	print '<div class="row" data-match-height>';
-	print_industry_sectors();
-	print '</div>';
-	print '</div>';
 }
 
 print_consulation_hint();

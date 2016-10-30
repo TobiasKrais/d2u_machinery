@@ -32,9 +32,12 @@ d2u_machinery_export_social_settings = Einstellungen für alle sozialen Netzwerk
 d2u_machinery_export_social_settings_facebook = Einstellungen für Facebook
 d2u_machinery_export_social_settings_linkedin = Einstellungen für LinkedIn
 d2u_machinery_export_social_settings_twitter = Einstellungen für Twitter
+d2u_machinery_export_start = Manuell exportieren
 d2u_machinery_export_twitter = Twitter
 d2u_machinery_export_twitter_id = Twitter Anmeldename
 d2u_machinery_export_type = Portaltyp
 
 d2u_machinery_export_rights_export = D2U Maschinen Addon: Export
 d2u_machinery_export_rights_export_provider = D2U Maschinen Addon: Portaleinstellungen
+
+d2u_machinery_export_zip_cannot_create = Fehler: Export ZIP Datei konnte nicht erstellt werden.

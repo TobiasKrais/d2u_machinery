@@ -384,7 +384,7 @@ class Category {
 			$result->setQuery($query);
 
 			for($i = 0; $i < $result->getRows(); $i++) {
-				$usedMachines = new UsedMachine($result->getValue("used_machine_id"), $this->clang_id);
+				$usedMachines[] = new UsedMachine($result->getValue("used_machine_id"), $this->clang_id);
 				$result->next();
 			}
 		}

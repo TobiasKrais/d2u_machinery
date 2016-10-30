@@ -95,7 +95,14 @@ if ($func == 'edit' || $func == 'add') {
 							d2u_addon_backend_helper::form_input('d2u_machinery_export_company_name', 'form[company_name]', $provider->company_name, TRUE, $readonly, 'text');
 							d2u_addon_backend_helper::form_input('d2u_machinery_export_company_email', 'form[company_email]', $provider->company_email, TRUE, $readonly, 'email');
 							d2u_addon_backend_helper::form_input('d2u_machinery_export_customer_number', 'form[customer_number]', $provider->customer_number, TRUE, $readonly, 'text');
-							d2u_addon_backend_helper::form_input('d2u_machinery_export_media_manager_type', 'form[media_manager_type]', $provider->media_manager_type, TRUE, $readonly, 'text');
+							$options_media = array();
+							$media_sql = rex_sql::factory();
+							$media_sql->setQuery("SELECT name FROM ". rex::getTablePrefix() ."media_manager_type");
+							for($i = 0; $i < $media_sql->getRows(); $i++) {
+								$options_media[$media_sql->getValue("name")] = $media_sql->getValue("name");
+								$media_sql->next();
+							}
+							d2u_addon_backend_helper::form_select('d2u_machinery_export_media_manager_type', 'form[media_manager_type]', $options_media, array($provider->media_manager_type));
 						?>
 					</div>
 				</fieldset>
@@ -172,7 +179,7 @@ if ($func == '') {
 
     $list->addTableAttribute('class', 'table-striped table-hover');
 
-    $tdIcon = '<i class="rex-icon fa-cloud-upload"></i>';
+    $tdIcon = '<i class="rex-icon fa-cloud"></i>';
     $thIcon = '<a href="' . $list->getUrl(['func' => 'add']) . '" title="' . rex_i18n::msg('add') . '"><i class="rex-icon rex-icon-add-module"></i></a>';
     $list->addColumn($thIcon, $tdIcon, 0, ['<th class="rex-table-icon">###VALUE###</th>', '<td class="rex-table-icon">###VALUE###</td>']);
     $list->setColumnParams($thIcon, ['func' => 'edit', 'entry_id' => '###provider_id###']);

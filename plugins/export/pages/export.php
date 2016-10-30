@@ -24,6 +24,11 @@ else if ($func == 'all_offline') {
 	// Remove all from next export
 	ExportedUsedMachine::removeAllFromExport($provider_id);
 }
+else if ($func == 'export') {
+	// Export
+	$provider = new Provider($provider_id);
+	$provider->export();
+}
 
 // Fetch providers
 $d2u_machinery = rex_addon::get('d2u_machinery');
@@ -33,9 +38,16 @@ $used_machines = UsedMachine::getAll($d2u_machinery->getConfig('default_lang'), 
 print '<table class="table table-striped table-hover">';
 print "<thead>";
 print "<tr>";
-print "<th><b>". rex_i18n::msg('d2u_machinery_used_machines_manufacturer') ." ". rex_i18n::msg('d2u_machinery_name') ."</b></td>";
+print "<th><b>". rex_i18n::msg('d2u_machinery_used_machines_manufacturer') ." ". rex_i18n::msg('d2u_machinery_name') ."</b></th>";
 foreach ($providers as $provider) {
-	print "<th><b>". $provider->name ."</b></td>";
+	print "<th><b>". $provider->name ."</b></th>";
+}
+print "</tr>";
+print "<tr>";
+print "<td>&nbsp;</td>";
+foreach ($providers as $provider) {
+	print "<td><a href='".rex_url::currentBackendPage(array('func'=>'export', 'provider_id'=>$provider->provider_id)) ."'>"
+		. "<button class='btn btn-apply'>". rex_i18n::msg('d2u_machinery_export_start') ."</button></a></td>";
 }
 print "</tr>";
 print "</thead>";

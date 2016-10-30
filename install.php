@@ -73,7 +73,7 @@ $sql->setQuery('CREATE OR REPLACE VIEW '. rex::getTablePrefix() .'d2u_machinery_
 	LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_categories AS categories ON categories_lang.category_id = categories.category_id
 	LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_categories_lang AS parent_categories ON categories.parent_category_id = parent_categories.category_id
 	WHERE machines.online_status = "online"
-	GROUP BY GROUP BY category_id, clang_id, name, parent_name, seo_title, seo_description, updatedate');
+	GROUP BY category_id, clang_id, name, parent_name, seo_title, seo_description, updatedate');
 // Insert url schemes
 if(rex_addon::get('url')->isAvailable()) {
 	$sql->setQuery("INSERT INTO `". rex::getTablePrefix() ."url_generate` (`article_id`, `clang_id`, `url`, `table`, `table_parameters`, `relation_table`, `relation_table_parameters`, `relation_insert`, `createdate`, `createuser`, `updatedate`, `updateuser`) VALUES
@@ -116,4 +116,5 @@ if (!$this->hasConfig()) {
 	$this->setConfig('default_lang', $default_clang_id);
 	$this->setConfig('default_category_sort', 'name');
 	$this->setConfig('show_categories_usage_area', 'hide');
+	$this->setConfig('show_teaser', 'hide');
 }

@@ -13,6 +13,7 @@ class d2u_machinery_frontend_helper {
 		// Prepare objects first for sorting in correct order
 		$category = FALSE;
 		$machine = FALSE;
+		$used_machine = FALSE;
 		$url_data = array();
 		if(rex_addon::get("url")->isAvailable()) {
 			$url_data = UrlGenerator::getData();
@@ -32,6 +33,14 @@ class d2u_machinery_frontend_helper {
 			}
 			$category = new Category($category_id, rex_clang::getCurrentId());
 		}
+		if(filter_input(INPUT_GET, 'used_machine_id', FILTER_VALIDATE_INT) > 0 || (rex_addon::get("url")->isAvailable() && $url_data->urlParamKey === "used_machine_id")) {
+			$used_machine_id = filter_input(INPUT_GET, 'used_machine_id', FILTER_VALIDATE_INT);
+			if(rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
+				$used_machine_id = UrlGenerator::getId();
+			}
+			$used_machine = new UsedMachine($used_machine_id, rex_clang::getCurrentId());
+			$category = $used_machine->category;
+		}
 
 		// Breadcrumbs
 		if($category !== FALSE) {
@@ -42,6 +51,9 @@ class d2u_machinery_frontend_helper {
 		}
 		if($machine !== FALSE) {
 			$breadcrumbs[] = '<a href="' . $machine->getUrl() . '">' . $machine->name . '</a>';
+		}
+		if($used_machine !== FALSE) {
+			$breadcrumbs[] = '<a href="' . $used_machine->getUrl() . '">' . $used_machine->name . '</a>';
 		}
 		
 		// Industry sectors

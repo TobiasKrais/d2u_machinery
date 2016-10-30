@@ -176,6 +176,31 @@ class Provider {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 	}
+
+	/**
+	 * Exports used machines for the provider.
+	 */
+	public function export() {
+		if($this->type == "europemachinery") {
+			$europemachinery = new EuropeMachinery($this);
+			$europemachinery->export();
+		}
+		else if($this->type == "machinerypark") {
+			
+		}
+		else if($this->type == "mascus") {
+			
+		}
+		else if($this->type == "facebook") {
+			
+		}
+		else if($this->type == "twitter") {
+			
+		}
+		else if($this->type == "linkedin") {
+			
+		}
+	}
 	
 	/**
 	 * Get all providers.

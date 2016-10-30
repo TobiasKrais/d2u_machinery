@@ -102,6 +102,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 						d2u_addon_backend_helper::form_input('d2u_machinery_settings_request_form_email', 'settings[request_form_email]', $this->getConfig('request_form_email'), TRUE, FALSE, 'email');
 						d2u_addon_backend_helper::form_mediafield('d2u_machinery_settings_consultation_pic', 'consultation_pic', $this->getConfig('consultation_pic'));
 						d2u_addon_backend_helper::form_linkfield('d2u_machinery_settings_consultation_article', '2', $this->getConfig('consultation_article_id'), $this->getConfig('default_lang'));
+						d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_show_teaser', 'settings[show_teaser]', 'show', $this->getConfig('show_teaser') == 'show')
 					?>
 				</div>
 			</fieldset>

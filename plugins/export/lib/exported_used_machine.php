@@ -108,16 +108,16 @@ class ExportedUsedMachine {
 	 * @return ExportedUsedMachine[] Array with ExportedUsedMachine objects.
 	 */
 	public static function getAll($provider = FALSE) {
-		$query = "SELECT used_machine_id, provider_id FROM ". rex::getTablePrefix() ."d2u_machinery_export_machines AS export";
+		$query = "SELECT used_machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_export_machines AS export";
 		if ($provider !== FALSE && $provider->provider_id > 0) {
 			$query .= " WHERE provider_id = ". $provider->provider_id;
 		}
 		$result = rex_sql::factory();
 		$result->setQuery($query);
-		
+
 		$exported_used_machines = array();
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$exported_used_machines[] = new ExportedUsedMachine($result->getValue("used_machine_id"), $result->getValue("provider_id"));
+			$exported_used_machines[] = new ExportedUsedMachine($result->getValue("used_machine_id"), $provider->provider_id);
 			$result->next();
 		}
 		return $exported_used_machines;

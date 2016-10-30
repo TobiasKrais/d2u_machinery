@@ -16,5 +16,5 @@ requires:
     packages:
         d2u_machinery/used_machines: '1.0'
     php:
-        extensions: [xml]
+        extensions: [xml, zip]
         version: '>=5.3'

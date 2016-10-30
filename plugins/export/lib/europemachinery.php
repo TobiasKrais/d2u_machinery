@@ -4,9 +4,38 @@
  * all machines, even ones that are not changed. Deleted machines are not included.
  * @link http://www.agriaffaires.com/html/rubtableauliste_compact_de.html Full List
  */
-class Europemachinery extends AExport {
+class EuropeMachinery extends AFTPExport {
+	/**
+	 *
+	 * @var string Filename of the XML file for this export. EuropeMachinery
+	 * does not require a special name.
+	 */
+	private $xml_filename = "export.xml";
+	
+	/**
+	 * Perform the EuropeMachinery Export.
+	 */
 	public function export() {
-		// TODO
+		// Prepare pictures
+		$this->preparePictures(10);
+		$this->files_for_zip = array_unique($this->files_for_zip);
+
+		// Create XML file
+		$this->createXML();
+		
+		// Create ZIP
+		$zip = new ZipArchive();
+		if ($zip->open($this->cache_path . $this->getZipFileName(), ZipArchive::CREATE) !== TRUE) {
+			rex_view::error(rex_i18n::msg('d2u_machinery_export_zip_cannot_create'));
+		}
+		$zip->addFile($this->cache_path . $this->xml_filename, $this->xml_filename);
+		foreach($this->files_for_zip as $original_filename => $cachefilename) {
+			$zip->addFile(rex_path::addonCache("media_manager", $cachefilename), $original_filename);
+		}
+		$zip->close();
+		
+		// Cleanup
+		unlink($this->cache_path . $this->xml_filename);
 	}
 	
 	/**
@@ -16,7 +45,6 @@ class Europemachinery extends AExport {
 	private function createXML() {
 		// return value
 		$machine_counter = 0;	
-
 		// <?xml version="1.0" encoding="UTF-8">
 		$xml = new DOMDocument("1.0", "UTF-8");
 		$xml->formatOutput = true;
@@ -63,12 +91,11 @@ class Europemachinery extends AExport {
 					$pictures = $xml->createElement("pictures");
 					$pics_counter = 1;
 
-					$pics = explode(",", $used_machine->pics);
-					foreach($pics as $pic) {
+					foreach($used_machine->pics as $pic) {
 						// only first 10 pics are inculded
 						if(strlen($pic) > 3 && $pics_counter <= 10) {
 							$picture = $xml->createElement("picture");
-							$picture->appendChild($xml->createTextNode(getPictureNameAndResize($pic))); // TODO
+							$picture->appendChild($xml->createTextNode($pic));
 							$pictures->appendChild($picture);
 
 							$pics_counter ++;
@@ -154,7 +181,7 @@ class Europemachinery extends AExport {
 
 		// write XML file
 		try {
-			if($xml->save($this->provider->export_filename)) {
+			if($xml->save($this->cache_path . $this->xml_filename)) {
 				return $machine_counter;
 			}
 			else {

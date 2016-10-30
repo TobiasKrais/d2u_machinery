@@ -145,8 +145,8 @@ class UsedMachine {
 			}
 			$this->location = $result->getValue("location");
 			$this->external_url = $result->getValue("external_url");
-			$this->description = $result->getValue("description");
-			$this->teaser = $result->getValue("teaser");
+			$this->description = htmlspecialchars_decode($result->getValue("description"));
+			$this->teaser = htmlspecialchars_decode($result->getValue("teaser"));
 			$this->translation_needs_update = $result->getValue("translation_needs_update");
 
 			// URL des externen Links bei Bedarf korrigieren

@@ -22,4 +22,4 @@ requires:
         sprog: '>=1.0.0beta4'
         url: '>=1.0.0beta4'
         yform: '>=2.0'
-        yrewrite: '>=2.2'
+        yrewrite: '>=2.0.1'
