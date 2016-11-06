@@ -6,36 +6,45 @@
  */
 class EuropeMachinery extends AFTPExport {
 	/**
-	 *
 	 * @var string Filename of the XML file for this export. EuropeMachinery
 	 * does not require a special name.
 	 */
-	private $xml_filename = "export.xml";
+	protected $xml_filename = "export.xml";
 	
 	/**
 	 * Perform the EuropeMachinery Export.
+	 * @return string error message - if no errors occured, emtpy string is returned.
 	 */
 	public function export() {
-		// Prepare pictures
+		// Cleanup old export ZIP file
+		unlink($this->cache_path . $this->getZipFileName());
+		
+		// Prepare pictures: Europemachinery allows max. 10 pictures
 		$this->preparePictures(10);
 		$this->files_for_zip = array_unique($this->files_for_zip);
 
 		// Create XML file
-		$this->createXML();
+		$error = $this->createXML();
+		if($error != "") {
+			return $error;
+		}
 		
 		// Create ZIP
-		$zip = new ZipArchive();
-		if ($zip->open($this->cache_path . $this->getZipFileName(), ZipArchive::CREATE) !== TRUE) {
-			rex_view::error(rex_i18n::msg('d2u_machinery_export_zip_cannot_create'));
-		}
-		$zip->addFile($this->cache_path . $this->xml_filename, $this->xml_filename);
-		foreach($this->files_for_zip as $original_filename => $cachefilename) {
-			$zip->addFile(rex_path::addonCache("media_manager", $cachefilename), $original_filename);
-		}
-		$zip->close();
+		$this->zip($this->xml_filename);
 		
-		// Cleanup
+		// Cleanup xml file
 		unlink($this->cache_path . $this->xml_filename);
+		
+		// Upload
+		$error = $this->upload();
+		if($error != "") {
+			return $error;
+		}
+		
+		// Save results in database
+		$this->saveExportedMachines();
+		
+		return "";
 	}
 	
 	/**
@@ -43,8 +52,6 @@ class EuropeMachinery extends AFTPExport {
 	 * @return int number of objects contained in xml
 	 */
 	private function createXML() {
-		// return value
-		$machine_counter = 0;	
 		// <?xml version="1.0" encoding="UTF-8">
 		$xml = new DOMDocument("1.0", "UTF-8");
 		$xml->formatOutput = true;
@@ -172,25 +179,21 @@ class EuropeMachinery extends AFTPExport {
 
 					// </product>
 					$importfile->appendChild($equipment);
-
-					// Count used machines
-					$machine_counter++;
 				}
 			}
 		}
 
 		// write XML file
 		try {
-			if($xml->save($this->cache_path . $this->xml_filename)) {
-				return $machine_counter;
+			if($xml->save($this->cache_path . $this->xml_filename) === FALSE) {
+				return rex_i18n::msg('d2u_machinery_export_xml_cannot_create');
 			}
 			else {
-				return 0;
+				return "";
 			}
 		}
 		catch(Exception $e) {
-			print "Error: ". $e;
-			return 0;
+			return rex_i18n::msg('d2u_machinery_export_xml_cannot_create') . " - ". $e->getMessage();
 		}
 	}
 }

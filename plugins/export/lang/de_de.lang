@@ -40,4 +40,8 @@ d2u_machinery_export_type = Portaltyp
 d2u_machinery_export_rights_export = D2U Maschinen Addon: Export
 d2u_machinery_export_rights_export_provider = D2U Maschinen Addon: Portaleinstellungen
 
+d2u_machinery_export_ftp_error_connection = Fehler: FTP Verbindung konnte nicht aufgebaut werden. Bitte prüfen sie zur Sicherheit die FTP Benutzerdaten.
+d2u_machinery_export_ftp_error_upload = Fehler: FTP Verbindung wurde hergestellt aber Datei konnte nicht hochgeladen werden.
+d2u_machinery_export_success = Übertragung erfolgreich
+d2u_machinery_export_xml_cannot_create = Fehler: Export XML Datei konnte nicht erstellt werden.
 d2u_machinery_export_zip_cannot_create = Fehler: Export ZIP Datei konnte nicht erstellt werden.

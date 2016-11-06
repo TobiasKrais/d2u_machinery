@@ -7,29 +7,33 @@ abstract class AFTPExport extends AExport {
 	 * @var string Path to cache of the plugin. Initialized in constructor. 
 	 */
 	protected $cache_path = "";
-
-	/**
-	 * @var ExportedUsedMachine[] that need to be exported.
-	 */
-	protected $exported_used_machines = array();
-	
-	/**
-	 * @var Provider Export provider object.
-	 */
-	protected $provider;
 	
 	/**
 	 * @var string[] list of files that need to be added to ZIP export file. 
 	 */
 	protected $files_for_zip = [];
+	
+	/**
+	 *
+	 * @var string Filename of the ZIP file for this export.
+	 */
+	private $zip_filename = "";
 
 	/**
 	 * Constructor. Initializes variables
 	 * @param Provider $provider Export Provider
 	 */
-	 public function __construct($provider) {
+	public function __construct($provider) {
 		parent::__construct($provider);
-		 
+		
+		// Set exported used machines without export action to action "update"
+		foreach($this->exported_used_machines as $exported_used_machine) {
+			$exported_used_machine->export_action = "update";
+			$exported_used_machine->save();
+		}
+		$this->exported_used_machines = ExportedUsedMachine::getAll($this->provider);		
+		
+		// Check if cache path exists - if not create it
 		$this->cache_path = rex_path::pluginCache("d2u_machinery", "export");
 		if(!is_dir($this->cache_path)) {
 			mkdir($this->cache_path, 0777, true);
@@ -40,14 +44,17 @@ abstract class AFTPExport extends AExport {
 	 * Creates the filename for the zip file
 	 * @return string zip filename
 	 */
-	function getZipFileName() {
-		if($this->provider->ftp_filename != "") {
-			return $this->provider->ftp_filename;
+	protected function getZipFileName() {
+		if($this->zip_filename == "") {
+			if($this->provider->ftp_filename != "") {
+				$this->zip_filename = $this->provider->ftp_filename;
+			}
+			else {
+				$this->zip_filename = preg_replace("/[^a-zA-Z0-9]/", "", $this->provider->name) ."_"
+						. trim($this->provider->customer_number) ."_". $this->provider->type .".zip";
+			}
 		}
-		else {
-			return preg_replace("/[^a-zA-Z0-9]/", "", $this->provider->name) ."_"
-					. trim($this->provider->customer_number) ."_". $this->provider->type .".zip";
-		}
+		return $this->zip_filename;
 	}
 
 	/**
@@ -80,5 +87,57 @@ abstract class AFTPExport extends AExport {
 				}
 			}
 		}
-	}	
+	}
+	
+	/**
+	 * Uploads the zip file using FTP.
+	 * @return string error message
+	 */
+	protected function upload() {
+	   // Establish connection and ...
+	   $connection_id = ftp_connect($this->provider->ftp_server);
+	   // ... login
+	   $login_result = ftp_login($connection_id, $this->provider->ftp_username, $this->provider->ftp_password);
+
+	   // Is connection not healthy: send error message
+	   if ((!$connection_id) || (!$login_result)) {
+		   return rex_i18n::msg('d2u_machinery_export_ftp_error_connection');
+	   }
+
+	   // Upload
+	   $upload = ftp_nb_put($connection_id, $this->zip_filename, $this->cache_path . $this->getZipFileName(), FTP_BINARY);
+	   while ($upload == FTP_MOREDATA) {
+		   // Continue uploading
+		   $upload = ftp_nb_continue($connection_id);
+	   }
+
+	   // Check upload status
+	   if ($upload != FTP_FINISHED) {
+		   return rex_i18n::msg('d2u_machinery_export_ftp_error_upload');
+	   }
+
+	   // Close connection
+	   ftp_quit($connection_id);
+
+	   return "";
+	}
+
+	/**
+	 * ZIPs pictures and machine filename.
+	 * @param type $machines_filename
+	 * @return string Error message or empty if no errors occur.
+	 */
+	protected function zip($machines_filename) {
+	   	// Create ZIP
+		$zip = new ZipArchive();
+		if ($zip->open($this->cache_path . $this->getZipFileName(), ZipArchive::CREATE) !== TRUE) {
+			return rex_i18n::msg('d2u_machinery_export_zip_cannot_create');
+		}
+		$zip->addFile($this->cache_path . $machines_filename, $machines_filename);
+		foreach($this->files_for_zip as $original_filename => $cachefilename) {
+			$zip->addFile($cachefilename, $original_filename);
+		}
+		$zip->close();
+		return "";
+   }
 }

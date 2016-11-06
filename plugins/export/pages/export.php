@@ -27,7 +27,13 @@ else if ($func == 'all_offline') {
 else if ($func == 'export') {
 	// Export
 	$provider = new Provider($provider_id);
-	$provider->export();
+	$error = $provider->export();
+	if($error != "") {
+		print rex_view::error($provider->name .": ". $error);
+	}
+	else {
+		print rex_view::success($provider->name .": ". rex_i18n::msg('d2u_machinery_export_success'));
+	}
 }
 
 // Fetch providers
