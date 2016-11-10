@@ -44,7 +44,7 @@ $used_machines = UsedMachine::getAll($d2u_machinery->getConfig('default_lang'), 
 print '<table class="table table-striped table-hover">';
 print "<thead>";
 print "<tr>";
-print "<th><b>". rex_i18n::msg('d2u_machinery_used_machines_manufacturer') ." ". rex_i18n::msg('d2u_machinery_name') ."</b></th>";
+print "<th><b>". rex_i18n::msg('d2u_machinery_machine') ."</b></th>";
 foreach ($providers as $provider) {
 	print "<th><b>". $provider->name ."</b></th>";
 }
@@ -56,7 +56,12 @@ foreach ($providers as $provider) {
 		. "<button class='btn btn-apply'>". rex_i18n::msg('d2u_machinery_export_start') ."</button></a></td>";
 }
 print "</tr>";
-print "</thead>";
+print "<tr>";
+print "<td><b>". rex_i18n::msg('d2u_machinery_export_last_export_date') ."</b></td>";
+foreach ($providers as $provider) {
+	print "<td>". date("d.m.Y H:i", $provider->getLastExportTimestamp()) ." ". rex_i18n::msg('d2u_machinery_export_uhr') ."</td>";
+}
+print "</tr>";print "</thead>";
 print "<tbody>";
 
 // Only if used machines are available

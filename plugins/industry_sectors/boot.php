@@ -22,9 +22,12 @@ function rex_d2u_machinery_industry_sectors_media_is_in_use(rex_extension_point 
 	// Prepare warnings
 	// Industry sectors
 	for($i = 0; $i < $sql->getRows(); $i++) {
-		$warning[] =  '<a href="javascript:openPage(\'index.php?page=d2u_machinery/industry_sectors&func=edit&entry_id='.
+		$message =  '<a href="javascript:openPage(\'index.php?page=d2u_machinery/industry_sectors&func=edit&entry_id='.
 			$sql->getValue('industry_sector_id') .'\')">'. rex_i18n::msg('d2u_machinery_rights_all') ." - ". rex_i18n::msg('d2u_machinery_industry_sectors') .': '. $sql->getValue('name') .'</a>';
-    }
+ 		if(!in_array($message, $warning)) {
+			$warning[] = $message;
+		}
+   }
 
 	return $warning;
 }

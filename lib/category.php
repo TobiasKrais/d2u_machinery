@@ -330,8 +330,10 @@ class Category {
 	 * @return Machine[] Machines in this category
 	 */
 	public function getMachines() {
-		$query = "SELECT machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_machines "
-			."WHERE category_id = ". $this->category_id;
+		$query = "SELECT lang.machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_machines_lang AS lang "
+			."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_machines AS machines "
+					."ON lang.machine_id = machines.machine_id "
+			."WHERE category_id = ". $this->category_id ." AND clang_id = ". $this->clang_id;
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
@@ -378,8 +380,10 @@ class Category {
 	public function getUsedMachines() {
 		$usedMachines = array();
 		if(rex_plugin::get("d2u_machinery", "used_machines")->isAvailable()) {
-			$query = "SELECT used_machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_used_machines "
-				."WHERE category_id = ". $this->category_id;
+			$query = "SELECT lang.used_machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_used_machines_lang AS lang "
+				."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_used_machines AS used_machines "
+					."ON lang.used_machine_id = used_machines.used_machine_id "
+				."WHERE category_id = ". $this->category_id ." AND clang_id = ". $this->clang_id;
 			$result = rex_sql::factory();
 			$result->setQuery($query);
 

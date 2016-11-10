@@ -3,20 +3,61 @@
  * machinerypark.com always takes a full export, this means the export includes
  * all machines, even ones that are not changed. Deleted machines are not included.
  */
-class MacherinyPark extends AExport {
+class MachineryPark extends AFTPExport {
+	/**
+	 * @var string Filename of the XML file for this export. MachineryPark
+	 * does not require a special name.
+	 */
+	protected $csv_filename = "machinerypark.csv";
+	
+	/**
+	 * @var string Filename of the ZIP file for this export.
+	 */
+	protected $zip_filename = "machinerypark.zip";
 
+	/**
+	 * Perform the MachineryPark Export.
+	 * @return string error message - if no errors occured, emtpy string is returned.
+	 */
 	public function export() {
-		// TODO
+		// Cleanup old export ZIP file
+		if(file_exists($this->cache_path . $this->getZipFileName())) {
+			unlink($this->cache_path . $this->getZipFileName());
+		}
+
+		// Prepare pictures: MachineryPark allows max. 6 pictures / machine
+		$this->preparePictures(6); // TODO Pictures are missing
+		$this->files_for_zip = array_unique($this->files_for_zip);
+		
+		// Create XML file
+		$error = $this->createCSV();
+		if($error != "") {
+			return $error;
+		}
+		
+		// Create ZIP
+		$this->zip($this->csv_filename);
+		
+		// Cleanup xml file
+		unlink($this->cache_path . $this->csv_filename);
+		
+		// Upload
+		$error = $this->upload();
+		if($error != "") {
+			return $error;
+		}
+		
+		// Save results in database
+		$this->saveExportedMachines();
+		
+		return "";
 	}
 	
 	/**
 	 * Creates a csv file for machinerypark.com
-	 * @return int number of objects contained in xml
+	 * @return string containing error information, if occured
 	 */
 	private function createCSV() {
-		// return value
-		$machine_counter = 0;	
-
 		// Column names
 		$list = array (
 			array('Referenz', 'Kategorie', 'Hersteller', 'Typ', 'Beschreibung',
@@ -28,28 +69,28 @@ class MacherinyPark extends AExport {
 			$used_machine = new UsedMachine($exported_used_machine->used_machine_id, $this->provider->clang_id);
 			// deleted machines are not included
 			if($exported_used_machine->export_action == "add" || $exported_used_machine->export_action == "update") {
-				// Only take used machines with a europemachinery category
+				// Only take used machines with a machinerypark category
 				if($used_machine->category->export_machinerypark_category_id > 0) {
 					// prepare pics, maximum 6 are allowed
-					$temp_pics = explode(",", $used_machine->pics);
-					$pics = array("", "", "", "", "", "");
-					for($i = 0; $i < count($temp_pics); $i++) {
-						if($i < 6) {
-							$pics[$i] = $this->preparePicture($temp_pics[$i]); //TODO
+					$pics = ["", "", "", "", "", ""];
+					$pics_counter = 0;
+					foreach($used_machine->pics as $pic) {
+						if($pics_counter < 6) {
+							$pics[$pics_counter++] = $pic;
 						}
 					}
 
-					$list[] = array($used_machine->used_machine_id,
+					$list[] = [$used_machine->used_machine_id,
 							$used_machine->category->export_machinerypark_category_id,
 							utf8_decode(str_replace('"', "'", $used_machine->manufacturer)),
 							utf8_decode(str_replace('"', "'", $used_machine->name)),
-							utf8_decode(str_replace("\n", " ", str_replace('"', "'", $used_machine->description))),
+							utf8_decode(str_replace("\n", " ", str_replace('"', "'", AExport::convertToExportString($used_machine->description)))),
 							"", // ZIP code
 							"", // Location
 							"", // Country
 							str_replace('"', "'", round($used_machine->price)),
 							str_replace('"', "'", $used_machine->year_built),
-							"", // PS
+							"", // Horse power
 							"", // KM
 							"", // BS
 							"", // Weight
@@ -59,27 +100,21 @@ class MacherinyPark extends AExport {
 							$pics[2],
 							$pics[3],
 							$pics[4],
-							$pics[5]);
-
-					// Count used machines
-					$machine_counter++;
+							$pics[5]];
 				}
 			}
 		}
 
-		// Create CSV file
-		$fp = fopen($this->provider->export_filename, 'w+');
-
+		// Write CSV file
+		$fp = fopen($this->cache_path . $this->csv_filename, 'w+');
 		if($fp === false) {
-			return false;
+			return rex_i18n::msg('d2u_machinery_export_csv_cannot_create');
 		}
-
 		foreach ($list as $fields) {
 			fputcsv($fp, $fields, ';');
 		}
-
 		fclose($fp);
 
-		return $machine_counter;
+		return "";
 	}
 }

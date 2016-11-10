@@ -34,11 +34,6 @@ d2u_machinery_settings_request_form_email = Empfänger E-Mail Adresse für Anfra
 d2u_machinery_settings_show_teaser = Kurzbeschreibung in Maschinenlisten einblenden
 
 d2u_machinery_category = Kategorie
-d2u_machinery_category_export = Exporteinstellungen
-d2u_machinery_category_export_machinerypark_category_id = MachineryPark.com Kategorie ID
-d2u_machinery_category_export_europemachinery_category_id = EuropeMachinery Kategorie ID
-d2u_machinery_category_export_machinerypark_category_id = EuropeMachinery Kategorie Name
-d2u_machinery_category_export_mascus_category_name_category_id = Mascus Kategorie Name
 d2u_machinery_category_no_categories_found = Es wurden noch keine Kategorien angelegt.
 d2u_machinery_category_parent = Elternkategorie
 d2u_machinery_category_parent_none = Hat keine Elternkategorie

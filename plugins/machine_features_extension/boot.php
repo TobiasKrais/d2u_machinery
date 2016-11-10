@@ -22,8 +22,11 @@ function rex_d2u_machinery_features_media_is_in_use(rex_extension_point $ep) {
 	// Prepare warnings
 	// Features
 	for($i = 0; $i < $sql->getRows(); $i++) {
-		$warning[] =  '<a href="javascript:openPage(\'index.php?page=d2u_machinery/machine_features_extension&func=edit&entry_id='.
+		$message =  '<a href="javascript:openPage(\'index.php?page=d2u_machinery/machine_features_extension&func=edit&entry_id='.
 			$sql->getValue('feature_id') .'\')">'. rex_i18n::msg('d2u_machinery_rights_all') ." - ". rex_i18n::msg('d2u_machinery_features') .': '. $sql->getValue('title') .'</a>';
+  		if(!in_array($message, $warning)) {
+			$warning[] = $message;
+		}
     }
 
 	return $warning;

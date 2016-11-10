@@ -27,8 +27,11 @@ function rex_d2u_machinery_used_machines_media_is_in_use(rex_extension_point $ep
 	// Prepare warnings
 	// Industry sectors
 	for($i = 0; $i < $sql->getRows(); $i++) {
-		$warning[] =  '<a href="javascript:openPage(\'index.php?page=d2u_machinery/used_machines&func=edit&entry_id='.
+		$message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/used_machines&func=edit&entry_id='.
 			$sql->getValue('used_machine_id') .'\')">'. rex_i18n::msg('d2u_machinery_used_machines_rights_used_machines') ." - ". rex_i18n::msg('d2u_machinery_used_machines') .': '. $sql->getValue('manufacturer') .' '. $sql->getValue('name') .'</a>';
+		if(!in_array($message, $warning)) {	
+			$warning[] = $message;
+		}
     }
 
 	return $warning;

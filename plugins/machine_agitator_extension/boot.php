@@ -28,14 +28,20 @@ function rex_d2u_machinery_agitators_media_is_in_use(rex_extension_point $ep) {
 	// Prepare warnings
 	// Agitator types
 	for($i = 0; $i < $sql_agitator_types->getRows(); $i++) {
-		$warning[] = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/machine_agitator_extension/agitator_type&func=edit&entry_id='.
+		$message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/machine_agitator_extension/agitator_type&func=edit&entry_id='.
 			$sql_mechanical->getValue('agitator_type_id') .'\')">'. rex_i18n::msg('d2u_machinery_rights_all') ." - ". rex_i18n::msg('d2u_machinery_agitator_types') .': '. $sql_mechanical->getValue('name') .'</a>';
+ 		if(!in_array($message, $warning)) {
+			$warning[] = $message;
+		}
     }
 	// Agitators
 	for($i = 0; $i < $sql_agitators->getRows(); $i++) {
-		$warning[] = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/machine_agitator_extension/agitator&func=edit&entry_id='.
+		$message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/machine_agitator_extension/agitator&func=edit&entry_id='.
 			$sql_mechanical->getValue('agitator_id') .'\')">'. rex_i18n::msg('d2u_machinery_rights_all') ." - ". rex_i18n::msg('d2u_machinery_agitators') .': '. $sql_mechanical->getValue('name') .'</a>';
-    }
+  		if(!in_array($message, $warning)) {
+			$warning[] = $message;
+		}
+   }
 	
 	return $warning;
 }

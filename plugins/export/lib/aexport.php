@@ -22,6 +22,26 @@ abstract class AExport {
 		$this->exported_used_machines = ExportedUsedMachine::getAll($this->provider);
 	}
 
+	
+	/**
+	 * Converts HTML formatted string to string with new lines. Following HTML
+	 * tags are converted to new lines: </p>, <br>, </h1>, </h2>, </h3>, </h4>,
+	 * </h5>, </h6>, </li>
+	 * @param string $html HTML string
+	 */
+	static protected function convertToExportString($html) {
+		$html = str_replace("<br>", PHP_EOL, $html);
+		$html = str_replace("</p>", "</p>".PHP_EOL, $html);
+		$html = str_replace("</h1>", "</h1>".PHP_EOL, $html);
+		$html = str_replace("</h2>", "</h2>".PHP_EOL, $html);
+		$html = str_replace("</h3>", "</h3>".PHP_EOL, $html);
+		$html = str_replace("</h4>", "</h4>".PHP_EOL, $html);
+		$html = str_replace("</h5>", "</h5>".PHP_EOL, $html);
+		$html = str_replace("</h6>", "</h6>".PHP_EOL, $html);
+		$html = str_replace("</li>", "</li>".PHP_EOL, $html);
+		return strip_tags($html);
+	}
+
 	/**
 	 * Export machines that are added to export list for the provider.
 	 */
@@ -48,7 +68,7 @@ abstract class AExport {
 		catch (Error $e) {
 			getimagesize(rex::getServer()."index.php?rex_media_type=". $this->provider->media_manager_type ."&rex_media_file=". $pic);
 		}
-		
+
 		if(file_exists($media_manager->getCacheFilename())) {
 			// Cached file if successfull
 			return $media_manager->getCacheFilename();

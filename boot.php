@@ -37,21 +37,30 @@ function rex_d2u_machinery_media_is_in_use(rex_extension_point $ep) {
 	// Prepare warnings
 	// Machines
 	for($i = 0; $i < $sql_machine->getRows(); $i++) {
-		$warning[] = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/machine&func=edit&entry_id='.
+		$message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/machine&func=edit&entry_id='.
 			$sql_machine->getValue('machine_id') .'\')">'. rex_i18n::msg('d2u_machinery_rights_all') ." - ". rex_i18n::msg('d2u_machinery_meta_machines') .': '. $sql_machine->getValue('name') .'</a>';
+		if(!in_array($message, $warning)) {
+			$warning[] = $message;
+		}
     }
 
 	// Categories
 	for($i = 0; $i < $sql_categories->getRows(); $i++) {
-		$warning[] = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/category&func=edit&entry_id='. $sql_categories->getValue('category_id') .'\')">'.
+		$message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/category&func=edit&entry_id='. $sql_categories->getValue('category_id') .'\')">'.
 			 rex_i18n::msg('d2u_machinery_rights_all') ." - ". rex_i18n::msg('d2u_machinery_meta_categories') .': '. $sql_categories->getValue('name') . '</a>';
+		if(!in_array($message, $warning)) {
+			$warning[] = $message;
+		}
     }
 	
 	// Settings
 	$addon = rex_addon::get("d2u_machinery");
 	if($addon->hasConfig("consultation_pic") && $addon->getConfig("consultation_pic") == $filename) {
-		$warning[] = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/settings\')">'.
+		$message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/settings\')">'.
 			 rex_i18n::msg('d2u_machinery_rights_all') ." - ". rex_i18n::msg('d2u_machinery_meta_settings') . '</a>';
+		if(!in_array($message, $warning)) {
+			$warning[] = $message;
+		}
 	}
 
 	return $warning;

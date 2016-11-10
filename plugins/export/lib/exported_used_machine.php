@@ -17,7 +17,7 @@ class ExportedUsedMachine {
 	/**
 	 * @var Provider Export provider object
 	 */
-	var $provider;
+	var $provider_id;
 
 	/**
 	 * @var string Export status. Either "add", "update" or "delete"
@@ -50,7 +50,7 @@ class ExportedUsedMachine {
 		$num_rows = $result->getRows();
 
 		$this->used_machine_id = $used_machine_id;
-		$this->provider = new Provider($provider_id);
+		$this->provider_id = $provider_id;
 		if ($num_rows > 0) {
 			$this->export_action = $result->getValue("export_action");
 			$this->provider_import_id = $result->getValue("provider_import_id");
@@ -96,7 +96,7 @@ class ExportedUsedMachine {
 	 */
 	public function delete() {
 		$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_export_machines "
-			."WHERE used_machine_id = ". $this->used_machine_id ." AND provider_id = ". $this->provider->provider_id;
+			."WHERE used_machine_id = ". $this->used_machine_id ." AND provider_id = ". $this->provider_id->provider_id;
 		$result_lang = rex_sql::factory();
 		$result_lang->setQuery($query);
 	}
@@ -128,7 +128,7 @@ class ExportedUsedMachine {
 	 * @return boolean TRUE if set, FALSE if not
 	 */
 	public function isSetForExport() {
-		if($this->export_action == "add" || $this->export_action == "update") {
+		if($this->export_action == "add" || $this->export_action == "update" || ($this->export_action == "" && $this->export_timestamp > 0)) {
 			return TRUE;
 		}
 		else {
@@ -167,7 +167,7 @@ class ExportedUsedMachine {
 	public function save() {
 		$query = "REPLACE INTO ". rex::getTablePrefix() ."d2u_machinery_export_machines SET "
 				."used_machine_id = ". $this->used_machine_id .", "
-				."provider_id = ". $this->provider->provider_id .", "
+				."provider_id = ". $this->provider_id .", "
 				."export_action = '". $this->export_action ."', "
 				."provider_import_id = '". $this->provider_import_id ."', "
 				."export_timestamp = '". $this->export_timestamp ."'";

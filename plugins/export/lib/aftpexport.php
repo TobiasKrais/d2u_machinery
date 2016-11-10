@@ -14,10 +14,9 @@ abstract class AFTPExport extends AExport {
 	protected $files_for_zip = [];
 	
 	/**
-	 *
 	 * @var string Filename of the ZIP file for this export.
 	 */
-	private $zip_filename = "";
+	protected $zip_filename = "";
 
 	/**
 	 * Constructor. Initializes variables
@@ -45,14 +44,12 @@ abstract class AFTPExport extends AExport {
 	 * @return string zip filename
 	 */
 	protected function getZipFileName() {
-		if($this->zip_filename == "") {
-			if($this->provider->ftp_filename != "") {
-				$this->zip_filename = $this->provider->ftp_filename;
-			}
-			else {
-				$this->zip_filename = preg_replace("/[^a-zA-Z0-9]/", "", $this->provider->name) ."_"
-						. trim($this->provider->customer_number) ."_". $this->provider->type .".zip";
-			}
+		if($this->provider->ftp_filename != "") {
+			$this->zip_filename = $this->provider->ftp_filename;
+		}
+		else if($this->zip_filename == "") {
+			$this->zip_filename = preg_replace("/[^a-zA-Z0-9]/", "", $this->provider->name) ."_"
+				. trim($this->provider->customer_number) ."_". $this->provider->type .".zip";
 		}
 		return $this->zip_filename;
 	}
@@ -75,8 +72,8 @@ abstract class AFTPExport extends AExport {
 	 * @param int $max_pics Maximum number of pictures, default is 6
 	 */
 	protected function preparePictures($max_pics = 6) {
-		$pics_counter = 0;
 		foreach($this->exported_used_machines as $exported_used_machine) {
+			$pics_counter = 0;
 			if($exported_used_machine->export_action == "add" || $exported_used_machine->export_action == "update") {
 				$used_machine = new UsedMachine($exported_used_machine->used_machine_id, $this->provider->clang_id);
 				foreach($used_machine->pics as $pic) {
@@ -94,32 +91,27 @@ abstract class AFTPExport extends AExport {
 	 * @return string error message
 	 */
 	protected function upload() {
-	   // Establish connection and ...
-	   $connection_id = ftp_connect($this->provider->ftp_server);
-	   // ... login
-	   $login_result = ftp_login($connection_id, $this->provider->ftp_username, $this->provider->ftp_password);
+		// Establish connection and ...
+		$connection_id = ftp_connect($this->provider->ftp_server);
+		// ... login
+		$login_result = ftp_login($connection_id, $this->provider->ftp_username, $this->provider->ftp_password);
 
-	   // Is connection not healthy: send error message
-	   if ((!$connection_id) || (!$login_result)) {
+		// Is connection not healthy: send error message
+		if ((!$connection_id) || (!$login_result)) {
 		   return rex_i18n::msg('d2u_machinery_export_ftp_error_connection');
-	   }
-
-	   // Upload
-	   $upload = ftp_nb_put($connection_id, $this->zip_filename, $this->cache_path . $this->getZipFileName(), FTP_BINARY);
-	   while ($upload == FTP_MOREDATA) {
-		   // Continue uploading
-		   $upload = ftp_nb_continue($connection_id);
-	   }
-
-	   // Check upload status
-	   if ($upload != FTP_FINISHED) {
+		}
+		// Passive mode
+		ftp_pasv($connection_id, true);
+		
+		// Upload
+		if (! ftp_put($connection_id, $this->zip_filename, $this->cache_path . $this->getZipFileName(), FTP_BINARY)) {
 		   return rex_i18n::msg('d2u_machinery_export_ftp_error_upload');
-	   }
+		}
 
-	   // Close connection
-	   ftp_quit($connection_id);
+		// Close connection
+		ftp_quit($connection_id);
 
-	   return "";
+		return "";
 	}
 
 	/**

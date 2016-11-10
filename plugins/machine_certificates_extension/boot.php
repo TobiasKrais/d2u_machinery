@@ -22,9 +22,12 @@ function rex_d2u_machinery_certificates_media_is_in_use(rex_extension_point $ep)
 	// Prepare warnings
 	// Certificates
 	for($i = 0; $i < $sql->getRows(); $i++) {
-		$warning[] =  '<a href="javascript:openPage(\'index.php?page=d2u_machinery/machine_certificates_extension&func=edit&entry_id='.
+		$message =  '<a href="javascript:openPage(\'index.php?page=d2u_machinery/machine_certificates_extension&func=edit&entry_id='.
 			$sql->getValue('certificate_id') .'\')">'. rex_i18n::msg('d2u_machinery_rights_all') ." - ". rex_i18n::msg('d2u_machinery_certificates') .': '. $sql->getValue('name') .'</a>';
-    }
+  		if(!in_array($message, $warning)) {
+			$warning[] = $message;
+		}
+	}
 
 	return $warning;
 }

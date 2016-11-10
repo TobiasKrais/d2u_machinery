@@ -17,9 +17,11 @@ class EuropeMachinery extends AFTPExport {
 	 */
 	public function export() {
 		// Cleanup old export ZIP file
-		unlink($this->cache_path . $this->getZipFileName());
+		if(file_exists($this->cache_path . $this->getZipFileName())) {
+			unlink($this->cache_path . $this->getZipFileName());
+		}
 		
-		// Prepare pictures: Europemachinery allows max. 10 pictures
+		// Prepare pictures: Europemachinery allows max. 10 pictures / machine
 		$this->preparePictures(10);
 		$this->files_for_zip = array_unique($this->files_for_zip);
 
@@ -49,7 +51,7 @@ class EuropeMachinery extends AFTPExport {
 	
 	/**
 	 * Creates a xml file for europemachinery.com
-	 * @return int number of objects contained in xml
+	 * @return string containing error information, if occured
 	 */
 	private function createXML() {
 		// <?xml version="1.0" encoding="UTF-8">
@@ -89,7 +91,7 @@ class EuropeMachinery extends AFTPExport {
 
 					// <comment>Current Location Lansing, MI - Bargain Lot, Base Model Dozers, Trans Type PowerShift, lever steer</comment>
 					$comment = $xml->createElement("comment");
-					$comment->appendChild($xml->createTextNode($used_machine->description));
+					$comment->appendChild($xml->createTextNode(AExport::convertToExportString($used_machine->description)));
 					$equipment->appendChild($comment);
 
 					// <pictures>
@@ -119,60 +121,60 @@ class EuropeMachinery extends AFTPExport {
 					$properties = $xml->createElement("properties");
 
 					// <property id="1" name="Make">Caterpillar</property>
-					$hersteller = $xml->createElement("property");
+					$manufacturer = $xml->createElement("property");
 
-					$hersteller_id = $xml->createAttribute("id");
-					$hersteller_id->appendChild($xml->createTextNode("1"));
-					$hersteller->appendChild($hersteller_id);
+					$manufacturer_id = $xml->createAttribute("id");
+					$manufacturer_id->appendChild($xml->createTextNode("1"));
+					$manufacturer->appendChild($manufacturer_id);
 
-					$hersteller_name = $xml->createAttribute("name");
-					$hersteller_name->appendChild($xml->createTextNode("Hersteller"));
-					$hersteller->appendChild($hersteller_name);
+					$manufacturer_name = $xml->createAttribute("name");
+					$manufacturer_name->appendChild($xml->createTextNode("Hersteller"));
+					$manufacturer->appendChild($manufacturer_name);
 
-					$hersteller->appendChild($xml->createTextNode($used_machine->manufacturer));
-					$properties->appendChild($hersteller);
+					$manufacturer->appendChild($xml->createTextNode($used_machine->manufacturer));
+					$properties->appendChild($manufacturer);
 
 					// <property id="2" name="Model">D4C XL III</property>
-					$modell = $xml->createElement("property");
+					$model = $xml->createElement("property");
 
-					$modell_id = $xml->createAttribute("id");
-					$modell_id->appendChild($xml->createTextNode("2"));
-					$modell->appendChild($modell_id);
+					$model_id = $xml->createAttribute("id");
+					$model_id->appendChild($xml->createTextNode("2"));
+					$model->appendChild($model_id);
 
-					$modell_name = $xml->createAttribute("name");
-					$modell_name->appendChild($xml->createTextNode("Modell"));
-					$modell->appendChild($modell_name);
+					$model_name = $xml->createAttribute("name");
+					$model_name->appendChild($xml->createTextNode("Modell"));
+					$model->appendChild($model_name);
 
-					$modell->appendChild($xml->createTextNode($used_machine->name));
-					$properties->appendChild($modell);
+					$model->appendChild($xml->createTextNode($used_machine->name));
+					$properties->appendChild($model);
 
 					// <property id="3" name="Year">1998</property>
-					$baujahr = $xml->createElement("property");
+					$yearBuilt = $xml->createElement("property");
 
-					$baujahr_id = $xml->createAttribute("id");
-					$baujahr_id->appendChild($xml->createTextNode("3"));
-					$baujahr->appendChild($baujahr_id);
+					$yearBuiltID = $xml->createAttribute("id");
+					$yearBuiltID->appendChild($xml->createTextNode("3"));
+					$yearBuilt->appendChild($yearBuiltID);
 
-					$baujahr_name = $xml->createAttribute("name");
-					$baujahr_name->appendChild($xml->createTextNode("Baujahr"));
-					$baujahr->appendChild($baujahr_name);
+					$yearBuiltName = $xml->createAttribute("name");
+					$yearBuiltName->appendChild($xml->createTextNode("Baujahr"));
+					$yearBuilt->appendChild($yearBuiltName);
 
-					$baujahr->appendChild($xml->createTextNode($used_machine->year_built));
-					$properties->appendChild($baujahr);
+					$yearBuilt->appendChild($xml->createTextNode($used_machine->year_built));
+					$properties->appendChild($yearBuilt);
 
 					// <property id="6" name="Price">18960</property>
-					$preis = $xml->createElement("property");
+					$price = $xml->createElement("property");
 
-					$preis_id = $xml->createAttribute("id");
-					$preis_id->appendChild($xml->createTextNode("4"));
-					$preis->appendChild($preis_id);
+					$priceID = $xml->createAttribute("id");
+					$priceID->appendChild($xml->createTextNode("4"));
+					$price->appendChild($priceID);
 
-					$preis_name = $xml->createAttribute("name");
-					$preis_name->appendChild($xml->createTextNode("Preis"));
-					$preis->appendChild($preis_name);
+					$priceName = $xml->createAttribute("name");
+					$priceName->appendChild($xml->createTextNode("Preis"));
+					$price->appendChild($priceName);
 
-					$preis->appendChild($xml->createTextNode($used_machine->price));
-					$properties->appendChild($preis);
+					$price->appendChild($xml->createTextNode($used_machine->price));
+					$properties->appendChild($price);
 
 					// </properties>
 					$equipment->appendChild($properties);

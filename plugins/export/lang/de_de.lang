@@ -1,3 +1,9 @@
+d2u_machinery_category_export = Exporteinstellungen
+d2u_machinery_category_export_machinerypark_category_id = MachineryPark.com Kategorie ID
+d2u_machinery_category_export_europemachinery_category_id = EuropeMachinery Kategorie ID
+d2u_machinery_category_export_europemachinery_category_name = EuropeMachinery Kategorie Name
+d2u_machinery_category_export_mascus_category_name = Mascus Kategorie Name
+
 d2u_machinery_export = Export
 d2u_machinery_export_all_online = Alle online setzen
 d2u_machinery_export_all_offline = Alle offline setzen
@@ -10,11 +16,12 @@ d2u_machinery_export_europemachinery = Europe Machinery / Agri Affairs
 d2u_machinery_export_facebook = Facebook
 d2u_machinery_export_facebook_email = Login E-Mailadresse
 d2u_machinery_export_facebook_pageid = Falls nicht Standardpinwand: optionale Fan Page ID
-d2u_machinery_export_ftp_filename = Dateiname
+d2u_machinery_export_ftp_filename = Dateiname (nur wenn Name vom Portal vorgeschrieben ist)
 d2u_machinery_export_ftp_password = FTP Passwort
 d2u_machinery_export_ftp_server = FTP Server
 d2u_machinery_export_ftp_settings = FTP Einstellungen für Agri Affairs, Europe Machinery, MachineryPark und Mascus
 d2u_machinery_export_ftp_username = FTP Benutzername
+d2u_machinery_export_last_export_date = Letzter Export am
 d2u_machinery_export_linkedin = LinkedIn
 d2u_machinery_export_linkedin_id = LinkedIn ID (falls bekannt, wird sonst beim ersten Export ausgefüllt)
 d2u_machinery_export_linkedin_groupid = LinkedIn GruppenID (falls nicht auf Standard Stream gepostet werden soll)
@@ -36,10 +43,12 @@ d2u_machinery_export_start = Manuell exportieren
 d2u_machinery_export_twitter = Twitter
 d2u_machinery_export_twitter_id = Twitter Anmeldename
 d2u_machinery_export_type = Portaltyp
+d2u_machinery_export_uhr = Uhr
 
 d2u_machinery_export_rights_export = D2U Maschinen Addon: Export
 d2u_machinery_export_rights_export_provider = D2U Maschinen Addon: Portaleinstellungen
 
+d2u_machinery_export_csv_cannot_create = Fehler: Export CSV Datei konnte nicht erstellt werden.
 d2u_machinery_export_ftp_error_connection = Fehler: FTP Verbindung konnte nicht aufgebaut werden. Bitte prüfen sie zur Sicherheit die FTP Benutzerdaten.
 d2u_machinery_export_ftp_error_upload = Fehler: FTP Verbindung wurde hergestellt aber Datei konnte nicht hochgeladen werden.
 d2u_machinery_export_success = Übertragung erfolgreich

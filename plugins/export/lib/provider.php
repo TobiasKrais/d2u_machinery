@@ -66,12 +66,6 @@ class Provider {
 	var $media_manager_type = "d2u_machinery_list_tile";
 	
 	/**
-	 * @var string Filename. This file contains information on the exported
-	 * machines.
-	 */
-	var $export_filename = "";
-	
-	/**
 	 * @var string Path where attachments can be found.
 	 */
 	var $attachment_path = "";
@@ -140,14 +134,6 @@ class Provider {
 			$this->type = $result->getValue("type");
 			$this->clang_id = $result->getValue("clang_id");
 			$this->customer_number = $result->getValue("customer_number");
-			if($this->type == "machinerypark") {
-				// MachineryPark: the CSV filename must be the same as the zip filename.
-				$this->export_filename = "machinerypark.csv";
-			}
-			else {
-				// EuropeMachinery has no specific filename
-				$this->export_filename = "export.xml";
-			}
 			$this->ftp_server = $result->getValue("ftp_server");
 			$this->ftp_username = $result->getValue("ftp_username");
 			$this->ftp_password = $result->getValue("ftp_password");
@@ -157,8 +143,8 @@ class Provider {
 			$this->media_manager_type = $result->getValue("media_manager_type");
 			$this->social_app_id = $result->getValue("social_app_id");
 			$this->social_app_secret = $result->getValue("social_app_secret");
-			$this->social_oauth_token = $result->getValue("twitter_oauth_token");
-			$this->social_oauth_token_secret = $result->getValue("twitter_oauth_token_secret");
+			$this->social_oauth_token = $result->getValue("social_oauth_token");
+			$this->social_oauth_token_secret = $result->getValue("social_oauth_token_secret");
 			$this->facebook_email = $result->getValue("facebook_email");
 			$this->facebook_pageid = $result->getValue("facebook_pageid");
 			$this->linkedin_id = $result->getValue("linkedin_id");
@@ -171,6 +157,13 @@ class Provider {
 	 * Deletes the object.
 	 */
 	public function delete() {
+		// First delete exported used machines
+		$exported_used_machines = ExportedUsedMachine::getAll($this->provider_id);
+		foreach($exported_used_machines as $exported_used_machine) {
+			$exported_used_machine->delete();
+		}
+		
+		// Next delete object
 		$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_export_provider "
 			."WHERE provider_id = ". $this->provider_id;
 		$result = rex_sql::factory();
@@ -183,22 +176,24 @@ class Provider {
 	public function export() {
 		if($this->type == "europemachinery") {
 			$europemachinery = new EuropeMachinery($this);
-			$europemachinery->export();
+			return $europemachinery->export();
 		}
 		else if($this->type == "machinerypark") {
-			
+			$machinerypark = new MachineryPark($this);
+			return $machinerypark->export();
 		}
 		else if($this->type == "mascus") {
-			
+			$mascus = new Mascus($this);
+			return $mascus->export();
 		}
 		else if($this->type == "facebook") {
-			
+			return "Schnittstelle ist noch nicht programmiert.";
 		}
 		else if($this->type == "twitter") {
-			
+			return "Schnittstelle ist noch nicht programmiert.";
 		}
 		else if($this->type == "linkedin") {
-			
+			return "Schnittstelle ist noch nicht programmiert.";
 		}
 	}
 	
@@ -218,6 +213,24 @@ class Provider {
 			$result->next();
 		}
 		return $providers;
+	}
+	
+	/**
+	 * Get last export timestamp.
+	 * @return int Timestamp of last successful export.
+	 */
+	public function getLastExportTimestamp() {
+		$query = "SELECT export_timestamp FROM ". rex::getTablePrefix() ."d2u_machinery_export_machines "
+			."WHERE provider_id = ". $this->provider_id ." "
+			."ORDER BY export_timestamp DESC LIMIT 0, 1";
+		$result = rex_sql::factory();
+		$result->setQuery($query);
+		
+		$time = 0;
+		if($result->getRows() > 0) {
+			$time = $result->getValue("export_timestamp");
+		}
+		return $time;
 	}
 
 	/**
