@@ -158,7 +158,7 @@ class Provider {
 	 */
 	public function delete() {
 		// First delete exported used machines
-		$exported_used_machines = ExportedUsedMachine::getAll($this->provider_id);
+		$exported_used_machines = ExportedUsedMachine::getAll($this);
 		foreach($exported_used_machines as $exported_used_machine) {
 			$exported_used_machine->delete();
 		}
@@ -168,6 +168,80 @@ class Provider {
 			."WHERE provider_id = ". $this->provider_id;
 		$result = rex_sql::factory();
 		$result->setQuery($query);
+	}
+
+	/**
+	 * Exports used machines for provider types europemachinery, machinerypark
+	 * and mascus (ftp based exports). Export starts only, if changes were made
+	 * or last export ist older than a week.
+	 * @return string HTML formatted string with success or failure message.
+	 */
+	public static function autoexport() {
+		$providers = Provider::getAll();
+		$message = [];
+		
+		$error = FALSE;
+		
+		foreach($providers as $provider) {
+			if($provider->isExportNeeded() || $provider->getLastExportTimestamp() < strtotime("-1 week")) {
+				if($provider->type == "europemachinery") {
+					$europemachinery = new EuropeMachinery($provider);
+					$europemachinery_error = $europemachinery->export();
+					if($europemachinery_error != "") {
+						$message[] = $provider->name .": ". $europemachinery_error;
+						print $provider->name .": ". $europemachinery_error ."; ";
+						$error = TRUE;
+					}
+					else {
+						$message[] = $provider->name .": ". rex_i18n::msg('d2u_machinery_export_success');
+					}
+				}
+				else if($provider->type == "machinerypark") {
+					$machinerypark = new MachineryPark($provider);
+					$machinerypark_error = $machinerypark->export();
+					if($machinerypark_error != "") {
+						$message[] = $provider->name .": ". $machinerypark_error;
+						print $provider->name .": ". $machinerypark_error ."; ";
+						$error = TRUE;
+					}
+					else {
+						$message[] = $provider->name .": ". rex_i18n::msg('d2u_machinery_export_success');
+					}
+				}
+				else if($provider->type == "mascus") {
+					$mascus = new Mascus($provider);
+					$mascus_error = $mascus->export();
+					if($mascus_error != "") {
+						$message[] = $provider->name .": ". $mascus_error;
+						print $provider->name .": ". $mascus_error ."; ";
+						$error = TRUE;
+					}
+					else {
+						$message[] = $provider->name .": ". rex_i18n::msg('d2u_machinery_export_success');
+					}
+				}
+			}
+		}
+		
+		// Send report
+		$d2u_machinery = rex_addon::get("d2u_machinery");
+		if($d2u_machinery->hasConfig('export_failure_email') && $error) {
+			$mail = new rex_mailer();
+			$mail->IsHTML(true);
+			$mail->CharSet = "utf-8";
+			$mail->AddAddress(trim($d2u_machinery->getConfig('export_failure_email')));
+			$mail->Subject = rex_i18n::msg('d2u_machinery_export_failure_report');
+			$mail->Body = implode("<br>", $message);
+			$mail->Send();
+		}
+		
+		if($error) {
+			return false;
+		}
+		else {
+			print rex_i18n::msg('d2u_machinery_export_success');
+			return true;
+		}
 	}
 
 	/**
@@ -187,13 +261,45 @@ class Provider {
 			return $mascus->export();
 		}
 		else if($this->type == "facebook") {
-			return "Schnittstelle ist noch nicht programmiert.";
+			// Check requirements
+			if (!function_exists('curl_init')) {
+				return rex_i18n::msg('d2u_machinery_export_failure_curl');
+			}
+			else if (!function_exists('json_decode')) {
+				return rex_i18n::msg('d2u_machinery_export_failure_json');				
+			}
+			
+			// Export
+			$facebook = new SocialExportFacebook($this);
+			if($facebook->isUserLoggedIn()) {
+//				return $facebook->export();
+			}
+/*			else {
+				if($facebook->isAnybodyLoggedIn()) {
+					// Wrong user logged in: logout first
+					header("Location: ". $facebook->getLogoutURL());
+				}
+				else {
+					// If not logged in, go to log in page
+					header("Location: ". $facebook->getLoginURL());
+				}
+				exit;
+			}
+ * 
+ */
 		}
 		else if($this->type == "twitter") {
 			return "Schnittstelle ist noch nicht programmiert.";
 		}
 		else if($this->type == "linkedin") {
-			return "Schnittstelle ist noch nicht programmiert.";
+			// Check requirements
+			if (!function_exists('curl_init')) {
+				return rex_i18n::msg('d2u_machinery_export_failure_curl');
+			}
+			else if (!class_exists('oauth')) {
+				return rex_i18n::msg('d2u_machinery_export_failure_oauth');				
+			}
+			return "Schnittstelle ist noch nicht fertiggestellt.";
 		}
 	}
 	
@@ -215,6 +321,36 @@ class Provider {
 		return $providers;
 	}
 	
+	/**
+	 * Checks if an export is needed. This is the case if:
+	 * a) A machine needs to be deleted from export
+	 * b) A machine is updated after the last export
+	 * @return int Timestamp of latest machine update.
+	 */
+	private function isExportNeeded() {
+		$query = "SELECT export_action FROM ". rex::getTablePrefix() ."d2u_machinery_export_machines "
+			."WHERE provider_id = ". $this->provider_id ." AND export_action = 'delete'";
+		$result = rex_sql::factory();
+		$result->setQuery($query);
+		
+		if($result->getRows() > 0) {
+			return TRUE;
+		}
+		
+		$query = "SELECT used_machines.updatedate, export.export_timestamp FROM ". rex::getTablePrefix() ."d2u_machinery_used_machines_lang AS used_machines "
+			."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_export_machines AS export ON used_machines.used_machine_id = export.used_machine_id "
+			."WHERE provider_id = ". $this->provider_id ." AND clang_id = ". $this->clang_id ." "
+			."ORDER BY used_machines.updatedate DESC LIMIT 0, 1";
+		$result = rex_sql::factory();
+		$result->setQuery($query);
+		
+		if($result->getRows() > 0 && $result->getValue("updatedate") > $result->getValue("export_timestamp")) {
+			return TRUE;
+		}
+		
+		return FALSE;
+	}
+
 	/**
 	 * Get last export timestamp.
 	 * @return int Timestamp of last successful export.

@@ -105,6 +105,7 @@ if(!function_exists('print_machines')) {
 		print '<h1>'. $title.'</h1>';
 		print '</div>';
 
+		$counter = 0;
 		foreach($machines as $machine) {
 			if($machine->online_status == 'online') {
 				print '<div class="col-xs-6 col-sm-4 col-md-3 abstand">';
@@ -124,6 +125,17 @@ if(!function_exists('print_machines')) {
 				print '</div>';
 				print '</a>';
 				print '</div>';
+				$counter++;
+			}
+		}
+		
+		// Directly forward if only one machine is available
+		if($counter == 1) {
+			foreach($machines as $machine) {
+				if($machine->online_status == 'online') {
+					header("Location: ". $machine->getURL(FALSE));
+					exit;
+				}
 			}
 		}
 	}

@@ -1,5 +1,6 @@
 d2u_machinery_used_machines = Gebrauchtmaschinen
-d2u_machinery_used_machines_article = Gebrauchtmaschinen Artikel
+d2u_machinery_used_machines_article_rent = Gebrauchtmaschinen Artikel Miete
+d2u_machinery_used_machines_article_sale = Gebrauchtmaschinen Artikel Verkauf
 d2u_machinery_used_machines_availability = Verfügbar ab
 d2u_machinery_used_machines_category = Kategorie
 d2u_machinery_used_machines_currency_code = Währungscode
@@ -10,6 +11,9 @@ d2u_machinery_used_machines_machine = Gebrauchtmaschine
 d2u_machinery_used_machines_manufacturer = Hersteller
 d2u_machinery_used_machines_name = Name
 d2u_machinery_used_machines_no_used_machines_found = Keine Gebrauchtmaschinen gefunden.
+d2u_machinery_used_machines_offer_type = Angebotsart
+d2u_machinery_used_machines_offer_type_rent = Miete
+d2u_machinery_used_machines_offer_type_sale = Kauf
 d2u_machinery_used_machines_price = Preis
 d2u_machinery_used_machines_product_number = Produktnummer
 d2u_machinery_used_machines_technical_data = Technische Daten

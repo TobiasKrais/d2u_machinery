@@ -7,3 +7,8 @@ $sql->setQuery('ALTER TABLE ' . rex::getTablePrefix() . 'd2u_machinery_categorie
 	DROP export_europemachinery_category_id,
 	DROP export_europemachinery_category_name,
 	DROP export_europemachinery_category_name;');
+
+// Delete Autoexport if activated
+if(export_backend_helper::autoexportIsInstalled()) {
+	export_backend_helper::autoexportDelete();
+}

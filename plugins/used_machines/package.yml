@@ -15,4 +15,5 @@ requires:
     packages:
         media_manager: '>=2.0.2'
         redactor2: '>=3.0'
+        sprog: '>=1.0.0beta4'
         yform: '>=2.0'

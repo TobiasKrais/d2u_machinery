@@ -38,7 +38,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	else {
 		$message = 'form_saved';
 	}
-/*	
+	
 	// Redirect to make reload and thus double save impossible
 	if(filter_input(INPUT_POST, "btn_apply") == 1 && $message != 'form_save_error') {
 		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$provider->provider_id, "func"=>'edit', "message"=>$message), FALSE));
@@ -47,19 +47,18 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), FALSE));
 	}
 	exit;
- * 
- */
 }
 // Delete
 else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$provider_id = $entry_id;
 	if($provider_id == 0) {
 		$form = (array) rex_post('form', 'array', array());
-		$provider_id = $form['provider_id'];
+		$provider_id = $form['entry_id'];
 	}
-	$provider = new Provider($provider_id);
-	$provider->delete();
-	
+	if($provider_id > 0) {
+		$provider = new Provider($provider_id);
+		$provider->delete();
+	}
 	$func = '';
 }
 
@@ -94,7 +93,7 @@ if ($func == 'edit' || $func == 'add') {
 							d2u_addon_backend_helper::form_select('d2u_machinery_export_clang', 'form[clang_id]', $options_lang, array($provider->clang_id));
 							d2u_addon_backend_helper::form_input('d2u_machinery_export_company_name', 'form[company_name]', $provider->company_name, TRUE, $readonly, 'text');
 							d2u_addon_backend_helper::form_input('d2u_machinery_export_company_email', 'form[company_email]', $provider->company_email, TRUE, $readonly, 'email');
-							d2u_addon_backend_helper::form_input('d2u_machinery_export_customer_number', 'form[customer_number]', $provider->customer_number, TRUE, $readonly, 'text');
+							d2u_addon_backend_helper::form_input('d2u_machinery_export_customer_number', 'form[customer_number]', $provider->customer_number, FALSE, $readonly, 'text');
 							$options_media = array();
 							$media_sql = rex_sql::factory();
 							$media_sql->setQuery("SELECT name FROM ". rex::getTablePrefix() ."media_manager_type");

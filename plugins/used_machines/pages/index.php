@@ -24,6 +24,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$used_machine = new UsedMachine($used_machine_id, $rex_clang->getId());
 			$used_machine->name = $form['name'];
 			$used_machine->category = new Category($form['category_id'], $rex_clang->getId());
+			$used_machine->offer_type = $form['offer_type'];
 			$used_machine->availability = $form['availability'];
 			$used_machine->product_number = $form['product_number'];
 			$used_machine->manufacturer = $form['manufacturer'];
@@ -127,6 +128,9 @@ if ($func == 'edit' || $func == 'add') {
 								}
 							}
 							d2u_addon_backend_helper::form_select('d2u_machinery_category', 'form[category_id]', $options, array($used_machine->category->category_id), 1, FALSE, $readonly);
+							$options_offer_type = ["sale" => rex_i18n::msg('d2u_machinery_used_machines_offer_type_sale'),
+								"rent" => rex_i18n::msg('d2u_machinery_used_machines_offer_type_rent')];
+							d2u_addon_backend_helper::form_select('d2u_machinery_used_machines_offer_type', 'form[offer_type]', $options_offer_type, array($used_machine->offer_type), 1, FALSE, $readonly);
 							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_availability', "form[availability]", $used_machine->availability, $required, $readonly_lang, "date");
 							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_product_number', "form[product_number]", $used_machine->product_number, $required, $readonly_lang, "text");
 							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_year_built', "form[year_built]", $used_machine->year_built, FALSE, $readonly, "number");
@@ -197,7 +201,7 @@ if ($func == 'edit' || $func == 'add') {
 }
 
 if ($func == '') {
-    $list = rex_list::factory('SELECT used_machine_id, manufacturer, machines.name AS machinename, categories.name AS categoryname, online_status '
+    $list = rex_list::factory('SELECT used_machine_id, manufacturer, machines.name AS machinename, categories.name AS categoryname, offer_type, online_status '
 		. 'FROM '. rex::getTablePrefix() .'d2u_machinery_used_machines AS machines '
 		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_categories_lang AS categories '
 			. 'ON machines.category_id = categories.category_id AND categories.clang_id = '. rex_config::get("d2u_machinery", "default_lang") .' '
@@ -219,6 +223,8 @@ if ($func == '') {
     $list->setColumnParams('machinename', ['func' => 'edit', 'entry_id' => '###used_machine_id###']);
 
     $list->setColumnLabel('categoryname', rex_i18n::msg('d2u_machinery_used_machines_category'));
+
+	$list->setColumnLabel('offer_type', rex_i18n::msg('d2u_machinery_used_machines_offer_type'));
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);

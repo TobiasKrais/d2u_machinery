@@ -53,7 +53,7 @@ class d2u_machinery_frontend_helper {
 			$breadcrumbs[] = '<a href="' . $machine->getUrl() . '">' . $machine->name . '</a>';
 		}
 		if($used_machine !== FALSE) {
-			$breadcrumbs[] = '<a href="' . $used_machine->getUrl() . '">' . $used_machine->name . '</a>';
+			$breadcrumbs[] = '<a href="' . $used_machine->getUrl() . '">' . $used_machine->manufacturer ." ". $used_machine->name . '</a>';
 		}
 		
 		// Industry sectors

@@ -96,7 +96,7 @@ class ExportedUsedMachine {
 	 */
 	public function delete() {
 		$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_export_machines "
-			."WHERE used_machine_id = ". $this->used_machine_id ." AND provider_id = ". $this->provider_id->provider_id;
+			."WHERE used_machine_id = ". $this->used_machine_id ." AND provider_id = ". $this->provider_id;
 		$result_lang = rex_sql::factory();
 		$result_lang->setQuery($query);
 	}
@@ -108,7 +108,7 @@ class ExportedUsedMachine {
 	 * @return ExportedUsedMachine[] Array with ExportedUsedMachine objects.
 	 */
 	public static function getAll($provider = FALSE) {
-		$query = "SELECT used_machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_export_machines AS export";
+		$query = "SELECT used_machine_id, provider_id FROM ". rex::getTablePrefix() ."d2u_machinery_export_machines AS export";
 		if ($provider !== FALSE && $provider->provider_id > 0) {
 			$query .= " WHERE provider_id = ". $provider->provider_id;
 		}
@@ -117,7 +117,7 @@ class ExportedUsedMachine {
 
 		$exported_used_machines = array();
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$exported_used_machines[] = new ExportedUsedMachine($result->getValue("used_machine_id"), $provider->provider_id);
+			$exported_used_machines[] = new ExportedUsedMachine($result->getValue("used_machine_id"), $result->getValue("provider_id"));
 			$result->next();
 		}
 		return $exported_used_machines;
@@ -137,7 +137,7 @@ class ExportedUsedMachine {
 	}
 	
 	/**
-	 * Add all machines to export for given provider.
+	 * Remove all machines to export for given provider.
 	 * @param int $provider_id Provider id
 	 */
 	public static function removeAllFromExport($provider_id) {
@@ -152,6 +152,18 @@ class ExportedUsedMachine {
 		}
 	}
 	
+	/**
+	 * Remove a machine from export of all providers.
+	 * @param int $used_machine_id Used machine id
+	 */
+	public static function removeMachineAllFromExports($used_machine_id) {
+		$query_lang = "UPDATE ". rex::getTablePrefix() ."d2u_machinery_export_machines "
+			."SET export_action = 'delete' "
+			."WHERE used_machine_id = ". $used_machine_id;
+		$result_lang = rex_sql::factory();
+		$result_lang->setQuery($query_lang);
+	}
+
 	/**
 	 * Remove from export list for this provider.
 	 */

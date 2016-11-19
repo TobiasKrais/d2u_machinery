@@ -3,13 +3,17 @@ if(!function_exists('print_used_machine_categories')) {
 	/**
 	 * Prints category list for used machines.
 	 * @param Category[] $categories Array with category objects.
+	 * @param string $offer_type Either "sale" or "rent"
 	 */
-	function print_used_machine_categories($categories) {
+	function print_used_machine_categories($categories, $offer_type = "") {
 		// Get placeholder wildcard tags
 		$sprog = rex_addon::get("sprog");
 		$counter = 0;
 		foreach($categories as $category) {
 			// Only use used categories
+			if($offer_type != "") {
+				$category->setOfferType($offer_type);
+			}
 			if(count($category->getUsedMachines()) > 0) {
 				print '<div class="col-xs-6 col-sm-4 col-md-3 abstand">';
 				print '<a href="'. $category->getURL() .'">';
@@ -68,6 +72,7 @@ if(!function_exists('print_used_machines')) {
 	 */
 	function print_used_machines($used_machines, $title) {
 		$d2u_machinery = rex_addon::get("d2u_machinery");
+		$counter = 0;
 		foreach($used_machines as $used_machine) {
 			if($used_machine->online_status == 'online') {
 				print '<div class="col-xs-6 col-sm-4 col-md-3 abstand">';
@@ -87,6 +92,17 @@ if(!function_exists('print_used_machines')) {
 				print '</div>';
 				print '</a>';
 				print '</div>';
+				$counter++;
+			}
+		}
+		
+		// Directly forward if only one machine is available
+		if($counter == 1) {
+			foreach($used_machines as $used_machine) {
+				if($used_machine->online_status == 'online') {
+					header("Location: ". $used_machine->getURL(FALSE));
+					exit;
+				}
 			}
 		}
 	}
@@ -226,18 +242,21 @@ else if(filter_input(INPUT_GET, 'used_machine_id', FILTER_VALIDATE_INT) > 0 || (
 		print '</div>';
 	}
 	// Price
-	if($used_machine->price != "") {
-		print '<div class="col-xs-12">';
-		print '<b>'. $tag_open .'d2u_machinery_used_machines_price'. $tag_close .':</b> '
-			. $used_machine->price .' '. $used_machine->currency_code;
+	print '<div class="col-xs-12">';
+	print '<b>'. $tag_open .'d2u_machinery_used_machines_price'. $tag_close .':</b> ';
+	if($used_machine->price != "0.00") {
+		print $used_machine->price .' '. $used_machine->currency_code;
 		if($used_machine->vat > 0) {
 			print ' ('. $used_machine->vat .'% '.$tag_open .'d2u_machinery_used_machines_vat_included'. $tag_close .')';
 		}
 		else {
 			print ' ('. $tag_open .'d2u_machinery_used_machines_vat_excluded'. $tag_close .')';
 		}
-		print '</div>';
 	}
+	else {
+		print $tag_open .'d2u_machinery_used_machines_price_on_request'. $tag_close;
+	}
+	print '</div>';
 	// Location
 	if($used_machine->location != "") {
 		print '<div class="col-xs-12">';
@@ -307,8 +326,33 @@ else if(filter_input(INPUT_GET, 'used_machine_id', FILTER_VALIDATE_INT) > 0 || (
 else {
 	// Categories
 	print '<div class="col-xs-12">';
-	print '<div class="row" data-match-height>';
-	print_used_machine_categories(Category::getAll(rex_clang::getCurrentId()));
+	print '<div class="tab-content">';
+
+	$current_article = rex_article::getCurrent();
+	$class_active = ' active';
+	if($current_article->getId() == $d2u_machinery->getConfig('used_machine_article_id_sale')) {
+		// Sale offers
+		print '<div id="tab_sale" class="tab-pane fade in machine-tab'. $class_active .'">';
+		$class_active = "";
+		print '<div class="row" data-match-height>';
+		print_used_machine_categories(Category::getAll(rex_clang::getCurrentId()), "sale");
+		print '</div>';
+		print '</div>';
+	}
+
+	if($current_article->getId() == $d2u_machinery->getConfig('used_machine_article_id_rent')) {
+		// Rental offers
+		print '<div id="tab_rent" class="tab-pane fade in machine-tab'. $class_active .'">';
+		print '<div class="row" data-match-height>';
+		print_used_machine_categories(Category::getAll(rex_clang::getCurrentId()), "rent");
+		print '</div>';
+		print '</div>';
+	}
+	
+	if($current_article->getId() != $d2u_machinery->getConfig('used_machine_article_id_rent') && $current_article->getId() != $d2u_machinery->getConfig('used_machine_article_id_sale')) {
+		print "<p>". $tag_open .'d2u_machinery_used_machines_config_error'. $tag_close ."</p>";
+	}
+
 	print '</div>';
 	print '</div>';
 	

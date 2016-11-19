@@ -97,6 +97,11 @@ class Category {
 	var $priority = 0;
 	
 	/**
+	 * @var string For used machines: offer type. Either "rent" or "sale".
+	 */
+	private $offer_type;
+	
+	/**
 	 * @var string "yes" if translation needs update
 	 */
 	var $translation_needs_update = "delete";
@@ -166,6 +171,40 @@ class Category {
 			if(rex_plugin::get("d2u_machinery", "sawing_machines")->isAvailable()) {
 				$this->sawing_machines_cutting_range_title = $result->getValue("sawing_machines_cutting_range_title");
 				$this->sawing_machines_cutting_range_file = $result->getValue("sawing_machines_cutting_range_file");
+			}
+		}
+		
+		// For used machines: set offer type
+		if(rex_plugin::get("d2u_machinery", "used_machines")->isAvailable()) {
+			$d2u_machinery = rex_addon::get("d2u_machinery");
+			$current_article_id = rex_article::getCurrent()->getId();
+			if($d2u_machinery->getConfig('used_machine_article_id_rent') == $d2u_machinery->getConfig('used_machine_article_id_sale')
+					&& ($current_article_id == $d2u_machinery->getConfig('used_machine_article_id_rent') || $current_article_id == $d2u_machinery->getConfig('used_machine_article_id_sale'))) {
+				if(filter_input(INPUT_GET, 'offer_type') == "rent" || filter_input(INPUT_GET, 'offer_type') == "sale") {
+					$this->offer_type = filter_input(INPUT_GET, 'offer_type');
+				}
+				else {
+					// Get offer type from used machine
+					$used_machine_id = 0;
+					if(rex_addon::get("url")->isAvailable()) {
+						$url_data = UrlGenerator::getData();
+						if($url_data->urlParamKey=== "used_machine_id") {
+							$used_machine_id = UrlGenerator::getId();
+						}
+					}
+					else if(filter_input(INPUT_GET, 'used_machine_id', FILTER_VALIDATE_INT) > 0) {
+						$used_machine_id = filter_input(INPUT_GET, 'used_machine_id', FILTER_VALIDATE_INT);
+					}
+					if($used_machine_id > 0) {
+						$this->offer_type = UsedMachine::getOfferTypeForUsedMachineId($used_machine_id);
+					}
+				}
+			}
+			else if($current_article_id == $d2u_machinery->getConfig('used_machine_article_id_rent')) {
+				$this->offer_type = "rent";
+			}
+			else {
+				$this->offer_type = "sale";
 			}
 		}
 	}
@@ -383,7 +422,12 @@ class Category {
 			$query = "SELECT lang.used_machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_used_machines_lang AS lang "
 				."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_used_machines AS used_machines "
 					."ON lang.used_machine_id = used_machines.used_machine_id "
-				."WHERE category_id = ". $this->category_id ." AND clang_id = ". $this->clang_id;
+				."WHERE category_id = ". $this->category_id ." AND clang_id = ". $this->clang_id ." ";
+			if($this->offer_type != "") {
+				$query .= "AND offer_type = '". $this->offer_type ."' ";
+
+			}
+			$query .= "ORDER BY manufacturer, name";
 			$result = rex_sql::factory();
 			$result->setQuery($query);
 
@@ -407,6 +451,17 @@ class Category {
 				
 			$parameterArray = array();
 			$parameterArray['category_id'] = $this->category_id;
+
+			// In case of used machines
+			if(rex_plugin::get("d2u_machinery", "used_machines")->isAvailable()) {
+				$current_article_id = rex_article::getCurrent()->getId();
+				// If sale and rent article are the same, append offer type to URL
+				if($d2u_machinery->getConfig('used_machine_article_id_rent') == $d2u_machinery->getConfig('used_machine_article_id_sale')
+						&& ($current_article_id == $d2u_machinery->getConfig('used_machine_article_id_rent') || $current_article_id == $d2u_machinery->getConfig('used_machine_article_id_sale'))) {
+					$parameterArray['offer_type'] = $this->offer_type;
+				}
+			}
+			
 			$this->url = rex_getUrl($d2u_machinery->getConfig('article_id'), $this->clang_id, $parameterArray, "&");
 		}
 
@@ -490,7 +545,18 @@ class Category {
 		
 		return $error;
 	}
-		
+	
+	/**
+	 * Set offer type for used machines. Setter only works if used_machines plugin
+	 * is installed.
+	 * @param string $offer_type Offer type. Either "sale" or "rent"
+	 */
+	public function setOfferType($offer_type) {
+		if(rex_plugin::get("d2u_machinery", "used_machines")->isAvailable()) {
+			$this->offer_type = $offer_type;
+		}
+	}
+	
 	/**
 	 * Reassigns priority to all Categories in database.
 	 */

@@ -11,7 +11,7 @@ class industry_sectors_lang_helper extends d2u_machinery_lang_helper {
 		];
 
 	/**
-	 * @var string[] Array with englisch replacements. Key is the wildcard,
+	 * @var string[] Array with german replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
 	protected $replacements_german = ['d2u_machinery_industry_sectors' => 'Branchen'

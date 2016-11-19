@@ -52,7 +52,7 @@ print "</tr>";
 print "<tr>";
 print "<td>&nbsp;</td>";
 foreach ($providers as $provider) {
-	print "<td><a href='".rex_url::currentBackendPage(array('func'=>'export', 'provider_id'=>$provider->provider_id)) ."'>"
+	print "<td><a href='". rex_url::currentBackendPage(array('func'=>'export', 'provider_id'=>$provider->provider_id)) ."'>"
 		. "<button class='btn btn-apply'>". rex_i18n::msg('d2u_machinery_export_start') ."</button></a></td>";
 }
 print "</tr>";
@@ -95,14 +95,20 @@ if(count($used_machines) > 0) {
 		print "<tr>";
 		print "<td>". $used_machine->manufacturer ." ". $used_machine->name ."</td>";
 		foreach ($providers as $provider) {
-			$exported_used_machine = new ExportedUsedMachine($used_machine->used_machine_id, $provider->provider_id);
-			if($exported_used_machine->isSetForExport()) {
-				print '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(array('func'=>'offline', 'provider_id'=>$provider->provider_id, 'used_machine_id'=>$used_machine->used_machine_id))
-					.'" class="rex-online"><i class="rex-icon rex-icon-online"></i> '. rex_i18n::msg('status_online') .'</a></td>';
+			if($used_machine->offer_type == "rent" && ($provider->type == "europemachinery" || $provider->type == "machinerypark" || $provider->type == "mascus")) {
+				// Rental machines cannot be exported to these providers
+				print '<td class="rex-table-action"><i class="rex-icon rex-icon-offline"></i> '. rex_i18n::msg('status_offline') .'</td>';
 			}
 			else {
-				print '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(array('func'=>'online', 'provider_id'=>$provider->provider_id, 'used_machine_id'=>$used_machine->used_machine_id))
-					.'" class="rex-offline"><i class="rex-icon rex-icon-offline"></i> '. rex_i18n::msg('status_offline') .'</a></td>';
+				$exported_used_machine = new ExportedUsedMachine($used_machine->used_machine_id, $provider->provider_id);
+				if($exported_used_machine->isSetForExport()) {
+					print '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(array('func'=>'offline', 'provider_id'=>$provider->provider_id, 'used_machine_id'=>$used_machine->used_machine_id))
+						.'" class="rex-online"><i class="rex-icon rex-icon-online"></i> '. rex_i18n::msg('status_online') .'</a></td>';
+				}
+				else {
+					print '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(array('func'=>'online', 'provider_id'=>$provider->provider_id, 'used_machine_id'=>$used_machine->used_machine_id))
+						.'" class="rex-offline"><i class="rex-icon rex-icon-offline"></i> '. rex_i18n::msg('status_offline') .'</a></td>';
+				}
 			}
 		}
 		print "</tr>";

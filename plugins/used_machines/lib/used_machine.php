@@ -35,6 +35,11 @@ class UsedMachine {
 	var $category = false;
 
 	/**
+	 * @var string Offer type. This could be "sale" or "rent"
+	 */
+	var $offer_type = "sale";
+
+	/**
 	 * @var string Date string with information concerning the availability of the machine.
 	 */
 	var $availability = "";
@@ -129,6 +134,7 @@ class UsedMachine {
 			$this->used_machine_id = $result->getValue("used_machines.used_machine_id");
 			$this->name = $result->getValue("name");
 			$this->category = new Category($result->getValue("category_id"), $this->clang_id);
+			$this->offer_type = $result->getValue("offer_type");
 			$this->availability = $result->getValue("availability");
 			$this->product_number = $result->getValue("product_number");
 			$this->manufacturer = $result->getValue("manufacturer");
@@ -179,6 +185,11 @@ class UsedMachine {
 				$result->setQuery($query);
 			}
 			$this->online_status = "offline";
+
+			// Remove from export
+			if(rex_plugin::get("d2u_machinery", "export")->isAvailable()) {
+				ExportedUsedMachine::removeMachineAllFromExports($this->used_machine_id);
+			}
 		}
 		else {
 			if($this->used_machine_id > 0) {
@@ -214,6 +225,11 @@ class UsedMachine {
 				."WHERE used_machine_id = ". $this->used_machine_id ." AND clang_id = ". $this->clang_id;
 			$result_lang = rex_sql::factory();
 			$result_lang->setQuery($query_lang);
+		}		
+
+		// Remove from export
+		if(rex_plugin::get("d2u_machinery", "export")->isAvailable()) {
+			ExportedUsedMachine::removeMachineAllFromExports($this->used_machine_id);
 		}
 	}
 	
@@ -221,14 +237,22 @@ class UsedMachine {
 	 * Get all used machines.
 	 * @param int $clang_id Redaxo clang id.
 	 * @param boolean $only_online Show only online used machines
+	 * @param string $offer_type Either "sale", "rent" or leave string empty for both
 	 * @return UsedMachine[] Array with UsedMachines objects. The key is used_machine_id
 	 */
-	public static function getAll($clang_id, $only_online = FALSE) {
+	public static function getAll($clang_id, $only_online = FALSE, $offer_type = "") {
 		$query = "SELECT used_machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_used_machines ";
-		if($only_online) {
-			$query .= "WHERE online_status = 'online' ";
+		if($only_online || $offer_type != "") {
+			$where = [];
+			if($only_online) {
+				$where[] = "online_status = 'online'";
+			}
+			if($offer_type != "") {
+				$where[] = "offer_type = '". $offer_type ."'";
+			}
+			$query .= "WHERE ". implode(" AND ", $where);
 		}
-		$query .= "ORDER BY name";
+		$query .= " ORDER BY manufacturer, name";
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
@@ -246,6 +270,30 @@ class UsedMachine {
 	 */
 	public function getCanonicalTag() {
 		return '<link rel="canonical" href="'. $this->getURL() .'">';
+	}
+	
+	/**
+	 * Get an extended Teaser. This is the teaser combined with year built and
+	 * price.
+	 * @return string Extended Teaser
+	 */
+	public function getExtendedTeaser() {
+		$extended_teaser = "";
+		if (strlen($this->teaser) > 0) {
+			$extended_teaser .= $this->teaser ."; ";
+		}
+		if ($this->year_built > 0) {
+			$extended_teaser .= Wildcard::get('d2u_machinery_used_machines_year_built', $this->clang_id) .":&nbsp;". $this->year_built ."; ";
+		}
+		if ($this->price > 0) {
+			$extended_teaser .= Wildcard::get('d2u_machinery_used_machines_price', $this->clang_id) .":&nbsp;".
+			number_format($this->price, 2, ",", ".") .'&nbsp;'.$this->currency_code ."; ";
+		}
+		else {
+			$extended_teaser .= Wildcard::get('d2u_machinery_used_machines_price', $this->clang_id) .":&nbsp;".
+				Wildcard::get('d2u_machinery_used_machines_price_on_request', $this->clang_id);
+		}
+		return $extended_teaser;
 	}
 	
 	/**
@@ -277,6 +325,24 @@ class UsedMachine {
 	}
 	
 	/**
+	 * Gets the simply the offer type for used machine.
+	 * @param int $used_machine_id Used machine id
+	 * @return string Offer type. Either "rent" or "sale"
+	 */
+	public static function getOfferTypeForUsedMachineId($used_machine_id) {
+		$query = "SELECT offer_type FROM ". rex::getTablePrefix() ."d2u_machinery_used_machines "
+				."WHERE used_machine_id = ". $used_machine_id;
+		$result = rex_sql::factory();
+		$result->setQuery($query);
+
+		if($result->getRows() > 0) {
+			return $result->getValue("offer_type");
+		}
+		
+		return "";
+	}
+
+	/**
 	 * Get the <title> tag for page header.
 	 * @return Complete title tag.
 	 */
@@ -290,7 +356,7 @@ class UsedMachine {
 	 * @param Machine $machine Machine for which used machines should be searched for
 	 * @return UsedMachine[] Array full of used machines ;-)
 	 */
-	static function getUsedMachinesForMachine($machine) {
+	public static function getUsedMachinesForMachine($machine) {
 		$query = "SELECT used_machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_used_machines "
 				."WHERE machine_id = ". $machine->machine_id ." "
 					."AND online_status = 'online'";
@@ -311,13 +377,18 @@ class UsedMachine {
 	 * Gets the used machines for a category. Only machines with online status "online"
 	 * will be returned.
 	 * @param Category $category Category.
-	 * @param int $clang_id Redaxo language ID.
+	 * @param string $offer_type Either "sale", "rent" or leave string empty for both
 	 * @return UsedMachine[] Array full of used machines ;-)
 	 */
-	static function getUsedMachinesForCategory($category) {
+	static function getUsedMachinesForCategory($category, $offer_type = "") {
 		$query = "SELECT used_machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_used_machines "
 				."WHERE category_id = ". $category->category_id ." "
-					."AND online_status = 'online'";
+					."AND online_status = 'online' ";
+		if($offer_type != "") {
+			$query .= "AND offer_type = '". $offer_type ."' ";
+
+		}
+		$query .= "ORDER BY manufacturer, name";
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
@@ -370,6 +441,7 @@ class UsedMachine {
 			$query = rex::getTablePrefix() ."d2u_machinery_used_machines SET "
 					."name = '". $this->name ."', "
 					."category_id = ". $this->category->category_id .", "
+					."offer_type = '". $this->offer_type ."', "
 					."availability = '". $this->availability ."', "
 					."product_number = '". $this->product_number ."', "
 					."manufacturer = '". $this->manufacturer ."', "
@@ -413,6 +485,11 @@ class UsedMachine {
 				$result->setQuery($query);
 				$error = $result->hasError();
 			}
+		}
+
+		// Remove from export
+		if($this->online_status == "offline" && rex_plugin::get("d2u_machinery", "export")->isAvailable()) {
+			ExportedUsedMachine::removeMachineAllFromExports($this->used_machine_id);
 		}
 
 		// Update URLs

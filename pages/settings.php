@@ -22,21 +22,22 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 	$link_names = filter_input_array(INPUT_POST, array('REX_LINK_NAME' => array('flags' => FILTER_REQUIRE_ARRAY)));
 
 	$settings['article_id'] = $link_ids["REX_INPUT_LINK"][1];
-	$settings['article_name'] = trim($link_names["REX_LINK_NAME"][1]);
 
 	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', array());
 	$settings['consultation_pic'] = $input_media['consultation_pic'];
 	$settings['consultation_article_id'] = $link_ids["REX_INPUT_LINK"][2];
-	$settings['consultation_article_name'] = trim($link_names["REX_LINK_NAME"][2]);
 
 	if(rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
-		$settings['used_machine_article_id'] = $link_ids["REX_INPUT_LINK"][3];
-		$settings['used_machine_article_name'] = trim($link_names["REX_LINK_NAME"][3]);
+		$settings['used_machine_article_id_rent'] = $link_ids["REX_INPUT_LINK"][3];
+		$settings['used_machine_article_id_sale'] = $link_ids["REX_INPUT_LINK"][4];
 	}
 
 	// Checkbox also need special treatment if empty
 	if(!array_key_exists('show_categories_usage_area', $settings)) {
 		$settings['show_categories_usage_area'] = "hide";
+	}
+	if(!array_key_exists('export_autoexport', $settings)) {
+		$settings['export_autoexport'] = "inactive";
 	}
 	
 	// Save settings
@@ -51,14 +52,19 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 				d2u_machinery_update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_industry_sectors", $settings['article_id']);
 			}
 			if(rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
-				d2u_machinery_update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_used_machines", $settings['used_machine_article_id']);
-				d2u_machinery_update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_used_machine_categories", $settings['used_machine_article_id']);		
+				d2u_machinery_update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_used_machines_rent", $settings['used_machine_article_id_rent']);
+				d2u_machinery_update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_used_machine_categories_rent", $settings['used_machine_article_id_rent']);		
+				d2u_machinery_update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_used_machines_sale", $settings['used_machine_article_id_sale']);
+				d2u_machinery_update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_used_machine_categories_sale", $settings['used_machine_article_id_sale']);		
 			}
 			UrlGenerator::generatePathFile([]);
 		}
 		
 		// Install / update language replacements
 		d2u_machinery_lang_helper::factory()->install();
+		if(rex_plugin::get('d2u_machinery', 'export')->isAvailable()) {
+			export_lang_helper::factory()->install();
+		}
 		if(rex_plugin::get('d2u_machinery', 'industry_sectors')->isAvailable()) {
 			industry_sectors_lang_helper::factory()->install();
 		}
@@ -73,6 +79,18 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 		}
 		if(rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
 			used_machines_lang_helper::factory()->install();
+		}
+		
+		// Install / remove Cronjob
+		if(rex_plugin::get('d2u_machinery', 'export')->isAvailable()) {
+			if($this->getConfig('export_autoexport') == 'active') {
+				if(!export_backend_helper::autoexportIsInstalled()) {
+					export_backend_helper::autoexportInstall();
+				}
+			}
+			else {
+				export_backend_helper::autoexportDelete();
+			}
 		}
 	}
 	else {
@@ -146,7 +164,23 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 					<legend><small><i class="rex-icon fa-truck"></i></small> <?php echo rex_i18n::msg('d2u_machinery_used_machines'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-							d2u_addon_backend_helper::form_linkfield('d2u_machinery_used_machines_article', '3', $this->getConfig('used_machine_article_id'), $this->getConfig('default_lang'));
+							d2u_addon_backend_helper::form_linkfield('d2u_machinery_used_machines_article_rent', '3', $this->getConfig('used_machine_article_id_rent'), $this->getConfig('default_lang'));
+							d2u_addon_backend_helper::form_linkfield('d2u_machinery_used_machines_article_sale', '4', $this->getConfig('used_machine_article_id_sale'), $this->getConfig('default_lang'));
+						?>
+					</div>
+				</fieldset>
+			<?php
+				}
+			?>
+			<?php
+				if(rex_plugin::get('d2u_machinery', 'export')->isAvailable()) {
+			?>
+				<fieldset>
+					<legend><small><i class="rex-icon fa-cloud-upload"></i></small> <?php echo rex_i18n::msg('d2u_machinery_category_export'); ?></legend>
+					<div class="panel-body-wrapper slide">
+						<?php
+						d2u_addon_backend_helper::form_checkbox('d2u_machinery_export_settings_autoexport', 'settings[export_autoexport]', 'active', $this->getConfig('export_autoexport') == 'active');
+						d2u_addon_backend_helper::form_input('d2u_machinery_export_settings_email', 'settings[export_failure_email]', $this->getConfig('export_failure_email'), TRUE, FALSE, 'email');
 						?>
 					</div>
 				</fieldset>
