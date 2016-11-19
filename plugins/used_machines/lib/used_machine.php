@@ -279,6 +279,9 @@ class UsedMachine {
 	 */
 	public function getExtendedTeaser() {
 		$extended_teaser = "";
+		if ($this->offer_type == "rent") {
+			$extended_teaser .= Wildcard::get('d2u_machinery_used_machines_offer_rent', $this->clang_id) .": ";
+		}
 		if (strlen($this->teaser) > 0) {
 			$extended_teaser .= $this->teaser ."; ";
 		}
