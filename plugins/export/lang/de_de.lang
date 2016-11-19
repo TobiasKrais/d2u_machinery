@@ -18,6 +18,7 @@ d2u_machinery_export_facebook_delete_failed = konnte nicht von der Facebook Pinw
 d2u_machinery_export_facebook_email = Login E-Mailadresse
 d2u_machinery_export_facebook_pageid = Falls nicht Standardpinwand: optionale Fan Page ID
 d2u_machinery_export_facebook_upload_failed = konnte nicht auf die Facebook Pinwand gepostet werden.
+d2u_machinery_export_facebook_upload_page_failed = konnte nicht auf die Facebook Page gepostet werden. Ein häufiger Fehler ist, dass das Recht auf der Page zu posten fehlt. Der App Administrator kann Sie in diesem als Entwickler zu der App hinzufügen.
 d2u_machinery_export_failure_report = Autoexport Fehlerbericht
 d2u_machinery_export_failure_curl = Exporttyp benötigt die PHP Erweiterung cURL.
 d2u_machinery_export_failure_json = Exporttyp benötigt die PHP Erweiterung JSON.

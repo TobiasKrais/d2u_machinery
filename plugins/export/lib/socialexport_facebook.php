@@ -158,7 +158,12 @@ class SocialExportFacebook extends AExport {
 					}
 					$exported_used_machine->provider_import_id = $feedback["id"];
 				} catch (FacebookApiException $e) {
-					return rex_i18n::msg("d2u_machinery_export_facebook_upload_failed") ." ". $e;
+					if($this->provider->facebook_pageid == "") {
+						return rex_i18n::msg("d2u_machinery_export_facebook_upload_failed") ." ". $e;
+					}
+					else {
+						return rex_i18n::msg("d2u_machinery_export_facebook_upload_page_failed") ." ". $e;
+					}
 				}
 				
 				// Save results
