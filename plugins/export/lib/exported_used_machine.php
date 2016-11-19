@@ -54,7 +54,9 @@ class ExportedUsedMachine {
 		if ($num_rows > 0) {
 			$this->export_action = $result->getValue("export_action");
 			$this->provider_import_id = $result->getValue("provider_import_id");
-			$this->export_timestamp = $result->getValue("export_timestamp");
+			if($result->getValue("export_timestamp") > 0) {
+				$this->export_timestamp = $result->getValue("export_timestamp");
+			}
 		}
 	}
 	
@@ -81,10 +83,10 @@ class ExportedUsedMachine {
 		$used_machines = UsedMachine::getAll($provider->clang_id, TRUE);
 		foreach($used_machines as $used_machine) {
 			$exported_used_machine = new ExportedUsedMachine($used_machine->used_machine_id, $provider_id);
-			if($exported_used_machine->export_action == "") {
+			if($exported_used_machine->export_action == "" && $exported_used_machine->export_timestamp == 0) {
 				$exported_used_machine->export_action = "add";
 			}
-			else if($exported_used_machine->export_action == "add" || $exported_used_machine->export_action == "delete") {
+			else if(($exported_used_machine->export_action == "" && $exported_used_machine->export_timestamp > 0) || $exported_used_machine->export_action == "delete") {
 				$exported_used_machine->export_action = "update";
 			}
 			$exported_used_machine->save();
@@ -145,7 +147,7 @@ class ExportedUsedMachine {
 		$used_machines = UsedMachine::getAll($provider->clang_id, TRUE);
 		foreach($used_machines as $used_machine) {
 			$exported_used_machine = new ExportedUsedMachine($used_machine->used_machine_id, $provider_id);
-			if($exported_used_machine->export_action == "add" || $exported_used_machine->export_action == "update") {
+			if($exported_used_machine->isSetForExport()) {
 				$exported_used_machine->export_action = "delete";
 				$exported_used_machine->save();
 			}

@@ -272,9 +272,9 @@ class Provider {
 			// Export
 			$facebook = new SocialExportFacebook($this);
 			if($facebook->isUserLoggedIn()) {
-//				return $facebook->export();
+				return $facebook->export();
 			}
-/*			else {
+			else {
 				if($facebook->isAnybodyLoggedIn()) {
 					// Wrong user logged in: logout first
 					header("Location: ". $facebook->getLogoutURL());
@@ -285,8 +285,6 @@ class Provider {
 				}
 				exit;
 			}
- * 
- */
 		}
 		else if($this->type == "twitter") {
 			return "Schnittstelle ist noch nicht programmiert.";
@@ -299,7 +297,19 @@ class Provider {
 			else if (!class_exists('oauth')) {
 				return rex_i18n::msg('d2u_machinery_export_failure_oauth');				
 			}
-			return "Schnittstelle ist noch nicht fertiggestellt.";
+			$linkedin = new SocialExportLinkedIn($this);
+			if($linkedin->isUserLoggedIn()) {
+				return $linkedin->export();
+			}
+			else {
+				if($linkedin->isAnybodyLoggedIn()) {
+					// Wrong user logged in: logout first
+					$linkedin->logout();
+				}
+				// If not logged in, go to log in page
+				header("Location: ". $linkedin->getLoginURL());
+				exit;
+			}
 		}
 	}
 	

@@ -22,9 +22,9 @@ class SocialExportFacebook extends AExport {
 		
 		$this->exported_used_machines = ExportedUsedMachine::getAll($this->provider);
 		
-		$this->facebook = new Facebook\Facebook(array(
-			'app_id'  => $this->provider->social_app_id,
-			'app_secret' => $this->provider->social_app_secret
+		$this->facebook = new Facebook(array(
+			'appId'  => $this->provider->social_app_id,
+			'secret' => $this->provider->social_app_secret
 		));
 	}	
 	
@@ -34,12 +34,10 @@ class SocialExportFacebook extends AExport {
 	 */
 	private function getAccessToken() {
 		if($this->access_token == "") {
-			$helper = $this->facebook->getRedirectLoginHelper();
-print_r($helper);
 			// Access token for wall
-			$this->access_token = $helper->getAccessToken();
+			$this->access_token = $this->facebook->getAccessToken();
 			// if page id is given, access token of page is needed
-/*	TODO	if($this->provider->facebook_pageid != "") {
+			if($this->provider->facebook_pageid != "") {
 				// Get accounts (pages)
 				$facebook_accounts = $this->facebook->api('/me/accounts');
 				foreach($facebook_accounts as $facebook_accounts_data) {
@@ -50,31 +48,26 @@ print_r($helper);
 					}
 				}
 			}
- * 
- */
 		}
 		return $this->access_token;
 	}
 
 	/**
 	 * Get login URL
-	 * @return string Facebook login url
+	 * @return string Login url
 	 */
 	function getLoginURL() {
-		$helper = $this->facebook->getRedirectLoginHelper();
 		if($this->provider->facebook_pageid != "") {
-			$permissions = ['email', 'manage_pages', 'publish_actions', 'publish_pages'];
-			return $helper->getLoginUrl(rex_url::currentBackendPage(array('func'=>'export', 'provider_id'=>$this->provider->provider_id)), $permissions);
+			return $this->facebook->getLoginUrl(array('scope' => 'email, manage_pages, publish_actions, publish_pages'));
 		}
 		else {
-			$permissions = ['email', 'manage_pages', 'publish_actions'];
-			return $helper->getLoginUrl(rex_url::currentBackendPage(array('func'=>'export', 'provider_id'=>$this->provider->provider_id)), $permissions);
+			return $this->facebook->getLoginUrl(array('scope' => 'email, manage_pages, publish_actions'));
 		}
 	}
 
 	/**
 	 * Get Logout URL
-	 * @return string Facebook logout URL
+	 * @return string Logout URL
 	 */
 	function getLogoutURL() {
 		return $this->facebook->getLogoutUrl();
@@ -85,7 +78,7 @@ print_r($helper);
 	 * @return boolean TRUE is somebody is logged in, otherwise FALSE
 	 */
 	function isAnybodyLoggedIn() {
-		if($this->facebook->get('/me', $this->getAccessToken())) {
+		if($this->facebook->getUser()) {
 			return true;
 		}
 		else {
@@ -94,14 +87,19 @@ print_r($helper);
 	}
 
 	/**
-	 * Is the Facebook user mentioned in prociver logged in?
+	 * Is user mentioned in provider logged in?
 	 * @return boolean TRUE id yes, otherwise FALSE.
 	 */
 	public function isUserLoggedIn() {
-		$response = $this->facebook->get('/me', $this->getAccessToken());
-		$facebook_user = $response->getGraphUser();
-		if($this->provider->facebook_email != "" && $facebook_user['email'] == $this->provider->facebook_email) {
-			return true;
+		if($this->facebook->getUser()) {
+			$facebook_user = $this->facebook->api('/me');
+
+			if($this->provider->facebook_email != "" && $facebook_user['email'] == $this->provider->facebook_email) {
+				return true;
+			}
+			else {
+				return false;
+			}
 		}
 		else {
 			return false;
@@ -119,21 +117,15 @@ print_r($helper);
 			if($exported_used_machine->export_action == "delete" || $exported_used_machine->export_action == "update") {
 				if($exported_used_machine->provider_import_id != "") {
 					try {
-						if($this->provider->facebook_pageid == "") {
-							// Delete on default wall
-							$this->facebook->delete('/me/feed', '/'. $exported_used_machine->provider_import_id, $this->getAccessToken());
-						}
-						else {
-							// Delete on pare
-							$this->facebook->delete('/'. $this->provider->facebook_pageid .'/feed', '/'. $exported_used_machine->provider_import_id, $this->getAccessToken());
-						}
+						$this->facebook->api("/". $exported_used_machine->provider_import_id ,"DELETE");
 					} catch (FacebookApiException $e) {
+						print $e;
 						// Seems to be already deleted
 					}
 				}
 
 				// delete in database
-				if($used_machine->export_action == "delete") {
+				if($exported_used_machine->export_action == "delete") {
 					$exported_used_machine->delete();
 				}
 				else {
@@ -158,11 +150,11 @@ print_r($helper);
 					$feedback = [];
 					if($this->provider->facebook_pageid == "") {
 						// Post on default wall
-						$feedback = $this->facebook->post('/me/feed', $news, $this->getAccessToken());
+						$feedback = $this->facebook->api('/me/feed', 'POST', $news);
 					}
 					else {
 						// Post on page
-						$feedback = $this->facebook->post('/'. $this->provider->facebook_pageid .'/feed', $news, $this->getAccessToken());
+						$feedback = $this->facebook->api('/'. $this->provider->facebook_pageid .'/feed', 'POST', $news);
 					}
 					$exported_used_machine->provider_import_id = $feedback["id"];
 				} catch (FacebookApiException $e) {

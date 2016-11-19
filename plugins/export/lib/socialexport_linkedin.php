@@ -3,12 +3,21 @@
  * LinkedIn export.
  */
 class SocialExportLinkedIn extends AExport {
-	
 	/**
-	 * OAuth object
+	 * @var OAuth LinkedIn OAuth object
 	 */
 	private $oauth;
 	
+	/**
+	 * @var string Access token 
+	 */
+	private $access_token = "";
+	
+	/**
+	 * @var string Access token secret
+	 */
+	private $access_token_secret = "";
+
 	/**
 	 * Constructor. Initializes variables
 	 * @param Provider $provider Export Provider
@@ -21,44 +30,88 @@ class SocialExportLinkedIn extends AExport {
 		$this->oauth = new OAuth($this->provider->social_app_id, $this->provider->social_app_secret);
 	}	
 
-	/*
-	 * Holt die in der Datenbank gespeicherte LinkedIn ID.
-	 * @param ExportConfig $config Exportkonfiguration
-	 * @param String $table_prefix Tabellen Praefix.
-	 * @return String LinkedIn ID
+	/**
+	 * Get login URL
+	 * @return string Login url
 	 */
-	function getLinkedInID($config, $table_prefix = "rex_") {
-		$get_id_qry = 'SELECT linkedin_id FROM '. $table_prefix .'d2u_baumaschinen_plugin_export_config '
-				.'WHERE export_config_id = '. $config->id;
+	public function getLoginURL() {
+		// get our request token
+		try {
+			$rt_info = $oauth->getRequestToken("https://api.linkedin.com/uas/oauth/requestToken", getCallbackURL(array("login" => "linkedin")));
+			$_SESSION['linkedin']['requesttoken'] = $rt_info["oauth_token"];
+			$_SESSION['linkedin']['requesttoken_secret'] = $rt_info["oauth_token_secret"];
 
-		$get_id_result = new rex_sql();
-		$get_id_result->setQuery($get_id_qry);
-
-		$linkedin_id = $get_id_result->getValue("linkedin_id");
-		return $linkedin_id;
+			// Login URL
+			return "https://www.linkedin.com/uas/oauth/authenticate?oauth_token=". $_SESSION['linkedin']['requesttoken'];
+		}
+		catch(OAuthException $e) {
+			print "Error: ". $e->getMessage() ."<br />";
+		}
 	}
 
-	/*
-	 * Speichert die LinkedIn ID in der Datenbank.
-	 * @param ExportConfig $config Exportkonfiguration
-	 * @param String $table_prefix Tabellen Praefix.
-	 * @return boolean True wenn erfolgreich gespeichert, sonst false
+	/**
+	 * Logout
+	 * @return string Logout URL
 	 */
-	function setLinkedInID($config, $table_prefix = "rex_") {
-		$set_id_qry = "UPDATE ". $table_prefix ."d2u_baumaschinen_plugin_export_config "
-				."SET linkedin_id = '". trim($config->linkedin_id) ."' "
-				.'WHERE export_config_id = '. $config->id;
-		$set_id_sql = new rex_sql();
-		$set_id_sql->setQuery($set_id_qry);
-
-		if(getLinkedInID($config, $table_prefix) == $config->linkedin_id) {
-			return true;
+	function logout() {
+		$this->oauth->fetch('GET', "https://api.linkedin.com/uas/oauth/invalidateToken");
+		unset($_SESSION['linkedin']);
+	}
+	
+	/**
+	 * Checks if somebody is logged in.
+	 * @return boolean TRUE is somebody is logged in, otherwise FALSE
+	 */
+	function isAnybodyLoggedIn() {
+		if($this->access_token != "") {
+			return TRUE;
+		}
+		else if (filter_input(INPUT_GET, 'oauth_verifier', FILTER_VALIDATE_INT) > 0) {
+			try {
+				// now set the token so we can get our access token
+				$this->oauth->setToken($_SESSION['linkedin']['requesttoken'], $_SESSION['linkedin']['requesttoken_secret']);
+				// get the access token now that we have the verifier pin
+				$at_info = $this->oauth->getAccessToken("https://api.linkedin.com/uas/oauth/accessToken", "", filter_input(INPUT_GET, 'oauth_verifier', FILTER_VALIDATE_INT));
+				$this->access_token = $at_info["oauth_token"];
+				$this->access_token_secret = $at_info["oauth_token_secret"];
+				return TRUE;
+			} catch (Exception $ex) {
+				return FALSE;
+			}
 		}
 		else {
-			return false;
+			return FALSE;
 		}
 	}
+	
+	/**
+	 * Is user mentioned in provider logged in?
+	 * @return boolean TRUE id yes, otherwise FALSE.
+	 */
+	public function isUserLoggedIn() {
+		// Fetch logged in profile
+		$api_url = "http://api.linkedin.com/v1/people/~:(id,first-name,last-name,email-address)";
+		$this->oauth->fetch($api_url, null, OAUTH_HTTP_METHOD_GET);
+		$response = $this->oauth->getLastResponse(); 
 
+		// Evaluate
+		$xml = new DOMDocument(); 
+		$xml->loadXML($response);
+		$persons = $xml->getElementsByTagName("person"); 
+		foreach($persons as $person) { 
+			$id = $person->getElementsByTagName("id");
+			if($this->provider->linkedin_id == "") {
+				$this->provider->linkedin_id = $id;
+				$this->provider->save();
+				return TRUE;
+			}
+			if($id->item(0)->nodeValue == $this->provider->linkedin_id) {
+				return TRUE;
+			}
+		}
+		return FALSE;
+	}
+	
 	/*
 	 * Gibt die Objekt IDs der zu exportierenden Maschinen zurueck. Im LinkedIn Export
 	 * sind das nur die neuen Objekte.
@@ -99,7 +152,7 @@ class SocialExportLinkedIn extends AExport {
 				}
 
 				// delete in database
-				if($used_machine->export_action == "delete") {
+				if($exported_used_machine->export_action == "delete") {
 					$exported_used_machine->delete();
 				}
 				else {
@@ -199,9 +252,6 @@ class SocialExportLinkedIn extends AExport {
 						$api_url = "http://api.linkedin.com/v1/groups/". $this->provider->linkedin_groupid ."/posts";
 					}
 
-					// $_SESSION['linkedin']['verifier'] wurde schon beim Login geholt
-	//				$access_token_info = $oauth->getAccessToken("https://api.linkedin.com/uas/oauth/accessToken", "", $_SESSION['linkedin']['verifier']);
-
 					$this->oauth->fetch($api_url, $xml->saveXML(), OAUTH_HTTP_METHOD_POST, array("Content-Type" => "text/xml"));
 
 					$response_headers = http_parse_headers($this->oauth->getLastResponseHeaders());
@@ -247,7 +297,7 @@ class SocialExportLinkedIn extends AExport {
 	 * @param OAuth $oauth OAuth objekt von dem Personendaten geholt werden.
 	 * @return Array String LinkedIn id, first-name, lastname
 	 */
-	function getLinkedInPersonInfos($oauth) {
+	function getPersonInfos($oauth) {
 		$return_array = array();
 
 		// eingeloggtes Profil holen
