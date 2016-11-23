@@ -17,6 +17,7 @@ requires:
     php:
         version: '>=5.3'
     packages:
+        d2u_helper: >=1.0
         media_manager: '>=2.0.2'
         redactor2: '>=3.0'
         sprog: '>=1.0.0beta4'

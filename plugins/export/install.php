@@ -19,9 +19,10 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machin
 	social_app_secret varchar(255) collate utf8_general_ci default NULL,
 	social_oauth_token varchar(255) collate utf8_general_ci default NULL,
 	social_oauth_token_secret varchar(255) collate utf8_general_ci default NULL,
+	social_oauth_token_valid_until int(11) collate utf8_general_ci default NULL,
 	facebook_email varchar(255) collate utf8_general_ci default NULL,
 	facebook_pageid varchar(255) collate utf8_general_ci default NULL,
-	linkedin_id varchar(255) collate utf8_general_ci default NULL,
+	linkedin_email varchar(255) collate utf8_general_ci default NULL,
 	linkedin_groupid varchar(255) collate utf8_general_ci default NULL,
 	twitter_id varchar(255) collate utf8_general_ci default NULL,
 	PRIMARY KEY (provider_id)

@@ -111,6 +111,9 @@ class SocialExportFacebook extends AExport {
 	 * @return string Error message
 	 */
 	public function export() {
+		// First remove all deleted machines from exports, otherwise an empty post would be added after deletion
+		ExportedUsedMachine::removeAllDeletedFromExport();
+		
 		foreach($this->exported_used_machines as $exported_used_machine) {
 			$used_machine = new UsedMachine($exported_used_machine->used_machine_id, $this->provider->clang_id);
 			// Delete from wall

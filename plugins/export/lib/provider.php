@@ -92,6 +92,11 @@ class Provider {
 	var $social_oauth_token_secret = "";
 
 	/**
+	 * @var string Twitter or LinkedIn OAuth Token Secret. Expiry time.
+	 */
+	var $social_oauth_token_valid_until = "";
+
+	/**
 	 * @var string Facebook login email address
 	 */
 	var $facebook_email = "";
@@ -104,7 +109,7 @@ class Provider {
 	/**
 	 * @var string Linkedin id.
 	 */
-	var $linkedin_id = "";
+	var $linkedin_email = "";
 
 	/**
 	 * @var string Linkedin group id.
@@ -145,29 +150,13 @@ class Provider {
 			$this->social_app_secret = $result->getValue("social_app_secret");
 			$this->social_oauth_token = $result->getValue("social_oauth_token");
 			$this->social_oauth_token_secret = $result->getValue("social_oauth_token_secret");
+			$this->social_oauth_token_valid_until = $result->getValue("social_oauth_token_valid_until");
 			$this->facebook_email = $result->getValue("facebook_email");
 			$this->facebook_pageid = $result->getValue("facebook_pageid");
-			$this->linkedin_id = $result->getValue("linkedin_id");
+			$this->linkedin_email = $result->getValue("linkedin_email");
 			$this->linkedin_groupid = $result->getValue("linkedin_groupid");
 			$this->twitter_id = $result->getValue("twitter_id");
 		}
-	}
-
-	/**
-	 * Deletes the object.
-	 */
-	public function delete() {
-		// First delete exported used machines
-		$exported_used_machines = ExportedUsedMachine::getAll($this);
-		foreach($exported_used_machines as $exported_used_machine) {
-			$exported_used_machine->delete();
-		}
-		
-		// Next delete object
-		$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_export_provider "
-			."WHERE provider_id = ". $this->provider_id;
-		$result = rex_sql::factory();
-		$result->setQuery($query);
 	}
 
 	/**
@@ -220,6 +209,20 @@ class Provider {
 						$message[] = $provider->name .": ". rex_i18n::msg('d2u_machinery_export_success');
 					}
 				}
+				else if($provider->type == "linkedin") {
+					$linkedin = new SocialExportLinkedIn($provider);
+					if($linkedin->hasAccessToken()) {
+						$linkedin_error = $linkedin->export();
+						if($mascus_error != "") {
+							$message[] = $provider->name .": ". $linkedin_error;
+							print $provider->name .": ". $linkedin_error ."; ";
+							$error = TRUE;
+						}
+						else {
+							$message[] = $provider->name .": ". rex_i18n::msg('d2u_machinery_export_success');
+						}
+					}
+				}
 			}
 		}
 		
@@ -242,6 +245,23 @@ class Provider {
 			print rex_i18n::msg('d2u_machinery_export_success');
 			return true;
 		}
+	}
+
+	/**
+	 * Deletes the object.
+	 */
+	public function delete() {
+		// First delete exported used machines
+		$exported_used_machines = ExportedUsedMachine::getAll($this);
+		foreach($exported_used_machines as $exported_used_machine) {
+			$exported_used_machine->delete();
+		}
+		
+		// Next delete object
+		$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_export_provider "
+			."WHERE provider_id = ". $this->provider_id;
+		$result = rex_sql::factory();
+		$result->setQuery($query);
 	}
 
 	/**
@@ -287,7 +307,7 @@ class Provider {
 			}
 		}
 		else if($this->type == "twitter") {
-			return "Schnittstelle ist noch nicht programmiert.";
+			return "Schnittstelle ist nicht programmiert.";
 		}
 		else if($this->type == "linkedin") {
 			// Check requirements
@@ -297,18 +317,51 @@ class Provider {
 			else if (!class_exists('oauth')) {
 				return rex_i18n::msg('d2u_machinery_export_failure_oauth');				
 			}
+
 			$linkedin = new SocialExportLinkedIn($this);
-			if($linkedin->isUserLoggedIn()) {
-				return $linkedin->export();
-			}
-			else {
-				if($linkedin->isAnybodyLoggedIn()) {
-					// Wrong user logged in: logout first
-					$linkedin->logout();
+			if(!$linkedin->hasAccessToken()) {
+				if(!filter_input(INPUT_GET, 'oauth_verifier', FILTER_NULL_ON_FAILURE) && !isset($_SESSION['linkedin']['requesttoken'])) {
+					// Verifier pin and Requesttoken not available? Login
+					$rt_error = $linkedin->getRequestToken();
+					if($rt_error == "") {
+						// Forward to login URL
+						header("Location: ". $linkedin->getLoginURL());
+						exit;
+					}
+					else {
+						return $rt_error;
+					}
 				}
-				// If not logged in, go to log in page
-				header("Location: ". $linkedin->getLoginURL());
-				exit;
+				else if(filter_input(INPUT_GET, 'oauth_verifier', FILTER_VALIDATE_INT) > 0 && isset($_SESSION['linkedin']['requesttoken'])) {
+					// Logged in an verifiert pin available? Get access token and ...
+					$at_error = $linkedin->getAccessToken(filter_input(INPUT_GET, 'oauth_verifier', FILTER_VALIDATE_INT));
+					if($at_error != "") {
+						return $at_error;
+					}
+				}
+				// Fuer den Fall dass mehrere Profile da sind und Requesttoken schon geholt wurde.
+				else if (isset($_SESSION['linkedin']['requesttoken'])) {
+					// Login URL
+					header("Location: ". $linkedin->getLoginURL());
+					exit;
+				}
+			}
+			if($linkedin->hasAccessToken()) {
+				// set the access token so we can make authenticated requests
+				$is_logged_in = $linkedin->isUserLoggedIn();
+				if($is_logged_in === FALSE) {
+					// Wrong user? Logout and inform user
+					$linkedin->logout();
+					return rex_i18n('d2u_machinery_export_linkedin_login_again');
+				}
+				else if($is_logged_in === TRUE) {
+					// Correct user? Perform export
+					return $linkedin->export();
+				}
+				else {
+					// Login error occured: inform user
+					return $is_logged_in;
+				}
 			}
 		}
 	}
@@ -413,11 +466,12 @@ class Provider {
 				."ftp_filename = '". $this->ftp_filename ."', "
 				."social_app_id = '". $this->social_app_id ."', "
 				."social_app_secret = '". $this->social_app_secret ."', "
-				."social_oauth_token = '". $this->linkedin_oauth_token ."', "
-				."social_oauth_token_secret = '". $this->linkedin_oauth_token_secret ."', "
+				."social_oauth_token = '". $this->social_oauth_token ."', "
+				."social_oauth_token_secret = '". $this->social_oauth_token_secret ."', "
+				."social_oauth_token_valid_until = '". $this->social_oauth_token_valid_until ."', "
 				."facebook_email = '". $this->facebook_email ."', "
 				."facebook_pageid = '". $this->facebook_pageid ."', "
-				."linkedin_id = '". $this->linkedin_id ."', "
+				."linkedin_email = '". $this->linkedin_email ."', "
 				."linkedin_groupid = '". $this->linkedin_groupid ."', "
 				."twitter_id = '". $this->twitter_id ."' ";
 

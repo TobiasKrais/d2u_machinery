@@ -28,9 +28,9 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	$provider->social_app_secret = $form['social_app_secret'];
 	$provider->facebook_email = $form['facebook_email'];
 	$provider->facebook_pageid = $form['facebook_pageid'];
-	$provider->linkedin_id = $form['linkedin_id'];
+	$provider->linkedin_email = $form['linkedin_email'];
 	$provider->linkedin_groupid = $form['linkedin_groupid'];
-	$provider->twitter_id = $form['twitter_id'];
+//	$provider->twitter_id = $form['twitter_id'];
 
 	if($provider->save() == FALSE){
 		$message = 'form_save_error';
@@ -78,12 +78,11 @@ if ($func == 'edit' || $func == 'add') {
 							$readonly = FALSE;
 							
 							d2u_addon_backend_helper::form_input('d2u_machinery_name', 'form[name]', $provider->name, TRUE, $readonly, 'text');
-							$options = array('europemachinery' => rex_i18n::msg('d2u_machinery_export_europemachinery'),
+							$options = ['europemachinery' => rex_i18n::msg('d2u_machinery_export_europemachinery'),
 								'facebook' => rex_i18n::msg('d2u_machinery_export_facebook'),
 								'linkedin' => rex_i18n::msg('d2u_machinery_export_linkedin'),
 								'machinerypark' => rex_i18n::msg('d2u_machinery_export_machinerypark'),
-								'mascus' => rex_i18n::msg('d2u_machinery_export_mascus'),
-								'twitter' => rex_i18n::msg('d2u_machinery_export_twitter'));
+								'mascus' => rex_i18n::msg('d2u_machinery_export_mascus')];
 							d2u_addon_backend_helper::form_select('d2u_machinery_export_type', 'form[type]', $options, array($provider->type), 1, FALSE, $readonly);
 							
 							$options_lang = array();
@@ -129,7 +128,7 @@ if ($func == 'edit' || $func == 'add') {
 					<legend><?php echo rex_i18n::msg('d2u_machinery_export_social_settings_facebook'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-							d2u_addon_backend_helper::form_input('d2u_machinery_export_facebook_email', "form[facebook_email]", $provider->facebook_email, FALSE, $readonly, "text");
+							d2u_addon_backend_helper::form_input('d2u_machinery_export_login_email', "form[facebook_email]", $provider->facebook_email, FALSE, $readonly, "text");
 							d2u_addon_backend_helper::form_input('d2u_machinery_export_facebook_pageid', "form[facebook_pageid]", $provider->facebook_pageid, FALSE, $readonly, "text");
 						?>
 					</div>
@@ -138,16 +137,8 @@ if ($func == 'edit' || $func == 'add') {
 					<legend><?php echo rex_i18n::msg('d2u_machinery_export_social_settings_linkedin'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-							d2u_addon_backend_helper::form_input('d2u_machinery_export_linkedin_id', "form[linkedin_id]", $provider->linkedin_id, FALSE, $readonly, "text");
+							d2u_addon_backend_helper::form_input('d2u_machinery_export_login_email', "form[linkedin_email]", $provider->linkedin_email, FALSE, $readonly, "text");
 							d2u_addon_backend_helper::form_input('d2u_machinery_export_linkedin_groupid', "form[linkedin_groupid]", $provider->linkedin_groupid, FALSE, $readonly, "text");
-						?>
-					</div>
-				</fieldset>
-				<fieldset>
-					<legend><?php echo rex_i18n::msg('d2u_machinery_export_social_settings_twitter'); ?></legend>
-					<div class="panel-body-wrapper slide">
-						<?php
-							d2u_addon_backend_helper::form_input('d2u_machinery_export_twitter_id', "form[twitter_id]", $provider->twitter_id, FALSE, $readonly, "text");
 						?>
 					</div>
 				</fieldset>

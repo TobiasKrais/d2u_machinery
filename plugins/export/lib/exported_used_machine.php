@@ -140,18 +140,37 @@ class ExportedUsedMachine {
 	
 	/**
 	 * Remove all machines to export for given provider.
+	 */
+	public static function removeAllDeletedFromExport() {
+		$query= "SELECT exported_machines.used_machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_export_machines AS exported_machines "
+			."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_used_machines AS used_machines "
+				."ON exported_machines.used_machine_id = used_machines.used_machine_id "
+			."WHERE used_machines.used_machine_id IS NULL "
+			."GROUP BY exported_machines.used_machine_id";
+		$result = rex_sql::factory();
+		$result->setQuery($query);
+		
+		for($i= 0; $i < $result->getRows(); $i++) {
+			$query_update = "UPDATE ". rex::getTablePrefix() ."d2u_machinery_export_machines "
+				."SET export_action = 'delete' "
+				."WHERE used_machine_id = ". $result->getValue("exported_machines.used_machine_id");
+			$result_update = rex_sql::factory();
+			$result_update->setQuery($query_update);
+			
+			$result->next();
+		}
+	}
+
+	/**
+	 * Remove all machines to export for given provider.
 	 * @param int $provider_id Provider id
 	 */
 	public static function removeAllFromExport($provider_id) {
-		$provider = new Provider($provider_id);
-		$used_machines = UsedMachine::getAll($provider->clang_id, TRUE);
-		foreach($used_machines as $used_machine) {
-			$exported_used_machine = new ExportedUsedMachine($used_machine->used_machine_id, $provider_id);
-			if($exported_used_machine->isSetForExport()) {
-				$exported_used_machine->export_action = "delete";
-				$exported_used_machine->save();
-			}
-		}
+		$query_lang = "UPDATE ". rex::getTablePrefix() ."d2u_machinery_export_machines "
+			."SET export_action = 'delete' "
+			."WHERE provider_id = ". $provider_id;
+		$result_lang = rex_sql::factory();
+		$result_lang->setQuery($query_lang);
 	}
 	
 	/**
