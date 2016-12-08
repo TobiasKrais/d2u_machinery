@@ -105,6 +105,11 @@ class UsedMachine {
 	var $description = "";
 
 	/**
+	 * @var string[] Download filenames
+	 */
+	var $downloads = array();
+
+	/**
 	 * @var string Needs translation update? "no", "yes" or "delete"
 	 */
 	var $translation_needs_update = "delete";
@@ -152,6 +157,7 @@ class UsedMachine {
 			$this->location = $result->getValue("location");
 			$this->external_url = $result->getValue("external_url");
 			$this->description = htmlspecialchars_decode($result->getValue("description"));
+			$this->downloads = preg_grep('/^\s*$/s', explode(",", $result->getValue("downloads")), PREG_GREP_INVERT);
 			$this->teaser = htmlspecialchars_decode($result->getValue("teaser"));
 			$this->translation_needs_update = $result->getValue("translation_needs_update");
 
@@ -481,6 +487,7 @@ class UsedMachine {
 						."clang_id = '". $this->clang_id ."', "
 						."teaser = '". htmlspecialchars($this->teaser) ."', "
 						."description = '". htmlspecialchars($this->description) ."', "
+						."downloads = '". implode(",", $this->downloads) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = ". time() .", "
 						."updateuser = '". rex::getUser()->getLogin() ."' ";

@@ -35,6 +35,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machin
 	clang_id int(10) NOT NULL,
 	teaser varchar(255) collate utf8_general_ci default NULL,
 	description text collate utf8_general_ci default NULL,
+	downloads text collate utf8_general_ci default NULL,
 	translation_needs_update varchar(7) collate utf8_general_ci default NULL,
 	updatedate int(11) default NULL,
 	updateuser varchar(255) collate utf8_general_ci default NULL,

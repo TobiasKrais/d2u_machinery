@@ -219,31 +219,31 @@ else if(filter_input(INPUT_GET, 'used_machine_id', FILTER_VALIDATE_INT) > 0 || (
 	// Link to machine
 	if($used_machine->machine !== FALSE) {
 		print '<div class="col-xs-12">';
-		print '<b>'. $tag_open .'d2u_machinery_used_machines_link_machine'. $tag_close .':</b>';
-		print '<a href="'. $used_machine->machine->getURL() .'">'. $used_machine->machine->name .'</a>';
+		print '<p><b>'. $tag_open .'d2u_machinery_used_machines_link_machine'. $tag_close .':</b>';
+		print '<a href="'. $used_machine->machine->getURL() .'">'. $used_machine->machine->name .'</a></p>';
 		print '</div>';
 	}
 	// Availability
 	if($used_machine->availability != "") {
 		print '<div class="col-xs-12">';
-		print '<b>'. $tag_open .'d2u_machinery_used_machines_availability'. $tag_close .':</b> ';
+		print '<p><b>'. $tag_open .'d2u_machinery_used_machines_availability'. $tag_close .':</b> ';
 		if($d2u_machinery->hasConfig('lang_replacement_'. rex_clang::getCurrentId()) && $d2u_machinery->getConfig('lang_replacement_'. rex_clang::getCurrentId()) == "german") {
 			print date_format(date_create($used_machine->availability),"d.m.Y");
 		}
 		else {
 			print date_format(date_create($used_machine->availability),"Y/m/d");
 		}
-		print '</div>';
+		print '</p></div>';
 	}
 	// Year built
 	if($used_machine->year_built != "") {
 		print '<div class="col-xs-12">';
-		print '<b>'. $tag_open .'d2u_machinery_used_machines_year_built'. $tag_close .':</b> '. $used_machine->year_built;
+		print '<p><b>'. $tag_open .'d2u_machinery_used_machines_year_built'. $tag_close .':</b> '. $used_machine->year_built .'</p>';
 		print '</div>';
 	}
 	// Price
 	print '<div class="col-xs-12">';
-	print '<b>'. $tag_open .'d2u_machinery_used_machines_price'. $tag_close .':</b> ';
+	print '<p><b>'. $tag_open .'d2u_machinery_used_machines_price'. $tag_close .':</b> ';
 	if($used_machine->price != "0.00") {
 		print $used_machine->price .' '. $used_machine->currency_code;
 		if($used_machine->vat > 0) {
@@ -256,18 +256,30 @@ else if(filter_input(INPUT_GET, 'used_machine_id', FILTER_VALIDATE_INT) > 0 || (
 	else {
 		print $tag_open .'d2u_machinery_used_machines_price_on_request'. $tag_close;
 	}
-	print '</div>';
+	print '</p></div>';
 	// Location
 	if($used_machine->location != "") {
 		print '<div class="col-xs-12">';
-		print '<b>'. $tag_open .'d2u_machinery_used_machines_location'. $tag_close .':</b> '. $used_machine->location;
+		print '<p><b>'. $tag_open .'d2u_machinery_used_machines_location'. $tag_close .':</b> '. $used_machine->location .'</p>';
 		print '</div>';
 	}
 	// External URL
 	if($used_machine->external_url != "" && filter_var($used_machine->external_url, FILTER_VALIDATE_URL)) {
 		print '<div class="col-xs-12">';
-		print '<b>'. $tag_open .'d2u_machinery_used_machines_external_url'. $tag_close .':</b> <a href="'. $used_machine->external_url .'" target="_blank">'. $used_machine->external_url .'</a>';
+		print '<p><b>'. $tag_open .'d2u_machinery_used_machines_external_url'. $tag_close .':</b> <a href="'. $used_machine->external_url .'" target="_blank">'. $used_machine->external_url .'</a></p>';
 		print '</div>';
+	}
+	//Downloads
+	if(count($used_machine->downloads) > 0) {
+		foreach($used_machine->downloads as $download) {
+			$media = rex_media::get($download);
+			$title = $media->getTitle() != "" ? $media->getTitle() : $download;
+			print '<div class="col-xs-6 col-sm-4 col-md-3">';
+			print '<div class="downloadbox">';
+			print '<a href="'. rex_url::media($download) .'" target="_blank"><span class="glyphicon glyphicon-cloud-download"></span><b>'. $title .'</b></a>';
+			print '</div>';
+			print '</div>';
+		}
 	}
 	print '</div>';
 	print '</div>';

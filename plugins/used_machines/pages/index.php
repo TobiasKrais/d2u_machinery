@@ -14,7 +14,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 
 	// Media fields and links need special treatment
 	$input_media_list = (array) rex_post('REX_INPUT_MEDIALIST', 'array', array());
-
+	
 	$success = TRUE;
 	$used_machine = FALSE;
 
@@ -44,6 +44,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 		$used_machine->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 		$used_machine->teaser = $form['lang'][$rex_clang->getId()]['teaser'];
 		$used_machine->description = $form['lang'][$rex_clang->getId()]['description'];
+		$used_machine->downloads = preg_grep('/^\s*$/s', explode(",", $input_media_list[$rex_clang->getId() + 100]), PREG_GREP_INVERT);
 	
 		if($used_machine->translation_needs_update == "delete") {
 			$used_machine->delete(FALSE);
@@ -62,7 +63,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	if($success) {
 		$message = 'form_saved';
 	}
-	
+
 	// Redirect to make reload and thus double save impossible
 	if(filter_input(INPUT_POST, "btn_apply") == 1 && $used_machine !== FALSE) {
 		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$used_machine->used_machine_id, "func"=>'edit', "message"=>$message), FALSE));
@@ -175,6 +176,7 @@ if ($func == 'edit' || $func == 'add') {
 								}
 								d2u_addon_backend_helper::form_input('d2u_machinery_machine_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $used_machine_lang->teaser, FALSE, $readonly_lang, "text");
 								d2u_addon_backend_helper::form_textarea('d2u_machinery_machine_description', "form[lang][". $rex_clang->getId() ."][description]", $used_machine_lang->description, 5, FALSE, $readonly_lang, TRUE);
+								d2u_addon_backend_helper::form_medialistfield('d2u_machinery_used_machines_downloads', $rex_clang->getId() + 100, $used_machine_lang->downloads, $readonly_lang);
 							?>
 						</div>
 					</fieldset>
