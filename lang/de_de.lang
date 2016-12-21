@@ -33,6 +33,8 @@ d2u_machinery_settings_lang_replacments_install = Voreingestellte Sprachersetzun
 d2u_machinery_settings_request_form_email = Empfänger E-Mail Adresse für Anfrageformular
 d2u_machinery_settings_show_teaser = Kurzbeschreibung in Maschinenlisten einblenden
 
+d2u_machinery_meta_setup = Setup
+
 d2u_machinery_category = Kategorie
 d2u_machinery_category_no_categories_found = Es wurden noch keine Kategorien angelegt.
 d2u_machinery_category_parent = Elternkategorie

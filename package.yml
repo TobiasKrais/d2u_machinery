@@ -11,13 +11,14 @@ page:
         machine: { title: 'translate:d2u_machinery_meta_machines', icon: rex-icon rex-icon-module }
         category: { title: 'translate:d2u_machinery_meta_categories', icon: rex-icon rex-icon-open-category }
         settings: { title: 'translate:d2u_machinery_meta_settings', icon: rex-icon rex-icon-system, perm: d2u_machinery[settings] }
+        setup: { title: 'translate:d2u_machinery_meta_setup', icon: rex-icon rex-icon-install, perm: d2u_machinery[settings] }
 
 requires:
     redaxo: '>=5.1.0'
     php:
         version: '>=5.3'
     packages:
-        d2u_helper: >=1.0
+        d2u_helper: '>=1.0'
         media_manager: '>=2.0.2'
         redactor2: '>=3.0'
         sprog: '>=1.0.0beta4'
