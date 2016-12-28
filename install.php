@@ -3,6 +3,7 @@ $sql = rex_sql::factory();
 // Install database
 $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machinery_machines (
 	machine_id int(10) unsigned NOT NULL auto_increment,
+	priority int(10) default NULL,
 	internal_name varchar(255) collate utf8_general_ci default NULL,
 	name varchar(255) collate utf8_general_ci default NULL,
 	pics text collate utf8_general_ci default NULL,
@@ -123,6 +124,7 @@ if (!$this->hasConfig()) {
     $this->setConfig('article_id', rex_article::getSiteStartArticleId());
 	$this->setConfig('default_lang', $default_clang_id);
 	$this->setConfig('default_category_sort', 'name');
+	$this->setConfig('default_machine_sort', 'name');
 	$this->setConfig('show_categories_usage_area', 'hide');
 	$this->setConfig('show_teaser', 'hide');
 }

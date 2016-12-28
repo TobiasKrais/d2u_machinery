@@ -157,7 +157,15 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 					?>
 				</div>
 			</fieldset>
-			<?php
+			<fieldset>
+				<legend><small><i class="rex-icon rex-icon-module"></i></small> <?php echo rex_i18n::msg('d2u_machinery_meta_machines'); ?></legend>
+				<div class="panel-body-wrapper slide">
+					<?php
+						$options = array('name' => rex_i18n::msg('d2u_machinery_name'), 'priority' => rex_i18n::msg('header_priority'));
+						d2u_addon_backend_helper::form_select('d2u_machinery_settings_default_sort', 'settings[default_machine_sort]', $options, array($this->getConfig('default_machine_sort')));
+					?>
+				</div>
+			</fieldset>			<?php
 				if(rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
 			?>
 				<fieldset>

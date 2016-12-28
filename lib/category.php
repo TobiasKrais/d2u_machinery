@@ -372,7 +372,13 @@ class Category {
 		$query = "SELECT lang.machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_machines_lang AS lang "
 			."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_machines AS machines "
 					."ON lang.machine_id = machines.machine_id "
-			."WHERE category_id = ". $this->category_id ." AND clang_id = ". $this->clang_id;
+			."WHERE category_id = ". $this->category_id ." AND clang_id = ". $this->clang_id .' ';
+		if(rex_addon::get('d2u_machinery')->getConfig('default_machinery_sort') == 'priority') {
+			$query .= 'ORDER BY priority ASC';
+		}
+		else {
+			$query .= 'ORDER BY name ASC';
+		}	
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		

@@ -145,6 +145,11 @@ class Machine {
 	var $operating_voltage_a = "";	
 
 	/**
+	 * @var int Sort Priority
+	 */
+	var $priority = 0;
+	
+	/**
 	 * @var string Teaser
 	 */
 	var $teaser = "";
@@ -186,7 +191,7 @@ class Machine {
 		$num_rows = $result->getRows();
 
 		if($num_rows > 0) {
-			$this->machine_id = $result->getValue("machine_id");;
+			$this->machine_id = $result->getValue("machine_id");
 			$this->internal_name = $result->getValue("internal_name");
 			$this->name = $result->getValue("name");
 			$this->pics = preg_grep('/^\s*$/s', explode(",", $result->getValue("pics")), PREG_GREP_INVERT);
@@ -209,6 +214,7 @@ class Machine {
 			$this->teaser = htmlspecialchars_decode($result->getValue("teaser"));
 			$this->description = htmlspecialchars_decode($result->getValue("description"));
 			$this->pdfs = preg_grep('/^\s*$/s', explode(",", $result->getValue("pdfs")), PREG_GREP_INVERT);
+			$this->priority = $result->getValue("priority");
 			$this->translation_needs_update = $result->getValue("translation_needs_update");
 
 			// Convert redaxo://123 to URL
@@ -306,7 +312,12 @@ class Machine {
 		if($only_online) {
 			$query .= "WHERE online_status = 'online' ";
 		}
-		$query .= "ORDER BY name";
+		if(rex_addon::get('d2u_machinery')->getConfig('default_machinery_sort') == 'priority') {
+			$query .= 'ORDER BY priority ASC';
+		}
+		else {
+			$query .= 'ORDER BY name ASC';
+		}
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
@@ -494,6 +505,12 @@ class Machine {
 
 		// Save the not language specific part
 		$pre_save_machine = new Machine($this->machine_id, $this->clang_id);
+
+		// save priority, but only if new or changed
+		if($this->priority != $pre_save_machine->priority || $this->machine_id == 0) {
+			$this->setPriority();
+		}
+
 		if($this->machine_id == 0 || $pre_save_machine != $this) {
 			$query = rex::getTablePrefix() ."d2u_machinery_machines SET "
 					."name = '". $this->name ."', "
@@ -570,5 +587,42 @@ class Machine {
 		}
 		
 		return $error;
+	}
+	
+	/**
+	 * Reassigns priority to all Machines in database.
+	 */
+	private function setPriority() {
+		// Pull prios from database
+		$query = "SELECT machine_id, priority FROM ". rex::getTablePrefix() ."d2u_machinery_machines "
+			."WHERE machine_id <> ". $this->machine_id ." ORDER BY priority";
+		$result = rex_sql::factory();
+		$result->setQuery($query);
+		
+		// When priority is too small, set at beginning
+		if($this->priority <= 0) {
+			$this->priority = 1;
+		}
+		
+		// When prio is too high, simply add at end 
+		if($this->priority > $result->getRows()) {
+			$this->priority = $result->getRows() + 1;
+		}
+
+		$machines = array();
+		for($i = 0; $i < $result->getRows(); $i++) {
+			$machines[$result->getValue("priority")] = $result->getValue("machine_id");
+			$result->next();
+		}
+		array_splice($machines, ($this->priority - 1), 0, array($this->machine_id));
+
+		// Save all prios
+		foreach($machines as $prio => $machine_id) {
+			$query = "UPDATE ". rex::getTablePrefix() ."d2u_machinery_machines "
+					."SET priority = ". ($prio + 1) ." " // +1 because array_splice recounts at zero
+					."WHERE machine_id = ". $machine_id;
+			$result = rex_sql::factory();
+			$result->setQuery($query);
+		}
 	}
 }

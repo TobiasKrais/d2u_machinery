@@ -5,3 +5,11 @@ d2u_machinery_lang_helper::factory()->install();
 // Update modules
 $d2u_module_manager = new D2UModuleManager(D2UMachineryModules::getD2UMachineryModules(), "", "d2u_machinery");
 $d2u_module_manager->autoupdate();
+
+// Update database
+$sql = rex_sql::factory();
+$sql->setQuery("SHOW COLUMNS FROM ". rex::getTablePrefix() ."d2u_machinery_machines LIKE 'priority';");
+if($sql->getRows() == 0) {
+	$sql->setQuery("ALTER TABLE ". rex::getTablePrefix() ."d2u_machinery_machines "
+		. "ADD priority INT(10) NULL DEFAULT NULL AFTER machine_id;");
+}
