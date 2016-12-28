@@ -12,7 +12,7 @@ if(!function_exists('print_categories')) {
 			// Only use used categories
 			if(count($category->getMachines()) > 0) {
 				print '<div class="col-xs-6 col-sm-4 col-md-3 abstand">';
-				print '<a href="'. $category->getURL() .'">';
+				print '<a href="'. $category->getURL() .'" class="bluebox">';
 				print '<div class="box" data-height-watch>';
 				if($category->pic != "") {
 					print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
@@ -48,7 +48,7 @@ if(!function_exists('print_consulation_hint')) {
 		$sprog = rex_addon::get("sprog");
 
 		print '<div class="col-xs-12 col-md-9 consultation">';
-		print '<a href="'. rex_getUrl($d2u_machinery->getConfig('consultation_article_id')) .'">';
+		print '<a href="'. rex_getUrl($d2u_machinery->getConfig('consultation_article_id')) .'" class="bluebox">';
 		print '<div class="abstand">';
 		if($d2u_machinery->getConfig('consultation_pic') != "") {
 			print '<img src="'. rex_url::media($d2u_machinery->getConfig('consultation_pic')) .'" alt=""><br><br>';
@@ -75,7 +75,7 @@ if(!function_exists('print_industry_sectors')) {
 		foreach (IndustrySector::getAll(rex_clang::getCurrentId()) as $industry_sector) {
 			if($industry_sector->online_status == "online" && count($industry_sector->getMachines()) > 0) {
 				print '<div class="col-xs-6 col-sm-4 col-md-3 abstand">';
-				print '<a href="'. $industry_sector->getURL() .'">';
+				print '<a href="'. $industry_sector->getURL() .'" class="bluebox">';
 				print '<div class="box" data-height-watch>';
 				if($industry_sector->pic != "") {
 					print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
@@ -108,8 +108,13 @@ if(!function_exists('print_machines')) {
 		$counter = 0;
 		foreach($machines as $machine) {
 			if($machine->online_status == 'online') {
-				print '<div class="col-xs-6 col-sm-4 col-md-3 abstand">';
-				print '<a href="'. $machine->getURL() .'">';
+				if($d2u_machinery->hasConfig('show_teaser') && $d2u_machinery->getConfig('show_teaser') == 'show') {
+					print '<div class="col-xs-12 col-sm-6 col-md-4 abstand" data-height-watch>';
+				}
+				else {
+					print '<div class="col-xs-6 col-sm-4 col-md-3 abstand" data-height-watch>';
+				}
+				print '<a href="'. $machine->getURL() .'" class="bluebox">';
 				print '<div class="box" data-height-watch>';
 				if(count($machine->pics) > 0 && $machine->pics[0] != "") {
 					print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
@@ -185,7 +190,7 @@ if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT) > 0 || (rex_addon
 		print '<table class="matrix">';
 		print '<thead><tr><td></td>';
 		foreach($machines as $machine) {
-			print '<td valign="bottom" align="center">';
+			print '<td valign="top" align="center">';
 			print '<a href="'. $machine->getURL() .'"><div>';
 			if(count($machine->pics) > 0 && $machine->pics[0] != "") {
 				print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.	$machine->pics[0] .'" alt='. $machine->name .'>';
@@ -223,7 +228,7 @@ if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT) > 0 || (rex_addon
 		print '<table class="matrix">';
 		print '<thead><tr><td></td>';
 		foreach($machines as $machine) {
-			print '<td valign="bottom" align="center">';
+			print '<td valign="top" align="center">';
 			print '<a href="'. $machine->getURL() .'"><div>';
 			if(count($machine->pics) > 0 && $machine->pics[0] != "") {
 				print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.	$machine->pics[0] .'" alt='. $machine->name .'>';
