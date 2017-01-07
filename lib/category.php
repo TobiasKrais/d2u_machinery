@@ -87,6 +87,11 @@ class Category {
 	var $sawing_machines_cutting_range_file = "";
 
 	/**
+	 * @var string Show agitators in machines of this category. Values are "hide" or "show"
+	 */
+	var $show_agitators = "hide";
+
+	/**
 	 * @var string[] Array with PDF file names.
 	 */
 	var $pdfs = array();
@@ -167,6 +172,11 @@ class Category {
 				$this->export_mascus_category_name = $result->getValue("export_mascus_category_name");
 			}
 			
+			// Agitator fields
+			if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable()) {
+				$this->show_agitators = $result->getValue("show_agitators");
+			}
+
 			// Sawing machines plugin fields
 			if(rex_plugin::get("d2u_machinery", "sawing_machines")->isAvailable()) {
 				$this->sawing_machines_cutting_range_title = $result->getValue("sawing_machines_cutting_range_title");
@@ -373,12 +383,12 @@ class Category {
 			."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_machines AS machines "
 					."ON lang.machine_id = machines.machine_id "
 			."WHERE category_id = ". $this->category_id ." AND clang_id = ". $this->clang_id .' ';
-		if(rex_addon::get('d2u_machinery')->getConfig('default_machinery_sort') == 'priority') {
+		if(rex_addon::get('d2u_machinery')->getConfig('default_machine_sort') == 'priority') {
 			$query .= 'ORDER BY priority ASC';
 		}
 		else {
 			$query .= 'ORDER BY name ASC';
-		}	
+		}
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
@@ -505,6 +515,9 @@ class Category {
 					."export_europemachinery_category_name = '". $this->export_europemachinery_category_name ."', "
 					."export_machinerypark_category_id = '". $this->export_machinerypark_category_id ."', "
 					."export_mascus_category_name = '". $this->export_mascus_category_name ."' ";
+			}
+			if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable()) {
+				$query .= ", show_agitators = '". $this->show_agitators ."' ";
 			}
 
 			if($this->category_id == 0) {

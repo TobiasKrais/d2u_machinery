@@ -54,6 +54,15 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 		if($this->getConfig('show_categories_usage_area') == 'show') {
 			$category->usage_area = $form['lang'][$rex_clang->getId()]['usage_area'];
 		}
+		if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable()) {
+			// Checkbox also need special treatment if empty
+			if(!array_key_exists('show_agitators', $form)) {
+				$category->show_agitators = "hide";
+			}
+			else {
+				$category->show_agitators = "show";
+			}
+		}
 		
 		if($category->translation_needs_update == "delete") {
 			$category->delete(FALSE);
@@ -224,6 +233,20 @@ if ($func == 'edit' || $func == 'add') {
 								d2u_addon_backend_helper::form_input('d2u_machinery_category_export_europemachinery_category_id', "form[export_europemachinery_category_id]", $category->export_europemachinery_category_id, FALSE, $readonly, "number");
 								d2u_addon_backend_helper::form_input('d2u_machinery_category_export_europemachinery_category_name', "form[export_europemachinery_category_name]", $category->export_europemachinery_category_name, FALSE, $readonly, "text");
 								d2u_addon_backend_helper::form_input('d2u_machinery_category_export_mascus_category_name', "form[export_mascus_category_name]", $category->export_mascus_category_name, FALSE, $readonly, "text");
+							?>
+						</div>
+					</fieldset>
+				<?php
+					}
+				?>
+				<?php
+					if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable()) {
+				?>
+					<fieldset>
+						<legend><small><i class="rex-icon fa-spoon"></i></small> <?php echo rex_i18n::msg('d2u_machinery_agitator_extension'); ?></legend>
+						<div class="panel-body-wrapper slide">
+							<?php
+								d2u_addon_backend_helper::form_checkbox('d2u_machinery_category_show_agitators', 'form[show_agitators]', 'show', $category->show_agitators == 'show');
 							?>
 						</div>
 					</fieldset>

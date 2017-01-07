@@ -186,7 +186,7 @@ else if(filter_input(INPUT_GET, 'used_machine_id', FILTER_VALIDATE_INT) > 0 || (
 			// Wrapper for slides
 			print '<div class="carousel-inner" role="listbox">';
 			for($i = 0; $i < count($used_machine->pics); $i++) {
-				print '<div class="item';
+				print '<div class="carousel-item';
 				if($i == 0) {
 					print ' active';
 				}
@@ -199,11 +199,11 @@ else if(filter_input(INPUT_GET, 'used_machine_id', FILTER_VALIDATE_INT) > 0 || (
 
 			// Left and right controls
 			print '<a class="left carousel-control" href="#machineCarousel" role="button" data-slide="prev">';
-			print '<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>';
+			print '<span class="icon-prev" aria-hidden="true"></span>';
 			print '<span class="sr-only">Previous</span>';
 			print '</a>';
 			print '<a class="right carousel-control" href="#machineCarousel" role="button" data-slide="next">';
-			print '<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>';
+			print '<span class="icon-next" aria-hidden="true"></span>';
 			print '<span class="sr-only">Next</span>';
 			print '</a>';
 			

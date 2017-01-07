@@ -26,6 +26,12 @@ if($sql->getRows() == 0) {
 	$sql->setQuery("ALTER TABLE ". rex::getTablePrefix() ."d2u_machinery_machines "
 		. "ADD viscosity INT(10) NULL DEFAULT NULL;");
 }
+// Alter category table
+$sql->setQuery("SHOW COLUMNS FROM ". rex::getTablePrefix() ."d2u_machinery_categories LIKE 'show_agitators';");
+if($sql->getRows() == 0) {
+	$sql->setQuery("ALTER TABLE ". rex::getTablePrefix() ."d2u_machinery_categories "
+		. "ADD show_agitators VARCHAR(4) CHARACTER SET utf8 COLLATE utf8_general_ci;");
+}
 
 // Create tables: agitators
 $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machinery_agitators (

@@ -13,3 +13,5 @@ d2u_machinery_agitators_no_agitators_found = Es wurden noch keine Rührwerke ang
 d2u_machinery_agitator_type = Rührwerkstyp
 d2u_machinery_agitator_types = Rührwerkstypen
 d2u_machinery_agitators_no_agitator_types_found = Es wurden noch keine Rührwerkstypen angelegt.
+
+d2u_machinery_category_show_agitators = Rührwerke bei Maschinen dieser Kategorie anzeigen

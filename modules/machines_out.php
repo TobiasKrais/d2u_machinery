@@ -294,7 +294,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT) > 0 || (rex_a
 			// Wrapper for slides
 			print '<div class="carousel-inner" role="listbox">';
 			for($i = 0; $i < count($machine->pics); $i++) {
-				print '<div class="item';
+				print '<div class="carousel-item';
 				if($i == 0) {
 					print ' active';
 				}
@@ -307,11 +307,11 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT) > 0 || (rex_a
 
 			// Left and right controls
 			print '<a class="left carousel-control" href="#machineCarousel" role="button" data-slide="prev">';
-			print '<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>';
+			print '<span class="icon-prev" aria-hidden="true"></span>';
 			print '<span class="sr-only">Previous</span>';
 			print '</a>';
 			print '<a class="right carousel-control" href="#machineCarousel" role="button" data-slide="next">';
-			print '<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>';
+			print '<span class="icon-next" aria-hidden="true"></span>';
 			print '<span class="sr-only">Next</span>';
 			print '</a>';
 			
@@ -383,7 +383,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT) > 0 || (rex_a
 	print '</div>';
 	
 	// Agitators
-	if($machine->agitator_type_id > 0) {
+	if($machine->agitator_type_id > 0 && $machine->category->show_agitators) {
 		print '<div id="tab_agitator" class="tab-pane fade machine-tab">';
 		$agitator_type = new AgitatorType($machine->agitator_type_id, $machine->clang_id);
 		print '<div class="row">';

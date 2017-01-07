@@ -29,7 +29,7 @@
 .consultation {
 	margin-top: 3em;
 }
-.nav li.active a {
+.nav li a.active {
 	background: url("../assets/addons/d2u_machinery/icon_arrowTabs.svg") no-repeat 50% bottom;
 }
 .nav li, .nav li.active {

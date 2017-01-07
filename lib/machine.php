@@ -312,7 +312,7 @@ class Machine {
 		if($only_online) {
 			$query .= "WHERE online_status = 'online' ";
 		}
-		if(rex_addon::get('d2u_machinery')->getConfig('default_machinery_sort') == 'priority') {
+		if(rex_addon::get('d2u_machinery')->getConfig('default_machine_sort') == 'priority') {
 			$query .= 'ORDER BY priority ASC';
 		}
 		else {
