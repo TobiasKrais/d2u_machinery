@@ -39,6 +39,7 @@ abstract class AExport {
 		$html = str_replace("</h5>", "</h5>".PHP_EOL, $html);
 		$html = str_replace("</h6>", "</h6>".PHP_EOL, $html);
 		$html = str_replace("</li>", "</li>".PHP_EOL, $html);
+		$html = html_entity_decode($html);
 		return strip_tags($html);
 	}
 
