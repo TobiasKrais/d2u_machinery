@@ -90,7 +90,6 @@ if(count($used_machines) > 0) {
 	}
 	print "</tr>";
 	
-	$rows_counter = 3;
 	foreach($used_machines as $used_machine) {
 		print "<tr>";
 		print "<td>". $used_machine->manufacturer ." ". $used_machine->name ."</td>";
@@ -112,10 +111,6 @@ if(count($used_machines) > 0) {
 			}
 		}
 		print "</tr>";
-		$rows_counter++;
-		if($rows_counter % 15 == 0) {
-			printTableHeading($providers);
-		}
 	}
 }
 print "</tbody>";
