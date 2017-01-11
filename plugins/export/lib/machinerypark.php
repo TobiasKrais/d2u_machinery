@@ -84,7 +84,7 @@ class MachineryPark extends AFTPExport {
 							$used_machine->category->export_machinerypark_category_id,
 							utf8_decode(str_replace('"', "'", $used_machine->manufacturer)),
 							utf8_decode(str_replace('"', "'", $used_machine->name)),
-							utf8_decode(str_replace("\n", " ", str_replace('"', "'", AExport::convertToExportString($used_machine->description)))),
+							utf8_decode(str_replace("\n", " ", str_replace(";", ",", str_replace('"', "'", html_entity_decode(AExport::convertToExportString($used_machine->description)))))),
 							"", // ZIP code
 							"", // Location
 							"", // Country
