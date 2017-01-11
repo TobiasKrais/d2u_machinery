@@ -132,7 +132,7 @@ class Category {
 	var $cutting_range_url = "";
 
 	/**
-	 * Constructor. Reads a categorie stored in database.
+	 * Constructor. Reads a category stored in database.
 	 * @param int $category_id Category ID.
 	 * @param int $clang_id Redaxo clang id.
 	 */
