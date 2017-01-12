@@ -107,7 +107,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	
 	// Check if object is used
 	$reffering_machines = $machine->getRefferingMachines();
-	$reffering_used_machines = array();
+	$reffering_used_machines = [];
 	if(rex_plugin::get("d2u_machinery", "used_machines")->isAvailable()) {
 		$reffering_used_machines = $machine->getRefferingUsedMachines();
 	}
@@ -174,14 +174,14 @@ if ($func == 'edit' || $func == 'add') {
 							d2u_addon_backend_helper::form_input('d2u_machinery_machine_product_number', "form[product_number]", $machine->product_number, $required, $readonly_lang, "text");
 							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $machine->priority, TRUE, $readonly, 'number');
 							d2u_addon_backend_helper::form_medialistfield('d2u_machinery_machine_pics', 1, $machine->pics, $readonly_lang);
-							$options = array();
+							$options = [];
 							foreach(Category::getAll(rex_config::get("d2u_machinery", "default_lang")) as $category) {
 								if($category->name != "") {
 									$options[$category->category_id] = $category->name;
 								}
 							}
 							d2u_addon_backend_helper::form_select('d2u_machinery_category', 'form[category_id]', $options, array($machine->category->category_id), 1, FALSE, $readonly);
-							$options_alt_machines = array();
+							$options_alt_machines = [];
 							foreach(Machine::getAll(rex_config::get("d2u_machinery", "default_lang")) as $alt_machine) {
 								if($alt_machine->machine_id != $machine->machine_id) {
 									$options_alt_machines[$alt_machine->machine_id] = $alt_machine->name;
@@ -209,7 +209,7 @@ if ($func == 'edit' || $func == 'add') {
 						print '<fieldset>';
 						print '<legend><small><i class="rex-icon fa-industry"></i></small> '. rex_i18n::msg('d2u_machinery_industry_sectors') .'</legend>';
 						print '<div class="panel-body-wrapper slide">';
-						$options_industry_sectors = array();
+						$options_industry_sectors = [];
 						foreach (IndustrySector::getAll(rex_config::get("d2u_machinery", "default_lang")) as $industry_sector) {
 							$options_industry_sectors[$industry_sector->industry_sector_id] = $industry_sector->name;
 						}
@@ -234,7 +234,7 @@ if ($func == 'edit' || $func == 'add') {
 						print '<fieldset>';
 						print '<legend><small><i class="rex-icon fa-certificate"></i></small> '. rex_i18n::msg('d2u_machinery_certificates') .'</legend>';
 						print '<div class="panel-body-wrapper slide">';
-						$options_certificates = array();
+						$options_certificates = [];
 						foreach (Certificate::getAll(rex_config::get("d2u_machinery", "default_lang"), $machine->certificate_ids) as $certificate) {
 							$options_certificates[$certificate->certificate_id] = $certificate->name;
 						}
@@ -246,7 +246,7 @@ if ($func == 'edit' || $func == 'add') {
 						print '<fieldset>';
 						print '<legend><small><i class="rex-icon fa-plug"></i></small> '. rex_i18n::msg('d2u_machinery_features') .'</legend>';
 						print '<div class="panel-body-wrapper slide">';
-						$options_features = array();
+						$options_features = [];
 						foreach (Feature::getAll(rex_config::get("d2u_machinery", "default_lang"), $machine->category->category_id) as $feature) {
 							$options_features[$feature->feature_id] = $feature->title;
 						}
@@ -258,7 +258,7 @@ if ($func == 'edit' || $func == 'add') {
 						print '<fieldset>';
 						print '<legend><small><i class="rex-icon fa-codepen"></i></small> '. rex_i18n::msg('d2u_machinery_usage_areas') .'</legend>';
 						print '<div class="panel-body-wrapper slide">';
-						$options_usage_areas = array();
+						$options_usage_areas = [];
 						foreach (UsageArea::getAll(rex_config::get("d2u_machinery", "default_lang"), $machine->category->category_id) as $usage_area) {
 							$options_usage_areas[$usage_area->usage_area_id] = $usage_area->name;
 						}
@@ -281,7 +281,7 @@ if ($func == 'edit' || $func == 'add') {
 						<div class="panel-body-wrapper slide">
 							<?php
 								if($rex_clang->getId() != rex_config::get("d2u_machinery", "default_lang")) {
-									$options_translations = array();
+									$options_translations = [];
 									$options_translations["yes"] = rex_i18n::msg('d2u_machinery_translation_needs_update');
 									$options_translations["no"] = rex_i18n::msg('d2u_machinery_translation_is_uptodate');
 									$options_translations["delete"] = rex_i18n::msg('d2u_machinery_translation_delete');
