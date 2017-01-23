@@ -30,7 +30,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$machine->pics = preg_grep('/^\s*$/s', explode(",", $input_media_list[1]), PREG_GREP_INVERT);
 			$machine->category = new Category($form['category_id'], $rex_clang->getId());
 			$machine->alternative_machine_ids = $form['alternative_machine_ids'];
-			$machine->online_status = $form['online_status'];
+			$machine->online_status = array_key_exists('online_status', $form) ? "online" : "offline";
 			$machine->article_id_service = $input_link['article_id_service'];
 			$machine->article_id_software = $input_link['article_id_software'];
 			$machine->article_ids_references = preg_grep('/^\s*$/s', explode(",", $input_link_list[1]), PREG_GREP_INVERT);
