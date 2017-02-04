@@ -191,7 +191,7 @@ if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT) > 0 || (rex_addon
 		print '<thead><tr><td></td>';
 		foreach($machines as $machine) {
 			print '<td valign="top" align="center">';
-			print '<a href="'. $machine->getURL() .'"><div>';
+			print '<a href="'. $machine->getURL() .'"><div class="comparison-header">';
 			if(count($machine->pics) > 0 && $machine->pics[0] != "") {
 				print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.	$machine->pics[0] .'" alt='. $machine->name .'>';
 			}
@@ -229,7 +229,7 @@ if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT) > 0 || (rex_addon
 		print '<thead><tr><td></td>';
 		foreach($machines as $machine) {
 			print '<td valign="top" align="center">';
-			print '<a href="'. $machine->getURL() .'"><div>';
+			print '<a href="'. $machine->getURL() .'"><div class="comparison-header">';
 			if(count($machine->pics) > 0 && $machine->pics[0] != "") {
 				print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.	$machine->pics[0] .'" alt='. $machine->name .'>';
 			}
@@ -521,12 +521,14 @@ else {
 	
 	print '<div class="col-xs-12 abstand"></div>';
 	
-	// Industry sectors
-	print '<div class="col-xs-12">';
-	print '<div class="row" data-match-height>';
-	print_industry_sectors();
-	print '</div>';
-	print '</div>';
+	if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable()) {
+		// Industry sectors
+		print '<div class="col-xs-12">';
+		print '<div class="row" data-match-height>';
+		print_industry_sectors();
+		print '</div>';
+		print '</div>';
+	}
 }
 
 print_consulation_hint();

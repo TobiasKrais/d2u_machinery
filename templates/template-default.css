@@ -8,6 +8,9 @@
 .subhead a:hover {
 	text-decoration: underline;
 }
+.subhead-nav {
+	margin-bottom: 11px;
+}
 #breadcrumbs {
 	padding: 1em 0 0 0;
 }
