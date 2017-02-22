@@ -1,18 +1,4 @@
 <?php
-/**
- * Updates url addon scheme article id.
- * @param string $table Table/view name used for url scheme. Parameter is used as identifier.
- * @param int $article_id Redaxo article id
- */
-function d2u_machinery_update_url_scheme($table, $article_id) {
-	if(rex_addon::get('url')->isAvailable()) {
-		$query = "UPDATE `". rex::getTablePrefix() ."url_generate` SET `article_id` = ". $article_id ." "
-			."WHERE `table` LIKE '%". $table ."'";
-		$sql = rex_sql::factory();
-		$sql->setQuery($query);
-	}
-}
-
 // save settings
 if (filter_input(INPUT_POST, "btn_save") == 'save') {
 	$settings = (array) rex_post('settings', 'array', array());
@@ -45,16 +31,16 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 
 		// Update url schemes
 		if(rex_addon::get('url')->isAvailable()) {
-			d2u_machinery_update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_machine_categories", $settings['article_id']);
-			d2u_machinery_update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_machines", $settings['article_id']);
+			d2u_addon_backend_helper::update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_machine_categories", $settings['article_id']);
+			d2u_addon_backend_helper::update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_machines", $settings['article_id']);
 			if(rex_plugin::get('d2u_machinery', 'industry_sectors')->isAvailable()) {
-				d2u_machinery_update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_industry_sectors", $settings['article_id']);
+				d2u_addon_backend_helper::update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_industry_sectors", $settings['article_id']);
 			}
 			if(rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
-				d2u_machinery_update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_used_machines_rent", $settings['used_machine_article_id_rent']);
-				d2u_machinery_update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_used_machine_categories_rent", $settings['used_machine_article_id_rent']);		
-				d2u_machinery_update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_used_machines_sale", $settings['used_machine_article_id_sale']);
-				d2u_machinery_update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_used_machine_categories_sale", $settings['used_machine_article_id_sale']);		
+				d2u_addon_backend_helper::update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_used_machines_rent", $settings['used_machine_article_id_rent']);
+				d2u_addon_backend_helper::update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_used_machine_categories_rent", $settings['used_machine_article_id_rent']);		
+				d2u_addon_backend_helper::update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_used_machines_sale", $settings['used_machine_article_id_sale']);
+				d2u_addon_backend_helper::update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_used_machine_categories_sale", $settings['used_machine_article_id_sale']);		
 			}
 			UrlGenerator::generatePathFile([]);
 		}
