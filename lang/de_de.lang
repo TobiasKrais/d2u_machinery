@@ -28,8 +28,8 @@ d2u_machinery_settings_defaultlang = Ausgangssprache
 d2u_machinery_settings_default_sort = Sortierung
 d2u_machinery_settings_english = English
 d2u_machinery_settings_german = Deutsch
-d2u_machinery_settings_lang_replacments = Sprachersetzungen
-d2u_machinery_settings_lang_replacments_install = Voreingestellte Sprachersetzungen aus folgender Sprache übernehmen:
+d2u_machinery_settings_lang_replacements = Sprachersetzungen
+d2u_machinery_settings_lang_replacements_install = Voreingestellte Sprachersetzungen aus folgender Sprache übernehmen:
 d2u_machinery_settings_request_form_email = Empfänger E-Mail Adresse für Anfrageformular
 d2u_machinery_settings_show_teaser = Kurzbeschreibung in Maschinenlisten einblenden
 

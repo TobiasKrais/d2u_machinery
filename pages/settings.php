@@ -6,7 +6,7 @@
  */
 function d2u_machinery_update_url_scheme($table, $article_id) {
 	if(rex_addon::get('url')->isAvailable()) {
-		$query = "UPDATE `". rex::getTablePrefix() ."url_generate` SET `article_id` = ".$article_id ." "
+		$query = "UPDATE `". rex::getTablePrefix() ."url_generate` SET `article_id` = ". $article_id ." "
 			."WHERE `table` LIKE '%". $table ."'";
 		$sql = rex_sql::factory();
 		$sql->setQuery($query);
@@ -19,7 +19,6 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 
 	// Linkmap Link and media needs special treatment
 	$link_ids = filter_input_array(INPUT_POST, array('REX_INPUT_LINK'=> array('filter' => FILTER_VALIDATE_INT, 'flags' => FILTER_REQUIRE_ARRAY)));
-	$link_names = filter_input_array(INPUT_POST, array('REX_LINK_NAME' => array('flags' => FILTER_REQUIRE_ARRAY)));
 
 	$settings['article_id'] = $link_ids["REX_INPUT_LINK"][1];
 
@@ -125,7 +124,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 				</div>
 			</fieldset>
 			<fieldset>
-				<legend><small><i class="rex-icon rex-icon-language"></i></small> <?php echo rex_i18n::msg('d2u_machinery_settings_lang_replacments'); ?></legend>
+				<legend><small><i class="rex-icon rex-icon-language"></i></small> <?php echo rex_i18n::msg('d2u_machinery_settings_lang_replacements'); ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
 						foreach(rex_clang::getAll() as $rex_clang) {
@@ -139,7 +138,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 							);
 							foreach($replacement_options as $key => $value) {
 								$selected = $value == $this->getConfig('lang_replacement_'. $rex_clang->getId()) ? ' selected="selected"' : '';
-								print '<option value="'. $value .'"'. $selected .'>'. rex_i18n::msg('d2u_machinery_settings_lang_replacments_install') .' '. rex_i18n::msg($key) .'</option>';
+								print '<option value="'. $value .'"'. $selected .'>'. rex_i18n::msg('d2u_machinery_settings_lang_replacements_install') .' '. rex_i18n::msg($key) .'</option>';
 							}
 							print '</select>';
 							print '</dl>';
@@ -165,7 +164,8 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 						d2u_addon_backend_helper::form_select('d2u_machinery_settings_default_sort', 'settings[default_machine_sort]', $options, array($this->getConfig('default_machine_sort')));
 					?>
 				</div>
-			</fieldset>			<?php
+			</fieldset>
+			<?php
 				if(rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
 			?>
 				<fieldset>
