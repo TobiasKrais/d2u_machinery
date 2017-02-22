@@ -417,7 +417,6 @@ class UsedMachine {
 	 */
 	public function getURL($including_domain = TRUE) {
 		if($this->url == "") {
-			// Without SEO Plugins
 			$d2u_machinery = rex_addon::get("d2u_machinery");
 				
 			$parameterArray = array();
