@@ -28,7 +28,7 @@ $used_machine = FALSE;
 $urlParamKey = "";
 if(rex_addon::get("url")->isAvailable()) {
 	$url_data = UrlGenerator::getData();
-	$urlParamKey = $url_data->urlParamKey;
+	$urlParamKey = isset($url_data->urlParamKey) ? $url_data->urlParamKey : "";
 }
 if(rex_Addon::get('d2u_machinery')->isAvailable()) {
 	if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "machine_id")) {
@@ -200,22 +200,5 @@ if(rex_Addon::get('d2u_machinery')->isAvailable()) {
 		<!-- TODO Your Footer stuff -->
 	</footer>
 	<script type="text/javascript" src="<?php print rex_url::media('bootstrap.min.js'); ?>"></script>
-	<script>
-		$(window).on("load",
-			function(e) {
-				$("[data-match-height]").each(
-					function() {
-						var e=$(this),
-							t=$(this).find("[data-height-watch]"),
-							n=t.map(function() {
-								return $(this).innerHeight();
-							}).get(),
-							i=Math.max.apply(Math,n);
-						t.css("min-height", i+1);
-					}
-				)
-			}
-		)
-	</script>
 </body>
 </html>
