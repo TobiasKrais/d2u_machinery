@@ -200,12 +200,12 @@ else if(filter_input(INPUT_GET, 'used_machine_id', FILTER_VALIDATE_INT) > 0 || (
 			print '</div>';
 
 			// Left and right controls
-			print '<a class="left carousel-control" href="#machineCarousel" role="button" data-slide="prev">';
-			print '<span class="icon-prev" aria-hidden="true"></span>';
+			print '<a class="carousel-control-prev" href="#machineCarousel" role="button" data-slide="prev">';
+			print '<span class="carousel-control-prev-icon" aria-hidden="true"></span>';
 			print '<span class="sr-only">Previous</span>';
 			print '</a>';
-			print '<a class="right carousel-control" href="#machineCarousel" role="button" data-slide="next">';
-			print '<span class="icon-next" aria-hidden="true"></span>';
+			print '<a class="carousel-control-next" href="#machineCarousel" role="button" data-slide="next">';
+			print '<span class="carousel-control-next-icon" aria-hidden="true"></span>';
 			print '<span class="sr-only">Next</span>';
 			print '</a>';
 			
