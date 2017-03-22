@@ -60,7 +60,9 @@ class UsageArea {
 			$this->name = $result->getValue("name");
 			$this->priority = $result->getValue("priority");
 			$this->category_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("category_ids")), PREG_GREP_INVERT);
-			$this->translation_needs_update = $result->getValue("translation_needs_update");
+			if($result->getValue("translation_needs_update") != "") {
+				$this->translation_needs_update = $result->getValue("translation_needs_update");
+			}
 		}
 	}
 	

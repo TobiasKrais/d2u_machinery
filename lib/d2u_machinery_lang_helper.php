@@ -8,7 +8,7 @@ class d2u_machinery_lang_helper {
 	 * value the replacement. 
 	 */
 	protected $replacements_english = ['d2u_machinery_alternative_machines' => 'Alternative machines',
-		'd2u_machinery_consultation_hint' => 'Together we will find the best solution for you.<br><b>Get counsel.</b>',
+		'd2u_machinery_consultation_hint' => 'Together we will find the best solution for you.<br><b>Please contact us.</b>',
 		'd2u_machinery_dimensions_length_width_height' => 'Dimensions (L x W x H)',
 		'd2u_machinery_dimensions_width_height_depth' => 'Dimensions (W x H x D)',
 		'd2u_machinery_downloads' => 'Downloads',
@@ -45,7 +45,7 @@ class d2u_machinery_lang_helper {
 		'd2u_machinery_request' => 'Request',
 		'd2u_machinery_service' => 'Service details',
 		'd2u_machinery_software' => 'Software Details',
-		'd2u_machinery_tech_data' => 'Technical Data',
+		'd2u_machinery_tech_data' => 'Technical&nbsp;Data',
 		'd2u_machinery_unit_a' => 'A',
 		'd2u_machinery_unit_hz' => 'Hz',
 		'd2u_machinery_unit_kg' => 'kg',
@@ -60,7 +60,7 @@ class d2u_machinery_lang_helper {
 	 * value the replacement. 
 	 */
 	protected $replacements_german = ['d2u_machinery_alternative_machines' => 'Alternative Maschinen',
-		'd2u_machinery_consultation_hint' => 'Wir finden gemeinsam mit Ihnen die optimale Lösung.<br><b>Lassen Sie sich beraten.</b>',
+		'd2u_machinery_consultation_hint' => 'Wir bieten für Ihren Bedarf die optimale Lösung.<br><b>Nehmen Sie Kontakt mit uns auf.</b>',
 		'd2u_machinery_dimensions_length_width_height' => 'Abmessungen (L x B x H)',
 		'd2u_machinery_dimensions_width_height_depth' => 'Abmessungen (B x H x T)',
 		'd2u_machinery_downloads' => 'Downloads',
@@ -95,9 +95,9 @@ class d2u_machinery_lang_helper {
 		'd2u_machinery_overview' => 'Übersicht',
 		'd2u_machinery_references' => 'Kundenerfahrungen',
 		'd2u_machinery_request' => 'Anfrage',
-		'd2u_machinery_service' => 'Service Details',
-		'd2u_machinery_software' => 'Software Details',
-		'd2u_machinery_tech_data' => 'Technische Daten',
+		'd2u_machinery_service' => 'Service&nbsp;Details',
+		'd2u_machinery_software' => 'Software&nbsp;Details',
+		'd2u_machinery_tech_data' => 'Technische&nbsp;Daten',
 		'd2u_machinery_unit_a' => 'A',
 		'd2u_machinery_unit_hz' => 'Hz',
 		'd2u_machinery_unit_kg' => 'kg',

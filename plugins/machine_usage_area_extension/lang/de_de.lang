@@ -5,3 +5,7 @@ d2u_machinery_usage_areas_data_all_lang = Allgemeine Daten
 d2u_machinery_usage_areas_name = Name
 d2u_machinery_usage_areas_no_usage_areas_found = Es wurden noch keine Anwendungsgebiete angelegt.
 d2u_machinery_usage_areas_pic = Bild
+
+d2u_machinery_usage_areas_settings_by_machines = Maschinen oben, Anwendungsgebiete auf der Seite
+d2u_machinery_usage_areas_settings_by_usage_areas = Anwendungsgebiete oben, Maschinen auf der Seite
+d2u_machinery_usage_areas_settings_header = Orientierung Anwendungsgebietmatrix

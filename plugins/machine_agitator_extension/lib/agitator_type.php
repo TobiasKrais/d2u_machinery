@@ -60,7 +60,9 @@ class AgitatorType {
 			$this->name = $result->getValue("name");
 			$this->pic = $result->getValue("pic");
 			$this->agitator_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("agitator_ids")), PREG_GREP_INVERT);
-			$this->translation_needs_update = $result->getValue("translation_needs_update");
+			if($result->getValue("translation_needs_update") != "") {
+				$this->translation_needs_update = $result->getValue("translation_needs_update");
+			}
 		}
 	}
 	

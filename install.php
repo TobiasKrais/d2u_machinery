@@ -125,4 +125,5 @@ if (!$this->hasConfig()) {
 	$this->setConfig('default_machine_sort', 'name');
 	$this->setConfig('show_categories_usage_area', 'hide');
 	$this->setConfig('show_teaser', 'hide');
+	$this->setConfig('show_techdata', 'show');
 }

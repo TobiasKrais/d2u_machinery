@@ -3,6 +3,7 @@ d2u_machinery_meta_machines = Maschinen
 d2u_machinery_meta_settings = Einstellungen
 d2u_machinery_meta_title = D2U Maschinen
 
+d2u_machinery_clone = klonen
 d2u_machinery_confirm_delete = Wirklich löschen?
 d2u_machinery_could_not_delete = Löschen fehlgeschlagen! Objekt wird derzeit noch verwendet von:
 d2u_machinery_data_all_lang = Daten für alle Sprachen
@@ -30,8 +31,10 @@ d2u_machinery_settings_english = English
 d2u_machinery_settings_german = Deutsch
 d2u_machinery_settings_lang_replacements = Sprachersetzungen
 d2u_machinery_settings_lang_replacements_install = Voreingestellte Sprachersetzungen aus folgender Sprache übernehmen:
+d2u_machinery_settings_contact_phone = Telefonnummer Beratungshinweis
 d2u_machinery_settings_request_form_email = Empfänger E-Mail Adresse für Anfrageformular
 d2u_machinery_settings_show_teaser = Kurzbeschreibung in Maschinenlisten einblenden
+d2u_machinery_settings_show_tech_data = Tab für technische Daten in Maschinenliste und Maschine anzeigen
 
 d2u_machinery_meta_setup = Setup
 

@@ -18,11 +18,11 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 	}
 
 	// Checkbox also need special treatment if empty
-	if(!array_key_exists('show_categories_usage_area', $settings)) {
-		$settings['show_categories_usage_area'] = "hide";
-	}
-	if(!array_key_exists('export_autoexport', $settings)) {
-		$settings['export_autoexport'] = "inactive";
+	$settings['show_categories_usage_area'] = array_key_exists('show_categories_usage_area', $settings) ? "show" : "hide";
+	$settings['show_teaser'] = array_key_exists('show_teaser', $settings) ? "show" : "hide";
+	$settings['show_techdata'] = array_key_exists('show_techdata', $settings) ? "show" : "hide";
+	if(rex_plugin::get('d2u_machinery', 'export')->isAvailable()) {
+		$settings['export_autoexport'] = array_key_exists('export_autoexport', $settings) ? "active" : "inactive";
 	}
 	
 	// Save settings
@@ -91,8 +91,6 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 				<legend><small><i class="rex-icon rex-icon-database"></i></small> <?php echo rex_i18n::msg('d2u_machinery_meta_settings'); ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
-						d2u_addon_backend_helper::form_linkfield('d2u_machinery_settings_article', '1', $this->getConfig('article_id'), $this->getConfig('default_lang'));
-
 						// Default language for translations
 						if(count(rex_clang::getAll()) > 1) {
 							$lang_options = array();
@@ -103,9 +101,9 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 						}
 						
 						d2u_addon_backend_helper::form_input('d2u_machinery_settings_request_form_email', 'settings[request_form_email]', $this->getConfig('request_form_email'), TRUE, FALSE, 'email');
+						d2u_addon_backend_helper::form_input('d2u_machinery_settings_contact_phone', 'settings[contact_phone]', $this->getConfig('contact_phone'), TRUE, FALSE);
 						d2u_addon_backend_helper::form_mediafield('d2u_machinery_settings_consultation_pic', 'consultation_pic', $this->getConfig('consultation_pic'));
 						d2u_addon_backend_helper::form_linkfield('d2u_machinery_settings_consultation_article', '2', $this->getConfig('consultation_article_id'), $this->getConfig('default_lang'));
-						d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_show_teaser', 'settings[show_teaser]', 'show', $this->getConfig('show_teaser') == 'show')
 					?>
 				</div>
 			</fieldset>
@@ -146,8 +144,11 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 				<legend><small><i class="rex-icon rex-icon-module"></i></small> <?php echo rex_i18n::msg('d2u_machinery_meta_machines'); ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
+						d2u_addon_backend_helper::form_linkfield('d2u_machinery_settings_article', '1', $this->getConfig('article_id'), $this->getConfig('default_lang'));
 						$options = array('name' => rex_i18n::msg('d2u_machinery_name'), 'priority' => rex_i18n::msg('header_priority'));
 						d2u_addon_backend_helper::form_select('d2u_machinery_settings_default_sort', 'settings[default_machine_sort]', $options, array($this->getConfig('default_machine_sort')));
+						d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_show_teaser', 'settings[show_teaser]', 'show', $this->getConfig('show_teaser') == 'show');
+						d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_show_tech_data', 'settings[show_techdata]', 'show', $this->getConfig('show_techdata') == 'show');
 					?>
 				</div>
 			</fieldset>
@@ -160,6 +161,21 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 						<?php
 							d2u_addon_backend_helper::form_linkfield('d2u_machinery_used_machines_article_rent', '3', $this->getConfig('used_machine_article_id_rent'), $this->getConfig('default_lang'));
 							d2u_addon_backend_helper::form_linkfield('d2u_machinery_used_machines_article_sale', '4', $this->getConfig('used_machine_article_id_sale'), $this->getConfig('default_lang'));
+						?>
+					</div>
+				</fieldset>
+			<?php
+				}
+			?>
+			<?php
+				if(rex_plugin::get('d2u_machinery', 'machine_usage_area_extension')->isAvailable()) {
+			?>
+				<fieldset>
+					<legend><small><i class="rex-icon fa-codepen"></i></small> <?php echo rex_i18n::msg('d2u_machinery_usage_areas'); ?></legend>
+					<div class="panel-body-wrapper slide">
+						<?php
+						$options_usage_area_header = array('machines' => rex_i18n::msg('d2u_machinery_usage_areas_settings_by_machines'), 'usage' => rex_i18n::msg('d2u_machinery_usage_areas_settings_by_usage_areas'));
+						d2u_addon_backend_helper::form_select('d2u_machinery_usage_areas_settings_header', 'settings[usage_area_header]', $options_usage_area_header, array($this->getConfig('usage_area_header')));
 						?>
 					</div>
 				</fieldset>

@@ -72,7 +72,9 @@ class Feature {
 			$this->pic = $result->getValue("pic");
 			$this->category_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("category_ids")), PREG_GREP_INVERT);
 			$this->description = htmlspecialchars_decode($result->getValue("description"));
-			$this->translation_needs_update = $result->getValue("translation_needs_update");
+			if($result->getValue("translation_needs_update") != "") {
+				$this->translation_needs_update = $result->getValue("translation_needs_update");
+			}
 
 			// Convert redaxo://123 to URL
 			$this->description = preg_replace_callback(
@@ -234,7 +236,7 @@ class Feature {
 
 		$features = array();
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$features[$result->getValue("prio")] = $result->getValue("feature_id");
+			$features[$result->getValue("priority")] = $result->getValue("feature_id");
 			$result->next();
 		}
 		array_splice($features, ($this->priority - 1), 0, array($this->feature_id));

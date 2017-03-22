@@ -134,13 +134,13 @@ if(rex_Addon::get('d2u_machinery')->isAvailable()) {
 							print '<h1 class="machine">'. $machine->name .'</h1>';
 							print '<ul class="nav nav-pills">';
 							print '<li class="active"><a data-toggle="tab" href="#tab_overview">'. $tag_open .'d2u_machinery_overview'. $tag_close .'</a></li>';
-							if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable() && $machine->agitator_type_id > 0) {
+							if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable() && $machine->agitator_type_id > 0 && $machine->category->show_agitators == "show") {
 								print '<li><a data-toggle="tab" href="#tab_agitator">'. $tag_open .'d2u_machinery_agitator'. $tag_close .'</a></li>';
 							}
 							if(rex_plugin::get("d2u_machinery", "machine_features_extension")->isAvailable() && count($machine->feature_ids) > 0){
 								print '<li><a data-toggle="tab" href="#tab_features">'. $tag_open .'d2u_machinery_features'. $tag_close .'</a></li>';
 							}
-							if(count($machine->getTechnicalData()) > 0){
+							if($d2u_machinery->hasConfig("show_techdata") && $d2u_machinery->getConfig("show_techdata") == "show" && count($machine->getTechnicalData()) > 0){
 								print '<li><a data-toggle="tab" href="#tab_tech_data">'. $tag_open .'d2u_machinery_tech_data'. $tag_close .'</a></li>';
 							}
 							print '<li><a data-toggle="tab" href="#tab_request">'. $tag_open .'d2u_machinery_request'. $tag_close .'</a></li>';
@@ -153,7 +153,7 @@ if(rex_Addon::get('d2u_machinery')->isAvailable()) {
 							if(rex_plugin::get("d2u_machinery", "machine_usage_area_extension")->isAvailable() && count($category->getMachines()) > 0) {
 								print '<li><a data-toggle="tab" href="#tab_usage_areas">'. $tag_open .'d2u_machinery_usage_areas'. $tag_close .'</a></li>';
 							}
-							if(count($category->getMachines()) > 0) {
+							if($d2u_machinery->hasConfig("show_techdata") && $d2u_machinery->getConfig("show_techdata") == "show" && count($category->getMachines()) > 0) {
 								print '<li><a data-toggle="tab" href="#tab_tech_data">'. $tag_open .'d2u_machinery_tech_data'. $tag_close .'</a></li>';
 							}
 							print '</ul>';

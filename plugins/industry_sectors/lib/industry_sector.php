@@ -71,7 +71,9 @@ class IndustrySector {
 			$this->teaser = htmlspecialchars_decode($result->getValue("teaser"));
 			$this->pic = $result->getValue("pic");
 			$this->online_status = $result->getValue("online_status");
-			$this->translation_needs_update = $result->getValue("translation_needs_update");
+			if($result->getValue("translation_needs_update") != "") {
+				$this->translation_needs_update = $result->getValue("translation_needs_update");
+			}
 		}
 	}
 	

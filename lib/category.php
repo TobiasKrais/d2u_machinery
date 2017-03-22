@@ -160,7 +160,9 @@ class Category {
 			$this->pic_usage = $result->getValue("pic_usage");
 			$this->pdfs = preg_grep('/^\s*$/s', explode(",", $result->getValue("pdfs")), PREG_GREP_INVERT);
 			$this->priority = $result->getValue("priority");
-			$this->translation_needs_update = $result->getValue("translation_needs_update");
+			if($result->getValue("translation_needs_update") != "") {
+				$this->translation_needs_update = $result->getValue("translation_needs_update");
+			}
 			$this->updatedate = $result->getValue("updatedate");
 			$this->updateuser = $result->getValue("updateuser");
 
@@ -394,7 +396,7 @@ class Category {
 		
 		$machines = array();
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$machines[] = new Machine($result->getValue("machine_id"), $this->clang_id);
+			$machines[$result->getValue("machine_id")] = new Machine($result->getValue("machine_id"), $this->clang_id);
 			$result->next();
 		}
 		return $machines;

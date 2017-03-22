@@ -60,7 +60,9 @@ class Agitator {
 			$this->name = $result->getValue("name");
 			$this->pic = $result->getValue("pic");
 			$this->description = htmlspecialchars_decode($result->getValue("description"));
-			$this->translation_needs_update = $result->getValue("translation_needs_update");
+			if($result->getValue("translation_needs_update") != "") {
+				$this->translation_needs_update = $result->getValue("translation_needs_update");
+			}
 
 			// Convert redaxo://123 to URL
 			$this->description = preg_replace_callback(

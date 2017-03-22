@@ -159,7 +159,9 @@ class UsedMachine {
 			$this->description = htmlspecialchars_decode($result->getValue("description"));
 			$this->downloads = preg_grep('/^\s*$/s', explode(",", $result->getValue("downloads")), PREG_GREP_INVERT);
 			$this->teaser = htmlspecialchars_decode($result->getValue("teaser"));
-			$this->translation_needs_update = $result->getValue("translation_needs_update");
+			if($result->getValue("translation_needs_update") != "") {
+				$this->translation_needs_update = $result->getValue("translation_needs_update");
+			}
 
 			// URL des externen Links bei Bedarf korrigieren
 			if(strlen($this->external_url) > 3 && substr($this->external_url, 0, 4) != "http") {

@@ -104,10 +104,13 @@ h1.machine {
 	border: 1px solid white;
 	padding: 0.25em 1em;
 }
-.carousel .carousel-control.left, .carousel .carousel-control.right {
+.carousel-img-holder {
+	display: inline-block;
+}
+.carousel .carousel-control-prev, .carousel .carousel-control-next {
 	background: transparent;
 }
-.carousel-control {
+.carousel-control-prev .carousel-control-next {
 	opacity: 1;
 }
 .carousel-indicators li {

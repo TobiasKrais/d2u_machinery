@@ -155,14 +155,14 @@ else if($func == 'changestatus') {
 }
 
 // Eingabeformular
-if ($func == 'edit' || $func == 'add') {
+if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 	$machine = new Machine($entry_id, rex_config::get("d2u_machinery", "default_lang"));
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
 			<header class="panel-heading"><div class="panel-title"><?php print rex_i18n::msg('d2u_machinery_machine'); ?></div></header>
 			<div class="panel-body">
-				<input type="hidden" name="form[machine_id]" value="<?php echo $entry_id; ?>">
+				<input type="hidden" name="form[machine_id]" value="<?php echo ($func == 'edit' ? $entry_id : 0); ?>">
 				<fieldset>
 					<legend><?php echo rex_i18n::msg('d2u_machinery_data_all_lang'); ?></legend>
 					<div class="panel-body-wrapper slide">
@@ -353,7 +353,11 @@ if ($func == '') {
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
     $list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###machine_id###']);
 
-    $list->addColumn(rex_i18n::msg('delete_module'), '<i class="rex-icon rex-icon-delete"></i> ' . rex_i18n::msg('delete'));
+ 	$list->addColumn(rex_i18n::msg('d2u_machinery_clone'), '<i class="rex-icon fa-copy"></i> ' . rex_i18n::msg('d2u_machinery_clone'));
+    $list->setColumnLayout(rex_i18n::msg('d2u_machinery_clone'), ['', '<td class="rex-table-action">###VALUE###</td>']);
+    $list->setColumnParams(rex_i18n::msg('d2u_machinery_clone'), ['func' => 'clone', 'entry_id' => '###machine_id###']);
+
+	$list->addColumn(rex_i18n::msg('delete_module'), '<i class="rex-icon rex-icon-delete"></i> ' . rex_i18n::msg('delete'));
 	$list->setColumnLayout(rex_i18n::msg('delete_module'), ['', '<td class="rex-table-action">###VALUE###</td>']);
     $list->setColumnParams(rex_i18n::msg('delete_module'), ['func' => 'delete', 'entry_id' => '###machine_id###']);
     $list->addLinkAttribute(rex_i18n::msg('delete_module'), 'data-confirm', rex_i18n::msg('d2u_machinery_confirm_delete'));

@@ -215,7 +215,9 @@ class Machine {
 			$this->description = htmlspecialchars_decode($result->getValue("description"));
 			$this->pdfs = preg_grep('/^\s*$/s', explode(",", $result->getValue("pdfs")), PREG_GREP_INVERT);
 			$this->priority = $result->getValue("priority");
-			$this->translation_needs_update = $result->getValue("translation_needs_update");
+			if($result->getValue("translation_needs_update") != "") {
+				$this->translation_needs_update = $result->getValue("translation_needs_update");
+			}
 
 			// Convert redaxo://123 to URL
 			$this->description = preg_replace_callback(

@@ -1,15 +1,16 @@
 <?php
-	print '<div class="col-xs-12 abstand">';
+	print '<div class="col-sm-12 abstand">';
 	print '<h1>REX_VALUE[1]</h1>';
 	print '</div>';
 
-	print '<div data-match-height>';
+	print '<div class="col-sm-12 abstand">';
+	print '<div class="row">';
 	foreach (Category::getAll(rex_clang::getCurrentId()) as $category) {
 		// Only use used parent categories
 		if(!$category->isChild() && count($category->getMachines()) > 0) {
-			print '<div class="col-xs-6 col-sm-4 col-md-3 abstand" data-height-watch>';
+			print '<div class="col-sm-6 col-md-4 col-lg-3 abstand">';
 			print '<a href="'. $category->getURL() .'" class="bluebox">';
-			print '<div class="box" data-height-watch>';
+			print '<div class="box same-height">';
 			if($category->pic != "") {
 				print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
 					$category->pic .'" alt="'. $category->name .'">';
@@ -24,6 +25,7 @@
 		}
 	}
 	print '</div>';
+	print '</div>';
 ?>
-<div class="col-xs-10 abstand">REX_VALUE[id=2 output=html]</div>
-<div class="col-xs-12 abstand"></div>
+<div class="col-sm-12 abstand">REX_VALUE[id=2 output=html]</div>
+<div class="col-sm-12 abstand"></div>
