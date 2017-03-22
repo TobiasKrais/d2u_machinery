@@ -19,5 +19,6 @@ requires:
         extensions: [xml, zip]
         version: '>=5.3'
     packages:
+        media_manager: '>=2.3'
         phpmailer: '>=2.1'
         sprog: '>=1.0.0beta4'
