@@ -65,6 +65,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$machine->clang_id = $rex_clang->getId();
 		}
 		$machine->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
+		$machine->lang_name = $form['lang'][$rex_clang->getId()]['lang_name'];
 		$machine->teaser = $form['lang'][$rex_clang->getId()]['teaser'];
 		$machine->description = $form['lang'][$rex_clang->getId()]['description'];
 		$machine->pdfs = preg_grep('/^\s*$/s', explode(",", $input_media_list['1'. $rex_clang->getId()]), PREG_GREP_INVERT);
@@ -89,12 +90,12 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	
 	// Redirect to make reload and thus double save impossible
 	if(filter_input(INPUT_POST, "btn_apply") == 1 && $machine !== FALSE) {
-		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$machine->machine_id, "func"=>'edit', "message"=>$message), FALSE));
+//		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$machine->machine_id, "func"=>'edit', "message"=>$message), FALSE));
 	}
 	else {
-		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), FALSE));
+//		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), FALSE));
 	}
-	exit;
+//	exit;
 }
 // Delete
 else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
@@ -290,6 +291,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 								else {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="no">';
 								}
+								d2u_addon_backend_helper::form_input('d2u_machinery_lang_name', "form[lang][". $rex_clang->getId() ."][lang_name]", $machine_lang->lang_name, FALSE, $readonly_lang, "text");
 								d2u_addon_backend_helper::form_textarea('d2u_machinery_machine_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $machine_lang->teaser, 3, FALSE, $readonly_lang, FALSE);
 								d2u_addon_backend_helper::form_textarea('d2u_machinery_machine_description', "form[lang][". $rex_clang->getId() ."][description]", $machine_lang->description, 5, FALSE, $readonly_lang, TRUE);
 								d2u_addon_backend_helper::form_medialistfield('d2u_machinery_machine_pdfs', '1'. $rex_clang->getId(), $machine_lang->pdfs, $readonly_lang);

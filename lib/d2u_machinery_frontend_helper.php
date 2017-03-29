@@ -50,7 +50,7 @@ class d2u_machinery_frontend_helper {
 			$breadcrumbs[] = '<a href="' . $category->getUrl() . '">' . $category->name . '</a>';
 		}
 		if($machine !== FALSE) {
-			$breadcrumbs[] = '<a href="' . $machine->getUrl() . '">' . $machine->name . '</a>';
+			$breadcrumbs[] = '<a href="' . $machine->getUrl() . '">' . ($machine->lang_name == "" ? $machine->name : $machine->lang_name) . '</a>';
 		}
 		if($used_machine !== FALSE) {
 			$breadcrumbs[] = '<a href="' . $used_machine->getUrl() . '">' . $used_machine->manufacturer ." ". $used_machine->name . '</a>';

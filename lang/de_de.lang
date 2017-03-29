@@ -7,6 +7,7 @@ d2u_machinery_clone = klonen
 d2u_machinery_confirm_delete = Wirklich löschen?
 d2u_machinery_could_not_delete = Löschen fehlgeschlagen! Objekt wird derzeit noch verwendet von:
 d2u_machinery_data_all_lang = Daten für alle Sprachen
+d2u_machinery_lang_name = Sprachspezifischer Name (optional)
 d2u_machinery_name = Name
 d2u_machinery_no_selection = Keine Auswahl
 d2u_machinery_online_status = Online

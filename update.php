@@ -15,3 +15,8 @@ if($sql->getRows() == 0) {
 	$sql->setQuery("ALTER TABLE ". rex::getTablePrefix() ."d2u_machinery_machines "
 		. "ADD priority INT(10) NULL DEFAULT NULL AFTER machine_id;");
 }
+$sql->setQuery("SHOW COLUMNS FROM ". rex::getTablePrefix() ."d2u_machinery_machines_lang LIKE 'lang_name';");
+if($sql->getRows() == 0) {
+	$sql->setQuery("ALTER TABLE ". rex::getTablePrefix() ."d2u_machinery_machines_lang "
+		. "ADD lang_namevarchar(255) collate utf8_general_ci default NULL AFTER clang_id;");
+}

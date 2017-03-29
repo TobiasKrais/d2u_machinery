@@ -28,6 +28,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machin
 $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machinery_machines_lang (
 	machine_id int(10) NOT NULL,
 	clang_id int(10) NOT NULL,
+	lang_name varchar(255) collate utf8_general_ci default NULL,
 	teaser varchar(255) collate utf8_general_ci default NULL,
 	description text collate utf8_general_ci default NULL,
 	pdfs varchar(255) collate utf8_general_ci default NULL,

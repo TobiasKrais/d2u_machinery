@@ -94,7 +94,7 @@ class Category {
 	/**
 	 * @var string[] Array with PDF file names.
 	 */
-	var $pdfs = array();
+	var $pdfs = [];
 	
 	/**
 	 * @var int Sort Priority
@@ -265,7 +265,7 @@ class Category {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$categories = array();
+		$categories = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$categories[] = new Category($result->getValue("category_id"), $clang_id);
 			$result->next();
@@ -291,7 +291,7 @@ class Category {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$children =  array();
+		$children =  [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$children[] = new Category($result->getValue("category_id"), $this->clang_id);
 			$result->next();
@@ -306,9 +306,9 @@ class Category {
 	 */
 	public function getTechDataMatrix() {
 		$machines = $this->getMachines();
-		$matrix = array();
-		$tech_data_arrays = array();
-		$tech_data_wildcards = array();
+		$matrix = [];
+		$tech_data_arrays = [];
+		$tech_data_wildcards = [];
 		// Get technical data
 		foreach($machines as $machine) {
 			$tech_data_arrays[$machine->machine_id] = $machine->getTechnicalData();
@@ -319,7 +319,7 @@ class Category {
 		}
 		// Create matrix
 		foreach($tech_data_wildcards as $wildcard) {
-			$matrix[$wildcard] = array();
+			$matrix[$wildcard] = [];
 			foreach($machines as $machine) {
 				$tech_data_array = $tech_data_arrays[$machine->machine_id];
 				if(array_key_exists($wildcard, $tech_data_array)) {
@@ -350,9 +350,9 @@ class Category {
 		$usage_areas = UsageArea::getAll($this->clang_id, $this->category_id);
 		$machines = $this->getMachines();
 		
-		$matrix = array();
+		$matrix = [];
 		foreach($usage_areas as $usage_area) {
-			$values = array();
+			$values = [];
 			foreach($machines as $machine) {
 				if(in_array($usage_area->usage_area_id, $machine->usage_area_ids)) {
 					$values[] = $machine->machine_id;
@@ -394,7 +394,7 @@ class Category {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$machines = array();
+		$machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$machines[$result->getValue("machine_id")] = new Machine($result->getValue("machine_id"), $this->clang_id);
 			$result->next();
@@ -435,7 +435,7 @@ class Category {
 	 * @return UsedMachine[] Used machines of this category
 	 */
 	public function getUsedMachines() {
-		$usedMachines = array();
+		$usedMachines = [];
 		if(rex_plugin::get("d2u_machinery", "used_machines")->isAvailable()) {
 			$query = "SELECT lang.used_machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_used_machines_lang AS lang "
 				."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_used_machines AS used_machines "
@@ -466,7 +466,7 @@ class Category {
 		if($this->url == "") {
 			$d2u_machinery = rex_addon::get("d2u_machinery");
 				
-			$parameterArray = array();
+			$parameterArray = [];
 			$parameterArray['category_id'] = $this->category_id;
 
 			// In case of used machines
@@ -597,7 +597,7 @@ class Category {
 			$this->priority = $result->getRows() + 1;
 		}
 
-		$categories = array();
+		$categories = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$categories[$result->getValue("priority")] = $result->getValue("category_id");
 			$result->next();

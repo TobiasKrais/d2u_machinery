@@ -130,12 +130,12 @@ if(!function_exists('print_machines')) {
 				print '<div class="box" data-height-watch>';
 				if(count($machine->pics) > 0 && $machine->pics[0] != "") {
 					print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
-						$machine->pics[0] .'" alt="'. $machine->name .'">';
+						$machine->pics[0] .'" alt="'. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .'">';
 				}
 				else {
 					print '<img src="'.	rex_addon::get("d2u_machinery")->getAssetsUrl("white_tile.gif") .'" alt="Placeholder">';
 				}
-				print '<div><b>'. $machine->name .'</b></div>';
+				print '<div><b>'. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .'</b></div>';
 				if($d2u_machinery->hasConfig('show_teaser') && $d2u_machinery->getConfig('show_teaser') == 'show') {
 					print '<div class="teaser">'. nl2br($machine->teaser) .'</div>';
 				}
@@ -214,12 +214,12 @@ if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT) > 0 || (rex_addon
 					print '<tr><td>';
 					print '<a href="'. $machine->getURL() .'"><div class="comparison-header">';
 					if(count($machine->pics) > 0 && $machine->pics[0] != "") {
-						print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.	$machine->pics[0] .'" alt='. $machine->name .'>';
+						print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.	$machine->pics[0] .'" alt='. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .'>';
 					}
 					else {
 						print '<img src="'.	rex_addon::get("d2u_machinery")->getAssetsUrl("white_tile.gif") .'" alt="Placeholder">';
 					}
-					print '<br><b>'. $machine->name .'</b></div></a></td>';
+					print '<br><b>'. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .'</b></div></a></td>';
 					foreach($usage_areas as $usage_area) {
 						if(in_array($usage_area->usage_area_id, $machine->usage_area_ids)) {
 							print '<td class="active-cell"></td>';
@@ -241,12 +241,12 @@ if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT) > 0 || (rex_addon
 					print '<td valign="top" align="center">';
 					print '<a href="'. $machine->getURL() .'"><div class="comparison-header">';
 					if(count($machine->pics) > 0 && $machine->pics[0] != "") {
-						print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.	$machine->pics[0] .'" alt='. $machine->name .'>';
+						print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.	$machine->pics[0] .'" alt='. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .'>';
 					}
 					else {
 						print '<img src="'.	rex_addon::get("d2u_machinery")->getAssetsUrl("white_tile.gif") .'" alt="Placeholder">';
 					}
-					print '<br><b>'. $machine->name .'</b></div></a></td>';
+					print '<br><b>'. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .'</b></div></a></td>';
 				}
 				print '</tr></thead>';
 				print '<tbody>';
@@ -281,12 +281,12 @@ if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT) > 0 || (rex_addon
 			print '<td valign="top" align="center">';
 			print '<a href="'. $machine->getURL() .'"><div class="comparison-header">';
 			if(count($machine->pics) > 0 && $machine->pics[0] != "") {
-				print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.	$machine->pics[0] .'" alt='. $machine->name .'>';
+				print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.	$machine->pics[0] .'" alt='. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .'>';
 			}
 			else {
 				print '<img src="'.	rex_addon::get("d2u_machinery")->getAssetsUrl("white_tile.gif") .'" alt="Placeholder">';
 			}
-			print '<br><b>'. $machine->name .'</b></div></a></td>';
+			print '<br><b>'. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .'</b></div></a></td>';
 		}
 		print '</tr></thead>';
 		print '<tbody>';
@@ -327,14 +327,22 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT) > 0 || (rex_a
 	print '<p>&nbsp;</p>';
 	// Alternative machines
 	if(count($machine->alternative_machine_ids) > 0) {
-		print '<h3>'. $tag_open .'d2u_machinery_alternative_machines'. $tag_close .'</h3>';
-		print '<ul>';
+		$alternative_machines = [];
 		foreach($machine->alternative_machine_ids as $alternative_machine_id) {
 			$alternative_machine = new Machine($alternative_machine_id, $machine->clang_id);
-			print '<li><a href="'. $alternative_machine->getURL() .'">'. $alternative_machine->name .'</a></li>';
+			if($alternative_machine->translation_needs_update != "delete") {
+				$alternative_machines[] = $alternative_machine;
+			}
 		}
-		print '</ul>';
-		print '<p>&nbsp;</p>';
+		if(count($alternative_machines) > 0) {
+			print '<h3>'. $tag_open .'d2u_machinery_alternative_machines'. $tag_close .'</h3>';
+			print '<ul>';
+			foreach($alternative_machines as $alternative_machine) {
+				print '<li><a href="'. $alternative_machine->getURL() .'">'. ($alternative_machine->lang_name == "" ? $alternative_machine->name : $alternative_machine->lang_name) .'</a></li>';
+			}
+			print '</ul>';
+			print '<p>&nbsp;</p>';
+		}
 	}
 		
 	// Software
@@ -371,7 +379,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT) > 0 || (rex_a
 		print '<div class="col-12 col-md-6">';
 		if(count($machine->pics) == 1) {
 			print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
-				$machine->pics[0] .'" alt='. $machine->name .' style="max-width:100%;">';
+				$machine->pics[0] .'" alt='. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .' style="max-width:100%;">';
 		}
 		else {
 			// Slider
@@ -397,7 +405,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT) > 0 || (rex_a
 				print '">';
 				print '<div class="carousel-img-holder">';
 				print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
-				$machine->pics[$i] .'" alt="'. $machine->name .'">';
+				$machine->pics[$i] .'" alt="'. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .'">';
 				print '</div>';
 				print '</div>';
 			}

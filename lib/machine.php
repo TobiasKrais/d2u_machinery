@@ -32,7 +32,7 @@ class Machine {
 	/**
 	 * @var string[] Machine pictures
 	 */
-	var $pics = array();
+	var $pics = [];
 
 	/**
 	 * @var Category Machine category
@@ -42,17 +42,17 @@ class Machine {
 	/**
 	 * @var int[] Usage area IDs
 	 */
-	var $usage_area_ids = array();
+	var $usage_area_ids = [];
 
 	/**
 	 * @var int[] IDs of alternative machines
 	 */
-	var $alternative_machine_ids = array();
+	var $alternative_machine_ids = [];
 
 	/**
 	 * @var int[] Machine feature ids
 	 */
-	var $feature_ids = array();
+	var $feature_ids = [];
 
 	/**
 	 * @var string Machine accessory ids.
@@ -62,7 +62,7 @@ class Machine {
 	/**
 	 * @var int[] Machine business ids.
 	 */
-	var $industry_sector_ids = array();
+	var $industry_sector_ids = [];
 
 	/**
 	 * @var int Redaxo article id for additional software information
@@ -77,7 +77,7 @@ class Machine {
 	/**
 	 * @var int[] Array with Redaxo article ids with customer success stories
 	 */
-	var $article_ids_references = array();
+	var $article_ids_references = [];
 
 	/**
 	 * @var String Status. Either "online" or "offline".
@@ -87,7 +87,7 @@ class Machine {
 	/**
 	 * @var int[] Certificate ids
 	 */
-	var $certificate_ids = array();
+	var $certificate_ids = [];
 
 	/**
 	 * @var int Agitator type id
@@ -150,6 +150,11 @@ class Machine {
 	var $priority = 0;
 	
 	/**
+	 * @var string Language specific name
+	 */
+	var $lang_name = "";
+
+	/**
 	 * @var string Teaser
 	 */
 	var $teaser = "";
@@ -162,7 +167,7 @@ class Machine {
 	/**
 	 * @var string[] File names of PDF files for the machine
 	 */
-	var $pdfs = array();
+	var $pdfs = [];
 
 	/**
 	 * @var string Needs translation update? "no", "yes" or "delete"
@@ -211,6 +216,7 @@ class Machine {
 			$this->operating_voltage_v = $result->getValue("operating_voltage_v");
 			$this->operating_voltage_hz = $result->getValue("operating_voltage_hz");
 			$this->operating_voltage_a = $result->getValue("operating_voltage_a");
+			$this->lang_name = $result->getValue("lang_name");
 			$this->teaser = htmlspecialchars_decode($result->getValue("teaser"));
 			$this->description = htmlspecialchars_decode($result->getValue("description"));
 			$this->pdfs = preg_grep('/^\s*$/s', explode(",", $result->getValue("pdfs")), PREG_GREP_INVERT);
@@ -323,7 +329,7 @@ class Machine {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$machines = array();
+		$machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$machines[] = new Machine($result->getValue("machine_id"), $clang_id);
 			$result->next();
@@ -344,7 +350,7 @@ class Machine {
 	 * @return Feature[] Array with Feature objects.
 	 */
 	public function getFeatures() {
-		$features = array();
+		$features = [];
 		foreach ($this->feature_ids as $feature_id) {
 			$features[] = new Feature($feature_id, $this->clang_id);
 		}
@@ -389,7 +395,7 @@ class Machine {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$machines = array();
+		$machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$machines[] = new Machine($result->getValue("machine_id"), $this->clang_id);
 			$result->next();
@@ -408,7 +414,7 @@ class Machine {
 			$result = rex_sql::factory();
 			$result->setQuery($query);
 
-			$used_machines = array();
+			$used_machines = [];
 			for($i = 0; $i < $result->getRows(); $i++) {
 				$used_machines[] = new UsedMachine($result->getValue("used_machine_id"), $this->clang_id);
 				$result->next();
@@ -416,7 +422,7 @@ class Machine {
 			return $used_machines;
 		}
 		else {
-			return array();
+			return [];
 		}
 	}
 	
@@ -426,7 +432,7 @@ class Machine {
 	 * placeholder, the value is the value.
 	 */
 	public function getTechnicalData() {
-		$tech_data = array();
+		$tech_data = [];
 		
 		// Get placeholder wildcard tags
 		$sprog = rex_addon::get("sprog");
@@ -484,7 +490,7 @@ class Machine {
 		if($this->url == "") {
 			$d2u_machinery = rex_addon::get("d2u_machinery");
 				
-			$parameterArray = array();
+			$parameterArray = [];
 			$parameterArray['machine_id'] = $this->machine_id;
 			$this->url = rex_getUrl($d2u_machinery->getConfig('article_id'), $this->clang_id, $parameterArray, "&");
 		}
@@ -570,6 +576,7 @@ class Machine {
 				$query = "REPLACE INTO ". rex::getTablePrefix() ."d2u_machinery_machines_lang SET "
 						."machine_id = '". $this->machine_id ."', "
 						."clang_id = '". $this->clang_id ."', "
+						."lang_name = '". $this->lang_name ."', "
 						."teaser = '". htmlspecialchars($this->teaser) ."', "
 						."description = '". htmlspecialchars($this->description) ."', "
 						."pdfs = '". implode(",", $this->pdfs) ."', "
@@ -610,7 +617,7 @@ class Machine {
 			$this->priority = $result->getRows() + 1;
 		}
 
-		$machines = array();
+		$machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$machines[$result->getValue("priority")] = $result->getValue("machine_id");
 			$result->next();
