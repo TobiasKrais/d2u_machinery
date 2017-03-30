@@ -18,5 +18,5 @@ if($sql->getRows() == 0) {
 $sql->setQuery("SHOW COLUMNS FROM ". rex::getTablePrefix() ."d2u_machinery_machines_lang LIKE 'lang_name';");
 if($sql->getRows() == 0) {
 	$sql->setQuery("ALTER TABLE ". rex::getTablePrefix() ."d2u_machinery_machines_lang "
-		. "ADD lang_namevarchar(255) collate utf8_general_ci default NULL AFTER clang_id;");
+		. "ADD lang_name varchar(255) collate utf8_general_ci default NULL AFTER clang_id;");
 }
