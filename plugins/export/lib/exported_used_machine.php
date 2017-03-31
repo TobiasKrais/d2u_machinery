@@ -117,7 +117,7 @@ class ExportedUsedMachine {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 
-		$exported_used_machines = array();
+		$exported_used_machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$exported_used_machines[] = new ExportedUsedMachine($result->getValue("used_machine_id"), $result->getValue("provider_id"));
 			$result->next();
@@ -177,7 +177,7 @@ class ExportedUsedMachine {
 	 * Remove a machine from export of all providers.
 	 * @param int $used_machine_id Used machine id
 	 */
-	public static function removeMachineAllFromExports($used_machine_id) {
+	public static function removeMachineFromAllExports($used_machine_id) {
 		$query_lang = "UPDATE ". rex::getTablePrefix() ."d2u_machinery_export_machines "
 			."SET export_action = 'delete' "
 			."WHERE used_machine_id = ". $used_machine_id;

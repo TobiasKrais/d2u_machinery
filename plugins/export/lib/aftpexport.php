@@ -27,8 +27,10 @@ abstract class AFTPExport extends AExport {
 		
 		// Set exported used machines without export action to action "update"
 		foreach($this->exported_used_machines as $exported_used_machine) {
-			$exported_used_machine->export_action = "update";
-			$exported_used_machine->save();
+			if($exported_used_machine->export_action == "") {
+				$exported_used_machine->export_action = "update";
+				$exported_used_machine->save();
+			}
 		}
 		$this->exported_used_machines = ExportedUsedMachine::getAll($this->provider);		
 		

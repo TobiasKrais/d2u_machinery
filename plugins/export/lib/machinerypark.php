@@ -26,7 +26,7 @@ class MachineryPark extends AFTPExport {
 		}
 
 		// Prepare pictures: MachineryPark allows max. 6 pictures / machine
-		$this->preparePictures(6); // TODO Pictures are missing
+		$this->preparePictures(6);
 		$this->files_for_zip = array_unique($this->files_for_zip);
 		
 		// Create XML file
