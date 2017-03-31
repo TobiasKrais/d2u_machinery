@@ -381,7 +381,8 @@ class Category {
 	 * @return Machine[] Machines in this category
 	 */
 	public function getMachines() {
-		$query = "SELECT lang.machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_machines_lang AS lang "
+		$query = "SELECT lang.machine_id, IF(lang.lang_name IS NULL or lang.lang_name = '', machines.name, lang.lang_name) as machine_name "
+			. "FROM ". rex::getTablePrefix() ."d2u_machinery_machines_lang AS lang "
 			."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_machines AS machines "
 					."ON lang.machine_id = machines.machine_id "
 			."WHERE category_id = ". $this->category_id ." AND clang_id = ". $this->clang_id .' ';
@@ -389,7 +390,7 @@ class Category {
 			$query .= 'ORDER BY priority ASC';
 		}
 		else {
-			$query .= 'ORDER BY name ASC';
+			$query .= 'ORDER BY machine_name ASC';
 		}
 		$result = rex_sql::factory();
 		$result->setQuery($query);

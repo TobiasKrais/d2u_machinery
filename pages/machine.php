@@ -29,7 +29,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$machine->product_number = $form['product_number'];
 			$machine->pics = preg_grep('/^\s*$/s', explode(",", $input_media_list[1]), PREG_GREP_INVERT);
 			$machine->category = new Category($form['category_id'], $rex_clang->getId());
-			$machine->alternative_machine_ids = $form['alternative_machine_ids'];
+			$machine->alternative_machine_ids = isset($form['alternative_machine_ids']) ? $form['alternative_machine_ids'] : [];
 			$machine->online_status = array_key_exists('online_status', $form) ? "online" : "offline";
 			$machine->article_id_service = $input_link['article_id_service'];
 			$machine->article_id_software = $input_link['article_id_software'];
@@ -48,10 +48,10 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 				$machine->industry_sector_ids = $form['industry_sector_ids'];
 			}
 			if(rex_plugin::get("d2u_machinery", "machine_certificates_extension")->isAvailable()) {
-				$machine->certificate_ids = $form['certificate_ids'];
+				$machine->certificate_ids = isset($form['certificate_ids']) ? $form['certificate_ids'] : [];
 			}
 			if(rex_plugin::get("d2u_machinery", "machine_features_extension")->isAvailable()) {
-				$machine->feature_ids = $form['feature_ids'];
+				$machine->feature_ids = isset($form['feature_ids']) ? $form['feature_ids'] : [];
 			}
 			if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable()) {
 				$machine->agitator_type_id = $form['agitator_type_id'] == '' ? 0 : $form['agitator_type_id'];
@@ -90,12 +90,12 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	
 	// Redirect to make reload and thus double save impossible
 	if(filter_input(INPUT_POST, "btn_apply") == 1 && $machine !== FALSE) {
-//		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$machine->machine_id, "func"=>'edit', "message"=>$message), FALSE));
+		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$machine->machine_id, "func"=>'edit', "message"=>$message), FALSE));
 	}
 	else {
-//		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), FALSE));
+		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), FALSE));
 	}
-//	exit;
+	exit;
 }
 // Delete
 else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {

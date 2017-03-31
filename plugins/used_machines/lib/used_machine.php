@@ -196,7 +196,7 @@ class UsedMachine {
 
 			// Remove from export
 			if(rex_plugin::get("d2u_machinery", "export")->isAvailable()) {
-				ExportedUsedMachine::removeMachineAllFromExports($this->used_machine_id);
+				ExportedUsedMachine::removeMachineFromAllExports($this->used_machine_id);
 			}
 		}
 		else {
@@ -237,7 +237,7 @@ class UsedMachine {
 
 		// Remove from export
 		if(rex_plugin::get("d2u_machinery", "export")->isAvailable()) {
-			ExportedUsedMachine::removeMachineAllFromExports($this->used_machine_id);
+			ExportedUsedMachine::removeMachineFromAllExports($this->used_machine_id);
 		}
 	}
 	
@@ -500,7 +500,7 @@ class UsedMachine {
 
 		// Remove from export
 		if($this->online_status == "offline" && rex_plugin::get("d2u_machinery", "export")->isAvailable()) {
-			ExportedUsedMachine::removeMachineAllFromExports($this->used_machine_id);
+			ExportedUsedMachine::removeMachineFromAllExports($this->used_machine_id);
 		}
 
 		// Update URLs
