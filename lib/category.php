@@ -470,17 +470,20 @@ class Category {
 			$parameterArray = [];
 			$parameterArray['category_id'] = $this->category_id;
 
+			$article_id = $d2u_machinery->getConfig('article_id');
 			// In case of used machines
 			if(rex_plugin::get("d2u_machinery", "used_machines")->isAvailable()) {
 				$current_article_id = rex_article::getCurrent()->getId();
-				// If sale and rent article are the same, append offer type to URL
-				if($d2u_machinery->getConfig('used_machine_article_id_rent') == $d2u_machinery->getConfig('used_machine_article_id_sale')
-						&& ($current_article_id == $d2u_machinery->getConfig('used_machine_article_id_rent') || $current_article_id == $d2u_machinery->getConfig('used_machine_article_id_sale'))) {
-					$parameterArray['offer_type'] = $this->offer_type;
+				if($current_article_id == $d2u_machinery->getConfig('used_machine_article_id_rent') || $current_article_id == $d2u_machinery->getConfig('used_machine_article_id_sale')) {
+					$article_id = $this->offer_type == "sale" ? $d2u_machinery->getConfig('used_machine_article_id_sale') : $d2u_machinery->getConfig('used_machine_article_id_rent');
+					
+					// If sale and rent article are the same, append offer type to URL
+					if($d2u_machinery->getConfig('used_machine_article_id_rent') == $d2u_machinery->getConfig('used_machine_article_id_sale')) {
+						$parameterArray['offer_type'] = $this->offer_type;
+					}
 				}
 			}
-			
-			$this->url = rex_getUrl($d2u_machinery->getConfig('article_id'), $this->clang_id, $parameterArray, "&");
+			$this->url = rex_getUrl($article_id, $this->clang_id, $parameterArray, "&");
 		}
 
 		if($including_domain) {
