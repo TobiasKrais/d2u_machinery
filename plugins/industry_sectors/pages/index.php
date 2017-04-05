@@ -21,12 +21,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	foreach(rex_clang::getAll() as $rex_clang) {
 		if($industry_sector === FALSE) {
 			$industry_sector = new IndustrySector($industry_sector_id, $rex_clang->getId());
-			if($form['online_status'] == '') {
-				$industry_sector->online_status = 'offline';
-			}
-			else {
-				$industry_sector->online_status = $form['online_status'];
-			}
+			$industry_sector->online_status = $form['online_status'] == '' ? 'offline' : $form['online_status'];
 			$industry_sector->pic = $input_media[1];
 		}
 		else {
