@@ -150,6 +150,271 @@ class Machine {
 	var $priority = 0;
 	
 	/**
+	 * @var Process[] machine_steel_processing_extension: Process objects
+	 */
+	var $processes = [];
+	
+	/**
+	 * @var Procedure[] machine_steel_processing_extension: Procedure objects
+	 */
+	var $procedures = [];
+	
+	/**
+	 * @var Material[] machine_steel_processing_extension: Material objects
+	 */
+	var $materials = [];
+	
+	/**
+	 * @var Tool[] machine_steel_processing_extension: Tool objects
+	 */
+	var $tools = [];
+	
+	/**
+	 * @var string machine_steel_processing_extension: Automation - Supply single stroke (mm)
+	 */
+	var $automation_supply_single_stroke = "";	
+
+	/**
+	 * @var string machine_steel_processing_extension: Automation - Multiple single stroke (mm)
+	 */
+	var $automation_supply_multi_stroke = "";
+
+	/**
+	 * @var string machine_steel_processing_extension: Automation - Feed rate range (mm/min)
+	 */
+	var $automation_feedrate = "";
+
+	/**
+	 * @var int machine_steel_processing_extension: Automation - Rush leader flyback (mm/min)
+	 */
+	var $automation_rush_leader_flyback = 0;
+
+	/**
+	 * @var Automation[] machine_steel_processing_extension: Automation grade objects
+	 */
+	var $automation_automationgrades = [];
+	
+	/**
+	 * @var Supply[] machine_steel_processing_extension: Automation supply objects
+	 */
+	var $automation_supplys = [];
+
+	/**
+	 * @var Videomanager machine_steel_processing_extension: Automation - video object. FALSE if none.
+	 */
+	var $automation_video = FALSE;
+
+	/**
+	 * @var string machine_steel_processing_extension: Workspace (mm x mm or only mm).
+	 */
+	var $workspace = "";	
+
+	/**
+	 * @var string machine_steel_processing_extension: Workspace square material (mm x mm or only mm).
+	 */
+	var $workspace_square = "";	
+
+	/**
+	 * @var string machine_steel_processing_extension: Workspace flat material (mm x mm or only mm).
+	 */
+	var $workspace_flat = "";	
+
+	/**
+	 * @var string machine_steel_processing_extension: Workspace plates (mm x mm or only mm).
+	 */
+	var $workspace_plate = "";	
+
+	/**
+	 * @var string machine_steel_processing_extension: Workspace for profiles (mm x mm or only mm).
+	 */
+	var $workspace_profile = "";	
+
+	/**
+	 * @var string machine_steel_processing_extension: Workspace for angle steels (mm x mm x mm).
+	 */
+	var $workspace_angle_steel = "";	
+
+	/**
+	 * @var string machine_steel_processing_extension: Workspace for round materials (mm x mm or only mm).
+	 */
+	var $workspace_round = "";	
+
+	/**
+	 * @var string machine_steel_processing_extension: Minimum Workspace (mm x mm x mm or mm x mm or only mm).
+	 */
+	var $workspace_min = "";	
+
+	/**
+	 * @var string machine_steel_processing_extension: sheet width range (mm).
+	 */
+	var $sheet_width = "";	
+
+	/**
+	 * @var string machine_steel_processing_extension: sheet length range (mm).
+	 */
+	var $sheet_length = "";	
+
+	/**
+	 * @var string machine_steel_processing_extension: sheet thickness ragne (mm).
+	 */
+	var $sheet_thickness = "";	
+
+	/**
+	 * @var string machine_steel_processing_extension: number of tool changer locations.
+	 */
+	var $tool_changer_locations = "";	
+
+	/**
+	 * @var string machine_steel_processing_extension: number of vertical drilling units.
+	 */
+	var $drilling_unit_vertical = "";	
+
+	/**
+	 * @var string machine_steel_processing_extension: number of horizontal drilling units.
+	 */
+	var $drilling_unit_horizontal = "";	
+
+	/**
+	 * @var string machine_steel_processing_extension: drilling whole diameter (range in mm).
+	 */
+	var $drilling_diameter = "";	
+
+	/**
+	 * @var string machine_steel_processing_extension: number of drilling tools per axis.
+	 */
+	var $drilling_tools_axis = "";	
+
+	/**
+	 * @var string machine_steel_processing_extension: axis driver power.
+	 */
+	var $drilling_axis_drive_power = "";	
+
+	/**
+	 * @var string machine_steel_processing_extension: drilling speed (rpm).
+	 */
+	var $drilling_rpm_speed = "";	
+
+	/**
+	 * @var string machine_steel_processing_extension: saw blade diameter (mm, sometimes mm x mm).
+	 */
+	var $saw_blade = "";	
+
+	/**
+	 * @var string machine_steel_processing_extension: saw band dimensions (mm x mm x mm).
+	 */
+	var $saw_band = "";	
+
+	/**
+	 * @var string machine_steel_processing_extension: saw band tilt range (°).
+	 */
+	var $saw_band_tilt = "";	
+
+	/**
+	 * @var string machine_steel_processing_extension: saw cutting speed range (mm).
+	 */
+	var $saw_cutting_speed = "";	
+
+	/**
+	 * @var string machine_steel_processing_extension: saw miter (°).
+	 */
+	var $saw_miter = "";
+
+	/**
+	 * @var int machine_steel_processing_extension: Max. bevel angle (°).
+	 */
+	var $bevel_angle = 0;
+
+	/**
+	 * @var string machine_steel_processing_extension: punching diameter range (mm).
+	 */
+	var $punching_diameter = "";
+
+	/**
+	 * @var string machine_steel_processing_extension: number of punching tools.
+	 */
+	var $punching_tools = "";
+
+	/**
+	 * @var string machine_steel_processing_extension: angle steel single cut.
+	 */
+	var $shaving_unit_angle_steel_single_cut = 0;	
+
+	/**
+	 * @var Profile[] machine_steel_processing_extension: Profile area objects
+	 */
+	var $profiles = [];
+
+	/**
+	 * @var string machine_steel_processing_extension: carrier width (mm).
+	 */
+	var $carrier_width = "";	
+
+	/**
+	 * @var string machine_steel_processing_extension: carrier height (mm).
+	 */
+	var $carrier_height = "";	
+
+	/**
+	 * @var int machine_steel_processing_extension: carrier weight (kg).
+	 */
+	var $carrier_weight = 0;	
+
+	/**
+	 * @var string machine_steel_processing_extension: flange thickness min. / max. (mm).
+	 */
+	var $flange_thickness = "";	
+
+	/**
+	 * @var string machine_steel_processing_extension: web thickness min. / max. (mm).
+	 */
+	var $web_thickness = "";	
+
+	/**
+	 * @var string machine_steel_processing_extension: component length min. / max. (mm).
+	 */
+	var $component_length = "";	
+
+	/**
+	 * @var int machine_steel_processing_extension: component weight (kg).
+	 */
+	var $component_weight = 0;	
+
+	/**
+	 * @var Welding[] machine_steel_processing_extension: welding process objects
+	 */
+	var $weldings = [];
+
+	/**
+	 * @var int machine_steel_processing_extension: welding thickness ((a) mm).
+	 */
+	var $welding_thickness = 0;	
+
+	/**
+	 * @var string machine_steel_processing_extension: welding_wire_thickness (mm).
+	 */
+	var $welding_wire_thickness = "";	
+
+	/**
+	 * @var string machine_steel_processing_extension: beam machine continuous opening (mm).
+	 */
+	var $beam_continuous_opening = "";	
+
+	/**
+	 * @var int machine_steel_processing_extension: number of turbines.
+	 */
+	var $beam_turbines = 0;	
+
+	/**
+	 * @var string machine_steel_processing_extension: beam machine power per turbine (kW).
+	 */
+	var $beam_turbine_power = "";	
+
+	/**
+	 * @var string machine_steel_processing_extension: beam machine number of color guns.
+	 */
+	var $beam_color_guns = "";	
+
+	/**
 	 * @var string Language specific name
 	 */
 	var $lang_name = "";
@@ -239,6 +504,11 @@ class Machine {
 				$this->industry_sector_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("industry_sector_ids")), PREG_GREP_INVERT);
 			}
 
+			if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable()) {
+				$this->agitator_type_id = $result->getValue("agitator_type_id");
+				$this->viscosity = $result->getValue("viscosity");
+			}
+
 			if(rex_plugin::get("d2u_machinery", "machine_certificates_extension")->isAvailable()) {
 				$this->certificate_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("certificate_ids")), PREG_GREP_INVERT);
 			}
@@ -247,9 +517,84 @@ class Machine {
 				$this->feature_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("feature_ids")), PREG_GREP_INVERT);
 			}
 
-			if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable()) {
-				$this->agitator_type_id = $result->getValue("agitator_type_id");
-				$this->viscosity = $result->getValue("viscosity");
+			if(rex_plugin::get("d2u_machinery", "machine_steel_processing_extension")->isAvailable()) {
+				$process_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("process_ids")), PREG_GREP_INVERT);
+				foreach($process_ids as $process_id) {
+					$this->processes[$process_id] = new Process($process_id, $this->clang_id);
+				}
+				$procedure_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("procedure_ids")), PREG_GREP_INVERT);
+				foreach($procedure_ids as $procedure_id) {
+					$this->procedures[$procedure_id] = new Procedure($procedure_id, $this->clang_id);
+				}
+				$material_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("material_ids")), PREG_GREP_INVERT);
+				foreach($material_ids as $material_id) {
+					$this->materials[$material_id] = new Procedure($material_id, $this->clang_id);
+				}
+				$tool_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("tool_ids")), PREG_GREP_INVERT);
+				foreach($tool_ids as $tool_id) {
+					$this->tools[$tool_id] = new Procedure($tool_id, $this->clang_id);
+				}
+				$this->automation_supply_single_stroke = $result->getValue("automation_supply_single_stroke");
+				$this->automation_supply_multi_stroke = $result->getValue("automation_supply_multi_stroke");
+				$this->automation_feedrate = $result->getValue("automation_feedrate");
+				$this->automation_rush_leader_flyback = $result->getValue("automation_rush_leader_flyback");
+				$automation_automationgrade_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("automation_automationgrade_ids")), PREG_GREP_INVERT);
+				foreach($automation_automationgrade_ids as $automation_automationgrade_id) {
+					$this->automation_automationgrades[$automation_automationgrade_id] = new Automation($automation_automationgrade_id, $this->clang_id);
+				}
+				$automation_supply_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("automation_supply_ids")), PREG_GREP_INVERT);
+				foreach($automation_supply_ids as $automation_supply_id) {
+					$this->automation_supplys[$automation_supply_id] = new Supply($automation_supply_id, $this->clang_id);
+				}
+//				$this->automation_video = new Videomanager($result->getValue("automation_video_id"), $this->clang_id);
+				$this->workspace = $result->getValue("workspace");
+				$this->workspace_square = $result->getValue("workspace_square");
+				$this->workspace_flat = $result->getValue("workspace_flat");
+				$this->workspace_plate = $result->getValue("workspace_plate");
+				$this->workspace_profile = $result->getValue("workspace_profile");
+				$this->workspace_angle_steel = $result->getValue("workspace_angle_steel");
+				$this->workspace_round = $result->getValue("workspace_round");
+				$this->workspace_min = $result->getValue("workspace_min");
+				$this->sheet_width = $result->getValue("sheet_width");
+				$this->sheet_length = $result->getValue("sheet_length");
+				$this->sheet_thickness = $result->getValue("sheet_thickness");
+				$this->tool_changer_locations = $result->getValue("tool_changer_locations");
+				$this->drilling_unit_vertical = $result->getValue("drilling_unit_vertical");
+				$this->drilling_unit_horizontal = $result->getValue("drilling_unit_horizontal");
+				$this->drilling_diameter = $result->getValue("drilling_diameter");
+				$this->drilling_tools_axis = $result->getValue("drilling_tools_axis");
+				$this->drilling_axis_drive_power = $result->getValue("drilling_axis_drive_power");
+				$this->drilling_rpm_speed = $result->getValue("drilling_rpm_speed");
+				$this->saw_blade = $result->getValue("saw_blade");
+				$this->saw_band = $result->getValue("saw_band");
+				$this->saw_band_tilt = $result->getValue("saw_band_tilt");
+				$this->saw_cutting_speed = $result->getValue("saw_cutting_speed");
+				$this->saw_miter = $result->getValue("saw_miter");
+				$this->bevel_angle = $result->getValue("bevel_angle");
+				$this->punching_diameter = $result->getValue("punching_diameter");
+				$this->punching_tools = $result->getValue("punching_tools");
+				$this->shaving_unit_angle_steel_single_cut = $result->getValue("shaving_unit_angle_steel_single_cut");
+				$profile_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("profile_ids")), PREG_GREP_INVERT);
+				foreach($profile_ids as $profile_id) {
+					$this->profiles[$profile_id] = new Supply($profile_id, $this->clang_id);
+				}
+				$this->carrier_width = $result->getValue("carrier_width");
+				$this->carrier_height = $result->getValue("carrier_height");
+				$this->carrier_weight = $result->getValue("carrier_weight");
+				$this->flange_thickness = $result->getValue("flange_thickness");
+				$this->web_thickness = $result->getValue("web_thickness");
+				$this->component_length = $result->getValue("component_length");
+				$this->component_weight = $result->getValue("component_weight");
+				$welding_process_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("welding_process_ids")), PREG_GREP_INVERT);
+				foreach($welding_process_ids as $welding_process_id) {
+					$this->weldings[$welding_process_id] = new Welding($welding_process_id, $this->clang_id);
+				}
+				$this->welding_thickness = $result->getValue("welding_thickness");
+				$this->welding_wire_thickness = $result->getValue("welding_wire_thickness");
+				$this->beam_continuous_opening = $result->getValue("beam_continuous_opening");
+				$this->beam_turbines = $result->getValue("beam_turbines");
+				$this->beam_turbine_power = $result->getValue("beam_turbine_power");
+				$this->beam_color_guns = $result->getValue("beam_color_guns");
 			}
 
 			if(rex_plugin::get("d2u_machinery", "machine_usage_area_extension")->isAvailable()) {
@@ -523,12 +868,13 @@ class Machine {
 					."name = '". $this->name ."', "
 					."internal_name = '". $this->internal_name ."', "
 					."pics = '". implode(",", $this->pics) ."', "
-					."category_id = ". $this->category->category_id .", "
+					."category_id = ". ($this->category ? $this->category->category_id : 0) .", "
 					."alternative_machine_ids = '|". implode("|", $this->alternative_machine_ids) ."|', "
 					."product_number = '". $this->product_number ."', "
 					."article_id_software = '". $this->article_id_software ."', "
 					."article_id_service = '". $this->article_id_service ."', "
 					."article_ids_references = '". implode(",", $this->article_ids_references) ."', "
+					."online_status = '". $this->online_status ."', "
 					."engine_power = '". $this->engine_power ."', "
 					."length = '". $this->length ."', "
 					."width = '". $this->width ."', "
@@ -541,16 +887,73 @@ class Machine {
 			if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable()) {
 				$query .= ", industry_sector_ids = '|". implode("|", $this->industry_sector_ids) ."|' ";
 			}
+			if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable()) {
+				$query .= ", agitator_type_id = ". $this->agitator_type_id ." ";
+				$query .= ", viscosity = ". $this->viscosity ." ";
+			}
 			if(rex_plugin::get("d2u_machinery", "machine_certificates_extension")->isAvailable()) {
 				$query .= ", certificate_ids = '|". implode("|", $this->certificate_ids) ."|' ";
 			}
 			if(rex_plugin::get("d2u_machinery", "machine_features_extension")->isAvailable()) {
 				$query .= ", feature_ids = '|". implode("|", $this->feature_ids) ."|' ";
 			}
-			if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable()) {
-				$query .= ", agitator_type_id = ". $this->agitator_type_id ." ";
-				$query .= ", viscosity = ". $this->viscosity ." ";
+			if(rex_plugin::get("d2u_machinery", "machine_steel_processing_extension")->isAvailable()) {
+				$query .= ", process_ids = '|". implode("|", array_keys($this->processes)) ."|' "
+					.", procedure_ids = '|". implode("|", array_keys($this->procedures)) ."|' "
+					.", material_ids = '|". implode("|", array_keys($this->materials)) ."|' "
+					.", tool_ids = '|". implode("|", array_keys($this->tools)) ."|' "
+					.", automation_supply_single_stroke = '". $this->automation_supply_single_stroke ."' "
+					.", automation_supply_multi_stroke = '". $this->automation_supply_multi_stroke ."' "
+					.", automation_feedrate = '". $this->automation_feedrate ."' "
+					.", automation_rush_leader_flyback = '". $this->automation_rush_leader_flyback ."' "
+					.", automation_automationgrade_ids = '|". implode("|", array_keys($this->automation_automationgrades)) ."|' "
+					.", automation_supply_ids = '|". implode("|", array_keys($this->automation_supplys)) ."|' "
+					.", automation_video_id = ". ($this->automation_video !== FALSE ? $this->automation_video->video_id : 0) ." "
+					.", workspace = '". $this->workspace ."' "
+					.", workspace_square = '". $this->workspace_square ."' "
+					.", workspace_flat = '". $this->workspace_flat ."' "
+					.", workspace_plate = '". $this->workspace_plate ."' "
+					.", workspace_profile = '". $this->workspace_profile ."' "
+					.", workspace_angle_steel = '". $this->workspace_angle_steel ."' "
+					.", workspace_round = '". $this->workspace_round ."' "
+					.", workspace_min = '". $this->workspace_min ."' "
+					.", sheet_width = '". $this->sheet_width ."' "
+					.", sheet_length = '". $this->sheet_length ."' "
+					.", sheet_thickness = '". $this->sheet_thickness ."' "
+					.", tool_changer_locations = '". $this->tool_changer_locations ."' "
+					.", drilling_unit_vertical = '". $this->drilling_unit_vertical ."' "
+					.", drilling_unit_horizontal = '". $this->drilling_unit_horizontal ."' "
+					.", drilling_diameter = '". $this->drilling_diameter ."' "
+					.", drilling_tools_axis = '". $this->drilling_tools_axis ."' "
+					.", drilling_axis_drive_power = '". $this->drilling_axis_drive_power ."' "
+					.", drilling_rpm_speed = '". $this->drilling_rpm_speed ."' "
+					.", saw_blade = '". $this->saw_blade ."' "
+					.", saw_band = '". $this->saw_band ."' "
+					.", saw_band_tilt = '". $this->saw_band_tilt ."' "
+					.", saw_cutting_speed = '". $this->saw_cutting_speed ."' "
+					.", saw_miter = '". $this->saw_miter ."' "
+					.", bevel_angle = ". $this->bevel_angle ." "
+					.", punching_diameter = '". $this->punching_diameter ."' "
+					.", punching_tools = '". $this->punching_tools ."' "
+					.", shaving_unit_angle_steel_single_cut = ". $this->shaving_unit_angle_steel_single_cut ." "
+					.", profile_ids = '|". implode("|", array_keys($this->profiles)) ."|' "
+					.", carrier_width = '". $this->carrier_width ."' "
+					.", carrier_height = '". $this->carrier_height ."' "
+					.", carrier_weight = ". $this->carrier_weight ." "
+					.", flange_thickness = '". $this->flange_thickness ."' "
+					.", web_thickness = '". $this->web_thickness ."' "
+					.", component_length = '". $this->component_length ."' "
+					.", component_weight = ". $this->component_weight ." "
+					.", welding_process_ids = '|". implode("|", array_keys($this->weldings)) ."|' "
+					.", welding_thickness = ". $this->welding_thickness ." "
+					.", welding_wire_thickness = '". $this->welding_wire_thickness ."' "
+					.", beam_continuous_opening = '". $this->beam_continuous_opening ."' "
+					.", beam_turbines = ". $this->beam_turbines ." "
+					.", beam_turbine_power = '". $this->beam_turbine_power ."' "
+					.", beam_color_guns = '". $this->beam_color_guns ."' "
+				;
 			}
+
 			if(rex_plugin::get("d2u_machinery", "machine_usage_area_extension")->isAvailable()) {
 				$query .= ", usage_area_ids = '|". implode("|", $this->usage_area_ids) ."|' ";
 			}
@@ -561,6 +964,7 @@ class Machine {
 			else {
 				$query = "UPDATE ". $query ." WHERE machine_id = ". $this->machine_id;
 			}
+
 			$result = rex_sql::factory();
 			$result->setQuery($query);
 			if($this->machine_id == 0) {

@@ -79,12 +79,12 @@ class Category {
 	/**
 	 * @var string Title cutting range 
 	 */
-	var $sawing_machines_cutting_range_title = "";
+	var $steel_processing_saw_cutting_range_title = "";
 		
 	/**
 	 * @var string Cutting range configurator file
 	 */
-	var $sawing_machines_cutting_range_file = "";
+	var $steel_processing_saw_cutting_range_file = "";
 
 	/**
 	 * @var string Show agitators in machines of this category. Values are "hide" or "show"
@@ -180,16 +180,16 @@ class Category {
 			}
 
 			// Sawing machines plugin fields
-			if(rex_plugin::get("d2u_machinery", "sawing_machines")->isAvailable()) {
-				$this->sawing_machines_cutting_range_title = $result->getValue("sawing_machines_cutting_range_title");
-				$this->sawing_machines_cutting_range_file = $result->getValue("sawing_machines_cutting_range_file");
+			if(rex_plugin::get("d2u_machinery", "machine_steel_processing_extension")->isAvailable()) {
+				$this->steel_processing_saw_cutting_range_title = $result->getValue("steel_processing_saw_cutting_range_title");
+				$this->steel_processing_saw_cutting_range_file = $result->getValue("steel_processing_saw_cutting_range_file");
 			}
 		}
 		
 		// For used machines: set offer type
 		if(rex_plugin::get("d2u_machinery", "used_machines")->isAvailable()) {
 			$d2u_machinery = rex_addon::get("d2u_machinery");
-			$current_article_id = rex_article::getCurrent()->getId();
+			$current_article_id = rex::isBackend() ? 0 : rex_article::getCurrent()->getId();
 			if($d2u_machinery->getConfig('used_machine_article_id_rent') == $d2u_machinery->getConfig('used_machine_article_id_sale')
 					&& ($current_article_id == $d2u_machinery->getConfig('used_machine_article_id_rent') || $current_article_id == $d2u_machinery->getConfig('used_machine_article_id_sale'))) {
 				if(filter_input(INPUT_GET, 'offer_type') == "rent" || filter_input(INPUT_GET, 'offer_type') == "sale") {

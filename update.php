@@ -21,6 +21,11 @@ if($sql->getRows() == 0) {
 	$sql->setQuery("ALTER TABLE ". rex::getTablePrefix() ."d2u_machinery_machines_lang "
 		. "ADD lang_name varchar(255) collate utf8_general_ci default NULL AFTER clang_id;");
 }
+$sql->setQuery("SHOW COLUMNS FROM ". rex::getTablePrefix() ."d2u_machinery_categories LIKE 'videomanager_ids';");
+if($sql->getRows() == 0) {
+	$sql->setQuery("ALTER TABLE ". rex::getTablePrefix() ."d2u_machinery_categories "
+		. "ADD videomanager_ids varchar(255) collate utf8_general_ci default NULL AFTER pic_usage;");
+}
 
 // 1.0.2 Update machine URL view and regenerate path file
 $sql->setQuery('CREATE OR REPLACE VIEW '. rex::getTablePrefix() .'d2u_machinery_url_machines AS

@@ -116,7 +116,7 @@ $tag_close = $sprog->getConfig('wildcard_close_tag');
 $urlParamKey = "";
 if(rex_addon::get("url")->isAvailable()) {
 	$url_data = UrlGenerator::getData();
-	$urlParamKey = $url_data->urlParamKey;
+	$urlParamKey = isset($url_data->urlParamKey) ? $url_data->urlParamKey : "";
 }
 
 if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "category_id")) {

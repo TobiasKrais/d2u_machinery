@@ -34,6 +34,8 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.0.2 (Next):</p>
 <ul>
+	<li>Plugin für Stahlverarbeitung hinzugefügt.</li>
+	<li>Feature Plugin um neue Felder erweitert.</li>
 	<li>Für Maschinen kann jetzt ein sprachspezifischer Namen eingegeben werden,
 		der den allgemeinen Namen überschreibt.</li>
 	<li>Anpassungen an D2U Helper Version 1.2</li>

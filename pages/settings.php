@@ -207,3 +207,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 		</footer>
 	</div>
 </form>
+<?php
+	print d2u_addon_backend_helper::getCSS();
+	print d2u_addon_backend_helper::getJS();
+	print d2u_addon_backend_helper::getJSOpenAll();
