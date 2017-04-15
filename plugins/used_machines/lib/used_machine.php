@@ -152,7 +152,7 @@ class UsedMachine {
 			}
 			$this->pics = preg_grep('/^\s*$/s', explode(",", $result->getValue("pics")), PREG_GREP_INVERT);
 			if($result->getValue("machine_id") > 0) {
-				$this->machine = new Maschine($result->getValue("machine_id"), $clang_id);
+				$this->machine = new Machine($result->getValue("machine_id"), $clang_id);
 			}
 			$this->location = $result->getValue("location");
 			$this->external_url = $result->getValue("external_url");
@@ -462,7 +462,7 @@ class UsedMachine {
 					."vat = ". $this->vat .", "
 					."online_status = '". $this->online_status ."', "
 					."pics = '". implode(",", $this->pics) ."', "
-					."machine_id = ". $this->machine_id .", "
+					."machine_id = ". ($this->machine === FALSE ? 0 : $this->machine->machine_id) .", "
 					."location = '". $this->location ."', "
 					."external_url = '". $this->external_url ."' ";
 

@@ -34,7 +34,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$used_machine->vat = $form['vat'];
 			$used_machine->online_status = array_key_exists('online_status', $form) ? "online" : "offline";
 			$used_machine->pics = preg_grep('/^\s*$/s', explode(",", $input_media_list[1]), PREG_GREP_INVERT);
-			$used_machine->machine_id = $form['machine_id'];
+			$used_machine->machine = $form['machine_id'] > 0 ? new Machine($form['machine_id'], $rex_clang->getId()) : FALSE;
 			$used_machine->location = $form['location'];
 			$used_machine->external_url = $form['external_url'];
 		}
@@ -120,8 +120,8 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						<?php
 							$readonly = (rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_machinery[edit_tech_data]')) ? FALSE : TRUE;
 							
-							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_manufacturer', "form[manufacturer]", $used_machine->manufacturer, $required, $readonly_lang, "text");
-							d2u_addon_backend_helper::form_input('d2u_machinery_name', "form[name]", $used_machine->name, $required, $readonly_lang, "text");
+							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_manufacturer', "form[manufacturer]", $used_machine->manufacturer, TRUE, $readonly, "text");
+							d2u_addon_backend_helper::form_input('d2u_machinery_name', "form[name]", $used_machine->name, TRUE, $readonly, "text");
 							$options = array();
 							foreach(Category::getAll(rex_config::get("d2u_machinery", "default_lang")) as $category) {
 								if($category->name != "") {
@@ -132,19 +132,19 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 							$options_offer_type = ["sale" => rex_i18n::msg('d2u_machinery_used_machines_offer_type_sale'),
 								"rent" => rex_i18n::msg('d2u_machinery_used_machines_offer_type_rent')];
 							d2u_addon_backend_helper::form_select('d2u_machinery_used_machines_offer_type', 'form[offer_type]', $options_offer_type, array($used_machine->offer_type), 1, FALSE, $readonly);
-							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_availability', "form[availability]", $used_machine->availability, $required, $readonly_lang, "date");
-							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_product_number', "form[product_number]", $used_machine->product_number, $required, $readonly_lang, "text");
+							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_availability', "form[availability]", $used_machine->availability, FALSE, $readonly, "date");
+							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_product_number', "form[product_number]", $used_machine->product_number, FALSE, $readonly, "text");
 							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_year_built', "form[year_built]", $used_machine->year_built, FALSE, $readonly, "number");
 							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_price', "form[price]", $used_machine->price, FALSE, $readonly, "number");
 							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_currency_code', "form[currency_code]", $used_machine->currency_code, FALSE, $readonly, "text");
 							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_vat', "form[vat]", $used_machine->vat, FALSE, $readonly, "number");
 							d2u_addon_backend_helper::form_checkbox('d2u_machinery_online_status', 'form[online_status]', 'online', $used_machine->online_status == "online", $readonly);
-							d2u_addon_backend_helper::form_medialistfield('d2u_machinery_machine_pics', 1, $used_machine->pics, $readonly_lang);
+							d2u_addon_backend_helper::form_medialistfield('d2u_machinery_machine_pics', 1, $used_machine->pics, $readonly);
 							$options_machines = array(0 => rex_i18n::msg('d2u_machinery_no_selection'));
 							foreach(Machine::getAll(rex_config::get("d2u_machinery", "default_lang")) as $machine) {
 								$options_machines[$machine->machine_id] = $machine->name;
 							}
-							d2u_addon_backend_helper::form_select('d2u_machinery_used_machines_linked_machine', 'form[machine_id]', $options_machines, $used_machine->machine_id, 1, FALSE, $readonly);
+							d2u_addon_backend_helper::form_select('d2u_machinery_used_machines_linked_machine', 'form[machine_id]', $options_machines, ($used_machine->machine === FALSE ? [] : [$used_machine->machine->machine_id]), 1, FALSE, $readonly);
 							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_location', "form[location]", $used_machine->location, FALSE, $readonly, "text");
 							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_external_url', "form[external_url]", $used_machine->external_url, FALSE, $readonly, "text");
 						?>
@@ -198,7 +198,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 	</form>
 	<br>
 	<?php
-		print d2u_addon_backend_helper::getCSS('d2u_machinery');
+		print d2u_addon_backend_helper::getCSS();
 		print d2u_addon_backend_helper::getJS();
 }
 
