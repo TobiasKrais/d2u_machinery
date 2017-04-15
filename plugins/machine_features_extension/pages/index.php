@@ -28,6 +28,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 		else {
 			$feature->clang_id = $rex_clang->getId();
 		}
+		$feature->name = $form['lang'][$rex_clang->getId()]['name'];
 		$feature->title = $form['lang'][$rex_clang->getId()]['title'];
 		$feature->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 		$feature->description = $form['lang'][$rex_clang->getId()]['description'];
@@ -131,6 +132,7 @@ if ($func == 'edit' || $func == 'add') {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
 								}
 								
+								d2u_addon_backend_helper::form_input('d2u_machinery_name', "form[lang][". $rex_clang->getId() ."][name]", $feature->name, $required, $readonly_lang, "text");
 								d2u_addon_backend_helper::form_input('d2u_machinery_features_title', "form[lang][". $rex_clang->getId() ."][title]", $feature->title, $required, $readonly_lang, "text");
 								d2u_addon_backend_helper::form_textarea('d2u_machinery_features_description', "form[lang][". $rex_clang->getId() ."][description]", $feature->description, 10, FALSE, $readonly_lang, TRUE)
 							?>
@@ -175,7 +177,7 @@ if ($func == 'edit' || $func == 'add') {
 	</form>
 	<br>
 	<?php
-		print d2u_addon_backend_helper::getCSS('d2u_machinery');
+		print d2u_addon_backend_helper::getCSS();
 		print d2u_addon_backend_helper::getJS();
 }
 

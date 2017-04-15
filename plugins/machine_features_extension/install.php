@@ -12,6 +12,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machin
 $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machinery_features_lang (
 	feature_id int(10) NOT NULL,
 	clang_id int(10) NOT NULL,
+	name varchar(255) collate utf8_general_ci default NULL,
 	title varchar(255) collate utf8_general_ci default NULL,
 	description text collate utf8_general_ci default NULL,
 	translation_needs_update varchar(7) collate utf8_general_ci default NULL,
