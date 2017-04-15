@@ -31,8 +31,7 @@ $sql->setQuery('CREATE OR REPLACE VIEW '. rex::getTablePrefix() .'d2u_machinery_
 	LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_machines AS machines ON machines.industry_sector_ids LIKE CONCAT("%|", industries.industry_sector_id ,"|%")
 	LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_machines_lang AS machines_lang ON machines.machine_id = machines_lang.machine_id AND machines_lang.clang_id = industries.clang_id
 	WHERE machines.online_status = "online"
-	ORDER BY updatedate DESC
-	GROUP BY industry_sector_id, clang_id, name, seo_title');
+	ORDER BY updatedate DESC');
 // Insert url scheme
 if(rex_addon::get('url')->isAvailable()) {
 	$sql->setQuery("SELECT * FROM ". rex::getTablePrefix() ."url_generate WHERE `table` = '1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_industry_sectors'");
