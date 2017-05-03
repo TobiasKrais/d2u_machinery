@@ -119,7 +119,7 @@ if(rex_addon::get("url")->isAvailable()) {
 	$urlParamKey = isset($url_data->urlParamKey) ? $url_data->urlParamKey : "";
 }
 
-if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "category_id")) {
+if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "category_id")) {
 	$category_id = filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT);
 	if(rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
 		$category_id = UrlGenerator::getId();
@@ -149,7 +149,7 @@ if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT) > 0 || (rex_addon
 		print '</div>';
 	}
 }
-else if(filter_input(INPUT_GET, 'used_machine_id', FILTER_VALIDATE_INT) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "used_machine_id")) {
+else if(filter_input(INPUT_GET, 'used_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "used_machine_id")) {
 	// Print used machine
 	$used_machine_id = filter_input(INPUT_GET, 'used_machine_id', FILTER_VALIDATE_INT);
 	if(rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
@@ -293,15 +293,19 @@ else if(filter_input(INPUT_GET, 'used_machine_id', FILTER_VALIDATE_INT) > 0 || (
 	print '<div class="col-sm-12 col-md-8">';
 	$form_data = 'hidden|machine_name|'. $used_machine->manufacturer .' '. $used_machine->name .' (Gebrauchtmaschine)|REQUEST
 
+			text|vorname|'. $tag_open .'d2u_machinery_form_vorname'. $tag_close .'
 			text|name|'. $tag_open .'d2u_machinery_form_name'. $tag_close .' *
+			text|position|'. $tag_open .'d2u_machinery_form_position'. $tag_close .'
 			text|company|'. $tag_open .'d2u_machinery_form_company'. $tag_close .' *
 			text|address|'. $tag_open .'d2u_machinery_form_address'. $tag_close .' *
 			text|zip|'. $tag_open .'d2u_machinery_form_zip'. $tag_close .' *
 			text|city|'. $tag_open .'d2u_machinery_form_city'. $tag_close .' *
 			text|country|'. $tag_open .'d2u_machinery_form_country'. $tag_close .' *
 			text|phone|'. $tag_open .'d2u_machinery_form_phone'. $tag_close .' *
+			text|fax|'. $tag_open .'d2u_machinery_form_fax'. $tag_close .'
 			text|email|'. $tag_open .'d2u_machinery_form_email'. $tag_close .' *
 			textarea|message|'. $tag_open .'d2u_machinery_form_message'. $tag_close .'
+			checkbox|please_call|'. $tag_open .'d2u_machinery_form_please_call'. $tag_close .'|nein, ja|nein
 
 			html||<br>* '. $tag_open .'d2u_machinery_form_required'. $tag_close .'<br><br>
 			captcha_calc|'. $tag_open .'d2u_machinery_form_captcha'. $tag_close .'|'. $tag_open .'d2u_machinery_form_validate_captcha'. $tag_close .'|'. rex_getUrl('', '', ['used_machine_id' => $used_machine->used_machine_id]) .'
@@ -316,7 +320,7 @@ else if(filter_input(INPUT_GET, 'used_machine_id', FILTER_VALIDATE_INT) > 0 || (
 			validate|empty|country|'. $tag_open .'d2u_machinery_form_validate_country'. $tag_close .'
 			validate|empty|phone|'. $tag_open .'d2u_machinery_form_validate_phone'. $tag_close .'
 			validate|empty|email|'. $tag_open .'d2u_machinery_form_validate_email'. $tag_close .'
-			validate|email|email|'. $tag_open .'d2u_machinery_form_validate_email_false'. $tag_close .'
+			validate|email|email|'. $tag_open .'d2u_machinery_form_validate_email'. $tag_close .'
 
 			action|tpl2email|d2u_machinery_machine_request|emaillabel|'. $d2u_machinery->getConfig('request_form_email');
 

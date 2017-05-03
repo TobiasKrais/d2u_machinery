@@ -18,7 +18,7 @@ class d2u_machinery_frontend_helper {
 		if(rex_addon::get("url")->isAvailable()) {
 			$url_data = UrlGenerator::getData();
 		}
-		if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT) > 0 || (rex_addon::get("url")->isAvailable() && isset($url_data->urlParamKey) && $url_data->urlParamKey === "machine_id")) {
+		if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && isset($url_data->urlParamKey) && $url_data->urlParamKey === "machine_id")) {
 			$machine_id = filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT);
 			if(rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
 				$machine_id = UrlGenerator::getId();
@@ -26,14 +26,14 @@ class d2u_machinery_frontend_helper {
 			$machine = new Machine($machine_id, rex_clang::getCurrentId());
 			$category = $machine->category;
 		}
-		if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT) > 0 || (rex_addon::get("url")->isAvailable() && isset($url_data->urlParamKey) && $url_data->urlParamKey === "category_id")) {
+		if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && isset($url_data->urlParamKey) && $url_data->urlParamKey === "category_id")) {
 			$category_id = filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT);
 			if(rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
 				$category_id = UrlGenerator::getId();
 			}
 			$category = new Category($category_id, rex_clang::getCurrentId());
 		}
-		if(filter_input(INPUT_GET, 'used_machine_id', FILTER_VALIDATE_INT) > 0 || (rex_addon::get("url")->isAvailable() && isset($url_data->urlParamKey) && $url_data->urlParamKey === "used_machine_id")) {
+		if(filter_input(INPUT_GET, 'used_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && isset($url_data->urlParamKey) && $url_data->urlParamKey === "used_machine_id")) {
 			$used_machine_id = filter_input(INPUT_GET, 'used_machine_id', FILTER_VALIDATE_INT);
 			if(rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
 				$used_machine_id = UrlGenerator::getId();
@@ -48,6 +48,10 @@ class d2u_machinery_frontend_helper {
 				$breadcrumbs[] = '<a href="' . $category->parent_category->getUrl() . '">' . $category->parent_category->name . '</a>';
 			}
 			$breadcrumbs[] = '<a href="' . $category->getUrl() . '">' . $category->name . '</a>';
+			// Cutting range configurator
+			if(rex_plugin::get("d2u_machinery", "machine_steel_processing_extension")->isAvailable() && filter_input(INPUT_GET, 'cutting_range_configurator') != "") {
+				$breadcrumbs[] = '<a href="' . $category->getURLCuttingRangeConfigurator() . '">' . $category->steel_processing_saw_cutting_range_title . '</a>';
+			}
 		}
 		if($machine !== FALSE) {
 			$breadcrumbs[] = '<a href="' . $machine->getUrl() . '">' . ($machine->lang_name == "" ? $machine->name : $machine->lang_name) . '</a>';
@@ -57,7 +61,7 @@ class d2u_machinery_frontend_helper {
 		}
 		
 		// Industry sectors
-		if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable() && (filter_input(INPUT_GET, 'industry_sector_id', FILTER_VALIDATE_INT) > 0 || (rex_addon::get("url")->isAvailable() && isset($url_data->urlParamKey) && $url_data->urlParamKey === "industry_sector_id"))) {
+		if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable() && (filter_input(INPUT_GET, 'industry_sector_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && isset($url_data->urlParamKey) && $url_data->urlParamKey === "industry_sector_id"))) {
 			$industry_sector_id = filter_input(INPUT_GET, 'industry_sector_id', FILTER_VALIDATE_INT);
 			if(rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
 				$industry_sector_id = UrlGenerator::getId();

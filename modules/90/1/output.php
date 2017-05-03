@@ -169,7 +169,7 @@ if(rex_addon::get("url")->isAvailable()) {
 	$urlParamKey = isset($url_data->urlParamKey) ? $url_data->urlParamKey : "";
 }
 
-if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "category_id")) {
+if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "category_id")) {
 	$category_id = filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT);
 	if(rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
 		$category_id = UrlGenerator::getId();
@@ -276,7 +276,7 @@ if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT) > 0 || (rex_addon
 		print '<div class="col-12">';
 		$tech_data_matrix = $category->getTechDataMatrix();
 		print '<table class="matrix">';
-		print '<thead><tr><td></td>';
+		print '<thead><tr><td></td><td></td>';
 		foreach($machines as $machine) {
 			print '<td valign="top" align="center">';
 			print '<a href="'. $machine->getURL() .'"><div class="comparison-header">';
@@ -290,10 +290,12 @@ if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT) > 0 || (rex_addon
 		}
 		print '</tr></thead>';
 		print '<tbody>';
-		foreach($tech_data_matrix as $key => $values) {
-			print '<tr><td class="inactive-cell"><b>'. $key .'</b></td>';
+		foreach($tech_data_matrix as $wildcard => $values) {
+			print '<tr>';
+			print '<td class="inactive-cell"><b>'. $wildcard .'</b></td>';
+			print '<td class="inactive-cell unit"><b>'. $values['unit'] .'</b></td>';
 			foreach($machines as $machine) {
-				print '<td class="inactive-cell">'. $values[$machine->machine_id] .'</td>';
+				print '<td class="inactive-cell">'. $values['machine_ids'][$machine->machine_id] .'</td>';
 			}
 			print '</tr>';
 		}
@@ -307,7 +309,7 @@ if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT) > 0 || (rex_addon
 		print '</div>';
 	}
 }
-else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "machine_id")) {
+else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "machine_id")) {
 	// Print machine
 	$machine_id = filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT);
 	if(rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
@@ -349,7 +351,9 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT) > 0 || (rex_a
 	if($machine->article_id_software > 0) {
 		print '<h3>'. $tag_open .'d2u_machinery_software'. $tag_close .'</h3>';
 		$article = rex_article::get($machine->article_id_software, $machine->clang_id);
-		print '<a href="'. rex_getUrl($machine->article_id_software, $machine->clang_id).'">'. $article->getValue('name') .'</a>';
+		if($article instanceof rex_article) {
+			print '<a href="'. rex_getUrl($machine->article_id_software, $machine->clang_id).'">'. $article->getValue('name') .'</a>';
+		}
 		print '<p>&nbsp;</p>';
 	}
 		
@@ -357,7 +361,9 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT) > 0 || (rex_a
 	if($machine->article_id_service > 0) {
 		print '<h3>'. $tag_open .'d2u_machinery_service'. $tag_close .'</h3>';
 		$article = rex_article::get($machine->article_id_service, $machine->clang_id);
-		print '<a href="'. rex_getUrl($machine->article_id_service, $machine->clang_id).'">'. $article->getValue('name') .'</a>';
+		if($article instanceof rex_article) {
+			print '<a href="'. rex_getUrl($machine->article_id_service, $machine->clang_id).'">'. $article->getValue('name') .'</a>';
+		}
 		print '<p>&nbsp;</p>';
 	}
 		
@@ -367,7 +373,9 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT) > 0 || (rex_a
 		print '<ul>';
 		foreach($machine->article_ids_references as $article_id_reference) {
 			$article = rex_article::get($article_id_reference, $machine->clang_id);
-			print '<li><a href="'. rex_getUrl($article_id_reference, $machine->clang_id) .'">'. $article->getValue('name') .'</a></li>';
+			if($article instanceof rex_article) {
+				print '<li><a href="'. rex_getUrl($article_id_reference, $machine->clang_id) .'">'. $article->getValue('name') .'</a></li>';
+			}
 		}
 		print '</ul>';
 		print '<p>&nbsp;</p>';
@@ -488,15 +496,16 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT) > 0 || (rex_a
 	
 	// Technical data
 	print '<div id="tab_tech_data" class="tab-pane fade machine-tab">';
-	$tech_data = $machine->getTechnicalData();
-	if(count($tech_data) > 0) {
+	$tech_datas = $machine->getTechnicalData();
+	if(count($tech_datas) > 0) {
 		print '<div class="row">';
 		print '<div class="col-12 col-md-8">';
 		print '<table class="techdata">';
-		foreach ($tech_data as $description_wildcard => $value) {
+		foreach ($tech_datas as $tech_data) {
 			print '<tr>';
-			print '<td class="description">'. $description_wildcard .'</td>';
-			print '<td class="value">'. $value .'</td>';
+			print '<td class="description">'. $tech_data["description"] .'</td>';
+			print '<td class="unit">'. $tech_data["unit"] .'</td>';
+			print '<td class="value">'. $tech_data["value"] .'</td>';
 			print '</tr>';
 		}
 		print '</table>';
@@ -512,15 +521,19 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT) > 0 || (rex_a
 	print '<div class="col-12 col-md-8">';
 	$form_data = 'hidden|machine_name|'. $machine->name .'|REQUEST
 
+			text|vorname|'. $tag_open .'d2u_machinery_form_vorname'. $tag_close .'
 			text|name|'. $tag_open .'d2u_machinery_form_name'. $tag_close .' *
+			text|position|'. $tag_open .'d2u_machinery_form_position'. $tag_close .'
 			text|company|'. $tag_open .'d2u_machinery_form_company'. $tag_close .' *
 			text|address|'. $tag_open .'d2u_machinery_form_address'. $tag_close .' *
 			text|zip|'. $tag_open .'d2u_machinery_form_zip'. $tag_close .' *
 			text|city|'. $tag_open .'d2u_machinery_form_city'. $tag_close .' *
 			text|country|'. $tag_open .'d2u_machinery_form_country'. $tag_close .' *
 			text|phone|'. $tag_open .'d2u_machinery_form_phone'. $tag_close .' *
+			text|fax|'. $tag_open .'d2u_machinery_form_fax'. $tag_close .'
 			text|email|'. $tag_open .'d2u_machinery_form_email'. $tag_close .' *
 			textarea|message|'. $tag_open .'d2u_machinery_form_message'. $tag_close .'
+			checkbox|please_call|'. $tag_open .'d2u_machinery_form_please_call'. $tag_close .'|nein, ja|nein
 
 			html||<br>* '. $tag_open .'d2u_machinery_form_required'. $tag_close .'<br><br>
 			captcha|'. $tag_open .'d2u_machinery_form_captcha'. $tag_close .'|'. $tag_open .'d2u_machinery_form_validate_captcha'. $tag_close .'|'. rex_getUrl('', '', ['machine_id' => $machine->machine_id]) .'
@@ -535,7 +548,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT) > 0 || (rex_a
 			validate|empty|country|'. $tag_open .'d2u_machinery_form_validate_country'. $tag_close .'
 			validate|empty|phone|'. $tag_open .'d2u_machinery_form_validate_phone'. $tag_close .'
 			validate|empty|email|'. $tag_open .'d2u_machinery_form_validate_email'. $tag_close .'
-			validate|email|email|'. $tag_open .'d2u_machinery_form_validate_email_false'. $tag_close .'
+			validate|email|email|'. $tag_open .'d2u_machinery_form_validate_email'. $tag_close .'
 
 			action|tpl2email|d2u_machinery_machine_request|emaillabel|'. $d2u_machinery->getConfig('request_form_email');
 
@@ -556,7 +569,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT) > 0 || (rex_a
 	print '</div>';
 	print '</div>';
 }
-else if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable() && (filter_input(INPUT_GET, 'industry_sector_id', FILTER_VALIDATE_INT) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "industry_sector_id"))) {
+else if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable() && (filter_input(INPUT_GET, 'industry_sector_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "industry_sector_id"))) {
 	$industry_sector_id = filter_input(INPUT_GET, 'industry_sector_id', FILTER_VALIDATE_INT);
 	if(rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
 		$industry_sector_id = UrlGenerator::getId();

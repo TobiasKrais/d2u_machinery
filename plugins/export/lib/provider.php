@@ -332,7 +332,7 @@ class Provider {
 						return $rt_error;
 					}
 				}
-				else if(filter_input(INPUT_GET, 'oauth_verifier', FILTER_VALIDATE_INT) > 0 && isset($_SESSION['linkedin']['requesttoken'])) {
+				else if(filter_input(INPUT_GET, 'oauth_verifier', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 && isset($_SESSION['linkedin']['requesttoken'])) {
 					// Logged in an verifiert pin available? Get access token and ...
 					$at_error = $linkedin->getAccessToken(filter_input(INPUT_GET, 'oauth_verifier', FILTER_VALIDATE_INT));
 					if($at_error != "") {

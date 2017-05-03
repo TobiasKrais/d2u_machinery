@@ -200,11 +200,6 @@ class Machine {
 	var $automation_supplys = [];
 
 	/**
-	 * @var Videomanager machine_steel_processing_extension: Automation - video object. FALSE if none.
-	 */
-	var $automation_video = FALSE;
-
-	/**
 	 * @var string machine_steel_processing_extension: Workspace (mm x mm or only mm).
 	 */
 	var $workspace = "";	
@@ -328,6 +323,11 @@ class Machine {
 	 * @var string machine_steel_processing_extension: punching diameter range (mm).
 	 */
 	var $punching_diameter = "";
+
+	/**
+	 * @var string machine_steel_processing_extension: punching power.
+	 */
+	var $punching_power = 0;
 
 	/**
 	 * @var string machine_steel_processing_extension: number of punching tools.
@@ -546,7 +546,6 @@ class Machine {
 				foreach($automation_supply_ids as $automation_supply_id) {
 					$this->automation_supplys[$automation_supply_id] = new Supply($automation_supply_id, $this->clang_id);
 				}
-//				$this->automation_video = new Videomanager($result->getValue("automation_video_id"), $this->clang_id);
 				$this->workspace = $result->getValue("workspace");
 				$this->workspace_square = $result->getValue("workspace_square");
 				$this->workspace_flat = $result->getValue("workspace_flat");
@@ -572,6 +571,7 @@ class Machine {
 				$this->saw_miter = $result->getValue("saw_miter");
 				$this->bevel_angle = $result->getValue("bevel_angle");
 				$this->punching_diameter = $result->getValue("punching_diameter");
+				$this->punching_power = $result->getValue("punching_power");
 				$this->punching_tools = $result->getValue("punching_tools");
 				$this->shaving_unit_angle_steel_single_cut = $result->getValue("shaving_unit_angle_steel_single_cut");
 				$profile_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("profile_ids")), PREG_GREP_INVERT);
@@ -708,7 +708,7 @@ class Machine {
 	 */
 	public function getMetaAlternateHreflangTags() {
 		$hreflang_tags = "";
-		foreach(rex_clang::getAll() as $rex_clang) {
+		foreach(rex_clang::getAll(TRUE) as $rex_clang) {
 			if($rex_clang->getId() == $this->clang_id && $this->translation_needs_update != "delete") {
 				$hreflang_tags .= '<link rel="alternate" type="text/html" hreflang="'. $rex_clang->getCode() .'" href="'. $this->getURL() .'" title="'. str_replace('"', '', $this->category->name .': '. $this->name) .'">';
 			}
@@ -773,8 +773,9 @@ class Machine {
 	
 	/**
 	 * Get Technical Data as array.
-	 * @return string[] Array with technical data. The key is the translation
-	 * placeholder, the value is the value.
+	 * @return string[] Array with technical data. Each element is an array itself.
+	 * First element ist the translation wildcard, second is the value and third
+	 * the unit.
 	 */
 	public function getTechnicalData() {
 		$tech_data = [];
@@ -786,33 +787,573 @@ class Machine {
 		
 		// Max. viscosity
 		if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable() && $this->viscosity > 0) {
-			$tech_data[$tag_open . "d2u_machinery_agitators_viscosity" . $tag_close] = $this->viscosity ." ". $tag_open . "d2u_machinery_agitators_mpas" . $tag_close;
+			$tech_data[] = [
+				"description" => $tag_open . "d2u_machinery_agitators_viscosity" . $tag_close,
+				"value" => $this->viscosity,
+				"unit" => $tag_open . "d2u_machinery_agitators_mpas" . $tag_close
+			];
 		}
 
 		// Engine power
 		if($this->engine_power != "") {
-			$tech_data[$tag_open . "d2u_machinery_engine_power" . $tag_close] = $this->engine_power ." ". $tag_open . "d2u_machinery_unit_kw" . $tag_close;
+			$tech_data[] = [
+				"description" => $tag_open . "d2u_machinery_engine_power" . $tag_close,
+				"value" => $this->engine_power,
+				"unit" => $tag_open . "d2u_machinery_unit_kw" . $tag_close
+			];
 		}
 
 		// Operating voltage
 		if($this->operating_voltage_v != "") {
-			$v = $this->operating_voltage_v ." ". $tag_open . "d2u_machinery_unit_v" . $tag_close;
-			$h = $this->operating_voltage_hz == "" ? "" : " / ". $this->operating_voltage_hz ." ". $tag_open . "d2u_machinery_unit_hz" . $tag_close;
-			$a = $this->operating_voltage_a == "" ? "" : " / ". $this->operating_voltage_a ." ". $tag_open . "d2u_machinery_unit_a" . $tag_close;
-			$tech_data[$tag_open . "d2u_machinery_operating_voltage" . $tag_close] = $v . $h . $a;
+			$v = $this->operating_voltage_v == "" ? "-" : $this->operating_voltage_hz;
+			$h = $this->operating_voltage_hz == "" ? " / -" : " / ". $this->operating_voltage_hz;
+			$a = $this->operating_voltage_a == "" ? " / -" : " / ". $this->operating_voltage_a;
+			$tech_data[] = [
+				"description" => $tag_open . "d2u_machinery_operating_voltage" . $tag_close,
+				"value" => $v . $h . $a,
+				"unit" => $tag_open . "d2u_machinery_unit_v" . $tag_close ." / ". $tag_open . "d2u_machinery_unit_hz" . $tag_close ." / ". $tag_open . "d2u_machinery_unit_a" . $tag_close
+			];
 		}
 		
 		// Dimensions
 		if($this->length > 0 && $this->width > 0 && $this->height > 0) {
-			$tech_data[$tag_open . "d2u_machinery_dimensions_length_width_height" . $tag_close] = $this->length .' x '. $this->width .' x '. $this->height ." ". $tag_open . "d2u_machinery_unit_mm" . $tag_close;
+			$tech_data[] = [
+				"description" => $tag_open . "d2u_machinery_dimensions_length_width_height" . $tag_close,
+				"value" => $this->length .' x '. $this->width .' x '. $this->height,
+				"unit" => $tag_open . "d2u_machinery_unit_mm" . $tag_close
+			];
 		}
 		if($this->depth > 0 && $this->width > 0 && $this->height > 0) {
-			$tech_data[$tag_open . "d2u_machinery_dimensions_width_height_depth" . $tag_close] = $this->width .' x '. $this->height	.' x '. $this->depth ." ". $tag_open . "d2u_machinery_unit_mm" . $tag_close;
+			$tech_data[] = [
+				"description" => $tag_open . "d2u_machinery_dimensions_width_height_depth" . $tag_close,
+				"value" => $this->width .' x '. $this->height	.' x '. $this->depth,
+				"unit" => $tag_open . "d2u_machinery_unit_mm" . $tag_close
+			];
 		}
 
 		// Weight
 		if($this->weight != "") {
-			$tech_data[$tag_open . "d2u_machinery_weight" . $tag_close] = $this->weight ." ". $tag_open . "d2u_machinery_unit_kg" . $tag_close;
+			$tech_data[] = [
+				"description" => $tag_open . "d2u_machinery_weight" . $tag_close,
+				"value" => $this->weight,
+				"unit" => $tag_open . "d2u_machinery_unit_kg" . $tag_close
+			];
+		}
+
+		if(rex_plugin::get("d2u_machinery", "machine_steel_processing_extension")->isAvailable()) {
+			// Procedures
+			if(count($this->procedures) > 0) {
+				$tools = [];
+				foreach($this->procedures as $tool) {
+					$tools[] = $tool->name;
+				}
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_procedures" . $tag_close,
+					"value" => implode('<br>', $tools),
+					"unit" => ""
+				];
+			}
+
+			// Saw blade
+			if($this->saw_blade != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_saw_blade" . $tag_close,
+					"value" => $this->saw_blade,
+					"unit" => $tag_open . "d2u_machinery_unit_diameter_mm" . $tag_close
+				];
+			}
+
+			// Saw band
+			if($this->saw_band != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_saw_band" . $tag_close,
+					"value" => $this->saw_band,
+					"unit" => $tag_open . "d2u_machinery_unit_mm" . $tag_close
+				];
+			}
+
+			// Saw band tilt
+			if($this->saw_band_tilt != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_saw_band_tilt" . $tag_close,
+					"value" => $this->saw_band_tilt,
+					"unit" => $tag_open . "d2u_machinery_unit_degrees" . $tag_close
+				];
+			}
+
+			// Engine power
+			if($this->engine_power != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_engine_power" . $tag_close,
+					"value" => $this->engine_power,
+					"unit" => $tag_open . "d2u_machinery_unit_kw" . $tag_close
+				];
+			}
+
+			// Saw cutting speed
+			if($this->saw_cutting_speed != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_saw_cutting_speed" . $tag_close,
+					"value" => $this->saw_cutting_speed,
+					"unit" => $tag_open . "d2u_machinery_unit_m_min" . $tag_close
+				];
+			}
+
+			// Feed rate
+			if($this->automation_feedrate != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_automation_feedrate" . $tag_close,
+					"value" => $this->automation_feedrate,
+					"unit" => $tag_open . "d2u_machinery_unit_mm_min" . $tag_close
+				];
+			}
+
+			// Rush leader flyback
+			if($this->automation_rush_leader_flyback != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_automation_rush_leader_flyback" . $tag_close,
+					"value" => $this->automation_rush_leader_flyback,
+					"unit" => $tag_open . "d2u_machinery_unit_mm_min" . $tag_close
+				];
+			}
+
+			// Workspace max.
+			if($this->workspace != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_workspace" . $tag_close,
+					"value" => $this->workspace,
+					"unit" => $tag_open . "d2u_machinery_unit_mm" . $tag_close
+				];
+			}
+
+			// Workspace square
+			if($this->workspace_square != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_workspace_square" . $tag_close,
+					"value" => $this->workspace_square,
+					"unit" => $tag_open . "d2u_machinery_unit_mm" . $tag_close
+				];
+			}
+
+			// Workspace flat
+			if($this->workspace_flat != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_workspace_flat" . $tag_close,
+					"value" => $this->workspace_flat,
+					"unit" => $tag_open . "d2u_machinery_unit_mm" . $tag_close
+				];
+			}
+
+			// Workspace round
+			if($this->workspace_round != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_workspace_round" . $tag_close,
+					"value" => $this->workspace_round,
+					"unit" => $tag_open . "d2u_machinery_unit_mm" . $tag_close
+				];
+			}
+
+			// Workspace plates
+			if($this->workspace_plate != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_workspace_plate" . $tag_close,
+					"value" => $this->workspace_plate,
+					"unit" => $tag_open . "d2u_machinery_unit_mm" . $tag_close
+				];
+			}
+
+			// Workspace profile
+			if($this->workspace_profile != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_workspace_profile" . $tag_close,
+					"value" => $this->workspace_profile,
+					"unit" => $tag_open . "d2u_machinery_unit_mm" . $tag_close
+				];
+			}
+
+			// Workspace angle steel
+			if($this->workspace_angle_steel != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_workspace_angle_steel" . $tag_close,
+					"value" => $this->workspace_angle_steel,
+					"unit" => $tag_open . "d2u_machinery_unit_mm" . $tag_close
+				];
+			}
+
+			// Workspace minimum
+			if($this->workspace_min != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_workspace_min" . $tag_close,
+					"value" => $this->workspace_min,
+					"unit" => $tag_open . "d2u_machinery_unit_mm" . $tag_close
+				];
+			}
+
+			// Bevel angle
+			if($this->bevel_angle > 0) {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_bevel_angle" . $tag_close,
+					"value" => $this->bevel_angle,
+					"unit" => $tag_open . "d2u_machinery_unit_degrees" . $tag_close
+				];
+			}
+
+			// Continuous opening
+			if($this->beam_continuous_opening != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_beam_continuous_opening" . $tag_close,
+					"value" => $this->beam_continuous_opening,
+					"unit" => $tag_open . "d2u_machinery_unit_mm" . $tag_close
+				];
+			}
+
+			// Color guns
+			if($this->beam_color_guns != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_beam_color_guns" . $tag_close,
+					"value" => $this->beam_color_guns,
+					"unit" => ""
+				];
+			}
+
+			// Number turbines
+			if($this->beam_turbines > 0) {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_beam_turbines" . $tag_close,
+					"value" => $this->beam_turbines,
+					"unit" => $tag_open . "d2u_machinery_unit_pieces" . $tag_close
+				];
+			}
+
+			// Turbine power
+			if($this->beam_turbine_power != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_beam_turbine_power" . $tag_close,
+					"value" => $this->beam_turbine_power,
+					"unit" => $tag_open . "d2u_machinery_unit_kw" . $tag_close
+				];
+			}
+
+			// saw miter
+			if($this->saw_miter != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_saw_miter" . $tag_close,
+					"value" => $this->saw_miter,
+					"unit" => ""
+				];
+			}
+
+			// Vertical drilling units 
+			if($this->drilling_unit_vertical != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_drilling_unit_vertical" . $tag_close,
+					"value" => $this->drilling_unit_vertical,
+					"unit" => $tag_open . "d2u_machinery_unit_pieces" . $tag_close
+				];
+			}
+
+			// Horizontal drilling units 
+			if($this->drilling_unit_horizontal != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_drilling_unit_horizontal" . $tag_close,
+					"value" => $this->drilling_unit_horizontal,
+					"unit" => $tag_open . "d2u_machinery_unit_pieces" . $tag_close
+				];
+			}
+
+			// Horizontal drilling units 
+			if($this->drilling_diameter != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_drilling_diameter" . $tag_close,
+					"value" => $this->drilling_diameter,
+					"unit" => $tag_open . "d2u_machinery_unit_mm" . $tag_close
+				];
+			}
+
+			// Drilling tools per axis 
+			if($this->drilling_tools_axis != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_drilling_tools_axis" . $tag_close,
+					"value" => $this->drilling_tools_axis,
+					"unit" => $tag_open . "d2u_machinery_unit_pieces" . $tag_close
+				];
+			}
+
+			// Drilling axis drive power
+			if($this->drilling_axis_drive_power != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_drilling_axis_drive_power" . $tag_close,
+					"value" => $this->drilling_axis_drive_power,
+					"unit" => $tag_open . "d2u_machinery_unit_kw" . $tag_close
+				];
+			}
+
+			// Max. drilling speed
+			if($this->drilling_rpm_speed != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_drilling_rpm_speed" . $tag_close,
+					"value" => $this->drilling_rpm_speed,
+					"unit" => $tag_open . "d2u_machinery_unit_min1" . $tag_close
+				];
+			}
+
+			// Sheet width
+			if($this->sheet_width != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_sheet_width" . $tag_close,
+					"value" => $this->sheet_width,
+					"unit" => $tag_open . "d2u_machinery_unit_mm" . $tag_close
+				];
+			}
+
+			// Sheet length
+			if($this->sheet_length != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_sheet_length" . $tag_close,
+					"value" => $this->sheet_length,
+					"unit" => $tag_open . "d2u_machinery_unit_mm" . $tag_close
+				];
+			}
+
+			// Sheet thickness
+			if($this->sheet_thickness != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_sheet_thickness" . $tag_close,
+					"value" => $this->sheet_thickness,
+					"unit" => $tag_open . "d2u_machinery_unit_mm" . $tag_close
+				];
+			}
+
+			// Tool changer locations
+			if($this->tool_changer_locations != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_tool_changer_locations" . $tag_close,
+					"value" => $this->tool_changer_locations,
+					"unit" => $tag_open . "d2u_machinery_unit_pieces" . $tag_close
+				];
+			}
+
+			// punching diameter
+			if($this->punching_diameter != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_punching_diameter" . $tag_close,
+					"value" => $this->punching_diameter,
+					"unit" => $tag_open . "d2u_machinery_unit_mm" . $tag_close
+				];
+			}
+
+			// Number of punching tools
+			if($this->punching_tools != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_punching_tools" . $tag_close,
+					"value" => $this->punching_tools,
+					"unit" => $tag_open . "d2u_machinery_unit_pieces" . $tag_close
+				];
+			}
+
+			// Punching power
+			if($this->punching_power > 0) {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_punching_power" . $tag_close,
+					"value" => $this->punching_power,
+					"unit" => $tag_open . "d2u_machinery_unit_kn" . $tag_close
+				];
+			}
+
+			// Shaving unit angle steel singel cut
+			if($this->shaving_unit_angle_steel_single_cut > 0) {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_shaving_unit_angle_steel_single_cut" . $tag_close,
+					"value" => $this->shaving_unit_angle_steel_single_cut,
+					"unit" => $tag_open . "d2u_machinery_unit_kn" . $tag_close
+				];
+			}
+			
+			// Tools
+			if(count($this->tools) > 0) {
+				$tools = [];
+				foreach($this->tools as $tool) {
+					$tools[] = $tool->name;
+				}
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_tools" . $tag_close,
+					"value" => implode('<br>', $tools),
+					"unit" => ""
+				];
+			}
+			
+			// Automationgrades
+			if(count($this->automation_automationgrades) > 0) {
+				$automation_automationgrades = [];
+				foreach($this->automation_automationgrades as $automationgrade) {
+					$automation_automationgrades[] = $automationgrade->name;
+				}
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_automation_automationgrades" . $tag_close,
+					"value" => implode('<br>', $automation_automationgrades),
+					"unit" => ""
+				];
+			}
+			
+			// Material classes
+			if(count($this->materials) > 0) {
+				$materials = [];
+				foreach($this->materials as $material) {
+					$materials[] = $material->name;
+				}
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_materials" . $tag_close,
+					"value" => implode('<br>', $materials),
+					"unit" => ""
+				];
+			}
+			
+			// Processes
+			if(count($this->processes) > 0) {
+				$processes = [];
+				foreach($this->processes as $process) {
+					$processes[] = $process->name;
+				}
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_processes" . $tag_close,
+					"value" => implode('<br>', $processes),
+					"unit" => ""
+				];
+			}
+			
+			// Profiles
+			if(count($this->profiles) > 0) {
+				$profiles = [];
+				foreach($this->profiles as $profile) {
+					$profiles[] = $profile->name;
+				}
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_profiles" . $tag_close,
+					"value" => implode('<br>', $profiles),
+					"unit" => ""
+				];
+			}
+
+			// Carrier width
+			if($this->carrier_width != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_carrier_width" . $tag_close,
+					"value" => $this->carrier_width,
+					"unit" => $tag_open . "d2u_machinery_unit_mm" . $tag_close
+				];
+			}
+
+			// Carrier height
+			if($this->carrier_height != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_carrier_height" . $tag_close,
+					"value" => $this->carrier_height,
+					"unit" => $tag_open . "d2u_machinery_unit_mm" . $tag_close
+				];
+			}
+
+			// Carrier max. weight
+			if($this->carrier_weight > 0) {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_carrier_weight" . $tag_close,
+					"value" => $this->carrier_weight,
+					"unit" => $tag_open . "d2u_machinery_unit_kg" . $tag_close
+				];
+			}
+			
+			// Flange thickness
+			if($this->flange_thickness != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_flange_thickness" . $tag_close,
+					"value" => $this->flange_thickness,
+					"unit" => $tag_open . "d2u_machinery_unit_mm" . $tag_close
+				];
+			}
+			
+			// Web thickness min. / max.
+			if($this->web_thickness != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_web_thickness" . $tag_close,
+					"value" => $this->web_thickness,
+					"unit" => $tag_open . "d2u_machinery_unit_mm" . $tag_close
+				];
+			}
+			
+			// Component length
+			if($this->component_length != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_component_length" . $tag_close,
+					"value" => $this->component_length,
+					"unit" => $tag_open . "d2u_machinery_unit_mm" . $tag_close
+				];
+			}
+			
+			// Component weight
+			if($this->component_weight > 0) {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_component_weight" . $tag_close,
+					"value" => $this->component_weight,
+					"unit" => $tag_open . "d2u_machinery_unit_kg" . $tag_close
+				];
+			}
+			
+			// Welding processes
+			if(count($this->weldings) > 0) {
+				$welding_processes = [];
+				foreach($this->weldings as $welding) {
+					$welding_processes[] = $welding->name;
+				}
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_weldings" . $tag_close,
+					"value" => implode('<br>', $welding_processes),
+					"unit" => ""
+				];
+			}
+			
+			// Welding thickness
+			if($this->welding_thickness > 0) {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_welding_thickness" . $tag_close,
+					"value" => $this->welding_thickness,
+					"unit" => $tag_open . "d2u_machinery_unit_a_mm" . $tag_close
+				];
+			}
+			
+			// Welding wire thickness
+			if($this->welding_wire_thickness != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_welding_wire_thickness" . $tag_close,
+					"value" => $this->welding_wire_thickness,
+					"unit" => $tag_open . "d2u_machinery_unit_mm" . $tag_close
+				];
+			}
+			
+			// Welding wire thickness
+			if($this->welding_wire_thickness != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_welding_wire_thickness" . $tag_close,
+					"value" => $this->welding_wire_thickness,
+					"unit" => $tag_open . "d2u_machinery_unit_mm" . $tag_close
+				];
+			}
+			
+			// Automation supply single stroke
+			if($this->automation_supply_single_stroke != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_automation_supply_single_stroke" . $tag_close,
+					"value" => $this->automation_supply_single_stroke,
+					"unit" => $tag_open . "d2u_machinery_unit_mm" . $tag_close
+				];
+			}
+			
+			// Automation supply multi stroke
+			if($this->automation_supply_multi_stroke != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_automation_supply_multi_stroke" . $tag_close,
+					"value" => $this->automation_supply_multi_stroke,
+					"unit" => $tag_open . "d2u_machinery_unit_mm" . $tag_close
+				];
+			}
 		}
 		
 		return $tech_data;
@@ -908,7 +1449,6 @@ class Machine {
 					.", automation_rush_leader_flyback = '". $this->automation_rush_leader_flyback ."' "
 					.", automation_automationgrade_ids = '|". implode("|", array_keys($this->automation_automationgrades)) ."|' "
 					.", automation_supply_ids = '|". implode("|", array_keys($this->automation_supplys)) ."|' "
-					.", automation_video_id = ". ($this->automation_video !== FALSE ? $this->automation_video->video_id : 0) ." "
 					.", workspace = '". $this->workspace ."' "
 					.", workspace_square = '". $this->workspace_square ."' "
 					.", workspace_flat = '". $this->workspace_flat ."' "
@@ -934,6 +1474,7 @@ class Machine {
 					.", saw_miter = '". $this->saw_miter ."' "
 					.", bevel_angle = ". $this->bevel_angle ." "
 					.", punching_diameter = '". $this->punching_diameter ."' "
+					.", punching_power = ". $this->punching_power ." "
 					.", punching_tools = '". $this->punching_tools ."' "
 					.", shaving_unit_angle_steel_single_cut = ". $this->shaving_unit_angle_steel_single_cut ." "
 					.", profile_ids = '|". implode("|", array_keys($this->profiles)) ."|' "
@@ -981,8 +1522,8 @@ class Machine {
 						."machine_id = '". $this->machine_id ."', "
 						."clang_id = '". $this->clang_id ."', "
 						."lang_name = '". $this->lang_name ."', "
-						."teaser = '". htmlspecialchars($this->teaser) ."', "
-						."description = '". htmlspecialchars($this->description) ."', "
+						."teaser = '". addslashes(htmlspecialchars($this->teaser)) ."', "
+						."description = '". addslashes(htmlspecialchars($this->description)) ."', "
 						."pdfs = '". implode(",", $this->pdfs) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = ". time() .", "

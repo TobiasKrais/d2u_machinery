@@ -313,7 +313,7 @@ class UsedMachine {
 	 */
 	public function getMetaAlternateHreflangTags() {
 		$hreflang_tags = "";
-		foreach(rex_clang::getAll() as $rex_clang) {
+		foreach(rex_clang::getAll(TRUE) as $rex_clang) {
 			if($rex_clang->getId() == $this->clang_id && $this->translation_needs_update != "delete") {
 				$hreflang_tags .= '<link rel="alternate" type="text/html" hreflang="'. $rex_clang->getCode() .'" href="'. $this->getURL() .'" title="'. str_replace('"', '', $this->category->name .': '. $this->name) .'">';
 			}

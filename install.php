@@ -23,6 +23,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machin
 	operating_voltage_v varchar(255) collate utf8_general_ci default NULL,
 	operating_voltage_hz varchar(255) collate utf8_general_ci default NULL,
 	operating_voltage_a varchar(255) collate utf8_general_ci default NULL,
+	videomanager_ids varchar(255) collate utf8_general_ci default NULL,
 	PRIMARY KEY (machine_id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
 $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machinery_machines_lang (
@@ -54,7 +55,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machin
 	teaser varchar(255) collate utf8_general_ci default NULL,
 	usage_area varchar(255) collate utf8_general_ci default NULL,
 	pic_lang varchar(255) collate utf8_general_ci default NULL,
-	pdfs varchar(255) collate utf8_general_ci default NULL,
+	pdfs TEXT collate utf8_general_ci default NULL,
 	translation_needs_update varchar(7) collate utf8_general_ci default NULL,
 	updatedate int(11) default NULL,
 	updateuser varchar(255) collate utf8_general_ci default NULL,
@@ -108,8 +109,8 @@ if($sql->getRows() == 0) {
 // YForm e-mail template
 $sql->setQuery("SELECT * FROM ". rex::getTablePrefix() ."yform_email_template WHERE name = 'd2u_machinery_machine_request'");
 if($sql->getRows() == 0) {
-	$sql->setQuery("INSERT INTO ". rex::getTablePrefix() ."yform_email_template (`name`, `mail_from`, `mail_from_name`, `subject`, `body`) VALUES
-		('d2u_machinery_machine_request', 'REX_YFORM_DATA[field=\"email\"]', 'REX_YFORM_DATA[field=\"name\"]', 'Maschinenanfrage', 'Maschinenanfrage von Internetseite:\r\nMaschine: REX_YFORM_DATA[field=\"machine_name\"]\r\n\r\nEs fragt an:\r\nName: REX_YFORM_DATA[field=\"name\"]\r\nFirma: REX_YFORM_DATA[field=\"company\"]\r\nAnschrift: REX_YFORM_DATA[field=\"address\"]\r\nPLZ/Ort: REX_YFORM_DATA[field=\"zip\"] REX_YFORM_DATA[field=\"city\"]\r\nLand: REX_YFORM_DATA[field=\"country\"]\r\nTelefon: REX_YFORM_DATA[field=\"phone\"]\r\nEmail: REX_YFORM_DATA[field=\"email\"]\r\n\r\nNachricht: REX_YFORM_DATA[field=\"message\"]\r\n')");
+	$sql->setQuery("INSERT INTO ". rex::getTablePrefix() ."yform_email_template (`name`, `mail_from`, `mail_from_name`, `subject`, `body`, `body_html`, `attachments`) VALUES
+		('d2u_machinery_machine_request', 'REX_YFORM_DATA[field=\"email\"]', 'REX_YFORM_DATA[field=\"vorname\"] REX_YFORM_DATA[field=\"name\"]', 'Maschinenanfrage', 'Maschinenanfrage von Internetseite:\r\nMaschine: REX_YFORM_DATA[field=\"machine_name\"]\r\n\r\nEs fragt an:\r\nVorname: REX_YFORM_DATA[field=\"vorname\"]\r\nName: REX_YFORM_DATA[field=\"name\"]\r\nFunktion: REX_YFORM_DATA[field=\"position\"]\r\nFirma: REX_YFORM_DATA[field=\"company\"]\r\nAnschrift: REX_YFORM_DATA[field=\"address\"]\r\nPLZ/Ort: REX_YFORM_DATA[field=\"zip\"] REX_YFORM_DATA[field=\"city\"]\r\nLand: REX_YFORM_DATA[field=\"country\"]\r\nTelefon: REX_YFORM_DATA[field=\"phone\"]\r\nFax: REX_YFORM_DATA[field=\"fax\"]\r\nEmail: REX_YFORM_DATA[field=\"email\"]\r\nBitte um Rückruf: REX_YFORM_DATA[field=\"please_call\"]\r\n\r\nNachricht: REX_YFORM_DATA[field=\"message\"]\r\n', '', '')");
 }
 
 // Standard settings

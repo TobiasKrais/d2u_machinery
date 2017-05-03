@@ -9,6 +9,55 @@ if(rex::isBackend() && is_object(rex::getUser())) {
 
 if(rex::isBackend()) {
 	rex_extension::register('MEDIA_IS_IN_USE', 'rex_d2u_machinery_media_is_in_use');
+	rex_extension::register('ART_PRE_DELETED', 'rex_d2u_machinery_article_is_in_use');
+}
+
+/**
+ * Checks if article is used by this addon
+ * @param rex_extension_point $ep Redaxo extension point
+ * @return string[] Warning message as array
+ * @throws rex_api_exception If article is used
+ */
+function rex_d2u_machinery_article_is_in_use(rex_extension_point $ep) {
+	$warning = [];
+	$params = $ep->getParams();
+	$article_id = $params['id'];
+
+	// Machines
+	$sql_machine = rex_sql::factory();
+	$sql_machine->setQuery('SELECT lang.machine_id, name FROM `' . rex::getTablePrefix() . 'd2u_machinery_machines_lang` AS lang '
+		.'LEFT JOIN `' . rex::getTablePrefix() . 'd2u_machinery_machines` AS machines ON lang.machine_id = machines.machine_id '
+		.'WHERE article_id_software = "'. $article_id .'" OR article_id_service = "'. $article_id .'" '.
+			'OR article_id_service = "'. $article_id .'" OR article_ids_references LIKE "%,'. $article_id .',%" OR article_ids_references LIKE "%,'. $article_id .'" OR article_ids_references LIKE "'. $article_id .',%"'
+		.'GROUP BY machine_id');
+	
+
+	// Prepare warnings
+	// Machines
+	for($i = 0; $i < $sql_machine->getRows(); $i++) {
+		$message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/machine&func=edit&entry_id='.
+			$sql_machine->getValue('machine_id') .'\')">'. rex_i18n::msg('d2u_machinery_rights_all') ." - ". rex_i18n::msg('d2u_machinery_meta_machines') .': '. $sql_machine->getValue('name') .'</a>';
+		if(!in_array($message, $warning)) {
+			$warning[] = $message;
+		}
+    }
+	
+	// Settings
+	$addon = rex_addon::get("d2u_machinery");
+	if($addon->hasConfig("article_id") && $addon->getConfig("article_id") == $article_id) {
+		$message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/settings\')">'.
+			 rex_i18n::msg('d2u_machinery_rights_all') ." - ". rex_i18n::msg('d2u_machinery_meta_settings') . '</a>';
+		if(!in_array($message, $warning)) {
+			$warning[] = $message;
+		}
+	}
+
+	if(count($warning) > 0) {
+		throw new rex_api_exception(rex_i18n::msg('d2u_helper_rex_article_cannot_delete')."<br> ".implode("<br>", $warning));
+	}
+	else {
+		return explode("<br>", $warning);
+	}
 }
 
 /**

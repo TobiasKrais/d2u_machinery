@@ -131,9 +131,10 @@ class IndustrySector {
 	/**
 	 * Get all industry sectors.
 	 * @param int $clang_id Redaxo clang id.
+	 * @param boolean $online_only TRUE if only online objects should be returned.
 	 * @return IndustrySector[] Array with IndustrySector objects.
 	 */
-	public static function getAll($clang_id) {
+	public static function getAll($clang_id, $online_only = FALSE) {
 		$query = "SELECT industry_sector_id FROM ". rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang "
 			."WHERE clang_id = ". $clang_id ." ";
 		$query .= "ORDER BY name";
@@ -143,7 +144,13 @@ class IndustrySector {
 		
 		$industry_sectors = array();
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$industry_sectors[] = new IndustrySector($result->getValue("industry_sector_id"), $clang_id);
+			$industry_sector = new IndustrySector($result->getValue("industry_sector_id"), $clang_id);
+			if($online_only && $industry_sector->isOnline()) {
+				$industry_sectors[] = $industry_sector;
+			}
+			else if($online_only === FALSE) {
+				$industry_sectors[] = $industry_sector;
+			}
 			$result->next();
 		}
 		return $industry_sectors;
@@ -181,7 +188,7 @@ class IndustrySector {
 	 */
 	public function getMetaAlternateHreflangTags() {
 		$hreflang_tags = "";
-		foreach(rex_clang::getAll() as $rex_clang) {
+		foreach(rex_clang::getAll(TRUE) as $rex_clang) {
 			if($rex_clang->getId() == $this->clang_id && $this->translation_needs_update != "delete") {
 				$hreflang_tags .= '<link rel="alternate" type="text/html" hreflang="'. $rex_clang->getCode() .'" href="'. $this->getURL() .'" title="'. str_replace('"', '', $this->name) .'">';
 			}
@@ -232,6 +239,24 @@ class IndustrySector {
 			return $this->url;
 		}
 	}
+	
+	/**
+	 * Returns if object is used and thus online.
+	 * @return boolean TRUE if object is online, otherwise FALSE.
+	 */
+	public function isOnline() {
+		$query = "SELECT machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_machines "
+			."WHERE industry_sector_ids LIKE '%|". $this->industry_sector_id ."|%'";
+		$result = rex_sql::factory();
+		$result->setQuery($query);
+		
+		if($result->getRows() > 0) {
+			return TRUE;
+		}
+		else {
+			return FALSE;
+		}
+	}	
 	
 	/**
 	 * Updates or inserts the object into database.

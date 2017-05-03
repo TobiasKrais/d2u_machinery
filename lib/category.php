@@ -200,11 +200,11 @@ class Category {
 					$used_machine_id = 0;
 					if(rex_addon::get("url")->isAvailable()) {
 						$url_data = UrlGenerator::getData();
-						if($url_data->urlParamKey=== "used_machine_id") {
+						if(isset($url_data->urlParamKey) && $url_data->urlParamKey === "used_machine_id") {
 							$used_machine_id = UrlGenerator::getId();
 						}
 					}
-					else if(filter_input(INPUT_GET, 'used_machine_id', FILTER_VALIDATE_INT) > 0) {
+					else if(filter_input(INPUT_GET, 'used_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0) {
 						$used_machine_id = filter_input(INPUT_GET, 'used_machine_id', FILTER_VALIDATE_INT);
 					}
 					if($used_machine_id > 0) {
@@ -302,7 +302,8 @@ class Category {
 	/**
 	 * Get technical data matrix for this category.
 	 * @return mixed[] Key is the name of the sprog wildcard describing the field.
-	 * Values are an array with the machine id as key and the value as value.
+	 * Values are the unit ('unit' => $unit) and an array called 'machine_ids'
+	 * with the machine id as key and the value as value.
 	 */
 	public function getTechDataMatrix() {
 		$machines = $this->getMachines();
@@ -315,18 +316,22 @@ class Category {
 		}
 		// Get wildcards
 		foreach($tech_data_arrays as $tech_data_array) {
-			$tech_data_wildcards = array_unique(array_merge(array_keys($tech_data_array), $tech_data_wildcards));
+			foreach($tech_data_array as $tech_data) {
+				$tech_data_wildcards[$tech_data['description']] = $tech_data['unit'];
+			}
 		}
 		// Create matrix
-		foreach($tech_data_wildcards as $wildcard) {
-			$matrix[$wildcard] = [];
+		foreach($tech_data_wildcards as $wildcard => $unit) {
+			$key = ['description' => $wildcard, 'unit' => $unit];
+			$matrix[$wildcard] = ['unit' => $unit, 'machine_ids' => []];
 			foreach($machines as $machine) {
 				$tech_data_array = $tech_data_arrays[$machine->machine_id];
-				if(array_key_exists($wildcard, $tech_data_array)) {
-					$matrix[$wildcard][$machine->machine_id] = $tech_data_array[$wildcard];
-				}
-				else {
-					$matrix[$wildcard][$machine->machine_id] = "";
+				$matrix[$wildcard]['machine_ids'][$machine->machine_id] = "";
+				foreach($tech_data_array as $techdata) {
+					if($techdata['description'] == $wildcard) {
+						$matrix[$wildcard]['machine_ids'][$machine->machine_id] = $techdata['value'];
+						break;
+					}
 				}
 			}
 		}
@@ -364,28 +369,19 @@ class Category {
 	}
 	
 	/**
-	 * Detects whether category is child or not.
-	 * @return boolean TRUE if category has father.
-	 */
-	public function isChild() {
-		if($this->parent_category === FALSE) {
-			return FALSE;
-		}
-		else {
-			return TRUE;
-		}
-	}
-	
-	/**
 	 * Gets the machines of the category.
+	 * @param boolean $online_only TRUE if only online machines should be returned.
 	 * @return Machine[] Machines in this category
 	 */
-	public function getMachines() {
+	public function getMachines($online_only = FALSE) {
 		$query = "SELECT lang.machine_id, IF(lang.lang_name IS NULL or lang.lang_name = '', machines.name, lang.lang_name) as machine_name "
 			. "FROM ". rex::getTablePrefix() ."d2u_machinery_machines_lang AS lang "
 			."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_machines AS machines "
 					."ON lang.machine_id = machines.machine_id "
 			."WHERE category_id = ". $this->category_id ." AND clang_id = ". $this->clang_id .' ';
+		if($online_only) {
+			$query .= "AND online_status = 'online' ";
+		}
 		if(rex_addon::get('d2u_machinery')->getConfig('default_machine_sort') == 'priority') {
 			$query .= 'ORDER BY priority ASC';
 		}
@@ -409,7 +405,7 @@ class Category {
 	 */
 	public function getMetaAlternateHreflangTags() {
 		$hreflang_tags = "";
-		foreach(rex_clang::getAll() as $rex_clang) {
+		foreach(rex_clang::getAll(TRUE) as $rex_clang) {
 			if($rex_clang->getId() == $this->clang_id && $this->translation_needs_update != "delete") {
 				$hreflang_tags .= '<link rel="alternate" type="text/html" hreflang="'. $rex_clang->getCode() .'" href="'. $this->getURL() .'" title="'. str_replace('"', '', $this->name) .'">';
 			}
@@ -494,6 +490,87 @@ class Category {
 		}
 	}
 	
+	/*
+	 * Returns the URL of this object.
+	 * @param string $including_domain TRUE if Domain name should be included
+	 * @return string URL
+	 */
+	public function getURLCuttingRangeConfigurator($including_domain = FALSE) {
+		if(rex_plugin::get("d2u_machinery", "machine_steel_processing_extension")->isAvailable()) {
+			if($this->cutting_range_url == "") {
+				$d2u_machinery = rex_addon::get("d2u_machinery");
+
+				$parameterArray = [];
+				$parameterArray['category_id'] = $this->category_id;
+				$parameterArray['cutting_range_configurator'] = $this->steel_processing_saw_cutting_range_file;
+
+				$article_id = $d2u_machinery->getConfig('article_id');
+				$this->cutting_range_url = rex_getUrl($article_id, $this->clang_id, $parameterArray, "&");
+			}
+
+			if($including_domain) {
+				return str_replace(rex::getServer(). '/', rex::getServer(), rex::getServer() . $this->cutting_range_url);
+			}
+			else {
+				return $this->cutting_range_url;
+			}
+		}
+		
+		return FALSE;
+	}
+
+	/**
+	 * Detects usage of this category as parent category.
+	 * @return boolean TRUE if childs exist, otherwise FALSE
+	 */
+	public function hasChildren() {
+		$query = "SELECT category_id FROM ". rex::getTablePrefix() ."d2u_machinery_categories "
+			."WHERE parent_category_id = ". $this->category_id;
+		$result = rex_sql::factory();
+		$result->setQuery($query);
+		
+		if($result->getRows() > 0) {
+			return TRUE;
+		}
+		else {
+			return FALSE;
+		}
+	}
+	
+	/**
+	 * Detects if machines in this category exist
+	 * @return boolean TRUE if child categories exist, otherwise FALSE
+	 */
+	public function hasMachines() {
+		$query = "SELECT lang.machine_id, IF(lang.lang_name IS NULL or lang.lang_name = '', machines.name, lang.lang_name) as machine_name "
+			. "FROM ". rex::getTablePrefix() ."d2u_machinery_machines_lang AS lang "
+			."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_machines AS machines "
+					."ON lang.machine_id = machines.machine_id "
+			."WHERE category_id = ". $this->category_id ." AND clang_id = ". $this->clang_id;
+		$result = rex_sql::factory();
+		$result->setQuery($query);
+		
+		if($result->getRows() > 0) {
+			return TRUE;
+		}
+		else {
+			return FALSE;
+		}
+	}
+	
+	/**
+	 * Detects whether category is child or not.
+	 * @return boolean TRUE if category has father.
+	 */
+	public function isChild() {
+		if($this->parent_category === FALSE) {
+			return FALSE;
+		}
+		else {
+			return TRUE;
+		}
+	}
+
 	/**
 	 * Updates or inserts the object into database.
 	 * @return boolean TRUE if successful

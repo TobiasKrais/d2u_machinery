@@ -41,11 +41,11 @@ class Process {
 	 */
 	 public function __construct($process_id, $clang_id) {
 		$this->clang_id = $clang_id;
-		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_steel_process AS processs "
+		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_steel_process AS process "
 				."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_steel_process_lang AS lang "
-					."ON processs.process_id = lang.process_id "
+					."ON process.process_id = lang.process_id "
 					."AND clang_id = ". $this->clang_id ." "
-				."WHERE processs.process_id = ". $process_id;
+				."WHERE process.process_id = ". $process_id;
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		$num_rows = $result->getRows();
@@ -86,7 +86,7 @@ class Process {
 	}
 	
 	/**
-	 * Get all processs.
+	 * Get all process.
 	 * @param int $clang_id Redaxo clang id.
 	 * @return Process[] Array with Process objects.
 	 */
@@ -98,12 +98,12 @@ class Process {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$processs = array();
+		$process = array();
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$processs[] = new Process($result->getValue("process_id"), $clang_id);
+			$process[] = new Process($result->getValue("process_id"), $clang_id);
 			$result->next();
 		}
-		return $processs;
+		return $process;
 	}
 	
 	/**

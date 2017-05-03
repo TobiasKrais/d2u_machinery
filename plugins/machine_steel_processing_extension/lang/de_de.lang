@@ -46,6 +46,7 @@ d2u_machinery_steel_punching_component_length = Bauteilelänge min. / max. (mm)
 d2u_machinery_steel_punching_component_weight = Bauteilgewicht max. (kg/m)
 d2u_machinery_steel_punching_diameter = Stanzdurchmesser (mm)
 d2u_machinery_steel_punching_flange_thickness = Flanschdicke min. / max. (mm)
+d2u_machinery_steel_punching_power = Stanzkraft
 d2u_machinery_steel_punching_profiles = Profilbereiche
 d2u_machinery_steel_punching_shaving_unit_angle_steel_single_cut = Winkelstahl-Schereinheit single cut (kN)
 d2u_machinery_steel_punching_tools = Anzahl Stanzwerkzeuge

@@ -124,8 +124,7 @@ if($sql->getRows() == 0) {
 		. "ADD automation_rush_leader_flyback VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER automation_feedrate, "
 		. "ADD automation_automationgrade_ids VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER automation_rush_leader_flyback, "
 		. "ADD automation_supply_ids VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER automation_automationgrade_ids, "
-		. "ADD automation_video_id int(10) DEFAULT NULL AFTER automation_supply_ids, "
-		. "ADD workspace VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER automation_video_id, "
+		. "ADD workspace VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER automation_supply_ids, "
 		. "ADD workspace_square VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER workspace, "
 		. "ADD workspace_flat VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER workspace_square, "
 		. "ADD workspace_plate VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER workspace_flat, "
@@ -150,7 +149,8 @@ if($sql->getRows() == 0) {
 		. "ADD saw_miter VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER saw_cutting_speed, "
 		. "ADD bevel_angle int(10) DEFAULT NULL AFTER saw_miter, "
 		. "ADD punching_diameter VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER bevel_angle, "
-		. "ADD punching_tools VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER punching_diameter, "
+		. "ADD punching_power INT(5) NULL DEFAULT NULL AFTER punching_diameter, "
+		. "ADD punching_tools VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER punching_power, "
 		. "ADD shaving_unit_angle_steel_single_cut int(10) DEFAULT NULL AFTER punching_tools, "
 		. "ADD profile_ids VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER shaving_unit_angle_steel_single_cut, "
 		. "ADD carrier_width VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER profile_ids, "
@@ -164,7 +164,7 @@ if($sql->getRows() == 0) {
 		. "ADD welding_thickness int(10) DEFAULT NULL AFTER welding_process_ids, "
 		. "ADD welding_wire_thickness VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER welding_thickness, "
 		. "ADD beam_continuous_opening VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER welding_wire_thickness, "
-		. "ADD beam_turbines int(10) DEFAULT NULL AFTER beam_continuous_opening, "
+		. "ADD beam_turbines int(3) DEFAULT NULL AFTER beam_continuous_opening, "
 		. "ADD beam_turbine_power VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER beam_turbines, "
 		. "ADD beam_color_guns VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER beam_turbine_power"		
 	);
@@ -181,3 +181,6 @@ if($sql->getRows() == 0) {
 	$sql->setQuery("ALTER TABLE ". rex::getTablePrefix() ."d2u_machinery_categories_lang "
 		. "ADD steel_processing_saw_cutting_range_title VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER steel_processing_saw_cutting_range_file;");
 }
+
+// Insert frontend translations
+machine_steel_processing_extension_lang_helper::factory()->install();

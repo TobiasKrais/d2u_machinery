@@ -143,9 +143,9 @@ class Supply {
 	 * @return Supply[] Array with Supply objects.
 	 */
 	public static function getAll($clang_id, $only_online = FALSE) {
-		$query = "SELECT supply_id FROM ". rex::getTablePrefix() ."d2u_machinery_steel_supply_lang AS lang "
+		$query = "SELECT lang.supply_id FROM ". rex::getTablePrefix() ."d2u_machinery_steel_supply_lang AS lang "
 			. "LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_steel_supply AS supply "
-				. "ON lang.supply_id = supply.supply_id"
+				. "ON lang.supply_id = supply.supply_id "
 			."WHERE clang_id = ". $clang_id ." ";
 		if($only_online) {
 			$query .= "WHERE online_status = 'online' ";
