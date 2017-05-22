@@ -6,8 +6,8 @@
  */
 class D2UMachineryModules {
 	/**
-	 * Get modules offered by D2U Helper addon.
-	 * @return D2UModule[] Modules offered by D2U Helper addon
+	 * Get modules offered by this addon.
+	 * @return D2UModule[] Modules offered by this addon
 	 */
 	public static function getD2UMachineryModules() {
 		$d2u_machinery_modules = [];
