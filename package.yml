@@ -14,9 +14,9 @@ page:
         setup: { title: 'translate:d2u_machinery_meta_setup', icon: rex-icon rex-icon-install, perm: d2u_machinery[settings] }
 
 requires:
-    redaxo: '>=5.1.0'
+    redaxo: '>=5.3.0'
     php:
-        version: '>=5.3'
+        version: '>=7.0'
     packages:
         d2u_helper: '>=1.2'
         media_manager: '>=2.2'

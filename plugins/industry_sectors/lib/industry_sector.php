@@ -166,9 +166,10 @@ class IndustrySector {
 	
 	/**
 	 * Gets the machines reffering to this object.
+	 * @param boolean $online_only TRUE if only online machines should be returned.
 	 * @return Machine[] Machines reffering to this object.
 	 */
-	public function getMachines() {
+	public function getMachines($online_only = FALSE) {
 		$query = "SELECT machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_machines "
 			."WHERE industry_sector_ids LIKE '%|". $this->industry_sector_id ."|%'";
 		$result = rex_sql::factory();
@@ -176,7 +177,10 @@ class IndustrySector {
 		
 		$machines = array();
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$machines[] = new Machine($result->getValue("machine_id"), $this->clang_id);
+			$machine = new Machine($result->getValue("machine_id"), $this->clang_id);
+			if($online_only === FALSE || ($online_only && $machine->online_status == "online")) {
+				$machines[] = $machine;
+			}
 			$result->next();
 		}
 		return $machines;
@@ -223,7 +227,7 @@ class IndustrySector {
 	 * @param string $including_domain TRUE if Domain name should be included
 	 * @return string URL
 	 */
-	public function getURL($including_domain = TRUE) {
+	public function getURL($including_domain = FALSE) {
 		if($this->url == "") {
 			$d2u_machinery = rex_addon::get("d2u_machinery");
 				
@@ -298,7 +302,9 @@ class IndustrySector {
 						."clang_id = '". $this->clang_id ."', "
 						."name = '". $this->name ."', "
 						."teaser = '". htmlspecialchars($this->teaser) ."', "
-						."translation_needs_update = '". $this->translation_needs_update ."' ";
+						."translation_needs_update = '". $this->translation_needs_update ."' "
+						."updatedate = ". time() .", "
+						."updateuser = '". rex::getUser()->getLogin() ."' ";
 
 				$result = rex_sql::factory();
 				$result->setQuery($query);

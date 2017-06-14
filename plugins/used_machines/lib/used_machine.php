@@ -417,7 +417,7 @@ class UsedMachine {
 	 * @param string $including_domain TRUE if Domain name should be included
 	 * @return string URL
 	 */
-	public function getURL($including_domain = TRUE) {
+	public function getURL($including_domain = FALSE) {
 		if($this->url == "") {
 			$d2u_machinery = rex_addon::get("d2u_machinery");
 				
@@ -487,8 +487,8 @@ class UsedMachine {
 				$query = "REPLACE INTO ". rex::getTablePrefix() ."d2u_machinery_used_machines_lang SET "
 						."used_machine_id = '". $this->used_machine_id ."', "
 						."clang_id = '". $this->clang_id ."', "
-						."teaser = '". htmlspecialchars($this->teaser) ."', "
-						."description = '". htmlspecialchars($this->description) ."', "
+						."teaser = '". htmlspecialchars(addslashes($this->teaser)) ."', "
+						."description = '". htmlspecialchars(addslashes($this->description)) ."', "
 						."downloads = '". implode(",", $this->downloads) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = ". time() .", "

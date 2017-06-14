@@ -108,7 +108,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 				</div>
 			</fieldset>
 			<fieldset>
-				<legend><small><i class="rex-icon rex-icon-language"></i></small> <?php echo rex_i18n::msg('d2u_machinery_settings_lang_replacements'); ?></legend>
+				<legend><small><i class="rex-icon rex-icon-language"></i></small> <?php echo rex_i18n::msg('d2u_helper_lang_replacements'); ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
 						foreach(rex_clang::getAll() as $rex_clang) {
@@ -117,21 +117,21 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 							print '<dd>';
 							print '<select class="form-control" name="settings[lang_replacement_'. $rex_clang->getId() .']">';
 							$replacement_options = [
-								'd2u_machinery_settings_english' => 'english',
-								'd2u_machinery_settings_chinese' => 'chinese',
-								'd2u_machinery_settings_czech' => 'czech',
-								'd2u_machinery_settings_dutch' => 'dutch',
-								'd2u_machinery_settings_french' => 'french',
-								'd2u_machinery_settings_german' => 'german',
-								'd2u_machinery_settings_italian' => 'italian',
-								'd2u_machinery_settings_polish' => 'polish',
-								'd2u_machinery_settings_portuguese' => 'portuguese',
-								'd2u_machinery_settings_russian' => 'russian',
-								'd2u_machinery_settings_spanish' => 'spanish',
+								'd2u_helper_lang_english' => 'english',
+								'd2u_helper_lang_chinese' => 'chinese',
+								'd2u_helper_lang_czech' => 'czech',
+								'd2u_helper_lang_dutch' => 'dutch',
+								'd2u_helper_lang_french' => 'french',
+								'd2u_helper_lang_german' => 'german',
+								'd2u_helper_lang_italian' => 'italian',
+								'd2u_helper_lang_polish' => 'polish',
+								'd2u_helper_lang_portuguese' => 'portuguese',
+								'd2u_helper_lang_russian' => 'russian',
+								'd2u_helper_lang_spanish' => 'spanish',
 							];
 							foreach($replacement_options as $key => $value) {
 								$selected = $value == $this->getConfig('lang_replacement_'. $rex_clang->getId()) ? ' selected="selected"' : '';
-								print '<option value="'. $value .'"'. $selected .'>'. rex_i18n::msg('d2u_machinery_settings_lang_replacements_install') .' '. rex_i18n::msg($key) .'</option>';
+								print '<option value="'. $value .'"'. $selected .'>'. rex_i18n::msg('d2u_helper_lang_replacements_install') .' '. rex_i18n::msg($key) .'</option>';
 							}
 							print '</select>';
 							print '</dl>';

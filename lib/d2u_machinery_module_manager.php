@@ -10,23 +10,23 @@ class D2UMachineryModules {
 	 * @return D2UModule[] Modules offered by this addon
 	 */
 	public static function getD2UMachineryModules() {
-		$d2u_machinery_modules = [];
-		$d2u_machinery_modules[] = new D2UModule("90-1",
+		$modules = [];
+		$modules[] = new D2UModule("90-1",
 			"D2U Machinery Addon - Hauptausgabe",
 			1);
 		if(rex_plugin::get('d2u_machinery', 'industry_sectors')->isAvailable()) {
-			$d2u_machinery_modules[] = new D2UModule("90-2",
+			$modules[] = new D2UModule("90-2",
 				"D2U Machinery Addon - Branchen",
 				1);
 		}
-		$d2u_machinery_modules[] = new D2UModule("90-3",
+		$modules[] = new D2UModule("90-3",
 			"D2U Machinery Addon - Kategorien",
 			2);
 		if(rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
-			$d2u_machinery_modules[] = new D2UModule("90-4",
+			$modules[] = new D2UModule("90-4",
 				"D2U Machinery Addon - Gebrauchtmaschinen",
 				1);
 		}
-		return $d2u_machinery_modules;
+		return $modules;
 	}
 }
