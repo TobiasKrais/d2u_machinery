@@ -54,13 +54,20 @@ abstract class AExport {
 	 * @return string Cached picture filename
 	 */
 	protected function preparePicture($pic) {
-		$media_manager = rex_media_manager::create($this->provider->media_manager_type, $pic);
-		if(file_exists($media_manager->getCacheFilename())) {
-			// Cached file if successfull
-			return $media_manager->getCacheFilename();
+		$media = rex_media::get($pic);
+		if($media instanceof rex_media && $media->getSize() < 1572864) {
+			$media_manager = rex_media_manager::create($this->provider->media_manager_type, $pic);
+			if(file_exists($media_manager->getCacheFilename())) {
+				// Cached file if successfull
+				return $media_manager->getCacheFilename();
+			}
+			else {
+				// Normal media file if not successfull
+				return rex_url::media($pic);
+			}
 		}
 		else {
-			// Normal media file if not successfull
+			print rex_view::warning($pic .": ". rex_i18n::msg('d2u_machinery_export_image_too_large'));
 			return rex_url::media($pic);
 		}
 	}
