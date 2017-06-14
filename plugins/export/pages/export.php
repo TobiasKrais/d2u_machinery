@@ -60,7 +60,11 @@ if(count($providers) > 0) {
 	print "<tr>";
 	print "<td><b>". rex_i18n::msg('d2u_machinery_export_last_export_date') ."</b></td>";
 	foreach ($providers as $provider) {
-		print "<td>". date("d.m.Y H:i", $provider->getLastExportTimestamp()) ." ". rex_i18n::msg('d2u_machinery_export_uhr') ."</td>";
+		print "<td>";
+		if($provider->getLastExportTimestamp() > 0) {
+			print date("d.m.Y H:i", $provider->getLastExportTimestamp()) ." ". rex_i18n::msg('d2u_machinery_export_uhr');
+		}
+		print "</td>";
 	}
 	print "</tr>";print "</thead>";
 	print "<tbody>";
