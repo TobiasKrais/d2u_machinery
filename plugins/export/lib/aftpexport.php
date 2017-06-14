@@ -118,16 +118,16 @@ abstract class AFTPExport extends AExport {
 
 	/**
 	 * ZIPs pictures and machine filename.
-	 * @param type $machines_filename
+	 * @param type $filename
 	 * @return string Error message or empty if no errors occur.
 	 */
-	protected function zip($machines_filename) {
+	protected function zip($filename) {
 	   	// Create ZIP
 		$zip = new ZipArchive();
 		if ($zip->open($this->cache_path . $this->getZipFileName(), ZipArchive::CREATE) !== TRUE) {
 			return rex_i18n::msg('d2u_machinery_export_zip_cannot_create');
 		}
-		$zip->addFile($this->cache_path . $machines_filename, $machines_filename);
+		$zip->addFile($this->cache_path . $filename, $filename);
 		foreach($this->files_for_zip as $original_filename => $cachefilename) {
 			$zip->addFile($cachefilename, $original_filename);
 		}

@@ -17,7 +17,7 @@ class MachineryPark extends AFTPExport {
 
 	/**
 	 * Perform the MachineryPark Export.
-	 * @return string error message - if no errors occured, emtpy string is returned.
+	 * @return string error message - if no errors occured, empty string is returned.
 	 */
 	public function export() {
 		// Cleanup old export ZIP file

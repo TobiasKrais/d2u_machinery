@@ -20,7 +20,7 @@ class Provider {
 	var $type = "";
 		
 	/**
-	 * @var int Redaxo language id. Represents the language, the machines should
+	 * @var int Redaxo language id. Represents the language, the object should
 	 * be exported.
 	 */
 	var $clang_id = 0;
@@ -162,7 +162,7 @@ class Provider {
 	/**
 	 * Exports used machines for provider types europemachinery, machinerypark
 	 * and mascus (ftp based exports). Export starts only, if changes were made
-	 * or last export ist older than a week.
+	 * or last export is older than a week.
 	 * @return string HTML formatted string with success or failure message.
 	 */
 	public static function autoexport() {
@@ -265,7 +265,7 @@ class Provider {
 	}
 
 	/**
-	 * Exports used machines for the provider.
+	 * Exports objects for the provider.
 	 */
 	public function export() {
 		if($this->type == "europemachinery") {
