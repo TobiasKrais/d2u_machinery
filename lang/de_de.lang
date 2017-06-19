@@ -5,18 +5,12 @@ d2u_machinery_meta_title = D2U Maschinen
 
 d2u_machinery_confirm_delete = Wirklich löschen?
 d2u_machinery_could_not_delete = Löschen fehlgeschlagen! Objekt wird derzeit noch verwendet von:
-d2u_machinery_data_all_lang = Daten für alle Sprachen
 d2u_machinery_internal_name = Interne Bezeichnung
 d2u_machinery_lang_name = Sprachspezifischer Name (optional)
 d2u_machinery_name = Name
 d2u_machinery_no_selection = Keine Auswahl
 d2u_machinery_online_status = Online
 d2u_machinery_pic = Bild
-d2u_machinery_text_lang = Texte in Sprache
-d2u_machinery_translation = Diese Übersetzung ...
-d2u_machinery_translation_needs_update = ... muss aktualisiert werden
-d2u_machinery_translation_is_uptodate = ... ist aktuell
-d2u_machinery_translation_delete = ... ist zur Zeit nicht vorgesehen und soll nicht gespeichert werden
 d2u_machinery_video = Video
 
 d2u_machinery_rights_all = D2U Maschinen Addon
