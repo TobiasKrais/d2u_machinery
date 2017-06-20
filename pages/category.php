@@ -217,7 +217,7 @@ if ($func == 'edit' || $func == 'add') {
 								foreach(Videos::getAll(rex_config::get("d2u_machinery", "default_lang")) as $video) {
 									$options[$video->video_id] = $video->name;
 								}
-								d2u_addon_backend_helper::form_select('d2u_machinery_category_videos', 'form[videomanager_ids]', $options, $category->videomanager_ids, 1, TRUE, $readonly);
+								d2u_addon_backend_helper::form_select('d2u_machinery_category_videos', 'form[videomanager_ids][]', $options, $category->videomanager_ids, 1, TRUE, $readonly);
 							}
 						?>
 					</div>
