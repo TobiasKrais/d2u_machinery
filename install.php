@@ -119,16 +119,8 @@ if($sql->getRows() == 0) {
 
 // Standard settings
 if (!$this->hasConfig()) {
-	// Find first Redaxo lang an set later as default lang
-	$langs = rex_clang::getAll();
-	$default_clang_id = 1;
-	foreach ($langs as $lang) {
-		$default_clang_id = $lang->getId();
-		break;
-	}
-	
     $this->setConfig('article_id', rex_article::getSiteStartArticleId());
-	$this->setConfig('default_lang', $default_clang_id);
+	$this->setConfig('default_lang', rex_clang::getStartId());
 	$this->setConfig('default_category_sort', 'name');
 	$this->setConfig('default_machine_sort', 'name');
 	$this->setConfig('show_categories_usage_area', 'hide');
