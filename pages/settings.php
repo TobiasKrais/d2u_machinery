@@ -97,7 +97,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 							foreach(rex_clang::getAll() as $rex_clang) {
 								$lang_options[$rex_clang->getId()] = $rex_clang->getName();
 							}
-							d2u_addon_backend_helper::form_select('d2u_machinery_settings_defaultlang', 'settings[default_lang]', $lang_options, array($this->getConfig('default_lang')));
+							d2u_addon_backend_helper::form_select('d2u_helper_defaultlang', 'settings[default_lang]', $lang_options, array($this->getConfig('default_lang')));
 						}
 						
 						d2u_addon_backend_helper::form_input('d2u_machinery_settings_request_form_email', 'settings[request_form_email]', $this->getConfig('request_form_email'), TRUE, FALSE, 'email');
