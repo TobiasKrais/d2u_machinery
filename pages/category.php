@@ -102,7 +102,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	
 	// Check if category is used
 	$uses_machines = $category->getMachines();
-	$uses_used_machines = array();
+	$uses_used_machines = [];
 	if(rex_plugin::get("d2u_machinery", "used_machines")->isAvailable()) {
 		$uses_used_machines = $category->getUsedMachines();
 	}
@@ -166,7 +166,7 @@ if ($func == 'edit' || $func == 'add') {
 						<div class="panel-body-wrapper slide">
 							<?php
 								if($rex_clang->getId() != rex_config::get("d2u_machinery", "default_lang")) {
-									$options_translations = array();
+									$options_translations = [];
 									$options_translations["yes"] = rex_i18n::msg('d2u_helper_translation_needs_update');
 									$options_translations["no"] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
 									$options_translations["delete"] = rex_i18n::msg('d2u_helper_translation_delete');
@@ -201,7 +201,7 @@ if ($func == 'edit' || $func == 'add') {
 							}
 							
 							$options = array("-1"=>rex_i18n::msg('d2u_machinery_category_parent_none'));
-							$selected_values = array();
+							$selected_values = [];
 							foreach(Category::getAll(rex_config::get("d2u_machinery", "default_lang")) as $parent_category) {
 								if(!$parent_category->isChild() && $parent_category->category_id != $category->category_id) {
 									$options[$parent_category->category_id] = $parent_category->name;
@@ -213,7 +213,7 @@ if ($func == 'edit' || $func == 'add') {
 							d2u_addon_backend_helper::form_mediafield('d2u_machinery_category_pic_usage', '2', $category->pic_usage, $readonly);
 
 							if(rex_addon::get("d2u_videos")->isAvailable()) {
-								$options = array();
+								$options = [];
 								foreach(Videos::getAll(rex_config::get("d2u_machinery", "default_lang")) as $video) {
 									$options[$video->video_id] = $video->name;
 								}

@@ -122,7 +122,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 							
 							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_manufacturer', "form[manufacturer]", $used_machine->manufacturer, TRUE, $readonly, "text");
 							d2u_addon_backend_helper::form_input('d2u_machinery_name', "form[name]", $used_machine->name, TRUE, $readonly, "text");
-							$options = array();
+							$options = [];
 							foreach(Category::getAll(rex_config::get("d2u_machinery", "default_lang")) as $category) {
 								if($category->name != "") {
 									$options[$category->category_id] = $category->name;
@@ -165,7 +165,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						<div class="panel-body-wrapper slide">
 							<?php
 								if($rex_clang->getId() != rex_config::get("d2u_machinery", "default_lang")) {
-									$options_translations = array();
+									$options_translations = [];
 									$options_translations["yes"] = rex_i18n::msg('d2u_helper_translation_needs_update');
 									$options_translations["no"] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
 									$options_translations["delete"] = rex_i18n::msg('d2u_helper_translation_delete');

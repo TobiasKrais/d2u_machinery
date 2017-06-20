@@ -32,7 +32,7 @@ class AgitatorType {
 	/**
 	 * @var int[] Array with agitator_ids
 	 */
-	var $agitator_ids = array();
+	var $agitator_ids = [];
 	
 	/**
 	 * @var string "yes" if translation needs update
@@ -96,7 +96,7 @@ class AgitatorType {
 	 * @return Agitator[] Array with Agitator objects.
 	 */
 	public function getAgitators() {
-		$agitators = array();
+		$agitators = [];
 		foreach($this->agitator_ids as $agitator_id) {
 			$agitators[] = new Agitator($agitator_id, $this->clang_id);
 		}
@@ -116,7 +116,7 @@ class AgitatorType {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$agitator_types = array();
+		$agitator_types = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$agitator_types[] = new AgitatorType($result->getValue("agitator_type_id"), $clang_id);
 			$result->next();
@@ -134,7 +134,7 @@ class AgitatorType {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$machines = array();
+		$machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$machines[] = new Machine($result->getValue("machine_id"), $this->clang_id);
 			$result->next();

@@ -77,7 +77,7 @@ class UsedMachine {
 	/**
 	 * @var string[] Picture filenames
 	 */
-	var $pics = array();
+	var $pics = [];
 	
 	/**
 	 * @var Machine Machine objekt for technical data reference
@@ -107,7 +107,7 @@ class UsedMachine {
 	/**
 	 * @var string[] Download filenames
 	 */
-	var $downloads = array();
+	var $downloads = [];
 
 	/**
 	 * @var string Needs translation update? "no", "yes" or "delete"
@@ -264,7 +264,7 @@ class UsedMachine {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$used_machines = array();
+		$used_machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$used_machines[$result->getValue("used_machine_id")] = new UsedMachine($result->getValue("used_machine_id"), $clang_id);
 			$result->next();
@@ -375,7 +375,7 @@ class UsedMachine {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$used_machines = array();
+		$used_machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$used_machines[] = new UsedMachine($result->getValue("used_machine_id"), $machine->clang_id);
 			$result->next();
@@ -403,7 +403,7 @@ class UsedMachine {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$used_machines = array();
+		$used_machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$used_machines[] = new UsedMachine($result->getValue("used_machine_id"), $category->clang_id);
 			$result->next();
@@ -421,7 +421,7 @@ class UsedMachine {
 		if($this->url == "") {
 			$d2u_machinery = rex_addon::get("d2u_machinery");
 				
-			$parameterArray = array();
+			$parameterArray = [];
 			$parameterArray['used_machine_id'] = $this->used_machine_id;
 			$article_id = $this->offer_type == "sale" ? $d2u_machinery->getConfig('used_machine_article_id_sale') : $d2u_machinery->getConfig('used_machine_article_id_rent');
 			$this->url = rex_getUrl($article_id, $this->clang_id, $parameterArray, "&");

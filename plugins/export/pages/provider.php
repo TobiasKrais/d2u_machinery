@@ -85,7 +85,7 @@ if ($func == 'edit' || $func == 'add') {
 								'mascus' => rex_i18n::msg('d2u_machinery_export_mascus')];
 							d2u_addon_backend_helper::form_select('d2u_machinery_export_type', 'form[type]', $options, array($provider->type), 1, FALSE, $readonly);
 							
-							$options_lang = array();
+							$options_lang = [];
 							foreach(rex_clang::getAll() as $rex_clang) {
 								$options_lang[$rex_clang->getId()] = $rex_clang->getName();
 							}
@@ -93,7 +93,7 @@ if ($func == 'edit' || $func == 'add') {
 							d2u_addon_backend_helper::form_input('d2u_machinery_export_company_name', 'form[company_name]', $provider->company_name, TRUE, $readonly, 'text');
 							d2u_addon_backend_helper::form_input('d2u_machinery_export_company_email', 'form[company_email]', $provider->company_email, TRUE, $readonly, 'email');
 							d2u_addon_backend_helper::form_input('d2u_machinery_export_customer_number', 'form[customer_number]', $provider->customer_number, FALSE, $readonly, 'text');
-							$options_media = array();
+							$options_media = [];
 							$media_sql = rex_sql::factory();
 							$media_sql->setQuery("SELECT name FROM ". rex::getTablePrefix() ."media_manager_type");
 							for($i = 0; $i < $media_sql->getRows(); $i++) {

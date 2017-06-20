@@ -98,7 +98,7 @@ class Profile {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$profiles = array();
+		$profiles = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$profiles[] = new Profile($result->getValue("profile_id"), $clang_id);
 			$result->next();
@@ -116,7 +116,7 @@ class Profile {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$machines = array();
+		$machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$machines[] = new Machine($result->getValue("machine_id"), $this->clang_id);
 			$result->next();

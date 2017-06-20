@@ -6,7 +6,7 @@ abstract class AExport {
 	/**
 	 * @var ExportedUsedMachine[] that need to be exported.
 	 */
-	protected $exported_used_machines = array();
+	protected $exported_used_machines = [];
 	
 	/**
 	 * @var Provider Export provider object.

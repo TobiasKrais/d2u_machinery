@@ -114,7 +114,7 @@ class Certificate {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$certificates = array();
+		$certificates = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$certificates[] = new Certificate($result->getValue("certificate_id"), $clang_id);
 			$result->next();
@@ -132,7 +132,7 @@ class Certificate {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$machines = array();
+		$machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$machines[] = new Machine($result->getValue("machine_id"), $this->clang_id);
 			$result->next();

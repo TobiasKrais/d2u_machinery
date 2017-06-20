@@ -142,7 +142,7 @@ class IndustrySector {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$industry_sectors = array();
+		$industry_sectors = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$industry_sector = new IndustrySector($result->getValue("industry_sector_id"), $clang_id);
 			if($online_only && $industry_sector->isOnline()) {
@@ -175,7 +175,7 @@ class IndustrySector {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$machines = array();
+		$machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$machine = new Machine($result->getValue("machine_id"), $this->clang_id);
 			if($online_only === FALSE || ($online_only && $machine->online_status == "online")) {
@@ -231,7 +231,7 @@ class IndustrySector {
 		if($this->url == "") {
 			$d2u_machinery = rex_addon::get("d2u_machinery");
 				
-			$parameterArray = array();
+			$parameterArray = [];
 			$parameterArray['industry_sector_id'] = $this->industry_sector_id;
 			$this->url = rex_getUrl($d2u_machinery->getConfig('article_id'), $this->clang_id, $parameterArray, "&");
 		}

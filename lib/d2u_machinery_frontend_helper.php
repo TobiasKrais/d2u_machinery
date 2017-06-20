@@ -8,13 +8,13 @@ class d2u_machinery_frontend_helper {
 	 * @return string[] Breadcrumb elements
 	 */
 	public static function getBreadcrumbs() {
-		$breadcrumbs = array();
+		$breadcrumbs = [];
 
 		// Prepare objects first for sorting in correct order
 		$category = FALSE;
 		$machine = FALSE;
 		$used_machine = FALSE;
-		$url_data = array();
+		$url_data = [];
 		if(rex_addon::get("url")->isAvailable()) {
 			$url_data = UrlGenerator::getData();
 		}

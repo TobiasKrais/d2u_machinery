@@ -156,7 +156,7 @@ class Supply {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$supplys = array();
+		$supplys = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$supplys[] = new Supply($result->getValue("supply_id"), $clang_id);
 			$result->next();
@@ -174,7 +174,7 @@ class Supply {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$machines = array();
+		$machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$machines[] = new Machine($result->getValue("machine_id"), $this->clang_id);
 			$result->next();

@@ -98,7 +98,7 @@ class Tool {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$tools = array();
+		$tools = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$tools[] = new Tool($result->getValue("tool_id"), $clang_id);
 			$result->next();
@@ -116,7 +116,7 @@ class Tool {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$machines = array();
+		$machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$machines[] = new Machine($result->getValue("machine_id"), $this->clang_id);
 			$result->next();

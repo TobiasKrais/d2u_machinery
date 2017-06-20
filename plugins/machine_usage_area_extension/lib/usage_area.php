@@ -32,7 +32,7 @@ class UsageArea {
 	/**
 	 * @var int[] Category ids in which object will be available
 	 */
-	var $category_ids = array();
+	var $category_ids = [];
 		
 	/**
 	 * @var string "yes" if translation needs update
@@ -110,7 +110,7 @@ class UsageArea {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$usage_areas = array();
+		$usage_areas = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$usage_areas[] = new UsageArea($result->getValue("usage_area_id"), $clang_id);
 			$result->next();
@@ -128,7 +128,7 @@ class UsageArea {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$machines = array();
+		$machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$machines[] = new Machine($result->getValue("machine_id"), $this->clang_id);
 			$result->next();
@@ -210,7 +210,7 @@ class UsageArea {
 			$this->priority = $result->getRows() + 1;
 		}
 
-		$usage_areas = array();
+		$usage_areas = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$usage_areas[$result->getValue("priority")] = $result->getValue("usage_area_id");
 			$result->next();

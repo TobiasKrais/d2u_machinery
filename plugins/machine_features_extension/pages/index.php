@@ -122,7 +122,7 @@ if ($func == 'edit' || $func == 'add') {
 						<div class="panel-body-wrapper slide">
 							<?php
 								if($rex_clang->getId() != rex_config::get("d2u_machinery", "default_lang")) {
-									$options_translations = array();
+									$options_translations = [];
 									$options_translations["yes"] = rex_i18n::msg('d2u_helper_translation_needs_update');
 									$options_translations["no"] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
 									$options_translations["delete"] = rex_i18n::msg('d2u_helper_translation_delete');
@@ -155,7 +155,7 @@ if ($func == 'edit' || $func == 'add') {
 							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $feature->priority, TRUE, $readonly, 'number');
 							d2u_addon_backend_helper::form_mediafield('d2u_machinery_features_pic', 1, $feature->pic, $readonly);
 							
-							$options = array();
+							$options = [];
 							foreach(Category::getAll(rex_config::get("d2u_machinery", "default_lang")) as $category) {
 								$options[$category->category_id] = $category->name;
 							}

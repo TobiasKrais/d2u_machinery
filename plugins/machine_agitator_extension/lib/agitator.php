@@ -114,7 +114,7 @@ class Agitator {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$agitators = array();
+		$agitators = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$agitators[] = new Agitator($result->getValue("agitator_id"), $clang_id);
 			$result->next();
@@ -132,7 +132,7 @@ class Agitator {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$agitator_types = array();
+		$agitator_types = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$agitator_types[] = new AgitatorType($result->getValue("agitator_type_id"), $this->clang_id);
 			$result->next();

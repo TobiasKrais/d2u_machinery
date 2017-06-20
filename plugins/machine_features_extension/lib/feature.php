@@ -42,7 +42,7 @@ class Feature {
 	/**
 	 * @var int[] Category ids in which the feature will be available
 	 */
-	var $category_ids = array();
+	var $category_ids = [];
 	
 	/**
 	 * @var string Detailed description
@@ -137,7 +137,7 @@ class Feature {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$features = array();
+		$features = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$features[] = new Feature($result->getValue("feature_id"), $clang_id);
 			$result->next();
@@ -155,7 +155,7 @@ class Feature {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$machines = array();
+		$machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$machines[] = new Machine($result->getValue("machine_id"), $this->clang_id);
 			$result->next();
@@ -241,7 +241,7 @@ class Feature {
 			$this->priority = $result->getRows() + 1;
 		}
 
-		$features = array();
+		$features = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$features[$result->getValue("priority")] = $result->getValue("feature_id");
 			$result->next();

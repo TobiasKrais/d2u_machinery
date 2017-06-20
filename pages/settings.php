@@ -93,7 +93,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 					<?php
 						// Default language for translations
 						if(count(rex_clang::getAll()) > 1) {
-							$lang_options = array();
+							$lang_options = [];
 							foreach(rex_clang::getAll() as $rex_clang) {
 								$lang_options[$rex_clang->getId()] = $rex_clang->getName();
 							}
