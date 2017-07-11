@@ -9,7 +9,7 @@ page:
     icon: rex-icon fa-truck
 
 requires:
-    redaxo: '>=5.1.0'
+    redaxo: '>=5.3.0'
     php:
         version: '>=5.3'
     packages:

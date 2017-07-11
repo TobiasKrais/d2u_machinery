@@ -44,7 +44,7 @@ function rex_d2u_machinery_article_is_in_use(rex_extension_point $ep) {
 	// Settings
 	$addon = rex_addon::get("d2u_machinery");
 	if($addon->hasConfig("article_id") && $addon->getConfig("article_id") == $article_id) {
-		$message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/settings\')">'.
+		$message = '<a href="index.php?page=d2u_machinery/settings">'.
 			 rex_i18n::msg('d2u_machinery_rights_all') ." - ". rex_i18n::msg('d2u_machinery_meta_settings') . '</a>';
 		if(!in_array($message, $warning)) {
 			$warning[] = $message;
