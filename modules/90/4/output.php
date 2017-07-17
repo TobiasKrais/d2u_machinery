@@ -273,15 +273,27 @@ else if(filter_input(INPUT_GET, 'used_machine_id', FILTER_VALIDATE_INT, ['option
 	}
 	//Downloads
 	if(count($used_machine->downloads) > 0) {
-		foreach($used_machine->downloads as $download) {
-			$media = rex_media::get($download);
-			$title = $media->getTitle() != "" ? $media->getTitle() : $download;
-			print '<div class="col-sm-6 col-md-4 col-lg-3">';
-			print '<div class="downloadbox">';
-			print '<a href="'. rex_url::media($download) .'" target="_blank"><span class="glyphicon glyphicon-cloud-download"></span><b>'. $title .'</b></a>';
-			print '</div>';
-			print '</div>';
+		print '<div class="col-md-6 col-lg-4">';
+		print '<ul class="download-list">';
+		foreach($used_machine->downloads as $document) {
+			$rex_document = rex_media::get($document);
+			if($rex_document instanceof rex_media) {
+				$filesize = round(filesize(rex_path::media() .'/'. $document) / pow(1024, 2), 2);
+				$filetype = strtoupper(pathinfo(rex_path::media() . PATH_SEPARATOR . $document, PATHINFO_EXTENSION));
+				
+				print '<li>';
+				if($filetype == 'pdf') {
+					print '<span class="icon pdf"></span> ';
+				}
+				else {
+					print '<span class="icon file"></span> ';
+				}
+				print '<a href="'. rex_url::media($document) .'" target="_blank">'.
+						$rex_document->getTitle() .' <span>('. $filetype .', '. $filesize .' MB)</span></a></li>';
+			}
 		}
+		print '</ul>';
+		print '</div>';
 	}
 	print '</div>';
 	print '</div>';
