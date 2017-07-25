@@ -14,4 +14,3 @@ requires:
         version: '>=5.3'
     packages:
         media_manager: '>=2.0.2'
-        redactor2: '>=3.0'
