@@ -290,6 +290,8 @@ class Provider {
 			}
 			
 			// Export
+			return "Facebook Export needs upgrade to newer Graph API (currently 2.3). Export aborted.";
+/*
 			$facebook = new SocialExportFacebook($this);
 			if($facebook->isUserLoggedIn()) {
 				return $facebook->export();
@@ -305,6 +307,7 @@ class Provider {
 				}
 				exit;
 			}
+ */
 		}
 		else if($this->type == "twitter") {
 			return "Schnittstelle ist nicht programmiert.";
