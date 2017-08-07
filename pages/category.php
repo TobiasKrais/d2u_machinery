@@ -33,7 +33,11 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$category->pic_usage = $input_media[2];
 
 			if(rex_addon::get("d2u_videos")->isAvailable()) {
-				$category->videomanager_ids = preg_grep('/^\s*$/s', explode(",", $form['videomanager_ids']), PREG_GREP_INVERT);
+				$video_ids = isset($form['video_ids']) ? $form['video_ids'] : [];
+				$category->videos = []; // Clear video array
+				foreach($video_ids as $video_id) {
+					$category->videos[$video_id] = new Video($video_id, rex_config::get("d2u_machinery", "default_lang"));
+				}
 			}
 
 			if(rex_plugin::get("d2u_machinery", "export")->isAvailable()) {
@@ -214,10 +218,10 @@ if ($func == 'edit' || $func == 'add') {
 
 							if(rex_addon::get("d2u_videos")->isAvailable()) {
 								$options = [];
-								foreach(Videos::getAll(rex_config::get("d2u_machinery", "default_lang")) as $video) {
+								foreach(Video::getAll(rex_config::get("d2u_machinery", "default_lang")) as $video) {
 									$options[$video->video_id] = $video->name;
 								}
-								d2u_addon_backend_helper::form_select('d2u_machinery_category_videos', 'form[videomanager_ids][]', $options, $category->videomanager_ids, 1, TRUE, $readonly);
+								d2u_addon_backend_helper::form_select('d2u_machinery_category_videos', 'form[video_ids][]', $options, array_keys($category->videos), 10, TRUE, $readonly);
 							}
 						?>
 					</div>

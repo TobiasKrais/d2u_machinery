@@ -435,6 +435,11 @@ class Machine {
 	var $pdfs = [];
 
 	/**
+	 * @var Video[] Videomanager videos
+	 */
+	var $videos = [];
+	
+	/**
 	 * @var string Needs translation update? "no", "yes" or "delete"
 	 */
 	var $translation_needs_update = "delete";
@@ -599,6 +604,14 @@ class Machine {
 
 			if(rex_plugin::get("d2u_machinery", "machine_usage_area_extension")->isAvailable()) {
 				$this->usage_area_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("usage_area_ids")), PREG_GREP_INVERT);
+			}
+			
+			// Videos
+			if(rex_addon::get('d2u_videos')->isAvailable() && $result->getValue("video_ids") != "") {
+				$video_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("video_ids")), PREG_GREP_INVERT);
+				foreach ($video_ids as $video_id) {
+					$this->videos[$video_id] = new Video($video_id, $clang_id);
+				}
 			}
 		}
 	}
@@ -1399,11 +1412,6 @@ class Machine {
 		// Save the not language specific part
 		$pre_save_machine = new Machine($this->machine_id, $this->clang_id);
 
-		// save priority, but only if new or changed
-		if($this->priority != $pre_save_machine->priority || $this->machine_id == 0) {
-			$this->setPriority();
-		}
-
 		if($this->machine_id == 0 || $pre_save_machine != $this) {
 			$query = rex::getTablePrefix() ."d2u_machinery_machines SET "
 					."name = '". $this->name ."', "
@@ -1498,6 +1506,13 @@ class Machine {
 			if(rex_plugin::get("d2u_machinery", "machine_usage_area_extension")->isAvailable()) {
 				$query .= ", usage_area_ids = '|". implode("|", $this->usage_area_ids) ."|' ";
 			}
+			
+			if(rex_addon::get('d2u_videos')->isAvailable() && count($this->videos) > 0) {
+				$query .= ", video_ids = '|". implode("|", array_keys($this->videos)) ."|' ";
+			}
+			else {
+				$query .= ", video_ids = '' ";
+			}
 
 			if($this->machine_id == 0) {
 				$query = "INSERT INTO ". $query;
@@ -1513,7 +1528,12 @@ class Machine {
 				$error = $result->hasError();
 			}
 		}
-		
+		// save priority, but only if new or changed
+		if($this->priority != $pre_save_machine->priority || $this->machine_id == 0) {
+			$this->setPriority();
+		}
+
+	
 		if($error == 0) {
 			// Save the language specific part
 			$pre_save_machine = new Machine($this->machine_id, $this->clang_id);

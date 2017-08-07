@@ -327,6 +327,22 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 	print '<div class="col-12 col-md-6">';
 	print $machine->description;
 	print '<p>&nbsp;</p>';
+	print '</div>';
+
+	// Video
+	if(rex_addon::get('d2u_videos')->isAvailable()) {
+		$videos = array_merge($machine->videos, $machine->category->videos);
+		if(count($videos) > 0) {
+			print '<div class="col-12">';
+			print '<h2>'. $tag_open .'d2u_machinery_video'. $tag_close .'</h2>';
+			print '</div>';
+			print '<div class="col-12">';
+			$videomanager = new Videomanager();
+			$videomanager->printVideos($videos);
+			print '</div>';
+		} // END Video
+	}
+
 	// Alternative machines
 	if(count($machine->alternative_machine_ids) > 0) {
 		$alternative_machines = [];

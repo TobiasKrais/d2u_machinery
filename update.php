@@ -21,18 +21,29 @@ if($sql->getRows() == 0) {
 	$sql->setQuery("ALTER TABLE ". rex::getTablePrefix() ."d2u_machinery_machines_lang "
 		. "ADD lang_name varchar(255) collate utf8_general_ci default NULL AFTER clang_id;");
 }
+$sql->setQuery("SHOW COLUMNS FROM ". rex::getTablePrefix() ."d2u_machinery_categories LIKE 'video_ids';");
+if($sql->getRows() == 0) {
+	$sql->setQuery("ALTER TABLE ". rex::getTablePrefix() ."d2u_machinery_categories "
+		. "ADD video_ids varchar(255) collate utf8_general_ci default NULL AFTER pic_usage;");
+}
+$sql->setQuery("SHOW COLUMNS FROM ". rex::getTablePrefix() ."d2u_machinery_machines LIKE 'video_ids';");
+if($sql->getRows() == 0) {
+	$sql->setQuery("ALTER TABLE ". rex::getTablePrefix() ."d2u_machinery_machines "
+		. "ADD video_ids varchar(255) collate utf8_general_ci default NULL AFTER operating_voltage_a;");
+}
+$sql->setQuery("ALTER TABLE ". rex::getTablePrefix() ."d2u_machinery_machines "
+		. "CHANGE `pdfs` `pdfs` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER `description`;");
+// 1.1.3 Update database
 $sql->setQuery("SHOW COLUMNS FROM ". rex::getTablePrefix() ."d2u_machinery_categories LIKE 'videomanager_ids';");
 if($sql->getRows() == 0) {
 	$sql->setQuery("ALTER TABLE ". rex::getTablePrefix() ."d2u_machinery_categories "
-		. "ADD videomanager_ids varchar(255) collate utf8_general_ci default NULL AFTER pic_usage;");
+		. "CHANGE videomanager_ids video_ids varchar(255) collate utf8_general_ci default NULL;");
 }
 $sql->setQuery("SHOW COLUMNS FROM ". rex::getTablePrefix() ."d2u_machinery_machines LIKE 'videomanager_ids';");
 if($sql->getRows() == 0) {
 	$sql->setQuery("ALTER TABLE ". rex::getTablePrefix() ."d2u_machinery_machines "
-		. "ADD videomanager_ids varchar(255) collate utf8_general_ci default NULL AFTER operating_voltage_a;");
+		. "CHANGE videomanager_ids video_ids varchar(255) collate utf8_general_ci default NULL;");
 }
-$sql->setQuery("ALTER TABLE ". rex::getTablePrefix() ."d2u_machinery_machines "
-		. "CHANGE `pdfs` `pdfs` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER `description`;");
 
 // 1.0.2 Update machine URL view and regenerate path file
 $sql->setQuery('CREATE OR REPLACE VIEW '. rex::getTablePrefix() .'d2u_machinery_url_machines AS

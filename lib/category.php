@@ -97,6 +97,11 @@ class Category {
 	var $pdfs = [];
 	
 	/**
+	 * @var Video[] Videomanager videos
+	 */
+	var $videos = [];
+	
+	/**
 	 * @var int Sort Priority
 	 */
 	var $priority = 0;
@@ -183,6 +188,14 @@ class Category {
 			if(rex_plugin::get("d2u_machinery", "machine_steel_processing_extension")->isAvailable()) {
 				$this->steel_processing_saw_cutting_range_title = $result->getValue("steel_processing_saw_cutting_range_title");
 				$this->steel_processing_saw_cutting_range_file = $result->getValue("steel_processing_saw_cutting_range_file");
+			}
+
+			// Videos
+			if(rex_addon::get('d2u_videos')->isAvailable() && $result->getValue("video_ids") != "") {
+				$video_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("video_ids")), PREG_GREP_INVERT);
+				foreach ($video_ids as $video_id) {
+					$this->videos[$video_id] = new Video($video_id, $clang_id);
+				}
 			}
 		}
 		
@@ -600,6 +613,13 @@ class Category {
 			}
 			if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable()) {
 				$query .= ", show_agitators = '". $this->show_agitators ."' ";
+			}
+
+			if(rex_addon::get('d2u_videos')->isAvailable() && count($this->videos) > 0) {
+				$query .= ", video_ids = '|". implode("|", array_keys($this->videos)) ."|' ";
+			}
+			else {
+				$query .= ", video_ids = '' ";
 			}
 
 			if($this->category_id == 0) {

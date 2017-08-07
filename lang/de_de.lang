@@ -10,7 +10,8 @@ d2u_machinery_name = Name
 d2u_machinery_no_selection = Keine Auswahl
 d2u_machinery_online_status = Online
 d2u_machinery_pic = Bild
-d2u_machinery_video = Video
+d2u_machinery_video = D2U Videomanager Video
+d2u_machinery_video_no = Kein Video
 
 d2u_machinery_rights_all = D2U Maschinen Addon
 d2u_machinery_rights_edit_tech_data = D2U Maschinen Addon: Editierrechte für technische Daten und sprachübergreifende Inhalte
@@ -36,7 +37,7 @@ d2u_machinery_category_parent_none = Hat keine Elternkategorie
 d2u_machinery_category_pdfs = PDF Dateien
 d2u_machinery_category_pic_lang = Bild (überschreibt allg. Bild)
 d2u_machinery_category_pic_usage = Anwendungsbild
-d2u_machinery_category_videos = Videos
+d2u_machinery_category_videos = D2U Videomanager Videos
 d2u_machinery_category_usage_area = Umschreibende Anwendung für Navigation
 
 d2u_machinery_machine = Maschine

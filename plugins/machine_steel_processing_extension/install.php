@@ -71,7 +71,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machin
 	supply_id int(10) unsigned NOT NULL auto_increment,
 	online_status varchar(10) collate utf8_general_ci default 'online',
 	pic varchar(255) collate utf8_general_ci default NULL,
-	videomanager_id int(10) default NULL,
+	video_id int(10) default NULL,
 	PRIMARY KEY (supply_id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
 $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machinery_steel_supply_lang (

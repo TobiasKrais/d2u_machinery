@@ -45,9 +45,9 @@ class Supply {
 	var $pic = "";
 	
 	/**
-	 * @var string Videomanager id
+	 * @var Video Videomanager video
 	 */
-	var $videomanager_id = "";
+	var $video = FALSE;
 	
 	/**
 	 * @var string "yes" if translation needs update
@@ -77,9 +77,12 @@ class Supply {
 			$this->title = $result->getValue("title");
 			$this->description = $result->getValue("description");
 			$this->pic = $result->getValue("pic");
-//			$this->videomanager_id = $result->getValue("videomanager_id");
 			if($result->getValue("translation_needs_update") != "") {
 				$this->translation_needs_update = $result->getValue("translation_needs_update");
+			}
+
+			if(rex_addon::get('d2u_videos')->isAvailable() && $result->getValue("video_id") > 0) {
+				$this->video = new Video($result->getValue("video_id"), $clang_id);
 			}
 		}
 	}
@@ -197,7 +200,13 @@ class Supply {
 			$query = rex::getTablePrefix() ."d2u_machinery_steel_supply SET "
 					."online_status = '". $this->online_status ."', "
 					."pic = '". $this->pic ."' ";
-//					."videomanager_id = ". $this->videomanager_id ." ";
+			if(rex_addon::get('d2u_videos')->isAvailable() && $this->video !== FALSE) {
+				$query .= ", video_id = ". $this->video->video_id;
+			}
+			else {
+				$query .= ", video_id = NULL";
+			}
+
 			if($this->supply_id == 0) {
 				$query = "INSERT INTO ". $query;
 			}

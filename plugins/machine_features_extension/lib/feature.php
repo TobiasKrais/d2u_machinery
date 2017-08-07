@@ -40,6 +40,11 @@ class Feature {
 	var $pic = "";
 	
 	/**
+	 * @var Video Videomanager video
+	 */
+	var $video = FALSE;
+	
+	/**
 	 * @var int[] Category ids in which the feature will be available
 	 */
 	var $category_ids = [];
@@ -91,6 +96,10 @@ class Feature {
 					),
 					$this->description
 			);
+			
+			if(rex_addon::get('d2u_videos')->isAvailable() && $result->getValue("video_id") > 0) {
+				$this->video = new Video($result->getValue("video_id"), $clang_id);
+			}
 		}
 	}
 	
@@ -184,6 +193,12 @@ class Feature {
 					."pic = '". $this->pic ."', "
 					."category_ids = '|". implode("|", $this->category_ids) ."|', "
 					."priority = '". $this->priority ."' ";
+			if(rex_addon::get('d2u_videos')->isAvailable() && $this->video !== FALSE) {
+				$query .= ", video_id = ". $this->video->video_id;
+			}
+			else {
+				$query .= ", video_id = NULL";
+			}
 
 			if($this->feature_id == 0) {
 				$query = "INSERT INTO ". $query;

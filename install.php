@@ -23,7 +23,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machin
 	operating_voltage_v varchar(255) collate utf8_general_ci default NULL,
 	operating_voltage_hz varchar(255) collate utf8_general_ci default NULL,
 	operating_voltage_a varchar(255) collate utf8_general_ci default NULL,
-	videomanager_ids varchar(255) collate utf8_general_ci default NULL,
+	video_ids varchar(255) collate utf8_general_ci default NULL,
 	PRIMARY KEY (machine_id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
 $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machinery_machines_lang (
@@ -45,7 +45,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machin
 	parent_category_id int(10) default NULL,
 	pic varchar(255) collate utf8_general_ci default NULL,
 	pic_usage varchar(255) collate utf8_general_ci default NULL,
-	videomanager_ids varchar(255) collate utf8_general_ci default NULL,
+	video_ids varchar(255) collate utf8_general_ci default NULL,
 	PRIMARY KEY (category_id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
 $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machinery_categories_lang (

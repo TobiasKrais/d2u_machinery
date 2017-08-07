@@ -141,6 +141,14 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			if(rex_plugin::get("d2u_machinery", "machine_usage_area_extension")->isAvailable()) {
 				$machine->usage_area_ids = $form['usage_area_ids'];
 			}
+			
+			if(rex_addon::get("d2u_videos")->isAvailable()) {
+				$video_ids = isset($form['video_ids']) ? $form['video_ids'] : [];
+				$machine->videos = []; // Clear video array
+				foreach($video_ids as $video_id) {
+					$machine->videos[$video_id] = new Video($video_id, rex_config::get("d2u_machinery", "default_lang"));
+				}
+			}
 		}
 		else {
 			$machine->clang_id = $rex_clang->getId();
@@ -274,6 +282,14 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 							d2u_addon_backend_helper::form_linkfield('d2u_machinery_machine_software', 'article_id_software', $machine->article_id_software, rex_config::get("d2u_machinery", "default_lang"), $readonly);
 							d2u_addon_backend_helper::form_linkfield('d2u_machinery_machine_service', 'article_id_service', $machine->article_id_service, rex_config::get("d2u_machinery", "default_lang"), $readonly);
 							d2u_addon_backend_helper::form_linklistfield('d2u_machinery_machine_references', 1, $machine->article_ids_references, rex_config::get("d2u_machinery", "default_lang"), $readonly);
+							if(rex_addon::get("d2u_videos")->isAvailable()) {
+								$options = [];
+								foreach(Video::getAll(rex_config::get("d2u_machinery", "default_lang")) as $video) {
+									$options[$video->video_id] = $video->name;
+								}
+								d2u_addon_backend_helper::form_select('d2u_machinery_category_videos', 'form[video_ids][]', $options, array_keys($machine->videos), 10, TRUE, $readonly);
+							}
+
 							d2u_addon_backend_helper::form_input('d2u_machinery_machine_engine_power', "form[engine_power]", $machine->engine_power, FALSE, $readonly, "text");
 							d2u_addon_backend_helper::form_input('d2u_machinery_machine_length', "form[length]", $machine->length, FALSE, $readonly, "number");
 							d2u_addon_backend_helper::form_input('d2u_machinery_machine_width', "form[width]", $machine->width, FALSE, $readonly, "number");

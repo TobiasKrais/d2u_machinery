@@ -26,7 +26,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machin
 	linkedin_groupid varchar(255) collate utf8_general_ci default NULL,
 	twitter_id varchar(255) collate utf8_general_ci default NULL,
 	PRIMARY KEY (provider_id)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
  
 $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machinery_export_machines (
 	used_machine_id int(10) NOT NULL,
@@ -35,7 +35,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machin
 	provider_import_id varchar(255) collate utf8_general_ci default NULL,
 	export_timestamp int(11) NULL,
 	PRIMARY KEY (used_machine_id, provider_id)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
 
 // Extend category table
 $sql->setQuery("SHOW COLUMNS FROM ". rex::getTablePrefix() ."d2u_machinery_categories LIKE 'export_machinerypark_category_id';");
