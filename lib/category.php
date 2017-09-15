@@ -194,7 +194,9 @@ class Category {
 			if(rex_addon::get('d2u_videos')->isAvailable() && $result->getValue("video_ids") != "") {
 				$video_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("video_ids")), PREG_GREP_INVERT);
 				foreach ($video_ids as $video_id) {
-					$this->videos[$video_id] = new Video($video_id, $clang_id);
+					if($video_id > 0) {
+						$this->videos[$video_id] = new Video($video_id, $clang_id);
+					}
 				}
 			}
 		}

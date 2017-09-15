@@ -189,7 +189,7 @@ if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['d
 		print '<div class="tab-content">';
 
 		// Overview
-		print '<div id="tab_overview" class="tab-pane fade in active machine-tab show">';
+		print '<div id="tab_overview" class="tab-pane fade show active machine-tab" role="tabpanel">';
 		print '<div class="row" data-match-height>';
 		print_machines($machines, "");
 		print '</div>';
@@ -197,7 +197,7 @@ if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['d
 
 		// Usage Areas
 		if(rex_plugin::get('d2u_machinery', 'machine_usage_area_extension')->isAvailable()) {
-			print '<div id="tab_usage_areas" class="tab-pane fade machine-tab">';
+			print '<div id="tab_usage_areas" class="tab-pane fade machine-tab" role="tabpanel">';
 			print '<div class="row">';
 			print '<div class="col-12">';
 			if($d2u_machinery->hasConfig("usage_area_header") && $d2u_machinery->getConfig("usage_area_header") == "usage") {
@@ -271,7 +271,7 @@ if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['d
 		}
 
 		// Technical data
-		print '<div id="tab_tech_data" class="tab-pane fade machine-tab">';
+		print '<div id="tab_tech_data" class="tab-pane fade machine-tab" role="tabpanel">';
 		print '<div class="row">';
 		print '<div class="col-12">';
 		$tech_data_matrix = $category->getTechDataMatrix();
@@ -320,7 +320,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 	print '<div class="tab-content">';
 	
 	// Overview
-	print '<div id="tab_overview" class="tab-pane fade in active machine-tab show">';
+	print '<div id="tab_overview" class="tab-pane fade show active machine-tab" role="tabpanel">';
 	print '<div class="row">';
 
 	// Text
@@ -328,6 +328,57 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 	print $machine->description;
 	print '<p>&nbsp;</p>';
 	print '</div>';
+
+	if(count($machine->pics) > 0) {
+		// Picture(s)
+		print '<div class="col-12 col-md-6">';
+		if(count($machine->pics) == 1) {
+			print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
+				$machine->pics[0] .'" alt='. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .' style="max-width:100%;">';
+		}
+		else {
+			// Slider
+			print '<div id="machineCarousel" class="carousel slide" data-ride="carousel" data-pause="hover">';
+			// Slider indicators
+
+			print '<ol class="carousel-indicators">';
+			for($i = 0; $i < count($machine->pics); $i++) {
+				print '<li data-target="#machineCarousel" data-slide-to="'. $i .'"';
+				if($i == 0) {
+					print 'class="active"';
+				}
+				print '></li>';
+			}
+			print '</ol>';
+
+			// Wrapper for slides
+			print '<div class="carousel-inner">';
+			for($i = 0; $i < count($machine->pics); $i++) {
+				print '<div class="carousel-item';
+				if($i == 0) {
+					print ' active';
+				}
+				print '">';
+				print '<img class="d-block w-100" src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
+				$machine->pics[$i] .'" alt="'. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .'">';
+				print '</div>';
+			}
+			print '</div>';
+
+			// Left and right controls
+			print '<a class="carousel-control-prev" href="#machineCarousel" role="button" data-slide="prev">';
+			print '<span class="carousel-control-prev-icon" aria-hidden="true"></span>';
+			print '<span class="sr-only">Previous</span>';
+			print '</a>';
+			print '<a class="carousel-control-next" href="#machineCarousel" role="button" data-slide="next">';
+			print '<span class="carousel-control-next-icon" aria-hidden="true"></span>';
+			print '<span class="sr-only">Next</span>';
+			print '</a>';
+
+			print '</div>';
+		}
+		print '</div>';
+	}
 
 	// Video
 	if(rex_addon::get('d2u_videos')->isAvailable()) {
@@ -353,6 +404,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 			}
 		}
 		if(count($alternative_machines) > 0) {
+			print '<div class="col-12 col-md-6">';
 			print '<h3>'. $tag_open .'d2u_machinery_alternative_machines'. $tag_close .'</h3>';
 			print '<ul>';
 			foreach($alternative_machines as $alternative_machine) {
@@ -360,31 +412,37 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 			}
 			print '</ul>';
 			print '<p>&nbsp;</p>';
+			print '</div>';
 		}
 	}
 		
 	// Software
 	if($machine->article_id_software > 0) {
+		print '<div class="col-12 col-md-6">';
 		print '<h3>'. $tag_open .'d2u_machinery_software'. $tag_close .'</h3>';
 		$article = rex_article::get($machine->article_id_software, $machine->clang_id);
 		if($article instanceof rex_article) {
 			print '<a href="'. rex_getUrl($machine->article_id_software, $machine->clang_id).'">'. $article->getValue('name') .'</a>';
 		}
 		print '<p>&nbsp;</p>';
+		print '</div>';
 	}
 		
 	// Service
 	if($machine->article_id_service > 0) {
+		print '<div class="col-12 col-md-6">';
 		print '<h3>'. $tag_open .'d2u_machinery_service'. $tag_close .'</h3>';
 		$article = rex_article::get($machine->article_id_service, $machine->clang_id);
 		if($article instanceof rex_article) {
 			print '<a href="'. rex_getUrl($machine->article_id_service, $machine->clang_id).'">'. $article->getValue('name') .'</a>';
 		}
 		print '<p>&nbsp;</p>';
+		print '</div>';
 	}
 		
 	// References
 	if(count($machine->article_ids_references) > 0) {
+		print '<div class="col-12 col-md-6">';
 		print '<h3>'. $tag_open .'d2u_machinery_references'. $tag_close .'</h3>';
 		print '<ul>';
 		foreach($machine->article_ids_references as $article_id_reference) {
@@ -395,61 +453,8 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		}
 		print '</ul>';
 		print '<p>&nbsp;</p>';
-	}
-	print '</div>';
-	
-	if(count($machine->pics) > 0) {
-		// Picture(s)
-		print '<div class="col-12 col-md-6">';
-		if(count($machine->pics) == 1) {
-			print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
-				$machine->pics[0] .'" alt='. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .' style="max-width:100%;">';
-		}
-		else {
-			// Slider
-			print '<div id="machineCarousel" class="carousel slide" data-ride="carousel">';
-			// Slider indicators
-			print '<ol class="carousel-indicators">';
-			for($i = 0; $i < count($machine->pics); $i++) {
-				print '<li data-target="#machineCarousel" data-slide-to="'. $i .'"';
-				if($i == 0) {
-					print 'class="active"';
-				}
-				print '></li>';
-			}
-			print '</ol>';
-
-			// Wrapper for slides
-			print '<div class="carousel-inner" role="listbox">';
-			for($i = 0; $i < count($machine->pics); $i++) {
-				print '<div class="carousel-item';
-				if($i == 0) {
-					print ' active';
-				}
-				print '">';
-				print '<div class="carousel-img-holder">';
-				print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
-				$machine->pics[$i] .'" alt="'. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .'">';
-				print '</div>';
-				print '</div>';
-			}
-			print '</div>';
-
-			// Left and right controls
-			print '<a class="carousel-control-prev" href="#machineCarousel" role="button" data-slide="prev">';
-			print '<span class="carousel-control-prev-icon" aria-hidden="true"></span>';
-			print '<span class="sr-only">Previous</span>';
-			print '</a>';
-			print '<a class="carousel-control-next" href="#machineCarousel" role="button" data-slide="next">';
-			print '<span class="carousel-control-next-icon" aria-hidden="true"></span>';
-			print '<span class="sr-only">Next</span>';
-			print '</a>';
-			
-			print '</div>';
-		}
 		print '</div>';
 	}
-	print '</div>';
 
 	// Downloads
 	if(count($machine->pdfs) > 0) {
@@ -462,11 +467,12 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		}
 		print '</div>';
 	}
-	print '</div>';
+	print '</div>'; // END class="row"
+	print '</div>'; // END tab overview
 	
 	// Agitators
 	if($machine->agitator_type_id > 0 && $machine->category->show_agitators) {
-		print '<div id="tab_agitator" class="tab-pane fade machine-tab">';
+		print '<div id="tab_agitator" class="tab-pane fade machine-tab" role="tabpanel">';
 		$agitator_type = new AgitatorType($machine->agitator_type_id, $machine->clang_id);
 		print '<div class="row">';
 		print '<div class="col-12"><h3>'. $agitator_type->name .'</h3><br><br></div>';
@@ -488,10 +494,10 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		}
 		print '</div>';
 	}
-	
+
 	// Features
 	if(count($machine->feature_ids) > 0) {
-		print '<div id="tab_features" class="tab-pane fade machine-tab">';
+		print '<div id="tab_features" class="tab-pane fade machine-tab" role="tabpanel">';
 		$features = $machine->getFeatures();
 		foreach($features as $feature) {
 			print '<div class="row">';
@@ -509,11 +515,11 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		}
 		print '</div>';
 	}
-	
+
 	// Technical data
-	print '<div id="tab_tech_data" class="tab-pane fade machine-tab">';
 	$tech_datas = $machine->getTechnicalData();
 	if(count($tech_datas) > 0) {
+		print '<div id="tab_tech_data" class="tab-pane fade machine-tab" role="tabpanel">';
 		print '<div class="row">';
 		print '<div class="col-12 col-md-8">';
 		print '<table class="techdata">';
@@ -527,12 +533,12 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		print '</table>';
 		print '</div>';
 		print '</div>';
+		print '</div>';
 	}
-	print '</div>';
-	
+
 	// Contact Request form
 	$d2u_machinery = rex_addon::get("d2u_machinery");
-	print '<div id="tab_request" class="tab-pane fade machine-tab">';
+	print '<div id="tab_request" class="tab-pane fade machine-tab" role="tabpanel">';
 	print '<div class="row">';
 	print '<div class="col-12 col-md-8">';
 	$form_data = 'hidden|machine_name|'. $machine->name .'|REQUEST
@@ -580,7 +586,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 	echo $yform->getForm();
 	print '</div>';
 	print '</div>';
-	print '</div>';
+	print '</div>'; // END tab_request
 	
 	print '</div>';
 	print '</div>';
