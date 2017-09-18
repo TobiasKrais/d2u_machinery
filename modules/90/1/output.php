@@ -189,7 +189,7 @@ if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['d
 		print '<div class="tab-content">';
 
 		// Overview
-		print '<div id="tab_overview" class="tab-pane fade show active machine-tab" role="tabpanel">';
+		print '<div id="tab_overview" class="tab-pane fade show active machine-tab">';
 		print '<div class="row" data-match-height>';
 		print_machines($machines, "");
 		print '</div>';
@@ -197,7 +197,7 @@ if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['d
 
 		// Usage Areas
 		if(rex_plugin::get('d2u_machinery', 'machine_usage_area_extension')->isAvailable()) {
-			print '<div id="tab_usage_areas" class="tab-pane fade machine-tab" role="tabpanel">';
+			print '<div id="tab_usage_areas" class="tab-pane fade machine-tab">';
 			print '<div class="row">';
 			print '<div class="col-12">';
 			if($d2u_machinery->hasConfig("usage_area_header") && $d2u_machinery->getConfig("usage_area_header") == "usage") {
@@ -271,7 +271,7 @@ if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['d
 		}
 
 		// Technical data
-		print '<div id="tab_tech_data" class="tab-pane fade machine-tab" role="tabpanel">';
+		print '<div id="tab_tech_data" class="tab-pane fade machine-tab">';
 		print '<div class="row">';
 		print '<div class="col-12">';
 		$tech_data_matrix = $category->getTechDataMatrix();
@@ -320,7 +320,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 	print '<div class="tab-content">';
 	
 	// Overview
-	print '<div id="tab_overview" class="tab-pane fade show active machine-tab" role="tabpanel">';
+	print '<div id="tab_overview" class="tab-pane fade show active machine-tab">';
 	print '<div class="row">';
 
 	// Text
@@ -472,7 +472,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 	
 	// Agitators
 	if($machine->agitator_type_id > 0 && $machine->category->show_agitators) {
-		print '<div id="tab_agitator" class="tab-pane fade machine-tab" role="tabpanel">';
+		print '<div id="tab_agitator" class="tab-pane fade machine-tab">';
 		$agitator_type = new AgitatorType($machine->agitator_type_id, $machine->clang_id);
 		print '<div class="row">';
 		print '<div class="col-12"><h3>'. $agitator_type->name .'</h3><br><br></div>';
@@ -497,7 +497,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 
 	// Features
 	if(count($machine->feature_ids) > 0) {
-		print '<div id="tab_features" class="tab-pane fade machine-tab" role="tabpanel">';
+		print '<div id="tab_features" class="tab-pane fade machine-tab">';
 		$features = $machine->getFeatures();
 		foreach($features as $feature) {
 			print '<div class="row">';
@@ -519,7 +519,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 	// Technical data
 	$tech_datas = $machine->getTechnicalData();
 	if(count($tech_datas) > 0) {
-		print '<div id="tab_tech_data" class="tab-pane fade machine-tab" role="tabpanel">';
+		print '<div id="tab_tech_data" class="tab-pane fade machine-tab">';
 		print '<div class="row">';
 		print '<div class="col-12 col-md-8">';
 		print '<table class="techdata">';
@@ -538,7 +538,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 
 	// Contact Request form
 	$d2u_machinery = rex_addon::get("d2u_machinery");
-	print '<div id="tab_request" class="tab-pane fade machine-tab" role="tabpanel">';
+	print '<div id="tab_request" class="tab-pane fade machine-tab">';
 	print '<div class="row">';
 	print '<div class="col-12 col-md-8">';
 	$form_data = 'hidden|machine_name|'. $machine->name .'|REQUEST

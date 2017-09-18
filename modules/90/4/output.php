@@ -119,8 +119,9 @@ if(rex_addon::get("url")->isAvailable()) {
 	$urlParamKey = isset($url_data->urlParamKey) ? $url_data->urlParamKey : "";
 }
 
-if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "category_id")) {
-	$category_id = filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT);
+if(filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "used_rent_category_id")
+		|| filter_input(INPUT_GET, 'used_sale_category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "used_sale_category_id")) {
+	$category_id = filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 ? filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT) : filter_input(INPUT_GET, 'used_sale_category_id', FILTER_VALIDATE_INT);
 	if(rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
 		$category_id = UrlGenerator::getId();
 	}
@@ -149,9 +150,10 @@ if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['d
 		print '</div>';
 	}
 }
-else if(filter_input(INPUT_GET, 'used_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "used_machine_id")) {
+else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "used_rent_machine_id"))
+		|| (filter_input(INPUT_GET, 'used_sale_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "used_sale_machine_id"))) {
 	// Print used machine
-	$used_machine_id = filter_input(INPUT_GET, 'used_machine_id', FILTER_VALIDATE_INT);
+	$used_machine_id = filter_input(INPUT_GET, 'used_sale_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 ? filter_input(INPUT_GET, 'used_sale_machine_id', FILTER_VALIDATE_INT) : filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT);
 	if(rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
 		$used_machine_id = UrlGenerator::getId();
 	}
@@ -160,7 +162,7 @@ else if(filter_input(INPUT_GET, 'used_machine_id', FILTER_VALIDATE_INT, ['option
 	print '<div class="tab-content">';
 	
 	// Overview
-	print '<div id="tab_overview" class="tab-pane fade in active machine-tab show">';
+	print '<div id="tab_overview" class="tab-pane fade show active machine-tab">';
 	print '<div class="row">';
 	if(count($used_machine->pics) > 0) {
 		// Picture(s)
@@ -320,7 +322,7 @@ else if(filter_input(INPUT_GET, 'used_machine_id', FILTER_VALIDATE_INT, ['option
 			checkbox|please_call|'. $tag_open .'d2u_machinery_form_please_call'. $tag_close .'|nein, ja|nein
 
 			html||<br>* '. $tag_open .'d2u_machinery_form_required'. $tag_close .'<br><br>
-			captcha_calc|'. $tag_open .'d2u_machinery_form_captcha'. $tag_close .'|'. $tag_open .'d2u_machinery_form_validate_captcha'. $tag_close .'|'. rex_getUrl('', '', ['used_machine_id' => $used_machine->used_machine_id]) .'
+			captcha_calc|'. $tag_open .'d2u_machinery_form_captcha'. $tag_close .'|'. $tag_open .'d2u_machinery_form_validate_captcha'. $tag_close .'|'. rex_getUrl('', '', [($used_machine->offer_type == 'sale' ? 'used_sale_machine_id' : 'used_rent_machine_id') => $used_machine->used_machine_id]) .'
 
 			submit|submit|'. $tag_open .'d2u_machinery_form_send'. $tag_close .'|no_db
 
@@ -362,7 +364,7 @@ else {
 	$class_active = ' active show';
 	if($current_article->getId() == $d2u_machinery->getConfig('used_machine_article_id_sale')) {
 		// Sale offers
-		print '<div id="tab_sale" class="tab-pane fade in machine-tab'. $class_active .'">';
+		print '<div id="tab_sale" class="tab-pane fade machine-tab'. $class_active .'">';
 		$class_active = "";
 		print '<div class="row" data-match-height>';
 		print_used_machine_categories(Category::getAll(rex_clang::getCurrentId()), "sale");
@@ -372,7 +374,7 @@ else {
 
 	if($current_article->getId() == $d2u_machinery->getConfig('used_machine_article_id_rent')) {
 		// Rental offers
-		print '<div id="tab_rent" class="tab-pane fade in machine-tab'. $class_active .'">';
+		print '<div id="tab_rent" class="tab-pane fade machine-tab'. $class_active .'">';
 		print '<div class="row" data-match-height>';
 		print_used_machine_categories(Category::getAll(rex_clang::getCurrentId()), "rent");
 		print '</div>';

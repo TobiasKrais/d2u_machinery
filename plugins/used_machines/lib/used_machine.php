@@ -422,7 +422,12 @@ class UsedMachine {
 			$d2u_machinery = rex_addon::get("d2u_machinery");
 				
 			$parameterArray = [];
-			$parameterArray['used_machine_id'] = $this->used_machine_id;
+			if($this->offer_type == 'rent') {
+				$parameterArray['used_rent_machine_id'] = $this->used_machine_id;
+			}
+			else {
+				$parameterArray['used_sale_machine_id'] = $this->used_machine_id;
+			}
 			$article_id = $this->offer_type == "sale" ? $d2u_machinery->getConfig('used_machine_article_id_sale') : $d2u_machinery->getConfig('used_machine_article_id_rent');
 			$this->url = rex_getUrl($article_id, $this->clang_id, $parameterArray, "&");
 		}

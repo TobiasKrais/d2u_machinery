@@ -25,7 +25,7 @@ class D2UMachineryModules {
 		if(rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
 			$modules[] = new D2UModule("90-4",
 				"D2U Machinery Addon - Gebrauchtmaschinen",
-				1);
+				2);
 		}
 		return $modules;
 	}
