@@ -3,7 +3,7 @@
 d2u_machinery_lang_helper::factory()->install();
 
 // Update modules
-if(class_exists(D2UModuleManager) && class_exists(D2UMachineryModules)) {
+if(class_exists(D2UModuleManager)) {
 	$modules = [];
 	$modules[] = new D2UModule("90-1",
 		"D2U Machinery Addon - Hauptausgabe",
