@@ -49,4 +49,6 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machin
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
 
 // Insert frontend translations
-machine_agitator_extension_lang_helper::factory()->install();
+if(class_exists(machine_agitator_extension_lang_helper)) {
+	machine_agitator_extension_lang_helper::factory()->install();
+}

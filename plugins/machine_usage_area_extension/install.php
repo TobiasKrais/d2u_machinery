@@ -24,4 +24,6 @@ if($sql->getRows() == 0) {
 }
 
 // Insert frontend translations
-machine_usage_area_extension_lang_helper::factory()->install();
+if(class_exists(machine_usage_area_extension_lang_helper)) {
+	machine_usage_area_extension_lang_helper::factory()->install();
+}

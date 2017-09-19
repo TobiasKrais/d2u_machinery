@@ -106,4 +106,6 @@ if(rex_addon::get('url')->isAvailable()) {
 }
 
 // Insert frontend translations
-used_machines_lang_helper::factory()->install();
+if(class_exists(used_machines_lang_helper)) {
+	used_machines_lang_helper::factory()->install();
+}

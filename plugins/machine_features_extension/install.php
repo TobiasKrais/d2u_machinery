@@ -28,4 +28,6 @@ if($sql->getRows() == 0) {
 }
 
 // Insert frontend translations
-machine_features_extension_lang_helper::factory()->install();
+if(class_exists(machine_steel_processing_extension_lang_helper)) {
+	machine_steel_processing_extension_lang_helper::factory()->install();
+}

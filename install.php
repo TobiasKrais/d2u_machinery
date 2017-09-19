@@ -97,7 +97,9 @@ if(rex_addon::get('url')->isAvailable()) {
 }
 
 // Insert frontend translations
-d2u_machinery_lang_helper::factory()->install();
+if(class_exists(d2u_machinery_lang_helper)) {
+	d2u_machinery_lang_helper::factory()->install();
+}
 
 // Media Manager media types
 $sql->setQuery("SELECT * FROM ". rex::getTablePrefix() ."media_manager_type WHERE name = 'd2u_machinery_list_tile'");
