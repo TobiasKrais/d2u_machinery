@@ -4,7 +4,24 @@ d2u_machinery_lang_helper::factory()->install();
 
 // Update modules
 if(class_exists(D2UModuleManager) && class_exists(D2UMachineryModules)) {
-	$d2u_module_manager = new D2UModuleManager(D2UMachineryModules::getD2UMachineryModules(), "", "d2u_machinery");
+	$modules = [];
+	$modules[] = new D2UModule("90-1",
+		"D2U Machinery Addon - Hauptausgabe",
+		1);
+	if(rex_plugin::get('d2u_machinery', 'industry_sectors')->isAvailable()) {
+		$modules[] = new D2UModule("90-2",
+			"D2U Machinery Addon - Branchen",
+			1);
+	}
+	$modules[] = new D2UModule("90-3",
+		"D2U Machinery Addon - Kategorien",
+		2);
+	if(rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
+		$modules[] = new D2UModule("90-4",
+			"D2U Machinery Addon - Gebrauchtmaschinen",
+			2);
+	}
+	$d2u_module_manager = new D2UModuleManager($modules, "", "d2u_machinery");
 	$d2u_module_manager->autoupdate();
 }
 

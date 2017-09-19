@@ -2,7 +2,7 @@
 /*
  * Modules
  */
-$d2u_module_manager = new D2UModuleManager(D2UMachineryModules::getD2UMachineryModules(), "modules/", "d2u_machinery");
+$d2u_module_manager = new D2UModuleManager(D2UMachineryModules::getModules(), "modules/", "d2u_machinery");
 
 // D2UModuleManager actions
 $d2u_module_id = rex_request('d2u_module_id', 'string');
