@@ -37,9 +37,8 @@ else if ($func == 'export') {
 }
 
 // Fetch providers
-$d2u_machinery = rex_addon::get('d2u_machinery');
 $providers = Provider::getAll();
-$used_machines = UsedMachine::getAll($d2u_machinery->getConfig('default_lang'), TRUE);
+$used_machines = UsedMachine::getAll(rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId()), TRUE);
 
 print '<table class="table table-striped table-hover">';
 if(count($providers) > 0) {

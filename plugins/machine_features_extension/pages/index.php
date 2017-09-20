@@ -25,7 +25,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$feature->priority = $form['priority'];
 			$feature->pic = $input_media[1];
 			if(rex_addon::get("d2u_videos")->isAvailable() && isset($form['video_id']) && $form['video_id'] > 0) {
-				$supply->video = new Video($form['video_id'], rex_config::get("d2u_machinery", "default_lang"));
+				$supply->video = new Video($form['video_id'], rex_config::get("d2u_helper", "default_lang"));
 			}
 			else {
 				$supply->video = FALSE;
@@ -73,7 +73,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		$form = (array) rex_post('form', 'array', array());
 		$feature_id = $form['feature_id'];
 	}
-	$feature = new Feature($feature_id, rex_config::get("d2u_machinery", "default_lang"));
+	$feature = new Feature($feature_id, rex_config::get("d2u_helper", "default_lang"));
 	
 	// Check if object is used
 	$reffering_machines = $feature->getRefferingMachines();
@@ -116,7 +116,7 @@ if ($func == 'edit' || $func == 'add') {
 				<?php
 					foreach(rex_clang::getAll() as $rex_clang) {
 						$feature = new Feature($entry_id, $rex_clang->getId());
-						$required = $rex_clang->getId() == rex_config::get("d2u_machinery", "default_lang") ? TRUE : FALSE;
+						$required = $rex_clang->getId() == rex_config::get("d2u_helper", "default_lang") ? TRUE : FALSE;
 						
 						$readonly_lang = TRUE;
 						if(rex::getUser()->isAdmin() || (rex::getUser()->hasPerm('d2u_machinery[edit_lang]') && rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId()))) {
@@ -127,7 +127,7 @@ if ($func == 'edit' || $func == 'add') {
 						<legend><?php echo rex_i18n::msg('d2u_machinery_helper_lang') .' "'. $rex_clang->getName() .'"'; ?></legend>
 						<div class="panel-body-wrapper slide">
 							<?php
-								if($rex_clang->getId() != rex_config::get("d2u_machinery", "default_lang")) {
+								if($rex_clang->getId() != rex_config::get("d2u_helper", "default_lang")) {
 									$options_translations = [];
 									$options_translations["yes"] = rex_i18n::msg('d2u_helper_translation_needs_update');
 									$options_translations["no"] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
@@ -152,7 +152,7 @@ if ($func == 'edit' || $func == 'add') {
 					<div class="panel-body-wrapper slide">
 						<?php
 							// Do not use last object from translations, because you don't know if it exists in DB
-							$feature = new Feature($entry_id, rex_config::get("d2u_machinery", "default_lang"));
+							$feature = new Feature($entry_id, rex_config::get("d2u_helper", "default_lang"));
 							$readonly = TRUE;
 							if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_machinery[edit_tech_data]')) {
 								$readonly = FALSE;
@@ -162,14 +162,14 @@ if ($func == 'edit' || $func == 'add') {
 							d2u_addon_backend_helper::form_mediafield('d2u_machinery_features_pic', 1, $feature->pic, $readonly);
 							
 							$options = [];
-							foreach(Category::getAll(rex_config::get("d2u_machinery", "default_lang")) as $category) {
+							foreach(Category::getAll(rex_config::get("d2u_helper", "default_lang")) as $category) {
 								$options[$category->category_id] = $category->name;
 							}
 							d2u_addon_backend_helper::form_select('d2u_machinery_features_categories', 'form[category_ids][]', $options, $feature->category_ids, 10, TRUE, $readonly);
 
 							if(rex_addon::get("d2u_videos")->isAvailable()) {
 								$options_video = [0 => rex_i18n::msg('d2u_machinery_video_no')];
-								foreach (Video::getAll(rex_config::get("d2u_machinery", "default_lang")) as $video) {
+								foreach (Video::getAll(rex_config::get("d2u_helper", "default_lang")) as $video) {
 									$options_video[$video->video_id] = $video->name;
 								}
 								d2u_addon_backend_helper::form_select('d2u_machinery_video', 'form[video_id]', $options_video, $supply->video !== FALSE ? [$supply->video->video_id] : [], 1, FALSE, $readonly);
@@ -199,7 +199,7 @@ if ($func == '') {
 	$query = 'SELECT features.feature_id, title, priority '
 		. 'FROM '. rex::getTablePrefix() .'d2u_machinery_features AS features '
 		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_features_lang AS lang '
-			. 'ON features.feature_id = lang.feature_id AND lang.clang_id = '. rex_config::get("d2u_machinery", "default_lang") .' '
+			. 'ON features.feature_id = lang.feature_id AND lang.clang_id = '. rex_config::get("d2u_helper", "default_lang") .' '
 		. 'ORDER BY priority ASC';
     $list = rex_list::factory($query);
 

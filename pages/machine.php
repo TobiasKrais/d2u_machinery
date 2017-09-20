@@ -62,19 +62,19 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			if(rex_plugin::get("d2u_machinery", "machine_steel_processing_extension")->isAvailable()) {
 				$process_ids = isset($form['process_ids']) ? $form['process_ids'] : [];
 				foreach($process_ids as $process_id) {
-					$machine->processes[$process_id] = new Process($process_id, rex_config::get("d2u_machinery", "default_lang"));
+					$machine->processes[$process_id] = new Process($process_id, rex_config::get("d2u_helper", "default_lang"));
 				}
 				$procedure_ids = isset($form['procedure_ids']) ? $form['procedure_ids'] : [];
 				foreach($procedure_ids as $procedure_id) {
-					$machine->procedures[$procedure_id] = new Procedure($procedure_id, rex_config::get("d2u_machinery", "default_lang"));
+					$machine->procedures[$procedure_id] = new Procedure($procedure_id, rex_config::get("d2u_helper", "default_lang"));
 				}
 				$material_ids = isset($form['material_ids']) ? $form['material_ids'] : [];
 				foreach($material_ids as $material_id) {
-					$machine->materials[$material_id] = new Procedure($material_id, rex_config::get("d2u_machinery", "default_lang"));
+					$machine->materials[$material_id] = new Procedure($material_id, rex_config::get("d2u_helper", "default_lang"));
 				}
 				$tool_ids = isset($form['tool_ids']) ? $form['tool_ids'] : [];
 				foreach($tool_ids as $tool_id) {
-					$machine->tools[$tool_id] = new Procedure($tool_id, rex_config::get("d2u_machinery", "default_lang"));
+					$machine->tools[$tool_id] = new Procedure($tool_id, rex_config::get("d2u_helper", "default_lang"));
 				}
 				$machine->automation_supply_single_stroke = $form['automation_supply_single_stroke'];
 				$machine->automation_supply_multi_stroke = $form['automation_supply_multi_stroke'];
@@ -82,11 +82,11 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 				$machine->automation_rush_leader_flyback = $form['automation_rush_leader_flyback'];
 				$automation_automationgrade_ids = isset($form['automation_automationgrade_ids']) ? $form['automation_automationgrade_ids'] : [];
 				foreach($automation_automationgrade_ids as $automation_automationgrade_id) {
-					$machine->automation_automationgrades[$automation_automationgrade_id] = new Automation($automation_automationgrade_id, rex_config::get("d2u_machinery", "default_lang"));
+					$machine->automation_automationgrades[$automation_automationgrade_id] = new Automation($automation_automationgrade_id, rex_config::get("d2u_helper", "default_lang"));
 				}
 				$automation_supply_ids = isset($form['automation_supply_ids']) ? $form['automation_supply_ids'] : [];
 				foreach($automation_supply_ids as $automation_supply_id) {
-					$machine->automation_supplys[$automation_supply_id] = new Supply($automation_supply_id, rex_config::get("d2u_machinery", "default_lang"));
+					$machine->automation_supplys[$automation_supply_id] = new Supply($automation_supply_id, rex_config::get("d2u_helper", "default_lang"));
 				}
 				$machine->workspace = $form['workspace'];
 				$machine->workspace_square = $form['workspace_square'];
@@ -118,7 +118,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 				$machine->shaving_unit_angle_steel_single_cut = $form['shaving_unit_angle_steel_single_cut'] == "" ? 0 : $form['shaving_unit_angle_steel_single_cut'];
 				$profile_ids = isset($form['profile_ids']) ? $form['profile_ids'] : [];
 				foreach($profile_ids as $profile_id) {
-					$machine->profiles[$profile_id] = new Profile($profile_id, rex_config::get("d2u_machinery", "default_lang"));
+					$machine->profiles[$profile_id] = new Profile($profile_id, rex_config::get("d2u_helper", "default_lang"));
 				}
 				$machine->carrier_width = $form['carrier_width'];
 				$machine->carrier_height = $form['carrier_height'];
@@ -129,7 +129,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 				$machine->component_weight = $form['component_weight'] == "" ? 0 : $form['component_weight'];
 				$welding_process_ids = isset($form['welding_process_ids']) ? $form['welding_process_ids'] : [];
 				foreach($welding_process_ids as $welding_process_id) {
-					$machine->weldings[$welding_process_id] = new Welding($welding_process_id, rex_config::get("d2u_machinery", "default_lang"));
+					$machine->weldings[$welding_process_id] = new Welding($welding_process_id, rex_config::get("d2u_helper", "default_lang"));
 				}
 				$machine->welding_thickness = $form['welding_thickness'] == "" ? 0 : $form['welding_thickness'];
 				$machine->welding_wire_thickness = $form['welding_wire_thickness'];
@@ -146,7 +146,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 				$video_ids = isset($form['video_ids']) ? $form['video_ids'] : [];
 				$machine->videos = []; // Clear video array
 				foreach($video_ids as $video_id) {
-					$machine->videos[$video_id] = new Video($video_id, rex_config::get("d2u_machinery", "default_lang"));
+					$machine->videos[$video_id] = new Video($video_id, rex_config::get("d2u_helper", "default_lang"));
 				}
 			}
 		}
@@ -193,7 +193,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		$form = (array) rex_post('form', 'array', array());
 		$machine_id = $form['machine_id'];
 	}
-	$machine = new Machine($machine_id, rex_config::get("d2u_machinery", "default_lang"));
+	$machine = new Machine($machine_id, rex_config::get("d2u_helper", "default_lang"));
 	
 	// Check if object is used
 	$reffering_machines = $machine->getRefferingMachines();
@@ -237,7 +237,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 }
 // Change online status of machine
 else if($func == 'changestatus') {
-	$machine = new Machine($entry_id, rex_config::get("d2u_machinery", "default_lang"));
+	$machine = new Machine($entry_id, rex_config::get("d2u_helper", "default_lang"));
 	$machine->changeStatus();
 	
 	header("Location: ". rex_url::currentBackendPage());
@@ -246,7 +246,7 @@ else if($func == 'changestatus') {
 
 // Eingabeformular
 if ($func == 'edit' || $func == 'clone' || $func == 'add') {
-	$machine = new Machine($entry_id, rex_config::get("d2u_machinery", "default_lang"));
+	$machine = new Machine($entry_id, rex_config::get("d2u_helper", "default_lang"));
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
@@ -265,26 +265,26 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $machine->priority, TRUE, $readonly, 'number');
 							d2u_addon_backend_helper::form_medialistfield('d2u_machinery_machine_pics', 1, $machine->pics, $readonly);
 							$options = [];
-							foreach(Category::getAll(rex_config::get("d2u_machinery", "default_lang")) as $category) {
+							foreach(Category::getAll(rex_config::get("d2u_helper", "default_lang")) as $category) {
 								if($category->name != "") {
 									$options[$category->category_id] = $category->name;
 								}
 							}
 							d2u_addon_backend_helper::form_select('d2u_machinery_category', 'form[category_id]', $options, isset($machine->category->category_id) ? [$machine->category->category_id] : [], 1, FALSE, $readonly);
 							$options_alt_machines = [];
-							foreach(Machine::getAll(rex_config::get("d2u_machinery", "default_lang")) as $alt_machine) {
+							foreach(Machine::getAll(rex_config::get("d2u_helper", "default_lang")) as $alt_machine) {
 								if($alt_machine->machine_id != $machine->machine_id) {
 									$options_alt_machines[$alt_machine->machine_id] = $alt_machine->name;
 								}
 							}
 							d2u_addon_backend_helper::form_select('d2u_machinery_machine_alternatives', 'form[alternative_machine_ids][]', $options_alt_machines, $machine->alternative_machine_ids, 10, TRUE, $readonly);
 							d2u_addon_backend_helper::form_checkbox('d2u_machinery_online_status', 'form[online_status]', 'online', $machine->online_status == "online", $readonly);
-							d2u_addon_backend_helper::form_linkfield('d2u_machinery_machine_software', 'article_id_software', $machine->article_id_software, rex_config::get("d2u_machinery", "default_lang"), $readonly);
-							d2u_addon_backend_helper::form_linkfield('d2u_machinery_machine_service', 'article_id_service', $machine->article_id_service, rex_config::get("d2u_machinery", "default_lang"), $readonly);
-							d2u_addon_backend_helper::form_linklistfield('d2u_machinery_machine_references', 1, $machine->article_ids_references, rex_config::get("d2u_machinery", "default_lang"), $readonly);
+							d2u_addon_backend_helper::form_linkfield('d2u_machinery_machine_software', 'article_id_software', $machine->article_id_software, rex_config::get("d2u_helper", "default_lang"), $readonly);
+							d2u_addon_backend_helper::form_linkfield('d2u_machinery_machine_service', 'article_id_service', $machine->article_id_service, rex_config::get("d2u_helper", "default_lang"), $readonly);
+							d2u_addon_backend_helper::form_linklistfield('d2u_machinery_machine_references', 1, $machine->article_ids_references, rex_config::get("d2u_helper", "default_lang"), $readonly);
 							if(rex_addon::get("d2u_videos")->isAvailable()) {
 								$options = [];
-								foreach(Video::getAll(rex_config::get("d2u_machinery", "default_lang")) as $video) {
+								foreach(Video::getAll(rex_config::get("d2u_helper", "default_lang")) as $video) {
 									$options[$video->video_id] = $video->name;
 								}
 								d2u_addon_backend_helper::form_select('d2u_machinery_category_videos', 'form[video_ids][]', $options, array_keys($machine->videos), 10, TRUE, $readonly);
@@ -308,7 +308,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						print '<legend><small><i class="rex-icon fa-industry"></i></small> '. rex_i18n::msg('d2u_machinery_industry_sectors') .'</legend>';
 						print '<div class="panel-body-wrapper slide">';
 						$options_industry_sectors = [];
-						foreach (IndustrySector::getAll(rex_config::get("d2u_machinery", "default_lang")) as $industry_sector) {
+						foreach (IndustrySector::getAll(rex_config::get("d2u_helper", "default_lang")) as $industry_sector) {
 							$options_industry_sectors[$industry_sector->industry_sector_id] = $industry_sector->name;
 						}
 						d2u_addon_backend_helper::form_select('d2u_machinery_industry_sectors', 'form[industry_sector_ids][]', $options_industry_sectors, $machine->industry_sector_ids, 10, TRUE, $readonly);
@@ -320,7 +320,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						print '<legend><small><i class="rex-icon fa-spoon"></i></small> '. rex_i18n::msg('d2u_machinery_agitator_extension') .'</legend>';
 						print '<div class="panel-body-wrapper slide">';
 						$options_agitator_types = array(0=>rex_i18n::msg('d2u_machinery_no_selection'));
-						foreach (AgitatorType::getAll(rex_config::get("d2u_machinery", "default_lang")) as $agitator_type) {
+						foreach (AgitatorType::getAll(rex_config::get("d2u_helper", "default_lang")) as $agitator_type) {
 							$options_agitator_types[$agitator_type->agitator_type_id] = $agitator_type->name;
 						}
 						d2u_addon_backend_helper::form_select('d2u_machinery_agitator_type', 'form[agitator_type_id]', $options_agitator_types, array($machine->agitator_type_id), 1, FALSE, $readonly);
@@ -333,7 +333,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						print '<legend><small><i class="rex-icon fa-certificate"></i></small> '. rex_i18n::msg('d2u_machinery_certificates') .'</legend>';
 						print '<div class="panel-body-wrapper slide">';
 						$options_certificates = [];
-						foreach (Certificate::getAll(rex_config::get("d2u_machinery", "default_lang"), $machine->certificate_ids) as $certificate) {
+						foreach (Certificate::getAll(rex_config::get("d2u_helper", "default_lang"), $machine->certificate_ids) as $certificate) {
 							$options_certificates[$certificate->certificate_id] = $certificate->name;
 						}
 						d2u_addon_backend_helper::form_select('d2u_machinery_certificates', 'form[certificate_ids][]', $options_certificates, $machine->certificate_ids, 10, TRUE, $readonly);
@@ -345,7 +345,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						print '<legend><small><i class="rex-icon fa-plug"></i></small> '. rex_i18n::msg('d2u_machinery_features') .'</legend>';
 						print '<div class="panel-body-wrapper slide">';
 						$options_features = [];
-						foreach (Feature::getAll(rex_config::get("d2u_machinery", "default_lang"), $machine->category->category_id) as $feature) {
+						foreach (Feature::getAll(rex_config::get("d2u_helper", "default_lang"), $machine->category->category_id) as $feature) {
 							$options_features[$feature->feature_id] = $feature->title;
 						}
 						d2u_addon_backend_helper::form_select('d2u_machinery_features', 'form[feature_ids][]', $options_features, $machine->feature_ids, 10, TRUE, $readonly);
@@ -357,22 +357,22 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						print '<legend><small><i class="rex-icon fa-steam"></i></small> '. rex_i18n::msg('d2u_machinery_machine_steel_extension') .'</legend>';
 						print '<div class="panel-body-wrapper slide">';
 						$options_processes = [];
-						foreach (Process::getAll(rex_config::get("d2u_machinery", "default_lang")) as $process) {
+						foreach (Process::getAll(rex_config::get("d2u_helper", "default_lang")) as $process) {
 							$options_processes[$process->process_id] = $process->name;
 						}
 						d2u_addon_backend_helper::form_select('d2u_machinery_steel_processes', 'form[process_ids][]', $options_processes, array_keys($machine->processes), 4, TRUE, $readonly);
 						$options_procedures = [];
-						foreach (Procedure::getAll(rex_config::get("d2u_machinery", "default_lang")) as $procedure) {
+						foreach (Procedure::getAll(rex_config::get("d2u_helper", "default_lang")) as $procedure) {
 							$options_procedures[$procedure->procedure_id] = $procedure->name;
 						}
 						d2u_addon_backend_helper::form_select('d2u_machinery_steel_procedures', 'form[procedure_ids][]', $options_procedures, array_keys($machine->procedures), 4, TRUE, $readonly);
 						$options_materials = [];
-						foreach (Material::getAll(rex_config::get("d2u_machinery", "default_lang")) as $material) {
+						foreach (Material::getAll(rex_config::get("d2u_helper", "default_lang")) as $material) {
 							$options_materials[$material->material_id] = $material->name;
 						}
 						d2u_addon_backend_helper::form_select('d2u_machinery_steel_material_class', 'form[material_ids][]', $options_materials, array_keys($machine->materials), 4, TRUE, $readonly);
 						$options_tools = [];
-						foreach (Tool::getAll(rex_config::get("d2u_machinery", "default_lang")) as $tool) {
+						foreach (Tool::getAll(rex_config::get("d2u_helper", "default_lang")) as $tool) {
 							$options_tools[$tool->tool_id] = $tool->name;
 						}
 						d2u_addon_backend_helper::form_select('d2u_machinery_steel_tools', 'form[tool_ids][]', $options_tools, array_keys($machine->tools), 4, TRUE, $readonly);
@@ -387,12 +387,12 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						d2u_addon_backend_helper::form_input('d2u_machinery_steel_automation_feedrate', 'form[automation_feedrate]', $machine->automation_feedrate, FALSE, $readonly, "text");
 						d2u_addon_backend_helper::form_input('d2u_machinery_steel_automation_rush_leader_flyback', 'form[automation_rush_leader_flyback]', $machine->automation_rush_leader_flyback, FALSE, $readonly, "text");
 						$options_automation = [];
-						foreach (Automation::getAll(rex_config::get("d2u_machinery", "default_lang")) as $automation) {
+						foreach (Automation::getAll(rex_config::get("d2u_helper", "default_lang")) as $automation) {
 							$options_automation[$automation->automation_id] = $automation->name;
 						}
 						d2u_addon_backend_helper::form_select('d2u_machinery_steel_automation_automationgrades', 'form[automation_automationgrade_ids][]', $options_automation, array_keys($machine->automation_automationgrades), 4, TRUE, $readonly);
 						$options_supply = [];
-						foreach (Supply::getAll(rex_config::get("d2u_machinery", "default_lang")) as $supply) {
+						foreach (Supply::getAll(rex_config::get("d2u_helper", "default_lang")) as $supply) {
 							$options_supply[$supply->supply_id] = $supply->name;
 						}
 						d2u_addon_backend_helper::form_select('d2u_machinery_steel_automation_supplys', 'form[automation_supply_ids][]', $options_supply, array_keys($machine->automation_supplys), 4, TRUE, $readonly);
@@ -449,7 +449,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						d2u_addon_backend_helper::form_input('d2u_machinery_steel_punching_tools', 'form[punching_tools]', $machine->punching_tools, FALSE, $readonly, "text");
 						d2u_addon_backend_helper::form_input('d2u_machinery_steel_punching_shaving_unit_angle_steel_single_cut', 'form[shaving_unit_angle_steel_single_cut]', $machine->shaving_unit_angle_steel_single_cut, FALSE, $readonly, "number");
 						$options_profile = [];
-						foreach (Profile::getAll(rex_config::get("d2u_machinery", "default_lang")) as $profile) {
+						foreach (Profile::getAll(rex_config::get("d2u_helper", "default_lang")) as $profile) {
 							$options_profile[$profile->profile_id] = $profile->name;
 						}
 						d2u_addon_backend_helper::form_select('d2u_machinery_steel_punching_profiles', 'form[profile_ids][]', $options_profile, array_keys($machine->profiles), 4, TRUE, $readonly);
@@ -461,7 +461,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						d2u_addon_backend_helper::form_input('d2u_machinery_steel_punching_component_length', 'form[component_length]', $machine->component_length, FALSE, $readonly, "text");
 						d2u_addon_backend_helper::form_input('d2u_machinery_steel_punching_component_weight', 'form[component_weight]', $machine->component_weight, FALSE, $readonly, "number");
 						$options_welding = [];
-						foreach (Welding::getAll(rex_config::get("d2u_machinery", "default_lang")) as $welding) {
+						foreach (Welding::getAll(rex_config::get("d2u_helper", "default_lang")) as $welding) {
 							$options_welding[$welding->welding_id] = $welding->name;
 						}
 						d2u_addon_backend_helper::form_select('d2u_machinery_steel_weldings', 'form[welding_process_ids][]', $options_welding, array_keys($machine->weldings), 4, TRUE, $readonly);
@@ -485,7 +485,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						print '<legend><small><i class="rex-icon fa-codepen"></i></small> '. rex_i18n::msg('d2u_machinery_usage_areas') .'</legend>';
 						print '<div class="panel-body-wrapper slide">';
 						$options_usage_areas = [];
-						foreach (UsageArea::getAll(rex_config::get("d2u_machinery", "default_lang"), $machine->category->category_id) as $usage_area) {
+						foreach (UsageArea::getAll(rex_config::get("d2u_helper", "default_lang"), $machine->category->category_id) as $usage_area) {
 							$options_usage_areas[$usage_area->usage_area_id] = $usage_area->name;
 						}
 						d2u_addon_backend_helper::form_select('d2u_machinery_usage_areas', 'form[usage_area_ids][]', $options_usage_areas, $machine->usage_area_ids, 10, TRUE, $readonly);
@@ -495,7 +495,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 
 					foreach(rex_clang::getAll() as $rex_clang) {
 						$machine_lang = new Machine($entry_id, $rex_clang->getId());
-						$required = $rex_clang->getId() == rex_config::get("d2u_machinery", "default_lang") ? TRUE : FALSE;
+						$required = $rex_clang->getId() == rex_config::get("d2u_helper", "default_lang") ? TRUE : FALSE;
 						
 						$readonly_lang = TRUE;
 						if(rex::getUser()->isAdmin() || (rex::getUser()->hasPerm('d2u_machinery[edit_lang]') && rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId()))) {
@@ -506,7 +506,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						<legend><?php echo rex_i18n::msg('d2u_helper_text_lang') .' "'. $rex_clang->getName() .'"'; ?></legend>
 						<div class="panel-body-wrapper slide">
 							<?php
-								if($rex_clang->getId() != rex_config::get("d2u_machinery", "default_lang")) {
+								if($rex_clang->getId() != rex_config::get("d2u_helper", "default_lang")) {
 									$options_translations = [];
 									$options_translations["yes"] = rex_i18n::msg('d2u_helper_translation_needs_update');
 									$options_translations["no"] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
@@ -549,7 +549,7 @@ if ($func == '') {
 	$query = 'SELECT machine.machine_id, machine.name, machine.internal_name, category.name AS categoryname, online_status, priority '
 		. 'FROM '. rex::getTablePrefix() .'d2u_machinery_machines AS machine '
 		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_categories_lang AS category '
-			. 'ON machine.category_id = category.category_id AND category.clang_id = '. rex_config::get("d2u_machinery", "default_lang") .' ';
+			. 'ON machine.category_id = category.category_id AND category.clang_id = '. rex_config::get("d2u_helper", "default_lang") .' ';
 	if($this->getConfig('default_machine_sort') == 'priority') {
 		$query .= 'ORDER BY priority ASC';
 	}

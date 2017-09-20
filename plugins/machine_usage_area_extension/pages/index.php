@@ -61,7 +61,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		$form = (array) rex_post('form', 'array', array());
 		$usage_area_id = $form['usage_area_id'];
 	}
-	$usage_area = new UsageArea($usage_area_id, rex_config::get("d2u_machinery", "default_lang"));
+	$usage_area = new UsageArea($usage_area_id, rex_config::get("d2u_helper", "default_lang"));
 	
 	// Check if object is used
 	$reffering_machines = $usage_area->getMachines();
@@ -104,7 +104,7 @@ if ($func == 'edit' || $func == 'add') {
 				<?php
 					foreach(rex_clang::getAll() as $rex_clang) {
 						$usage_area = new UsageArea($entry_id, $rex_clang->getId());
-						$required = $rex_clang->getId() == rex_config::get("d2u_machinery", "default_lang") ? TRUE : FALSE;
+						$required = $rex_clang->getId() == rex_config::get("d2u_helper", "default_lang") ? TRUE : FALSE;
 						
 						$readonly_lang = TRUE;
 						if(rex::getUser()->isAdmin() || (rex::getUser()->hasPerm('d2u_machinery[edit_lang]') && rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId()))) {
@@ -115,7 +115,7 @@ if ($func == 'edit' || $func == 'add') {
 						<legend><?php echo rex_i18n::msg('d2u_helper_text_lang') .' "'. $rex_clang->getName() .'"'; ?></legend>
 						<div class="panel-body-wrapper slide">
 							<?php
-								if($rex_clang->getId() != rex_config::get("d2u_machinery", "default_lang")) {
+								if($rex_clang->getId() != rex_config::get("d2u_helper", "default_lang")) {
 									$options_translations = [];
 									$options_translations["yes"] = rex_i18n::msg('d2u_helper_translation_needs_update');
 									$options_translations["no"] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
@@ -138,7 +138,7 @@ if ($func == 'edit' || $func == 'add') {
 					<div class="panel-body-wrapper slide">
 						<?php
 							// Do not use last object from translations, because you don't know if it exists in DB
-							$usage_area = new UsageArea($entry_id, rex_config::get("d2u_machinery", "default_lang"));
+							$usage_area = new UsageArea($entry_id, rex_config::get("d2u_helper", "default_lang"));
 							$readonly = TRUE;
 							if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_machinery[edit_tech_data]')) {
 								$readonly = FALSE;
@@ -147,7 +147,7 @@ if ($func == 'edit' || $func == 'add') {
 							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $usage_area->priority, TRUE, $readonly, 'number');
 							
 							$options = [];
-							foreach(Category::getAll(rex_config::get("d2u_machinery", "default_lang")) as $category) {
+							foreach(Category::getAll(rex_config::get("d2u_helper", "default_lang")) as $category) {
 								$options[$category->category_id] = $category->name;
 							}
 							d2u_addon_backend_helper::form_select('d2u_machinery_usage_areas_categories', 'form[category_ids][]', $options, $usage_area->category_ids, 10, TRUE, $readonly);
@@ -177,7 +177,7 @@ if ($func == '') {
 	$query = 'SELECT usage_areas.usage_area_id, name, priority '
 		. 'FROM '. rex::getTablePrefix() .'d2u_machinery_usage_areas AS usage_areas '
 		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_usage_areas_lang AS lang '
-			. 'ON usage_areas.usage_area_id = lang.usage_area_id AND lang.clang_id = '. rex_config::get("d2u_machinery", "default_lang") .' '
+			. 'ON usage_areas.usage_area_id = lang.usage_area_id AND lang.clang_id = '. rex_config::get("d2u_helper", "default_lang") .' '
 		. 'ORDER BY name ASC';
     $list = rex_list::factory($query);
 

@@ -122,7 +122,6 @@ if($sql->getRows() == 0) {
 // Standard settings
 if (!$this->hasConfig()) {
     $this->setConfig('article_id', rex_article::getSiteStartArticleId());
-	$this->setConfig('default_lang', rex_clang::getStartId());
 	$this->setConfig('default_category_sort', 'name');
 	$this->setConfig('default_machine_sort', 'name');
 	$this->setConfig('show_categories_usage_area', 'hide');

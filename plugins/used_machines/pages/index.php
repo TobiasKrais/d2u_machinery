@@ -80,7 +80,7 @@ else if ($func == 'delete') {
 		$form = (array) rex_post('form', 'array', array());
 		$used_machine_id = $form['used_machine_id'];
 	}
-	$used_machine = new UsedMachine($used_machine_id, rex_config::get("d2u_machinery", "default_lang"));
+	$used_machine = new UsedMachine($used_machine_id, rex_config::get("d2u_helper", "default_lang"));
 	
 	foreach(rex_clang::getAll() as $rex_clang) {
 		if($used_machine === FALSE) {
@@ -98,7 +98,7 @@ else if ($func == 'delete') {
 }
 // Change online status of machine
 else if($func == 'changestatus') {
-	$used_machine = new UsedMachine($entry_id, rex_config::get("d2u_machinery", "default_lang"));
+	$used_machine = new UsedMachine($entry_id, rex_config::get("d2u_helper", "default_lang"));
 	$used_machine->changeStatus();
 	
 	header("Location: ". rex_url::currentBackendPage());
@@ -107,7 +107,7 @@ else if($func == 'changestatus') {
 
 // Eingabeformular
 if ($func == 'edit' || $func == 'clone' || $func == 'add') {
-	$used_machine = new UsedMachine($entry_id, rex_config::get("d2u_machinery", "default_lang"));
+	$used_machine = new UsedMachine($entry_id, rex_config::get("d2u_helper", "default_lang"));
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
@@ -123,7 +123,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_manufacturer', "form[manufacturer]", $used_machine->manufacturer, TRUE, $readonly, "text");
 							d2u_addon_backend_helper::form_input('d2u_machinery_name', "form[name]", $used_machine->name, TRUE, $readonly, "text");
 							$options = [];
-							foreach(Category::getAll(rex_config::get("d2u_machinery", "default_lang")) as $category) {
+							foreach(Category::getAll(rex_config::get("d2u_helper", "default_lang")) as $category) {
 								if($category->name != "") {
 									$options[$category->category_id] = $category->name;
 								}
@@ -141,7 +141,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 							d2u_addon_backend_helper::form_checkbox('d2u_machinery_online_status', 'form[online_status]', 'online', $used_machine->online_status == "online", $readonly);
 							d2u_addon_backend_helper::form_medialistfield('d2u_machinery_machine_pics', 1, $used_machine->pics, $readonly);
 							$options_machines = array(0 => rex_i18n::msg('d2u_machinery_no_selection'));
-							foreach(Machine::getAll(rex_config::get("d2u_machinery", "default_lang")) as $machine) {
+							foreach(Machine::getAll(rex_config::get("d2u_helper", "default_lang")) as $machine) {
 								$options_machines[$machine->machine_id] = $machine->name;
 							}
 							d2u_addon_backend_helper::form_select('d2u_machinery_used_machines_linked_machine', 'form[machine_id]', $options_machines, ($used_machine->machine === FALSE ? [] : [$used_machine->machine->machine_id]), 1, FALSE, $readonly);
@@ -153,7 +153,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 				<?php
 					foreach(rex_clang::getAll() as $rex_clang) {
 						$used_machine_lang = new UsedMachine($entry_id, $rex_clang->getId());
-						$required = $rex_clang->getId() == rex_config::get("d2u_machinery", "default_lang") ? TRUE : FALSE;
+						$required = $rex_clang->getId() == rex_config::get("d2u_helper", "default_lang") ? TRUE : FALSE;
 						
 						$readonly_lang = TRUE;
 						if(rex::getUser()->isAdmin() || (rex::getUser()->hasPerm('d2u_machinery[edit_lang]') && rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId()))) {
@@ -164,7 +164,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						<legend><?php echo rex_i18n::msg('d2u_helper_text_lang') .' "'. $rex_clang->getName() .'"'; ?></legend>
 						<div class="panel-body-wrapper slide">
 							<?php
-								if($rex_clang->getId() != rex_config::get("d2u_machinery", "default_lang")) {
+								if($rex_clang->getId() != rex_config::get("d2u_helper", "default_lang")) {
 									$options_translations = [];
 									$options_translations["yes"] = rex_i18n::msg('d2u_helper_translation_needs_update');
 									$options_translations["no"] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
@@ -206,7 +206,7 @@ if ($func == '') {
     $list = rex_list::factory('SELECT used_machine_id, manufacturer, machines.name AS machinename, year_built, categories.name AS categoryname, offer_type, online_status '
 		. 'FROM '. rex::getTablePrefix() .'d2u_machinery_used_machines AS machines '
 		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_categories_lang AS categories '
-			. 'ON machines.category_id = categories.category_id AND categories.clang_id = '. rex_config::get("d2u_machinery", "default_lang") .' '
+			. 'ON machines.category_id = categories.category_id AND categories.clang_id = '. rex_config::get("d2u_helper", "default_lang") .' '
 		. 'ORDER BY machines.name ASC');
     $list->addTableAttribute('class', 'table-striped table-hover');
 

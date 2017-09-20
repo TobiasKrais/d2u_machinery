@@ -64,7 +64,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		$form = (array) rex_post('form', 'array', array());
 		$agitator_id = $form['agitator_id'];
 	}
-	$agitator = new Agitator($agitator_id, rex_config::get("d2u_machinery", "default_lang"));
+	$agitator = new Agitator($agitator_id, rex_config::get("d2u_helper", "default_lang"));
 	
 	// Check if object is used
 	$reffering_agitator_types = $agitator->getRefferingAgitatorTypes();
@@ -106,7 +106,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 				<?php
 					foreach(rex_clang::getAll() as $rex_clang) {
 						$agitator = new Agitator($entry_id, $rex_clang->getId());
-						$required = $rex_clang->getId() == rex_config::get("d2u_machinery", "default_lang") ? TRUE : FALSE;
+						$required = $rex_clang->getId() == rex_config::get("d2u_helper", "default_lang") ? TRUE : FALSE;
 						
 						$readonly_lang = TRUE;
 						if(rex::getUser()->isAdmin() || (rex::getUser()->hasPerm('d2u_machinery[edit_lang]') && rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId()))) {
@@ -117,7 +117,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						<legend><?php echo rex_i18n::msg('d2u_helper_text_lang') .' "'. $rex_clang->getName() .'"'; ?></legend>
 						<div class="panel-body-wrapper slide">
 							<?php
-								if($rex_clang->getId() != rex_config::get("d2u_machinery", "default_lang")) {
+								if($rex_clang->getId() != rex_config::get("d2u_helper", "default_lang")) {
 									$options_translations = [];
 									$options_translations["yes"] = rex_i18n::msg('d2u_helper_translation_needs_update');
 									$options_translations["no"] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
@@ -141,7 +141,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 					<div class="panel-body-wrapper slide">
 						<?php
 							// Do not use last object from translations, because you don't know if it exists in DB
-							$agitator = new Agitator($entry_id, rex_config::get("d2u_machinery", "default_lang"));
+							$agitator = new Agitator($entry_id, rex_config::get("d2u_helper", "default_lang"));
 							$readonly = TRUE;
 							if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_machinery[edit_tech_data]')) {
 								$readonly = FALSE;
@@ -173,7 +173,7 @@ if ($func == '') {
 	$query = 'SELECT agitators.agitator_id, name '
 		. 'FROM '. rex::getTablePrefix() .'d2u_machinery_agitators AS agitators '
 		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_agitators_lang AS lang '
-			. 'ON agitators.agitator_id = lang.agitator_id AND lang.clang_id = '. rex_config::get("d2u_machinery", "default_lang") .' '
+			. 'ON agitators.agitator_id = lang.agitator_id AND lang.clang_id = '. rex_config::get("d2u_helper", "default_lang") .' '
 		. 'ORDER BY name ASC';
     $list = rex_list::factory($query);
 

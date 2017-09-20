@@ -36,7 +36,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 				$video_ids = isset($form['video_ids']) ? $form['video_ids'] : [];
 				$category->videos = []; // Clear video array
 				foreach($video_ids as $video_id) {
-					$category->videos[$video_id] = new Video($video_id, rex_config::get("d2u_machinery", "default_lang"));
+					$category->videos[$video_id] = new Video($video_id, rex_config::get("d2u_helper", "default_lang"));
 				}
 			}
 
@@ -102,7 +102,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		$form = (array) rex_post('form', 'array', array());
 		$category_id = $form['category_id'];
 	}
-	$category = new Category($category_id, rex_config::get("d2u_machinery", "default_lang"));
+	$category = new Category($category_id, rex_config::get("d2u_helper", "default_lang"));
 	
 	// Check if category is used
 	$uses_machines = $category->getMachines();
@@ -158,7 +158,7 @@ if ($func == 'edit' || $func == 'add') {
 				<?php
 					foreach(rex_clang::getAll() as $rex_clang) {
 						$category = new Category($entry_id, $rex_clang->getId());
-						$required = $rex_clang->getId() == rex_config::get("d2u_machinery", "default_lang") ? TRUE : FALSE;
+						$required = $rex_clang->getId() == rex_config::get("d2u_helper", "default_lang") ? TRUE : FALSE;
 						
 						$readonly_lang = TRUE;
 						if(rex::getUser()->isAdmin() || (rex::getUser()->hasPerm('d2u_machinery[edit_lang]') && rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId()))) {
@@ -169,7 +169,7 @@ if ($func == 'edit' || $func == 'add') {
 						<legend><?php echo rex_i18n::msg('d2u_helper_text_lang') .' "'. $rex_clang->getName() .'"'; ?></legend>
 						<div class="panel-body-wrapper slide">
 							<?php
-								if($rex_clang->getId() != rex_config::get("d2u_machinery", "default_lang")) {
+								if($rex_clang->getId() != rex_config::get("d2u_helper", "default_lang")) {
 									$options_translations = [];
 									$options_translations["yes"] = rex_i18n::msg('d2u_helper_translation_needs_update');
 									$options_translations["no"] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
@@ -198,7 +198,7 @@ if ($func == 'edit' || $func == 'add') {
 					<div class="panel-body-wrapper slide">
 						<?php
 							// Do not use last object from translations, because you don't know if it exists in DB
-							$category = new Category($entry_id, rex_config::get("d2u_machinery", "default_lang"));
+							$category = new Category($entry_id, rex_config::get("d2u_helper", "default_lang"));
 							$readonly = TRUE;
 							if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_machinery[edit_tech_data]')) {
 								$readonly = FALSE;
@@ -206,7 +206,7 @@ if ($func == 'edit' || $func == 'add') {
 							
 							$options = array("-1"=>rex_i18n::msg('d2u_machinery_category_parent_none'));
 							$selected_values = [];
-							foreach(Category::getAll(rex_config::get("d2u_machinery", "default_lang")) as $parent_category) {
+							foreach(Category::getAll(rex_config::get("d2u_helper", "default_lang")) as $parent_category) {
 								if(!$parent_category->isChild() && $parent_category->category_id != $category->category_id) {
 									$options[$parent_category->category_id] = $parent_category->name;
 								}
@@ -218,7 +218,7 @@ if ($func == 'edit' || $func == 'add') {
 
 							if(rex_addon::get("d2u_videos")->isAvailable()) {
 								$options = [];
-								foreach(Video::getAll(rex_config::get("d2u_machinery", "default_lang")) as $video) {
+								foreach(Video::getAll(rex_config::get("d2u_helper", "default_lang")) as $video) {
 									$options[$video->video_id] = $video->name;
 								}
 								d2u_addon_backend_helper::form_select('d2u_machinery_category_videos', 'form[video_ids][]', $options, array_keys($category->videos), 10, TRUE, $readonly);
@@ -280,9 +280,9 @@ if ($func == '') {
 	$query = 'SELECT categories.category_id, lang.name AS categoryname, parents_lang.name AS parentname, priority '
 		. 'FROM '. rex::getTablePrefix() .'d2u_machinery_categories AS categories '
 		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_categories_lang AS lang '
-			. 'ON categories.category_id = lang.category_id AND lang.clang_id = '. rex_config::get("d2u_machinery", "default_lang") .' '
+			. 'ON categories.category_id = lang.category_id AND lang.clang_id = '. rex_config::get("d2u_helper", "default_lang") .' '
 		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_categories_lang AS parents_lang '
-			. 'ON categories.parent_category_id = parents_lang.category_id AND parents_lang.clang_id = '. rex_config::get("d2u_machinery", "default_lang") .' ';
+			. 'ON categories.parent_category_id = parents_lang.category_id AND parents_lang.clang_id = '. rex_config::get("d2u_helper", "default_lang") .' ';
 	if($this->getConfig('default_category_sort') == 'priority') {
 		$query .= 'ORDER BY priority ASC';
 	}

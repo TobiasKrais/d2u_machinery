@@ -17,7 +17,7 @@ function rex_d2u_machinery_features_media_is_in_use(rex_extension_point $ep) {
 	$sql = rex_sql::factory();
 	$sql->setQuery('SELECT lang.feature_id, title FROM `' . rex::getTablePrefix() . 'd2u_machinery_features_lang` AS lang '
 		.'LEFT JOIN `' . rex::getTablePrefix() . 'd2u_machinery_features` AS features ON lang.feature_id = features.feature_id '
-		.'WHERE pic = "'. $filename .'" AND clang_id = '. rex_config::get("d2u_machinery", "default_lang"));
+		.'WHERE pic = "'. $filename .'" AND clang_id = '. rex_config::get("d2u_helper", "default_lang"));
 	
 	// Prepare warnings
 	// Features

@@ -107,3 +107,8 @@ if($sql->getRows() == 0) {
 
 // Insert frontend translations
 d2u_machinery_lang_helper::factory()->install();
+
+// remove default lang setting
+if (!$this->hasConfig()) {
+	$this->removeConfig('default_lang');
+}

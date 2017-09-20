@@ -91,19 +91,10 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 				<legend><small><i class="rex-icon rex-icon-database"></i></small> <?php echo rex_i18n::msg('d2u_machinery_meta_settings'); ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
-						// Default language for translations
-						if(count(rex_clang::getAll()) > 1) {
-							$lang_options = [];
-							foreach(rex_clang::getAll() as $rex_clang) {
-								$lang_options[$rex_clang->getId()] = $rex_clang->getName();
-							}
-							d2u_addon_backend_helper::form_select('d2u_helper_defaultlang', 'settings[default_lang]', $lang_options, array($this->getConfig('default_lang')));
-						}
-						
 						d2u_addon_backend_helper::form_input('d2u_machinery_settings_request_form_email', 'settings[request_form_email]', $this->getConfig('request_form_email'), TRUE, FALSE, 'email');
 						d2u_addon_backend_helper::form_input('d2u_machinery_settings_contact_phone', 'settings[contact_phone]', $this->getConfig('contact_phone'), TRUE, FALSE);
 						d2u_addon_backend_helper::form_mediafield('d2u_machinery_settings_consultation_pic', 'consultation_pic', $this->getConfig('consultation_pic'));
-						d2u_addon_backend_helper::form_linkfield('d2u_machinery_settings_consultation_article', '2', $this->getConfig('consultation_article_id'), $this->getConfig('default_lang'));
+						d2u_addon_backend_helper::form_linkfield('d2u_machinery_settings_consultation_article', '2', $this->getConfig('consultation_article_id'), rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId()));
 					?>
 				</div>
 			</fieldset>
@@ -153,7 +144,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 				<legend><small><i class="rex-icon rex-icon-module"></i></small> <?php echo rex_i18n::msg('d2u_machinery_meta_machines'); ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
-						d2u_addon_backend_helper::form_linkfield('d2u_machinery_settings_article', '1', $this->getConfig('article_id'), $this->getConfig('default_lang'));
+						d2u_addon_backend_helper::form_linkfield('d2u_machinery_settings_article', '1', $this->getConfig('article_id'), rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId()));
 						$options = array('name' => rex_i18n::msg('d2u_machinery_name'), 'priority' => rex_i18n::msg('header_priority'));
 						d2u_addon_backend_helper::form_select('d2u_machinery_settings_default_sort', 'settings[default_machine_sort]', $options, array($this->getConfig('default_machine_sort')));
 						d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_show_teaser', 'settings[show_teaser]', 'show', $this->getConfig('show_teaser') == 'show');
@@ -168,8 +159,8 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 					<legend><small><i class="rex-icon fa-truck"></i></small> <?php echo rex_i18n::msg('d2u_machinery_used_machines'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-							d2u_addon_backend_helper::form_linkfield('d2u_machinery_used_machines_article_rent', '3', $this->getConfig('used_machine_article_id_rent'), $this->getConfig('default_lang'));
-							d2u_addon_backend_helper::form_linkfield('d2u_machinery_used_machines_article_sale', '4', $this->getConfig('used_machine_article_id_sale'), $this->getConfig('default_lang'));
+							d2u_addon_backend_helper::form_linkfield('d2u_machinery_used_machines_article_rent', '3', $this->getConfig('used_machine_article_id_rent'), rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId()));
+							d2u_addon_backend_helper::form_linkfield('d2u_machinery_used_machines_article_sale', '4', $this->getConfig('used_machine_article_id_sale'), rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId()));
 						?>
 					</div>
 				</fieldset>

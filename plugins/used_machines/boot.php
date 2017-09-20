@@ -51,7 +51,7 @@ function rex_d2u_machinery_used_machines_media_is_in_use(rex_extension_point $ep
 	$sql = rex_sql::factory();
 	$sql->setQuery('SELECT lang.used_machine_id, manufacturer, name FROM `' . rex::getTablePrefix() . 'd2u_machinery_used_machines_lang` AS lang '
 		.'LEFT JOIN `' . rex::getTablePrefix() . 'd2u_machinery_used_machines` AS used_machines ON lang.used_machine_id = used_machines.used_machine_id '
-		.'WHERE pics LIKE "%'. $filename .'%" AND clang_id = '. rex_config::get("d2u_machinery", "default_lang"));
+		.'WHERE pics LIKE "%'. $filename .'%" AND clang_id = '. rex_config::get("d2u_helper", "default_lang"));
 	
 	// Prepare warnings
 	// Used machines
