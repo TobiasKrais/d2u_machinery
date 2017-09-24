@@ -10,7 +10,7 @@ if($message != "") {
 
 // save settings
 if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_apply") == 1) {
-	$form = (array) rex_post('form', 'array', array());
+	$form = (array) rex_post('form', 'array', []);
 
 	$success = TRUE;
 	$procedure = FALSE;
@@ -57,7 +57,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$procedure_id = $entry_id;
 	if($procedure_id == 0) {
-		$form = (array) rex_post('form', 'array', array());
+		$form = (array) rex_post('form', 'array', []);
 		$procedure_id = $form['procedure_id'];
 	}
 	$procedure = new Procedure($procedure_id, rex_config::get("d2u_helper", "default_lang"));
@@ -86,7 +86,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		}
 		$message .= '</ul>';
 
-		print rex_view::error(rex_i18n::msg('d2u_machinery_could_not_delete') . $message);
+		print rex_view::error(rex_i18n::msg('d2u_helper_could_not_delete') . $message);
 	}
 	
 	$func = '';

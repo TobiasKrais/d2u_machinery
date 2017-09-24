@@ -10,7 +10,7 @@ if($message != "") {
 
 // save settings
 if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_apply") == 1) {
-	$form = (array) rex_post('form', 'array', array());
+	$form = (array) rex_post('form', 'array', []);
 
 	// Media fields and links need special treatment
 	$input_media_list = (array) rex_post('REX_INPUT_MEDIALIST', 'array', array());
@@ -77,7 +77,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 else if ($func == 'delete') {
 	$used_machine_id = $entry_id;
 	if($used_machine_id == 0) {
-		$form = (array) rex_post('form', 'array', array());
+		$form = (array) rex_post('form', 'array', []);
 		$used_machine_id = $form['used_machine_id'];
 	}
 	$used_machine = new UsedMachine($used_machine_id, rex_config::get("d2u_helper", "default_lang"));

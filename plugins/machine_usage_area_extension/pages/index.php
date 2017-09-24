@@ -10,7 +10,7 @@ if($message != "") {
 
 // save settings
 if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_apply") == 1) {
-	$form = (array) rex_post('form', 'array', array());
+	$form = (array) rex_post('form', 'array', []);
 
 	$success = TRUE;
 	$usage_area = FALSE;
@@ -58,7 +58,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$usage_area_id = $entry_id;
 	if($usage_area_id == 0) {
-		$form = (array) rex_post('form', 'array', array());
+		$form = (array) rex_post('form', 'array', []);
 		$usage_area_id = $form['usage_area_id'];
 	}
 	$usage_area = new UsageArea($usage_area_id, rex_config::get("d2u_helper", "default_lang"));
@@ -87,7 +87,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		}
 		$message .= '</ul>';
 
-		print rex_view::error(rex_i18n::msg('d2u_machinery_could_not_delete') . $message);
+		print rex_view::error(rex_i18n::msg('d2u_helper_could_not_delete') . $message);
 	}
 	
 	$func = '';
@@ -134,7 +134,7 @@ if ($func == 'edit' || $func == 'add') {
 					}
 				?>
 				<fieldset>
-					<legend><?php echo rex_i18n::msg('d2u_machinery_usage_areas_data_all_lang'); ?></legend>
+					<legend><?php echo rex_i18n::msg('d2u_machinery_data_all_lang'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
 							// Do not use last object from translations, because you don't know if it exists in DB
