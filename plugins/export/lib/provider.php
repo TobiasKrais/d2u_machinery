@@ -416,7 +416,24 @@ class Provider {
 		
 		return FALSE;
 	}
-
+	
+	/**
+	 * Checks if an export is possible. This is the case if there are objects
+	 * set for export.
+	 * @return int Timestamp of latest object update.
+	 */
+	public function isExportPossible() {
+		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_export_machines "
+			."WHERE provider_id = ". $this->provider_id;
+		$result = rex_sql::factory();
+		$result->setQuery($query);
+		
+		if($result->getRows() > 0) {
+			return TRUE;
+		}
+		return FALSE;
+	}
+	
 	/**
 	 * Get last export timestamp.
 	 * @return int Timestamp of last successful export.
