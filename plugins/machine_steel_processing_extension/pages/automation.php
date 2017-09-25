@@ -18,6 +18,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	foreach(rex_clang::getAll() as $rex_clang) {
 		if($automation === FALSE) {
 			$automation = new Automation($automation_id, $rex_clang->getId());
+			$automation->automation_id = $automation_id; // Ensure correct ID in case first language has no object
 			$automation->internal_name = $form['internal_name'];
 		}
 		else {

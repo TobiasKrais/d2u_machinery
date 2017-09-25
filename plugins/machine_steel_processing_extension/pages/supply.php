@@ -21,6 +21,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	foreach(rex_clang::getAll() as $rex_clang) {
 		if($supply === FALSE) {
 			$supply = new Supply($supply_id, $rex_clang->getId());
+			$supply->supply_id = $supply_id; // Ensure correct ID in case first language has no object
 			$supply->internal_name = $form['internal_name'];
 			$supply->pic = $input_media[1];
 			if(rex_addon::get("d2u_videos")->isAvailable() && isset($form['video_id']) && $form['video_id'] > 0) {

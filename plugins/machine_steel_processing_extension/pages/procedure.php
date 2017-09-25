@@ -18,6 +18,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	foreach(rex_clang::getAll() as $rex_clang) {
 		if($procedure === FALSE) {
 			$procedure = new Procedure($procedure_id, $rex_clang->getId());
+			$procedure->procedure_id = $procedure_id; // Ensure correct ID in case first language has no object
 			$procedure->internal_name = $form['internal_name'];
 		}
 		else {

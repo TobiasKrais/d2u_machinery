@@ -18,6 +18,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	foreach(rex_clang::getAll() as $rex_clang) {
 		if($tool === FALSE) {
 			$tool = new Tool($tool_id, $rex_clang->getId());
+			$tool->tool_id = $tool_id; // Ensure correct ID in case first language has no object
 			$tool->internal_name = $form['internal_name'];
 		}
 		else {

@@ -23,6 +23,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	foreach(rex_clang::getAll() as $rex_clang) {
 		if($machine === FALSE) {
 			$machine = new Machine($machine_id, $rex_clang->getId());
+			$machine->machine_id = $machine_id; // Ensure correct ID in case first language has no object
 			$machine->priority = $form['priority'];
 			$machine->name = $form['name'];
 			$machine->internal_name = $form['internal_name'];

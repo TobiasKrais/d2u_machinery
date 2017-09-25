@@ -18,6 +18,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	foreach(rex_clang::getAll() as $rex_clang) {
 		if($usage_area === FALSE) {
 			$usage_area = new UsageArea($usage_area_id, $rex_clang->getId());
+			$usage_area->usage_area_id = $usage_area_id; // Ensure correct ID in case first language has no object
 			$usage_area->category_ids = $form['category_ids'];
 			$usage_area->priority = $form['priority'];
 		}

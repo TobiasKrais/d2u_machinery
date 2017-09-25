@@ -18,6 +18,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	foreach(rex_clang::getAll() as $rex_clang) {
 		if($material === FALSE) {
 			$material = new Material($material_id, $rex_clang->getId());
+			$material->material_id = $material_id; // Ensure correct ID in case first language has no object
 			$material->internal_name = $form['internal_name'];
 		}
 		else {

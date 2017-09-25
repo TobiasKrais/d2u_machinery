@@ -32,6 +32,10 @@ $d2u_module_manager->showManagerList();
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_machinery" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
+<p>1.1.4 (NEXT):</p>
+<ul>
+	<li>Bugfix: Speichern wenn zweite Sprache als Standardsprache gesetzt ist schlug fehl.</li>
+</ul>
 <p>1.1.3:</p>
 <ul>
 	<li>Unterstützung für D2U Videos Addon um Videos darstellen zu können.</li>

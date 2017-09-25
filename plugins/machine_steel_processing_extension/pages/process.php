@@ -18,6 +18,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	foreach(rex_clang::getAll() as $rex_clang) {
 		if($process === FALSE) {
 			$process = new Process($process_id, $rex_clang->getId());
+			$process->process_id = $process_id; // Ensure correct ID in case first language has no object
 			$process->internal_name = $form['internal_name'];
 		}
 		else {

@@ -21,6 +21,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	foreach(rex_clang::getAll() as $rex_clang) {
 		if($feature === FALSE) {
 			$feature = new Feature($feature_id, $rex_clang->getId());
+			$feature->feature_id = $feature_id; // Ensure correct ID in case first language has no object
 			$feature->category_ids = $form['category_ids'];
 			$feature->priority = $form['priority'];
 			$feature->pic = $input_media[1];

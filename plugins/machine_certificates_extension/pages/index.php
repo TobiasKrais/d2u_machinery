@@ -21,6 +21,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	foreach(rex_clang::getAll() as $rex_clang) {
 		if($certificate === FALSE) {
 			$certificate = new Certificate($certificate_id, $rex_clang->getId());
+			$certificate->certificate_id = $certificate_id; // Ensure correct ID in case first language has no object
 			$certificate->pic = $input_media[1];
 		}
 		else {

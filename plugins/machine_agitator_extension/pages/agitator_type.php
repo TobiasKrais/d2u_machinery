@@ -21,6 +21,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	foreach(rex_clang::getAll() as $rex_clang) {
 		if($agitator_type === FALSE) {
 			$agitator_type = new AgitatorType($agitator_type_id, $rex_clang->getId());
+			$agitator_type->agitator_type_id = $agitator_type_id; // Ensure correct ID in case first language has no object
 			$agitator_type->agitator_ids = $form['agitator_ids'];
 			$agitator_type->pic = $input_media[1];
 		}
