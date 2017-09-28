@@ -212,18 +212,18 @@ class Category {
 				}
 				else {
 					// Get offer type from used machine
-					$used_machine_id = 0;
+					$used_category_id = 0;
 					if(rex_addon::get("url")->isAvailable()) {
 						$url_data = UrlGenerator::getData();
-						if(isset($url_data->urlParamKey) && ($url_data->urlParamKey === "used_rent_machine_id" || $url_data->urlParamKey === "used_sale_machine_id")) {
-							$used_machine_id = UrlGenerator::getId();
+						if(isset($url_data->urlParamKey) && ($url_data->urlParamKey === "used_rent_category_id" || $url_data->urlParamKey === "used_sale_category_id")) {
+							$used_category_id = UrlGenerator::getId();
 						}
 					}
-					else if(filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || filter_input(INPUT_GET, 'used_sale_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0) {
-						$used_machine_id = filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 ? filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT) : filter_input(INPUT_GET, 'used_sale_machine_id', FILTER_VALIDATE_INT);
+					else if(filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || filter_input(INPUT_GET, 'used_sale_category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0) {
+						$used_category_id = filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 ? filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT) : filter_input(INPUT_GET, 'used_sale_category_id', FILTER_VALIDATE_INT);
 					}
-					if($used_machine_id > 0) {
-						$this->offer_type = UsedMachine::getOfferTypeForUsedMachineId($used_machine_id);
+					if($used_category_id > 0) {
+						$this->offer_type = UsedMachine::getOfferTypeForUsedMachineId($used_category_id);
 					}
 				}
 			}
@@ -242,22 +242,22 @@ class Category {
 	 * FALSE, only this translation will be deleted.
 	 */
 	public function delete($delete_all = TRUE) {
-		if($delete_all) {
-			$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_categories_lang "
-				."WHERE category_id = ". $this->category_id;
-			$result_lang = rex_sql::factory();
-			$result_lang->setQuery($query_lang);
-
+		$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_categories_lang "
+			."WHERE category_id = ". $this->category_id
+			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
+		$result_lang = rex_sql::factory();
+		$result_lang->setQuery($query_lang);
+		
+		// If no more lang objects are available, delete
+		$query_main = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_categories_lang "
+			."WHERE category_id = ". $this->category_id;
+		$result_main = rex_sql::factory();
+		$result_main->setQuery($query_main);
+		if($result_main->getRows() == 0) {
 			$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_categories "
 				."WHERE category_id = ". $this->category_id;
 			$result = rex_sql::factory();
 			$result->setQuery($query);
-		}
-		else {
-			$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_categories_lang "
-				."WHERE category_id = ". $this->category_id ." AND clang_id = ". $this->clang_id;
-			$result_lang = rex_sql::factory();
-			$result_lang->setQuery($query_lang);
 		}
 	}
 	
@@ -317,7 +317,7 @@ class Category {
 	/**
 	 * Get technical data matrix for this category.
 	 * @return mixed[] Key is the name of the sprog wildcard describing the field.
-	 * Values are the unit ('unit' => $unit) and an array called 'machine_ids'
+	 * Values are the unit ('unit' => $unit) and an array called 'category_ids'
 	 * with the machine id as key and the value as value.
 	 */
 	public function getTechDataMatrix() {
@@ -327,7 +327,7 @@ class Category {
 		$tech_data_wildcards = [];
 		// Get technical data
 		foreach($machines as $machine) {
-			$tech_data_arrays[$machine->machine_id] = $machine->getTechnicalData();
+			$tech_data_arrays[$machine->category_id] = $machine->getTechnicalData();
 		}
 		// Get wildcards
 		foreach($tech_data_arrays as $tech_data_array) {
@@ -338,13 +338,13 @@ class Category {
 		// Create matrix
 		foreach($tech_data_wildcards as $wildcard => $unit) {
 			$key = ['description' => $wildcard, 'unit' => $unit];
-			$matrix[$wildcard] = ['unit' => $unit, 'machine_ids' => []];
+			$matrix[$wildcard] = ['unit' => $unit, 'category_ids' => []];
 			foreach($machines as $machine) {
-				$tech_data_array = $tech_data_arrays[$machine->machine_id];
-				$matrix[$wildcard]['machine_ids'][$machine->machine_id] = "";
+				$tech_data_array = $tech_data_arrays[$machine->category_id];
+				$matrix[$wildcard]['category_ids'][$machine->category_id] = "";
 				foreach($tech_data_array as $techdata) {
 					if($techdata['description'] == $wildcard) {
-						$matrix[$wildcard]['machine_ids'][$machine->machine_id] = $techdata['value'];
+						$matrix[$wildcard]['category_ids'][$machine->category_id] = $techdata['value'];
 						break;
 					}
 				}
@@ -375,7 +375,7 @@ class Category {
 			$values = [];
 			foreach($machines as $machine) {
 				if(in_array($usage_area->usage_area_id, $machine->usage_area_ids)) {
-					$values[] = $machine->machine_id;
+					$values[] = $machine->category_id;
 				}
 			}
 			$matrix[$usage_area->name] = $values;
@@ -397,7 +397,7 @@ class Category {
 		if($online_only) {
 			$query .= "AND online_status = 'online' ";
 		}
-		if(rex_addon::get('d2u_machinery')->getConfig('default_machine_sort') == 'priority') {
+		if(rex_config::get('d2u_machinery', 'default_machine_sort', '') == 'priority') {
 			$query .= 'ORDER BY priority ASC';
 		}
 		else {
@@ -566,10 +566,10 @@ class Category {
 	 * @return boolean TRUE if child categories exist, otherwise FALSE
 	 */
 	public function hasMachines() {
-		$query = "SELECT lang.machine_id, IF(lang.lang_name IS NULL or lang.lang_name = '', machines.name, lang.lang_name) as machine_name "
-			. "FROM ". rex::getTablePrefix() ."d2u_machinery_machines_lang AS lang "
-			."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_machines AS machines "
-					."ON lang.machine_id = machines.machine_id "
+		$query = "SELECT lang.category_id, IF(lang.lang_name IS NULL or lang.lang_name = '', machines.name, lang.lang_name) as machine_name "
+			. "FROM ". rex::getTablePrefix() ."d2u_machinery_categories_lang AS lang "
+			."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_categories AS machines "
+					."ON lang.category_id = machines.category_id "
 			."WHERE category_id = ". $this->category_id ." AND clang_id = ". $this->clang_id;
 		$result = rex_sql::factory();
 		$result->setQuery($query);

@@ -67,23 +67,14 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		$industry_sector_id = $form['industry_sector_id'];
 	}
 	$industry_sector = new IndustrySector($industry_sector_id, rex_config::get("d2u_helper", "default_lang"));
+	$industry_sector->industry_sector_id = $industry_sector_id; // Ensure correct ID in case language has no object
 	
 	// Check if object is used
 	$reffering_machines = $industry_sector->getMachines();
 
 	// If not used, delete
 	if(count($reffering_machines) == 0) {
-		foreach(rex_clang::getAll() as $rex_clang) {
-			if($industry_sector === FALSE) {
-				$industry_sector = new IndustrySector($industry_sector_id, $rex_clang->getId());
-				// If object is not found in language, set industry_sector_id anyway to be able to delete
-				$industry_sector->industry_sector_id = $industry_sector_id;
-			}
-			else {
-				$industry_sector->clang_id = $rex_clang->getId();
-			}
-			$industry_sector->delete();
-		}
+		$industry_sector->delete(TRUE);
 	}
 	else {
 		$message = '<ul>';

@@ -109,22 +109,22 @@ class Feature {
 	 * FALSE, only this translation will be deleted.
 	 */
 	public function delete($delete_all = TRUE) {
-		if($delete_all) {
-			$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_features_lang "
-				."WHERE feature_id = ". $this->feature_id;
-			$result_lang = rex_sql::factory();
-			$result_lang->setQuery($query_lang);
-
+		$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_features_lang "
+			."WHERE feature_id = ". $this->feature_id
+			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
+		$result_lang = rex_sql::factory();
+		$result_lang->setQuery($query_lang);
+		
+		// If no more lang objects are available, delete
+		$query_main = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_features_lang "
+			."WHERE feature_id = ". $this->feature_id;
+		$result_main = rex_sql::factory();
+		$result_main->setQuery($query_main);
+		if($result_main->getRows() == 0) {
 			$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_features "
 				."WHERE feature_id = ". $this->feature_id;
 			$result = rex_sql::factory();
 			$result->setQuery($query);
-		}
-		else {
-			$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_features_lang "
-				."WHERE feature_id = ". $this->feature_id ." AND clang_id = ". $this->clang_id;
-			$result_lang = rex_sql::factory();
-			$result_lang->setQuery($query_lang);
 		}
 	}
 	

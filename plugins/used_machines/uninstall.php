@@ -10,7 +10,7 @@ if(rex_addon::get('url')->isAvailable()) {
 }
 
 // Delete language replacements
-used_machines_lang_helper::factory()->uninstall();
+d2u_machinery_used_machines_lang_helper::factory()->uninstall();
 
 // Delete tables
 $sql->setQuery('DROP TABLE IF EXISTS ' . rex::getTablePrefix() . 'd2u_machinery_used_machines');

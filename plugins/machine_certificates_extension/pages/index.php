@@ -66,23 +66,14 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		$certificate_id = $form['certificate_id'];
 	}
 	$certificate = new Certificate($certificate_id, rex_config::get("d2u_helper", "default_lang"));
+	$certificate->certificate_id = $certificate_id; // Ensure correct ID in case language has no object
 	
 	// Check if object is used
 	$reffering_machines = $certificate->getRefferingMachines();
 
 	// If not used, delete
 	if(count($reffering_machines) == 0) {
-		foreach(rex_clang::getAll() as $rex_clang) {
-			if($certificate === FALSE) {
-				$certificate = new Certificate($certificate_id, $rex_clang->getId());
-				// If object is not found in language, set certificate_id anyway to be able to delete
-				$certificate->certificate_id = $certificate_id;
-			}
-			else {
-				$certificate->clang_id = $rex_clang->getId();
-			}
-			$certificate->delete();
-		}
+		$certificate->delete();
 	}
 	else {
 		$message = '<ul>';

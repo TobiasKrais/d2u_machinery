@@ -2,7 +2,7 @@
 /**
  * Offers helper functions for language issues
  */
-class industry_sectors_lang_helper extends d2u_machinery_lang_helper {
+class d2u_machinery_industry_sectors_lang_helper extends d2u_machinery_lang_helper {
 	/**
 	 * @var string[] Array with englisch replacements. Key is the wildcard,
 	 * value the replacement. 
@@ -91,9 +91,9 @@ class industry_sectors_lang_helper extends d2u_machinery_lang_helper {
 	
 	/**
 	 * Factory method.
-	 * @return industry_sectors_lang_helper Object
+	 * @return d2u_machinery_industry_sectors_lang_helper Object
 	 */
 	public static function factory() {
-		return new industry_sectors_lang_helper();
+		return new d2u_machinery_industry_sectors_lang_helper();
 	}
 }

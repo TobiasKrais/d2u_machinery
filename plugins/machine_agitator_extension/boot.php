@@ -1,6 +1,33 @@
 <?php
 if(rex::isBackend()) {
+	rex_extension::register('CLANG_DELETED', 'rex_d2u_machinery_agitators_clang_deleted');
 	rex_extension::register('MEDIA_IS_IN_USE', 'rex_d2u_machinery_agitators_media_is_in_use');
+}
+
+/**
+ * Deletes language specific configurations and objects
+ * @param rex_extension_point $ep Redaxo extension point
+ * @return string[] Warning message as array
+ */
+function rex_d2u_machinery_agitators_clang_deleted(rex_extension_point $ep) {
+	$warning = $ep->getSubject();
+	$params = $ep->getParams();
+	$clang_id = $params['id'];
+
+	// Delete
+	$agitators = Agitator::getAll($clang_id);
+	foreach ($agitators as $agitator) {
+		$agitator->delete(FALSE);
+	}
+	$agitator_types = AgitatorType::getAll($clang_id);
+	foreach ($agitator_types as $agitator_type) {
+		$agitator_type->delete(FALSE);
+	}
+
+	// Delete language replacements
+	d2u_machinery_machine_agitator_extension_lang_helper::factory()->uninstall($clang_id);
+
+	return $warning;
 }
 
 /**

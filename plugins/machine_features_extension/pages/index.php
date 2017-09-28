@@ -75,23 +75,14 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		$feature_id = $form['feature_id'];
 	}
 	$feature = new Feature($feature_id, rex_config::get("d2u_helper", "default_lang"));
+	$feature->feature_id = $feature_id; // Ensure correct ID in case language has no object
 	
 	// Check if object is used
 	$reffering_machines = $feature->getRefferingMachines();
 
 	// If not used, delete
 	if(count($reffering_machines) == 0) {
-		foreach(rex_clang::getAll() as $rex_clang) {
-			if($feature === FALSE) {
-				$feature = new Feature($feature_id, $rex_clang->getId());
-				// If object is not found in language, set feature_id anyway to be able to delete
-				$feature->feature_id = $feature_id;
-			}
-			else {
-				$feature->clang_id = $rex_clang->getId();
-			}
-			$feature->delete();
-		}
+		$feature->delete(TRUE);
 	}
 	else {
 		$message = '<ul>';

@@ -8,4 +8,4 @@ if($sql->getRows() == 0) {
 }
 
 // Insert frontend translations
-machine_steel_processing_extension_lang_helper::factory()->install();
+d2u_machinery_machine_steel_processing_extension_lang_helper::factory()->install();

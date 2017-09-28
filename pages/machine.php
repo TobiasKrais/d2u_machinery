@@ -195,6 +195,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		$machine_id = $form['machine_id'];
 	}
 	$machine = new Machine($machine_id, rex_config::get("d2u_helper", "default_lang"));
+	$machine->machine_id = $machine_id; // Ensure correct ID in case language has no object
 	
 	// Check if object is used
 	$reffering_machines = $machine->getRefferingMachines();
@@ -205,17 +206,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	
 	// If not used, delete
 	if(count($reffering_machines) == 0 && count($reffering_used_machines) == 0) {
-		foreach(rex_clang::getAll() as $rex_clang) {
-			if($machine === FALSE) {
-				$machine = new Machine($machine_id, $rex_clang->getId());
-				// If object is not found in language, set id anyway to be able to delete
-				$machine->machine_id = $machine_id;
-			}
-			else {
-				$machine->clang_id = $rex_clang->getId();
-			}
-			$machine->delete();
-		}
+		$machine->delete();
 	}
 	else {
 		$message = '<ul>';
@@ -239,6 +230,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 // Change online status of machine
 else if($func == 'changestatus') {
 	$machine = new Machine($entry_id, rex_config::get("d2u_helper", "default_lang"));
+	$machine->machine_id = $machine_id; // Ensure correct ID in case language has no object
 	$machine->changeStatus();
 	
 	header("Location: ". rex_url::currentBackendPage());

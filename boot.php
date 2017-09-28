@@ -7,8 +7,9 @@ if(rex::isBackend() && is_object(rex::getUser())) {
 }
 
 if(rex::isBackend()) {
-	rex_extension::register('MEDIA_IS_IN_USE', 'rex_d2u_machinery_media_is_in_use');
 	rex_extension::register('ART_PRE_DELETED', 'rex_d2u_machinery_article_is_in_use');
+	rex_extension::register('CLANG_DELETED', 'rex_d2u_machinery_clang_deleted');
+	rex_extension::register('MEDIA_IS_IN_USE', 'rex_d2u_machinery_media_is_in_use');
 }
 
 /**
@@ -57,6 +58,36 @@ function rex_d2u_machinery_article_is_in_use(rex_extension_point $ep) {
 	else {
 		return explode("<br>", $warning);
 	}
+}
+
+/**
+ * Deletes language specific configurations and objects
+ * @param rex_extension_point $ep Redaxo extension point
+ * @return string[] Warning message as array
+ */
+function rex_d2u_machinery_clang_deleted(rex_extension_point $ep) {
+	$warning = $ep->getSubject();
+	$params = $ep->getParams();
+	$clang_id = $params['id'];
+
+	// Delete
+	$categories = Category::getAll($clang_id);
+	foreach ($categories as $category) {
+		$category->delete(FALSE);
+	}
+	$machines = Machine::getAll($clang_id, FALSE);
+	foreach ($machines as $machine) {
+		$machine->delete(FALSE);
+	}
+	
+	// Delete language settings
+	if(rex_config::has('d2u_machinery', 'lang_replacement_'. $clang_id)) {
+		rex_config::remove('d2u_machinery', 'lang_replacement_'. $clang_id);
+	}
+	// Delete language replacements
+	d2u_machinery_lang_helper::factory()->uninstall($clang_id);
+
+	return $warning;
 }
 
 /**

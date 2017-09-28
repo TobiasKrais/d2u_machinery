@@ -68,4 +68,4 @@ if(rex_addon::get('url')->isAvailable()) {
 }
 
 // Update language replacements
-used_machines_lang_helper::factory()->install();
+d2u_machinery_used_machines_lang_helper::factory()->install();

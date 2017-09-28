@@ -11,4 +11,4 @@ $sql->setQuery('ALTER TABLE ' . rex::getTablePrefix() . 'd2u_machinery_machines 
 $sql->setQuery('ALTER TABLE ' . rex::getTablePrefix() . 'd2u_machinery_machines DROP viscosity;');
 
 // Delete language replacements
-machine_agitator_extension_lang_helper::factory()->uninstall();
+d2u_machinery_machine_agitator_extension_lang_helper::factory()->uninstall();

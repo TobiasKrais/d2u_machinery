@@ -1,6 +1,6 @@
 <?php
 // Update language replacements
-machine_features_extension_lang_helper::factory()->install();
+d2u_machinery_machine_features_extension_lang_helper::factory()->install();
 
 // 1.0.1 Update database
 $sql = rex_sql::factory();

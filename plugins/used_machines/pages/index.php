@@ -82,6 +82,7 @@ else if ($func == 'delete') {
 		$used_machine_id = $form['used_machine_id'];
 	}
 	$used_machine = new UsedMachine($used_machine_id, rex_config::get("d2u_helper", "default_lang"));
+	$used_machine->used_machine_id = $used_machine_id; // Ensure correct ID in case language has no object
 	
 	foreach(rex_clang::getAll() as $rex_clang) {
 		if($used_machine === FALSE) {
@@ -100,6 +101,7 @@ else if ($func == 'delete') {
 // Change online status of machine
 else if($func == 'changestatus') {
 	$used_machine = new UsedMachine($entry_id, rex_config::get("d2u_helper", "default_lang"));
+	$used_machine->used_machine_id = $used_machine_id; // Ensure correct ID in case language has no object
 	$used_machine->changeStatus();
 	
 	header("Location: ". rex_url::currentBackendPage());

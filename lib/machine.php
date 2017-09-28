@@ -470,7 +470,7 @@ class Machine {
 			$this->internal_name = $result->getValue("internal_name");
 			$this->name = $result->getValue("name");
 			$this->pics = preg_grep('/^\s*$/s', explode(",", $result->getValue("pics")), PREG_GREP_INVERT);
-			$this->category = new Category($result->getValue("category_id"), $clang_id);
+			$this->category = new Category($result->getValue("machine_id"), $clang_id);
 			$this->alternative_machine_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("alternative_machine_ids")), PREG_GREP_INVERT);
 			$this->product_number = $result->getValue("product_number");
 			$this->article_id_software = $result->getValue("article_id_software");
@@ -648,22 +648,22 @@ class Machine {
 	 * FALSE, only this translation will be deleted.
 	 */
 	public function delete($delete_all = TRUE) {
-		if($delete_all) {
-			$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_machines_lang "
-				."WHERE machine_id = ". $this->machine_id;
-			$result_lang = rex_sql::factory();
-			$result_lang->setQuery($query_lang);
-
+		$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_machines_lang "
+			."WHERE machine_id = ". $this->machine_id
+			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
+		$result_lang = rex_sql::factory();
+		$result_lang->setQuery($query_lang);
+		
+		// If no more lang objects are available, delete
+		$query_main = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_machines_lang "
+			."WHERE machine_id = ". $this->machine_id;
+		$result_main = rex_sql::factory();
+		$result_main->setQuery($query_main);
+		if($result_main->getRows() == 0) {
 			$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_machines "
 				."WHERE machine_id = ". $this->machine_id;
 			$result = rex_sql::factory();
 			$result->setQuery($query);
-		}
-		else {
-			$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_machines_lang "
-				."WHERE machine_id = ". $this->machine_id ." AND clang_id = ". $this->clang_id;
-			$result_lang = rex_sql::factory();
-			$result_lang->setQuery($query_lang);
 		}
 	}
 	
@@ -801,9 +801,9 @@ class Machine {
 		// Max. viscosity
 		if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable() && $this->viscosity > 0) {
 			$tech_data[] = [
-				"description" => $tag_open . "d2u_machinery_agitators_viscosity" . $tag_close,
+				"description" => $tag_open . "d2u_machinery_machines_viscosity" . $tag_close,
 				"value" => $this->viscosity,
-				"unit" => $tag_open . "d2u_machinery_agitators_mpas" . $tag_close
+				"unit" => $tag_open . "d2u_machinery_machines_mpas" . $tag_close
 			];
 		}
 
@@ -1417,7 +1417,7 @@ class Machine {
 					."name = '". $this->name ."', "
 					."internal_name = '". $this->internal_name ."', "
 					."pics = '". implode(",", $this->pics) ."', "
-					."category_id = ". ($this->category ? $this->category->category_id : 0) .", "
+					."machine_id = ". ($this->category ? $this->category->machine_id : 0) .", "
 					."alternative_machine_ids = '|". implode("|", $this->alternative_machine_ids) ."|', "
 					."product_number = '". $this->product_number ."', "
 					."article_id_software = '". $this->article_id_software ."', "

@@ -62,23 +62,14 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		$profile_id = $form['profile_id'];
 	}
 	$profile = new Profile($profile_id, rex_config::get("d2u_helper", "default_lang"));
+	$profile->profile_id = $profile_id; // Ensure correct ID in case first language has no object
 	
 	// Check if object is used
 	$reffering_machines = $profile->getRefferingMachines();
 
 	// If not used, delete
 	if(count($reffering_machines) == 0) {
-		foreach(rex_clang::getAll() as $rex_clang) {
-			if($profile === FALSE) {
-				$profile = new Profile($profile_id, $rex_clang->getId());
-				// If object is not found in language, set profile_id anyway to be able to delete
-				$profile->profile_id = $profile_id;
-			}
-			else {
-				$profile->clang_id = $rex_clang->getId();
-			}
-			$profile->delete();
-		}
+		$profile->delete(TRUE);
 	}
 	else {
 		$message = '<ul>';

@@ -15,4 +15,4 @@ $sql->setQuery('DROP TABLE IF EXISTS ' . rex::getTablePrefix() . 'd2u_machinery_
 $sql->setQuery('ALTER TABLE ' . rex::getTablePrefix() . 'd2u_machinery_machines DROP industry_sector_ids;');
 
 // Delete language replacements
-industry_sectors_lang_helper::factory()->uninstall();
+d2u_machinery_industry_sectors_lang_helper::factory()->uninstall();

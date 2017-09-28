@@ -2,7 +2,7 @@
 /**
  * Offers helper functions for language issues
  */
-class machine_steel_processing_extension_lang_helper extends d2u_machinery_lang_helper {
+class d2u_machinery_machine_steel_processing_extension_lang_helper extends d2u_machinery_lang_helper {
 	/**
 	 * @var string[] Array with englisch replacements. Key is the wildcard,
 	 * value the replacement. 
@@ -665,9 +665,9 @@ class machine_steel_processing_extension_lang_helper extends d2u_machinery_lang_
 
 	/**
 	 * Factory method.
-	 * @return machine_features_extension_lang_helper Object
+	 * @return d2u_machinery_machine_features_extension_lang_helper Object
 	 */
 	public static function factory() {
-		return new machine_steel_processing_extension_lang_helper();
+		return new d2u_machinery_machine_steel_processing_extension_lang_helper();
 	}
 }

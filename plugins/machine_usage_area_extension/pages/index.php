@@ -63,6 +63,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		$usage_area_id = $form['usage_area_id'];
 	}
 	$usage_area = new UsageArea($usage_area_id, rex_config::get("d2u_helper", "default_lang"));
+	$usage_area->usage_area_id = $usage_area_id; // Ensure correct ID in case language has no object
 	
 	// Check if object is used
 	$reffering_machines = $usage_area->getMachines();

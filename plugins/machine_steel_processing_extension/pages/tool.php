@@ -62,23 +62,14 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		$tool_id = $form['tool_id'];
 	}
 	$tool = new Tool($tool_id, rex_config::get("d2u_helper", "default_lang"));
+	$tool->tool_id = $tool_id; // Ensure correct ID in case language has no object
 	
 	// Check if object is used
 	$reffering_machines = $tool->getRefferingMachines();
 
 	// If not used, delete
 	if(count($reffering_machines) == 0) {
-		foreach(rex_clang::getAll() as $rex_clang) {
-			if($tool === FALSE) {
-				$tool = new Tool($tool_id, $rex_clang->getId());
-				// If object is not found in language, set tool_id anyway to be able to delete
-				$tool->tool_id = $tool_id;
-			}
-			else {
-				$tool->clang_id = $rex_clang->getId();
-			}
-			$tool->delete();
-		}
+		$tool->delete(TRUE);
 	}
 	else {
 		$message = '<ul>';

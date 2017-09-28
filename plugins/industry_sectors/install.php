@@ -48,6 +48,6 @@ if(rex_addon::get('url')->isAvailable()) {
 }
 
 // Insert frontend translations
-if(class_exists(industry_sectors_lang_helper)) {
-	industry_sectors_lang_helper::factory()->install();
+if(class_exists(d2u_machinery_industry_sectors_lang_helper)) {
+	d2u_machinery_industry_sectors_lang_helper::factory()->install();
 }

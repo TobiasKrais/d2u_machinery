@@ -51,19 +51,19 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 			export_lang_helper::factory()->install();
 		}
 		if(rex_plugin::get('d2u_machinery', 'industry_sectors')->isAvailable()) {
-			industry_sectors_lang_helper::factory()->install();
+			d2u_machinery_industry_sectors_lang_helper::factory()->install();
 		}
 		if(rex_plugin::get('d2u_machinery', 'machine_agitator_extension')->isAvailable()) {
-			machine_agitator_extension_lang_helper::factory()->install();
+			d2u_machinery_machine_agitator_extension_lang_helper::factory()->install();
 		}
 		if(rex_plugin::get('d2u_machinery', 'machine_features_extension')->isAvailable()) {
-			machine_features_extension_lang_helper::factory()->install();
+			d2u_machinery_machine_features_extension_lang_helper::factory()->install();
 		}
 		if(rex_plugin::get('d2u_machinery', 'machine_usage_area_extension')->isAvailable()) {
-			machine_usage_area_extension_lang_helper::factory()->install();
+			d2u_machinery_machine_usage_area_extension_lang_helper::factory()->install();
 		}
 		if(rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
-			used_machines_lang_helper::factory()->install();
+			d2u_machinery_used_machines_lang_helper::factory()->install();
 		}
 		
 		// Install / remove Cronjob

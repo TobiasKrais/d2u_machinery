@@ -19,4 +19,4 @@ if($sql->getRows() == 0) {
 }
 
 // Update language replacements
-industry_sectors_lang_helper::factory()->install();
+d2u_machinery_industry_sectors_lang_helper::factory()->install();

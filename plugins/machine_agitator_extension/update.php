@@ -1,6 +1,6 @@
 <?php
 // Update language replacements
-machine_agitator_extension_lang_helper::factory()->install();
+d2u_machinery_machine_agitator_extension_lang_helper::factory()->install();
 
 // Alter category table
 $sql->setQuery("SHOW COLUMNS FROM ". rex::getTablePrefix() ."d2u_machinery_categories LIKE 'show_agitators';");

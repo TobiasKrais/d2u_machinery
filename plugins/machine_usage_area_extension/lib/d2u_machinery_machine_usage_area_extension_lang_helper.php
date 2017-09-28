@@ -2,7 +2,7 @@
 /**
  * Offers helper functions for language issues
  */
-class machine_usage_area_extension_lang_helper extends d2u_machinery_lang_helper {
+class d2u_machinery_machine_usage_area_extension_lang_helper extends d2u_machinery_lang_helper {
 	/**
 	 * @var string[] Array with englisch replacements. Key is the wildcard,
 	 * value the replacement. 
@@ -19,9 +19,9 @@ class machine_usage_area_extension_lang_helper extends d2u_machinery_lang_helper
 
 	/**
 	 * Factory method.
-	 * @return machine_usage_area_extension_lang_helper Object
+	 * @return d2u_machinery_machine_usage_area_extension_lang_helper Object
 	 */
 	public static function factory() {
-		return new machine_usage_area_extension_lang_helper();
+		return new d2u_machinery_machine_usage_area_extension_lang_helper();
 	}
 }

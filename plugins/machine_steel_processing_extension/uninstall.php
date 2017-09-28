@@ -81,4 +81,4 @@ $sql->setQuery('DROP TABLE IF EXISTS ' . rex::getTablePrefix() . 'd2u_machinery_
 $sql->setQuery('DROP TABLE IF EXISTS ' . rex::getTablePrefix() . 'd2u_machinery_steel_welding_lang');
 
 // Delete language replacements
-machine_steel_processing_extension_lang_helper::factory()->uninstall();
+d2u_machinery_machine_steel_processing_extension_lang_helper::factory()->uninstall();

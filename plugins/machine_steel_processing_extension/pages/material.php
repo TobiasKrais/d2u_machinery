@@ -62,23 +62,14 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		$material_id = $form['material_id'];
 	}
 	$material = new Material($material_id, rex_config::get("d2u_helper", "default_lang"));
+	$material->material_id = $material_id; // Ensure correct ID in case language has no object
 	
 	// Check if object is used
 	$reffering_machines = $material->getRefferingMachines();
 
 	// If not used, delete
 	if(count($reffering_machines) == 0) {
-		foreach(rex_clang::getAll() as $rex_clang) {
-			if($material === FALSE) {
-				$material = new Material($material_id, $rex_clang->getId());
-				// If object is not found in language, set material_id anyway to be able to delete
-				$material->material_id = $material_id;
-			}
-			else {
-				$material->clang_id = $rex_clang->getId();
-			}
-			$material->delete();
-		}
+		$material->delete(TRUE);
 	}
 	else {
 		$message = '<ul>';

@@ -66,23 +66,14 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		$agitator_type_id = $form['agitator_type_id'];
 	}
 	$agitator_type = new AgitatorType($agitator_type_id, rex_config::get("d2u_helper", "default_lang"));
+	$agitator_type->agitator_type_id = $agitator_type_id; // Ensure correct ID in case language has no object
 	
 	// Check if object is used
 	$reffering_machines = $agitator_type->getRefferingMachines();
 
 	// If not used, delete
 	if(count($reffering_machines) == 0) {
-		foreach(rex_clang::getAll() as $rex_clang) {
-			if($agitator_type === FALSE) {
-				$agitator_type = new AgitatorType($agitator_type_id, $rex_clang->getId());
-				// If object is not found in language, set agitator_type_id anyway to be able to delete
-				$agitator_type->agitator_type_id = $agitator_type_id;
-			}
-			else {
-				$agitator_type->clang_id = $rex_clang->getId();
-			}
-			$agitator_type->delete();
-		}
+		$agitator_type->delete(TRUE);
 	}
 	else {
 		$message = '<ul>';
