@@ -249,7 +249,7 @@ class IndustrySector {
 	 * @return boolean TRUE if object is online, otherwise FALSE.
 	 */
 	public function isOnline() {
-		$query = "SELECT industry_sector_id FROM ". rex::getTablePrefix() ."d2u_machinery_industry_sectors "
+		$query = "SELECT machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_machines "
 			."WHERE industry_sector_ids LIKE '%|". $this->industry_sector_id ."|%'";
 		$result = rex_sql::factory();
 		$result->setQuery($query);
@@ -302,7 +302,7 @@ class IndustrySector {
 						."clang_id = '". $this->clang_id ."', "
 						."name = '". $this->name ."', "
 						."teaser = '". htmlspecialchars($this->teaser) ."', "
-						."translation_needs_update = '". $this->translation_needs_update ."' "
+						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = ". time() .", "
 						."updateuser = '". rex::getUser()->getLogin() ."' ";
 

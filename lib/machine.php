@@ -470,7 +470,7 @@ class Machine {
 			$this->internal_name = $result->getValue("internal_name");
 			$this->name = $result->getValue("name");
 			$this->pics = preg_grep('/^\s*$/s', explode(",", $result->getValue("pics")), PREG_GREP_INVERT);
-			$this->category = new Category($result->getValue("machine_id"), $clang_id);
+			$this->category = new Category($result->getValue("category_id"), $clang_id);
 			$this->alternative_machine_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("alternative_machine_ids")), PREG_GREP_INVERT);
 			$this->product_number = $result->getValue("product_number");
 			$this->article_id_software = $result->getValue("article_id_software");
@@ -1387,11 +1387,9 @@ class Machine {
 	 */
 	public function getURL($including_domain = FALSE) {
 		if($this->url == "") {
-			$d2u_machinery = rex_addon::get("d2u_machinery");
-				
 			$parameterArray = [];
 			$parameterArray['machine_id'] = $this->machine_id;
-			$this->url = rex_getUrl($d2u_machinery->getConfig('article_id'), $this->clang_id, $parameterArray, "&");
+			$this->url = rex_getUrl(rex_config::get('d2u_machinery', 'article_id'), $this->clang_id, $parameterArray, "&");
 		}
 
 		if($including_domain) {
@@ -1417,7 +1415,7 @@ class Machine {
 					."name = '". $this->name ."', "
 					."internal_name = '". $this->internal_name ."', "
 					."pics = '". implode(",", $this->pics) ."', "
-					."machine_id = ". ($this->category ? $this->category->machine_id : 0) .", "
+					."category_id = ". ($this->category ? $this->category->category_id : 0) .", "
 					."alternative_machine_ids = '|". implode("|", $this->alternative_machine_ids) ."|', "
 					."product_number = '". $this->product_number ."', "
 					."article_id_software = '". $this->article_id_software ."', "
@@ -1534,7 +1532,7 @@ class Machine {
 		}
 
 	
-		if($error == 0) {
+		if($error !== FALSE) {
 			// Save the language specific part
 			$pre_save_machine = new Machine($this->machine_id, $this->clang_id);
 			if($pre_save_machine != $this) {

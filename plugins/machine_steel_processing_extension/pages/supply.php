@@ -123,8 +123,8 @@ if ($func == 'edit' || $func == 'add') {
 							if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_machinery[edit_tech_data]')) {
 								$readonly = FALSE;
 							}
-							d2u_addon_backend_helper::form_checkbox('d2u_machinery_online_status', 'form[online_status]', 'online', $supply->online_status == "online", $readonly);
-							d2u_addon_backend_helper::form_mediafield('d2u_machinery_pic', '1', $supply->pic, $readonly);
+							d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', $supply->online_status == "online", $readonly);
+							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', '1', $supply->pic, $readonly);
 							if(rex_addon::get("d2u_videos")->isAvailable()) {
 								$options_video = [0 => rex_i18n::msg('d2u_machinery_video_no')];
 								foreach (Video::getAll(rex_config::get("d2u_helper", "default_lang")) as $video) {

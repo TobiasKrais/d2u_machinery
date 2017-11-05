@@ -14,7 +14,7 @@ page:
 requires:
     redaxo: '>=5.1.0'
     packages:
-        d2u_machinery/used_machines: '1.0'
+        d2u_machinery/used_machines: '1.0.1'
     php:
         extensions: [xml, zip]
         version: '>=5.3'

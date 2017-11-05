@@ -566,10 +566,10 @@ class Category {
 	 * @return boolean TRUE if child categories exist, otherwise FALSE
 	 */
 	public function hasMachines() {
-		$query = "SELECT lang.category_id, IF(lang.lang_name IS NULL or lang.lang_name = '', machines.name, lang.lang_name) as machine_name "
-			. "FROM ". rex::getTablePrefix() ."d2u_machinery_categories_lang AS lang "
-			."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_categories AS machines "
-					."ON lang.category_id = machines.category_id "
+		$query = "SELECT lang.machine_id "
+			. "FROM ". rex::getTablePrefix() ."d2u_machinery_machines_lang AS lang "
+			."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_machines AS machines "
+					."ON lang.machine_id = machines.machine_id "
 			."WHERE category_id = ". $this->category_id ." AND clang_id = ". $this->clang_id;
 		$result = rex_sql::factory();
 		$result->setQuery($query);
@@ -648,7 +648,7 @@ class Category {
 			}
 		}
 		
-		if($error == 0) {
+		if($error !== FALSE) {
 			// Save the language specific part
 			$pre_save_category = new Category($this->category_id, $this->clang_id);
 			if($pre_save_category != $this) {

@@ -149,8 +149,8 @@ if ($func == 'edit' || $func == 'add') {
 								$readonly = FALSE;
 							}
 
-							d2u_addon_backend_helper::form_mediafield('d2u_machinery_industry_sectors_pic', 1, $industry_sector->pic, $readonly);
-							d2u_addon_backend_helper::form_checkbox('d2u_machinery_online_status', 'form[online_status]', 'online', $industry_sector->online_status == "online", $readonly);
+							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', 1, $industry_sector->pic, $readonly);
+							d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', $industry_sector->online_status == "online", $readonly);
 						?>
 					</div>
 				</fieldset>

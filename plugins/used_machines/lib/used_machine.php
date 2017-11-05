@@ -288,21 +288,21 @@ class UsedMachine {
 	public function getExtendedTeaser() {
 		$extended_teaser = "";
 		if ($this->offer_type == "rent") {
-			$extended_teaser .= Wildcard::get('d2u_machinery_used_machines_offer_rent', $this->clang_id) .": ";
+			$extended_teaser .= Sprog\Wildcard::get('d2u_machinery_used_machines_offer_rent', $this->clang_id) .": ";
 		}
 		if (strlen($this->teaser) > 0) {
 			$extended_teaser .= $this->teaser ."; ";
 		}
 		if ($this->year_built > 0) {
-			$extended_teaser .= Wildcard::get('d2u_machinery_used_machines_year_built', $this->clang_id) .":&nbsp;". $this->year_built ."; ";
+			$extended_teaser .= Sprog\Wildcard::get('d2u_machinery_used_machines_year_built', $this->clang_id) .":&nbsp;". $this->year_built ."; ";
 		}
 		if ($this->price > 0) {
-			$extended_teaser .= Wildcard::get('d2u_machinery_used_machines_price', $this->clang_id) .":&nbsp;".
+			$extended_teaser .= Sprog\Wildcard::get('d2u_machinery_used_machines_price', $this->clang_id) .":&nbsp;".
 			number_format($this->price, 2, ",", ".") .'&nbsp;'.$this->currency_code ."; ";
 		}
 		else {
-			$extended_teaser .= Wildcard::get('d2u_machinery_used_machines_price', $this->clang_id) .":&nbsp;".
-				Wildcard::get('d2u_machinery_used_machines_price_on_request', $this->clang_id);
+			$extended_teaser .= Sprog\Wildcard::get('d2u_machinery_used_machines_price', $this->clang_id) .":&nbsp;".
+				Sprog\Wildcard::get('d2u_machinery_used_machines_price_on_request', $this->clang_id);
 		}
 		return $extended_teaser;
 	}

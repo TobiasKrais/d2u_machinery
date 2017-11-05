@@ -140,7 +140,7 @@ if ($func == 'edit' || $func == 'add') {
 								$readonly = FALSE;
 							}
 
-							d2u_addon_backend_helper::form_mediafield('d2u_machinery_certificates_pic', 1, $certificate->pic, $readonly);
+							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', 1, $certificate->pic, $readonly);
 						?>
 					</div>
 				</fieldset>

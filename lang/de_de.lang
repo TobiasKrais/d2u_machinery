@@ -8,8 +8,6 @@ d2u_machinery_internal_name = Interne Bezeichnung
 d2u_machinery_lang_name = Sprachspezifischer Name (optional)
 d2u_machinery_name = Name
 d2u_machinery_no_selection = Keine Auswahl
-d2u_machinery_online_status = Online
-d2u_machinery_pic = Bild
 d2u_machinery_video = D2U Videomanager Video
 d2u_machinery_video_no = Kein Video
 
@@ -50,7 +48,6 @@ d2u_machinery_machine_length = Länge (mm)
 d2u_machinery_machine_name = Name
 d2u_machinery_machine_no_machines_found = Es wurden noch keine Maschinen angelegt.
 d2u_machinery_machine_pdfs = PDFs
-d2u_machinery_machine_pics = Bilder
 d2u_machinery_machine_product_number = Produktnummer
 d2u_machinery_machine_references = Artikel mit Referenzen
 d2u_machinery_machine_service = Artikel zum Service

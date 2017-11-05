@@ -4,8 +4,6 @@ d2u_machinery_agitators_description = Beschreibung
 d2u_machinery_agitators_name = Name
 d2u_machinery_agitators_viscosity = Max. Viskosität (mPas)
 
-d2u_machinery_agitators_pic = Bild
-
 d2u_machinery_agitators = Rührorgane
 d2u_machinery_agitators_no_agitators_found = Es wurden noch keine Rührwerke angelegt.
 

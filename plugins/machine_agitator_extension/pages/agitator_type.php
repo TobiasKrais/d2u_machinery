@@ -139,7 +139,7 @@ if ($func == 'edit' || $func == 'add') {
 								$readonly = FALSE;
 							}
 
-							d2u_addon_backend_helper::form_mediafield('d2u_machinery_agitators_pic', 1, $agitator_type->pic, $readonly);
+							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', 1, $agitator_type->pic, $readonly);
 
 							$options_agitators = [];
 							foreach (Agitator::getAll(rex_config::get("d2u_helper", "default_lang")) as $agitator) {

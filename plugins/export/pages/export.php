@@ -3,6 +3,7 @@ $func = rex_request('func', 'string');
 $provider_id = rex_request('provider_id', 'int');
 $used_machine_id = rex_request('used_machine_id', 'int');
 
+
 /*
  * Do actions
  */
@@ -54,7 +55,7 @@ if(count($providers) > 0) {
 	foreach ($providers as $provider) {
 		print "<td>";
 		if($provider->isExportPossible()) {
-			print "<a href='". rex_url::currentBackendPage(array('func'=>'export', 'provider_id'=>$provider->provider_id)) ."'>"
+			print "<a href='". rex_url::currentBackendPage(['func'=>'export', 'provider_id'=>$provider->provider_id]) ."'>"
 				. "<button class='btn btn-apply'>". rex_i18n::msg('d2u_machinery_export_start') ."</button></a>";
 		}
 		print "</td>";

@@ -1,4 +1,8 @@
 <?php
+if(rex::isBackend() && is_object(rex::getUser())) {
+	rex_perm::register('d2u_machinery[machine_steel_extension]', rex_i18n::msg('d2u_machinery_steel_rights'));
+}
+
 if(rex::isBackend()) {
 	rex_extension::register('CLANG_DELETED', 'rex_d2u_machinery_steel_processing_clang_deleted');
 }

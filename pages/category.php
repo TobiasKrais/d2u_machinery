@@ -205,7 +205,7 @@ if ($func == 'edit' || $func == 'add') {
 							}
 							d2u_addon_backend_helper::form_select('d2u_machinery_category_parent', 'form[parent_category_id]', $options, ($category->parent_category === FALSE ? [] : [$category->parent_category->category_id]), 1, FALSE, $readonly);
 							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $category->priority, TRUE, $readonly, 'number');
-							d2u_addon_backend_helper::form_mediafield('d2u_machinery_pic', '1', $category->pic, $readonly);
+							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', '1', $category->pic, $readonly);
 							d2u_addon_backend_helper::form_mediafield('d2u_machinery_category_pic_usage', '2', $category->pic_usage, $readonly);
 
 							if(rex_addon::get("d2u_videos")->isAvailable()) {

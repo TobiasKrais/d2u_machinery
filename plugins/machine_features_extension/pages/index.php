@@ -116,7 +116,7 @@ if ($func == 'edit' || $func == 'add') {
 						}
 				?>
 					<fieldset>
-						<legend><?php echo rex_i18n::msg('d2u_machinery_helper_lang') .' "'. $rex_clang->getName() .'"'; ?></legend>
+						<legend><?php echo rex_i18n::msg('d2u_helper_text_lang') .' "'. $rex_clang->getName() .'"'; ?></legend>
 						<div class="panel-body-wrapper slide">
 							<?php
 								if($rex_clang->getId() != rex_config::get("d2u_helper", "default_lang")) {
@@ -151,7 +151,7 @@ if ($func == 'edit' || $func == 'add') {
 							}
 
 							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $feature->priority, TRUE, $readonly, 'number');
-							d2u_addon_backend_helper::form_mediafield('d2u_machinery_features_pic', 1, $feature->pic, $readonly);
+							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', 1, $feature->pic, $readonly);
 							
 							$options = [];
 							foreach(Category::getAll(rex_config::get("d2u_helper", "default_lang")) as $category) {
@@ -164,11 +164,12 @@ if ($func == 'edit' || $func == 'add') {
 								foreach (Video::getAll(rex_config::get("d2u_helper", "default_lang")) as $video) {
 									$options_video[$video->video_id] = $video->name;
 								}
-								d2u_addon_backend_helper::form_select('d2u_machinery_video', 'form[video_id]', $options_video, $supply->video !== FALSE ? [$supply->video->video_id] : [], 1, FALSE, $readonly);
+								d2u_addon_backend_helper::form_select('d2u_machinery_video', 'form[video_id]', $options_video, $feature->video !== FALSE ? [$feature->video->video_id] : [], 1, FALSE, $readonly);
 							}
 						?>
 					</div>
 				</fieldset>
+			</div>
 			<footer class="panel-footer">
 				<div class="rex-form-panel-footer">
 					<div class="btn-toolbar">

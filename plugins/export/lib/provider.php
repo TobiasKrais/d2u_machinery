@@ -290,24 +290,32 @@ class Provider {
 			}
 			
 			// Export
-			return "Facebook Export needs upgrade to newer Graph API (currently 2.3). Export aborted.";
-/*
 			$facebook = new SocialExportFacebook($this);
-			if($facebook->isUserLoggedIn()) {
-				return $facebook->export();
-			}
-			else {
-				if($facebook->isAnybodyLoggedIn()) {
-					// Wrong user logged in: logout first
-					header("Location: ". $facebook->getLogoutURL());
+			if(!$facebook->hasAccessToken()) {
+				if(rex_request('facebook_return', 'string') == 'true') {
+					$facebook->getAccessToken();
 				}
 				else {
-					// If not logged in, go to log in page
 					header("Location: ". $facebook->getLoginURL());
+					exit;
 				}
-				exit;
 			}
- */
+			if($facebook->hasAccessToken()) {
+				if($facebook->isUserLoggedIn()) {
+//					return $facebook->export();
+				}
+				else {
+					if($facebook->isAnybodyLoggedIn()) {
+						// Wrong user logged in: logout first
+//						header("Location: ". $facebook->getLogoutURL());
+					}
+					else {
+						// If not logged in, go to log in page
+						header("Location: ". $facebook->getLoginURL());
+					}
+					exit;
+				}
+			}
 		}
 		else if($this->type == "twitter") {
 			return "Schnittstelle ist nicht programmiert.";
