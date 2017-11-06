@@ -140,6 +140,7 @@ class UsedMachine {
 			$this->name = $result->getValue("name");
 			$this->category = new Category($result->getValue("category_id"), $this->clang_id);
 			$this->offer_type = $result->getValue("offer_type");
+			$this->category->setOfferType($this->offer_type);
 			$this->availability = $result->getValue("availability");
 			$this->product_number = $result->getValue("product_number");
 			$this->manufacturer = $result->getValue("manufacturer");

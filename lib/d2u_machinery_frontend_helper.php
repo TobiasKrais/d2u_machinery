@@ -14,11 +14,13 @@ class d2u_machinery_frontend_helper {
 		$category = FALSE;
 		$machine = FALSE;
 		$used_machine = FALSE;
-		$url_data = [];
+		$urlParamKey = "";
 		if(rex_addon::get("url")->isAvailable()) {
 			$url_data = UrlGenerator::getData();
+			$urlParamKey = isset($url_data->urlParamKey) ? $url_data->urlParamKey : "";
 		}
-		if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && isset($url_data->urlParamKey) && $url_data->urlParamKey === "machine_id")) {
+		
+		if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "machine_id")) {
 			$machine_id = filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT);
 			if(rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
 				$machine_id = UrlGenerator::getId();
