@@ -250,7 +250,9 @@ class UsedMachine {
 	 * @return UsedMachine[] Array with UsedMachines objects. The key is used_machine_id
 	 */
 	public static function getAll($clang_id, $only_online = FALSE, $offer_type = "") {
-		$query = "SELECT used_machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_used_machines ";
+		$query = "SELECT lang.used_machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_used_machines_lang AS lang "
+			."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_used_machines AS machine "
+				."ON lang.used_machine_id = machine.used_machine_id AND clang_id = ". $clang_id ." ";
 		if($only_online || $offer_type != "") {
 			$where = [];
 			if($only_online) {
