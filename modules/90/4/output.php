@@ -283,15 +283,22 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 				$filesize = round(filesize(rex_path::media() .'/'. $document) / pow(1024, 2), 2);
 				$filetype = strtoupper(pathinfo(rex_path::media() . PATH_SEPARATOR . $document, PATHINFO_EXTENSION));
 				
-				print '<li>';
-				if($filetype == 'pdf') {
-					print '<span class="icon pdf"></span> ';
+				// Check permissions
+				$has_permission = TRUE;
+				if(rex_plugin::get('ycom', 'auth_media')->isAvailable()) {
+					$has_permission = rex_ycom_auth_media::checkPerm($media);
 				}
-				else {
-					print '<span class="icon file"></span> ';
+				if($has_permission) {
+					print '<li>';
+					if($filetype == 'pdf') {
+						print '<span class="icon pdf"></span> ';
+					}
+					else {
+						print '<span class="icon file"></span> ';
+					}
+					print '<a href="'. rex_url::media($document) .'" target="_blank">'.
+							$rex_document->getTitle() .' <span>('. $filetype .', '. $filesize .' MB)</span></a></li>';
 				}
-				print '<a href="'. rex_url::media($document) .'" target="_blank">'.
-						$rex_document->getTitle() .' <span>('. $filetype .', '. $filesize .' MB)</span></a></li>';
 			}
 		}
 		print '</ul>';

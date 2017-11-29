@@ -34,6 +34,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.1.4 (NEXT):</p>
 <ul>
+	<li>ycom/auth_media Dateirechte werden bei Downloads abgefragt.</li>
 	<li>Bugfix: Speichern wenn zweite Sprache als Standardsprache gesetzt ist schlug fehl.</li>
 	<li>Eine ganze Reihe kleinerer Bugfixes auch in den Plugins.</li>
 	<li>Editierrechte für Übersetzer eingeschränkt.</li>

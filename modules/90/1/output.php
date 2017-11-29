@@ -463,7 +463,15 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		$pdfs = array_unique(array_merge($machine->pdfs, $machine->category->pdfs));
 		foreach($pdfs as $pdf) {
 			$media = rex_media::get($pdf);
-			print '<a href="'. $media->getUrl() .'"><div class="downloads">'. $media->getTitle() .'</div></a>';
+			
+			// Check permissions
+			$has_permission = TRUE;
+			if(rex_plugin::get('ycom', 'auth_media')->isAvailable() && $media instanceof rex_media) {
+				$has_permission = rex_ycom_auth_media::checkPerm($media);
+			}
+			if($has_permission) {
+				print '<a href="'. $media->getUrl() .'"><div class="downloads">'. $media->getTitle() .'</div></a>';
+			}
 		}
 		print '</div>';
 	}
