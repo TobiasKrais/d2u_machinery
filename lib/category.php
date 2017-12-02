@@ -445,18 +445,21 @@ class Category implements \D2U_Helper\ITranslationHelper{
 	
 	/**
 	 * Gets the UsedMachines of the category if plugin ist installed.
+	 * @param boolean $online_only If true only online used machines are returned
 	 * @return UsedMachine[] Used machines of this category
 	 */
-	public function getUsedMachines() {
+	public function getUsedMachines($online_only = FALSE) {
 		$usedMachines = [];
 		if(rex_plugin::get("d2u_machinery", "used_machines")->isAvailable()) {
 			$query = "SELECT lang.used_machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_used_machines_lang AS lang "
 				."LEFT JOIN ". \rex::getTablePrefix() ."d2u_machinery_used_machines AS used_machines "
 					."ON lang.used_machine_id = used_machines.used_machine_id "
 				."WHERE category_id = ". $this->category_id ." AND clang_id = ". $this->clang_id ." ";
+			if($online_only) {
+				$query .= "AND online_status = 'online' ";
+			}
 			if($this->offer_type != "") {
 				$query .= "AND offer_type = '". $this->offer_type ."' ";
-
 			}
 			$query .= "ORDER BY manufacturer, name";
 			$result = rex_sql::factory();

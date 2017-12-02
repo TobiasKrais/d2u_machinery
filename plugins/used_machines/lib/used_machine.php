@@ -8,7 +8,7 @@
 /**
  * Used machine object.
  */
-class UsedMachine {
+class UsedMachine implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var int Database ID
 	 */
@@ -126,8 +126,8 @@ class UsedMachine {
 	 */
 	 public function __construct($used_machine_id, $clang_id) {
 		$this->clang_id = $clang_id;
-		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_used_machines AS used_machines "
-				."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_used_machines_lang AS lang "
+		$query = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_used_machines AS used_machines "
+				."LEFT JOIN ". \rex::getTablePrefix() ."d2u_machinery_used_machines_lang AS lang "
 					."ON used_machines.used_machine_id = lang.used_machine_id "
 					."AND clang_id = ". $this->clang_id ." "
 				."WHERE used_machines.used_machine_id = ". $used_machine_id;
@@ -187,7 +187,7 @@ class UsedMachine {
 	public function changeStatus() {
 		if($this->online_status == "online") {
 			if($this->used_machine_id > 0) {
-				$query = "UPDATE ". rex::getTablePrefix() ."d2u_machinery_used_machines "
+				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_used_machines "
 					."SET online_status = 'offline' "
 					."WHERE used_machine_id = ". $this->used_machine_id;
 				$result = rex_sql::factory();
@@ -202,7 +202,7 @@ class UsedMachine {
 		}
 		else {
 			if($this->used_machine_id > 0) {
-				$query = "UPDATE ". rex::getTablePrefix() ."d2u_machinery_used_machines "
+				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_used_machines "
 					."SET online_status = 'online' "
 					."WHERE used_machine_id = ". $this->used_machine_id;
 				$result = rex_sql::factory();
@@ -218,19 +218,19 @@ class UsedMachine {
 	 * FALSE, only this translation will be deleted.
 	 */
 	public function delete($delete_all = TRUE) {
-		$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_used_machines_lang "
+		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_used_machines_lang "
 			."WHERE used_machine_id = ". $this->used_machine_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
 		$result_lang = rex_sql::factory();
 		$result_lang->setQuery($query_lang);
 		
 		// If no more lang objects are available, delete
-		$query_main = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_used_machines_lang "
+		$query_main = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_used_machines_lang "
 			."WHERE used_machine_id = ". $this->used_machine_id;
 		$result_main = rex_sql::factory();
 		$result_main->setQuery($query_main);
 		if($result_main->getRows() == 0) {
-			$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_used_machines "
+			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_used_machines "
 				."WHERE used_machine_id = ". $this->used_machine_id;
 			$result = rex_sql::factory();
 			$result->setQuery($query);
@@ -250,8 +250,8 @@ class UsedMachine {
 	 * @return UsedMachine[] Array with UsedMachines objects. The key is used_machine_id
 	 */
 	public static function getAll($clang_id, $only_online = FALSE, $offer_type = "") {
-		$query = "SELECT lang.used_machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_used_machines_lang AS lang "
-			."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_used_machines AS machine "
+		$query = "SELECT lang.used_machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_used_machines_lang AS lang "
+			."LEFT JOIN ". \rex::getTablePrefix() ."d2u_machinery_used_machines AS machine "
 				."ON lang.used_machine_id = machine.used_machine_id AND clang_id = ". $clang_id ." ";
 		if($only_online || $offer_type != "") {
 			$where = [];
@@ -344,7 +344,7 @@ class UsedMachine {
 	 * @return string Offer type. Either "rent" or "sale"
 	 */
 	public static function getOfferTypeForUsedMachineId($used_machine_id) {
-		$query = "SELECT offer_type FROM ". rex::getTablePrefix() ."d2u_machinery_used_machines "
+		$query = "SELECT offer_type FROM ". \rex::getTablePrefix() ."d2u_machinery_used_machines "
 				."WHERE used_machine_id = ". $used_machine_id;
 		$result = rex_sql::factory();
 		$result->setQuery($query);
@@ -361,7 +361,7 @@ class UsedMachine {
 	 * @return Complete title tag.
 	 */
 	public function getTitleTag() {
-		return '<title>'. $this->name .' / '. $this->category->name .' / '. rex::getServerName() .'</title>';
+		return '<title>'. $this->name .' / '. $this->category->name .' / '. \rex::getServerName() .'</title>';
 	}
 	
 	/**
@@ -371,7 +371,7 @@ class UsedMachine {
 	 * @return UsedMachine[] Array full of used machines ;-)
 	 */
 	public static function getUsedMachinesForMachine($machine) {
-		$query = "SELECT used_machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_used_machines "
+		$query = "SELECT used_machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_used_machines "
 				."WHERE machine_id = ". $machine->machine_id ." "
 					."AND online_status = 'online'";
 
@@ -395,7 +395,7 @@ class UsedMachine {
 	 * @return UsedMachine[] Array full of used machines ;-)
 	 */
 	static function getUsedMachinesForCategory($category, $offer_type = "") {
-		$query = "SELECT used_machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_used_machines "
+		$query = "SELECT used_machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_used_machines "
 				."WHERE category_id = ". $category->category_id ." "
 					."AND online_status = 'online' ";
 		if($offer_type != "") {
@@ -414,6 +414,40 @@ class UsedMachine {
 		
 		return $used_machines;
 	}
+	
+	/**
+	 * Get objects concerning translation updates
+	 * @param int $clang_id Redaxo language ID
+	 * @param string $type 'update' or 'missing'
+	 * @return UsedMachine[] Array with UsedMachine objects.
+	 */
+	public static function getTranslationHelperObjects($clang_id, $type) {
+		$query = 'SELECT lang.used_machine_id FROM '. \rex::getTablePrefix() .'d2u_machinery_used_machines_lang AS lang '
+					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_used_machines AS main '
+						.'ON main.used_machine_id = lang.used_machine_id '
+				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
+				.'ORDER BY manufacturer, name';
+		if($type == 'missing') {
+			$query = 'SELECT main.used_machine_id FROM '. \rex::getTablePrefix() .'d2u_machinery_used_machines AS main '
+					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_used_machines_lang AS target_lang '
+						.'ON main.used_machine_id = target_lang.used_machine_id AND target_lang.clang_id = '. $clang_id .' '
+					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_used_machines_lang AS default_lang '
+						.'ON main.used_machine_id = default_lang.used_machine_id AND default_lang.clang_id = '. \rex_config::get('d2u_helper', 'default_lang') .' '
+					."WHERE target_lang.used_machine_id IS NULL "
+					.'ORDER BY manufacturer, name';
+			$clang_id = \rex_config::get('d2u_helper', 'default_lang');
+		}
+		$result = \rex_sql::factory();
+		$result->setQuery($query);
+
+		$objects = [];
+		for($i = 0; $i < $result->getRows(); $i++) {
+			$objects[] = new UsedMachine($result->getValue("used_machine_id"), $clang_id);
+			$result->next();
+		}
+		
+		return $objects;
+    }
 	
 	/**
 	 * Returns the URL of this object.
@@ -436,7 +470,7 @@ class UsedMachine {
 		}
 
 		if($including_domain) {
-			return str_replace(rex::getServer(). '/', rex::getServer(), rex::getServer() . $this->url) ;
+			return str_replace(\rex::getServer(). '/', \rex::getServer(), \rex::getServer() . $this->url) ;
 		}
 		else {
 			return $this->url;
@@ -457,7 +491,7 @@ class UsedMachine {
 		// Save the not language specific part
 		$pre_save_used_machine = new UsedMachine($this->used_machine_id, $this->clang_id);
 		if($this->used_machine_id == 0 || $pre_save_used_machine != $this) {
-			$query = rex::getTablePrefix() ."d2u_machinery_used_machines SET "
+			$query = \rex::getTablePrefix() ."d2u_machinery_used_machines SET "
 					."name = '". $this->name ."', "
 					."category_id = ". $this->category->category_id .", "
 					."offer_type = '". $this->offer_type ."', "
@@ -492,7 +526,7 @@ class UsedMachine {
 			// Save the language specific part
 			$pre_save_used_machine = new UsedMachine($this->used_machine_id, $this->clang_id);
 			if($pre_save_used_machine != $this) {
-				$query = "REPLACE INTO ". rex::getTablePrefix() ."d2u_machinery_used_machines_lang SET "
+				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_used_machines_lang SET "
 						."used_machine_id = '". $this->used_machine_id ."', "
 						."clang_id = '". $this->clang_id ."', "
 						."teaser = '". htmlspecialchars(addslashes($this->teaser)) ."', "
@@ -500,7 +534,7 @@ class UsedMachine {
 						."downloads = '". implode(",", $this->downloads) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = ". time() .", "
-						."updateuser = '". rex::getUser()->getLogin() ."' ";
+						."updateuser = '". \rex::getUser()->getLogin() ."' ";
 				$result = rex_sql::factory();
 				$result->setQuery($query);
 				$error = $result->hasError();

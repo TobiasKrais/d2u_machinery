@@ -268,7 +268,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 					<legend><?php echo rex_i18n::msg('d2u_helper_data_all_lang'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-							$readonly = (rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_machinery[edit_tech_data]')) ? FALSE : TRUE;
+							$readonly = (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_tech_data]')) ? FALSE : TRUE;
 							
 							d2u_addon_backend_helper::form_input('d2u_machinery_name', "form[name]", $machine->name, TRUE, $readonly, "text");
 							d2u_addon_backend_helper::form_input('d2u_machinery_internal_name', "form[internal_name]", $machine->internal_name, FALSE, $readonly, "text");
@@ -509,7 +509,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						$required = $rex_clang->getId() == rex_config::get("d2u_helper", "default_lang") ? TRUE : FALSE;
 						
 						$readonly_lang = TRUE;
-						if(rex::getUser()->isAdmin() || (rex::getUser()->hasPerm('d2u_machinery[edit_lang]') && rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId()))) {
+						if(\rex::getUser()->isAdmin() || (\rex::getUser()->hasPerm('d2u_machinery[edit_lang]') && \rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId()))) {
 							$readonly_lang = FALSE;
 						}
 				?>
@@ -545,7 +545,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						<button class="btn btn-apply" type="submit" name="btn_apply" value="1"><?php echo rex_i18n::msg('form_apply'); ?></button>
 						<button class="btn btn-abort" type="submit" name="btn_abort" formnovalidate="formnovalidate" value="1"><?php echo rex_i18n::msg('form_abort'); ?></button>
 						<?php
-							if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_machinery[edit_data]')) {
+							if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]')) {
 								print '<button class="btn btn-delete" type="submit" name="btn_delete" formnovalidate="formnovalidate" data-confirm="'. rex_i18n::msg('form_delete') .'?" value="1">'. rex_i18n::msg('form_delete') .'</button>';
 							}
 						?>
@@ -562,8 +562,8 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 
 if ($func == '') {
 	$query = 'SELECT machine.machine_id, machine.name, machine.internal_name, category.name AS categoryname, online_status, priority '
-		. 'FROM '. rex::getTablePrefix() .'d2u_machinery_machines AS machine '
-		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_categories_lang AS category '
+		. 'FROM '. \rex::getTablePrefix() .'d2u_machinery_machines AS machine '
+		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_categories_lang AS category '
 			. 'ON machine.category_id = category.category_id AND category.clang_id = '. rex_config::get("d2u_helper", "default_lang") .' ';
 	if($this->getConfig('default_machine_sort') == 'priority') {
 		$query .= 'ORDER BY priority ASC';
@@ -577,7 +577,7 @@ if ($func == '') {
 
     $tdIcon = '<i class="rex-icon rex-icon-module"></i>';
  	$thIcon = "";
-	if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_machinery[edit_data]')) {
+	if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]')) {
 		$thIcon = '<a href="' . $list->getUrl(['func' => 'add']) . '" title="' . rex_i18n::msg('add') . '"><i class="rex-icon rex-icon-add-module"></i></a>';
 	}
     $list->addColumn($thIcon, $tdIcon, 0, ['<th class="rex-table-icon">###VALUE###</th>', '<td class="rex-table-icon">###VALUE###</td>']);
@@ -599,7 +599,7 @@ if ($func == '') {
     $list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###machine_id###']);
 
 	$list->removeColumn('online_status');
-	if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_machinery[edit_data]')) {
+	if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]')) {
 		$list->addColumn(rex_i18n::msg('status_online'), '<a class="rex-###online_status###" href="' . rex_url::currentBackendPage(['func' => 'changestatus']) . '&entry_id=###machine_id###"><i class="rex-icon rex-icon-###online_status###"></i> ###online_status###</a>');
 		$list->setColumnLayout(rex_i18n::msg('status_online'), ['', '<td class="rex-table-action">###VALUE###</td>']);
 

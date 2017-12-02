@@ -42,7 +42,7 @@ class ExportedUsedMachine {
 	 * @param int $provider_id Provider ID.
 	 */
 	 public function __construct($used_machine_id, $provider_id) {
-		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_export_machines "
+		$query = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_export_machines "
 				."WHERE used_machine_id = ". $used_machine_id ." "
 					."AND provider_id = ". $provider_id;
 		$result = rex_sql::factory();
@@ -97,7 +97,7 @@ class ExportedUsedMachine {
 	 * Deletes the object.
 	 */
 	public function delete() {
-		$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_export_machines "
+		$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_export_machines "
 			."WHERE used_machine_id = ". $this->used_machine_id ." AND provider_id = ". $this->provider_id;
 		$result_lang = rex_sql::factory();
 		$result_lang->setQuery($query);
@@ -110,7 +110,7 @@ class ExportedUsedMachine {
 	 * @return ExportedUsedMachine[] Array with ExportedUsedMachine objects.
 	 */
 	public static function getAll($provider = FALSE) {
-		$query = "SELECT used_machine_id, provider_id FROM ". rex::getTablePrefix() ."d2u_machinery_export_machines AS export";
+		$query = "SELECT used_machine_id, provider_id FROM ". \rex::getTablePrefix() ."d2u_machinery_export_machines AS export";
 		if ($provider !== FALSE && $provider->provider_id > 0) {
 			$query .= " WHERE provider_id = ". $provider->provider_id;
 		}
@@ -142,8 +142,8 @@ class ExportedUsedMachine {
 	 * Remove all machines to export for given provider.
 	 */
 	public static function removeAllDeletedFromExport() {
-		$query= "SELECT exported_machines.used_machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_export_machines AS exported_machines "
-			."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_used_machines AS used_machines "
+		$query= "SELECT exported_machines.used_machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_export_machines AS exported_machines "
+			."LEFT JOIN ". \rex::getTablePrefix() ."d2u_machinery_used_machines AS used_machines "
 				."ON exported_machines.used_machine_id = used_machines.used_machine_id "
 			."WHERE used_machines.used_machine_id IS NULL "
 			."GROUP BY exported_machines.used_machine_id";
@@ -151,7 +151,7 @@ class ExportedUsedMachine {
 		$result->setQuery($query);
 		
 		for($i= 0; $i < $result->getRows(); $i++) {
-			$query_update = "UPDATE ". rex::getTablePrefix() ."d2u_machinery_export_machines "
+			$query_update = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_export_machines "
 				."SET export_action = 'delete' "
 				."WHERE used_machine_id = ". $result->getValue("exported_machines.used_machine_id");
 			$result_update = rex_sql::factory();
@@ -166,7 +166,7 @@ class ExportedUsedMachine {
 	 * @param int $provider_id Provider id
 	 */
 	public static function removeAllFromExport($provider_id) {
-		$query_lang = "UPDATE ". rex::getTablePrefix() ."d2u_machinery_export_machines "
+		$query_lang = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_export_machines "
 			."SET export_action = 'delete' "
 			."WHERE provider_id = ". $provider_id;
 		$result_lang = rex_sql::factory();
@@ -178,7 +178,7 @@ class ExportedUsedMachine {
 	 * @param int $used_machine_id Used machine id
 	 */
 	public static function removeMachineFromAllExports($used_machine_id) {
-		$query_lang = "UPDATE ". rex::getTablePrefix() ."d2u_machinery_export_machines "
+		$query_lang = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_export_machines "
 			."SET export_action = 'delete' "
 			."WHERE used_machine_id = ". $used_machine_id;
 		$result_lang = rex_sql::factory();
@@ -198,7 +198,7 @@ class ExportedUsedMachine {
 	 * @return boolean TRUE if successful
 	 */
 	public function save() {
-		$query = "REPLACE INTO ". rex::getTablePrefix() ."d2u_machinery_export_machines SET "
+		$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_export_machines SET "
 				."used_machine_id = ". $this->used_machine_id .", "
 				."provider_id = ". $this->provider_id .", "
 				."export_action = '". $this->export_action ."', "

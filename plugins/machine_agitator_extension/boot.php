@@ -1,5 +1,5 @@
 <?php
-if(rex::isBackend()) {
+if(\rex::isBackend()) {
 	rex_extension::register('CLANG_DELETED', 'rex_d2u_machinery_agitators_clang_deleted');
 	rex_extension::register('MEDIA_IS_IN_USE', 'rex_d2u_machinery_agitators_media_is_in_use');
 }
@@ -42,14 +42,14 @@ function rex_d2u_machinery_agitators_media_is_in_use(rex_extension_point $ep) {
 
 	// Agitator types
 	$sql_agitator_types = rex_sql::factory();
-	$sql_agitator_types->setQuery('SELECT lang.agitator_type_id, name FROM `' . rex::getTablePrefix() . 'd2u_machinery_agitator_types_lang` AS lang '
-		.'LEFT JOIN `' . rex::getTablePrefix() . 'd2u_machinery_agitator_types` AS types ON lang.agitator_type_id = types.agitator_type_id '
+	$sql_agitator_types->setQuery('SELECT lang.agitator_type_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_agitator_types_lang` AS lang '
+		.'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_agitator_types` AS types ON lang.agitator_type_id = types.agitator_type_id '
 		.'WHERE pic = "'. $filename .'" AND clang_id = '. rex_config::get("d2u_helper", "default_lang"));
 	
 	// Agitator organs
 	$sql_agitators = rex_sql::factory();
-	$sql_agitators->setQuery('SELECT lang.agitator_id, name FROM `' . rex::getTablePrefix() . 'd2u_machinery_agitators_lang` AS lang '
-		.'LEFT JOIN `' . rex::getTablePrefix() . 'd2u_machinery_agitators` AS types ON lang.agitator_id = types.agitator_id '
+	$sql_agitators->setQuery('SELECT lang.agitator_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_agitators_lang` AS lang '
+		.'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_agitators` AS types ON lang.agitator_id = types.agitator_id '
 		.'WHERE pic = "'. $filename .'" AND clang_id = '. rex_config::get("d2u_helper", "default_lang"));
 	
 	// Prepare warnings

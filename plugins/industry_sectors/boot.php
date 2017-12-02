@@ -1,5 +1,5 @@
 <?php
-if(rex::isBackend()) {
+if(\rex::isBackend()) {
 	rex_extension::register('CLANG_DELETED', 'rex_d2u_machinery_industry_sectors_clang_deleted');
 	rex_extension::register('MEDIA_IS_IN_USE', 'rex_d2u_machinery_industry_sectors_media_is_in_use');
 }
@@ -38,8 +38,8 @@ function rex_d2u_machinery_industry_sectors_media_is_in_use(rex_extension_point 
 
 	// Industry sectors
 	$sql = rex_sql::factory();
-	$sql->setQuery('SELECT lang.industry_sector_id, name FROM `' . rex::getTablePrefix() . 'd2u_machinery_industry_sectors_lang` AS lang '
-		.'LEFT JOIN `' . rex::getTablePrefix() . 'd2u_machinery_industry_sectors` AS sectors ON lang.industry_sector_id = sectors.industry_sector_id '
+	$sql->setQuery('SELECT lang.industry_sector_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_industry_sectors_lang` AS lang '
+		.'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_industry_sectors` AS sectors ON lang.industry_sector_id = sectors.industry_sector_id '
 		.'WHERE pic = "'. $filename .'" AND clang_id = '. rex_config::get("d2u_helper", "default_lang"));
 	
 	// Prepare warnings

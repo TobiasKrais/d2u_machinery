@@ -126,7 +126,7 @@ class Provider {
 	 * @param int $provider_id Object id
 	 */
 	public function __construct($provider_id) {
-		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_export_provider WHERE provider_id = ". $provider_id;
+		$query = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_export_provider WHERE provider_id = ". $provider_id;
 
 		$result = rex_sql::factory();
 		$result->setQuery($query);
@@ -258,7 +258,7 @@ class Provider {
 		}
 		
 		// Next delete object
-		$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_export_provider "
+		$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_export_provider "
 			."WHERE provider_id = ". $this->provider_id;
 		$result = rex_sql::factory();
 		$result->setQuery($query);
@@ -382,7 +382,7 @@ class Provider {
 	 * @return Provider[] Array with Provider objects.
 	 */
 	public static function getAll() {
-		$query = "SELECT provider_id FROM ". rex::getTablePrefix() ."d2u_machinery_export_provider "
+		$query = "SELECT provider_id FROM ". \rex::getTablePrefix() ."d2u_machinery_export_provider "
 			."ORDER BY name";
 		$result = rex_sql::factory();
 		$result->setQuery($query);
@@ -402,7 +402,7 @@ class Provider {
 	 * @return int Timestamp of latest machine update.
 	 */
 	private function isExportNeeded() {
-		$query = "SELECT export_action FROM ". rex::getTablePrefix() ."d2u_machinery_export_machines "
+		$query = "SELECT export_action FROM ". \rex::getTablePrefix() ."d2u_machinery_export_machines "
 			."WHERE provider_id = ". $this->provider_id ." AND export_action = 'delete'";
 		$result = rex_sql::factory();
 		$result->setQuery($query);
@@ -411,8 +411,8 @@ class Provider {
 			return TRUE;
 		}
 		
-		$query = "SELECT used_machines.updatedate, export.export_timestamp FROM ". rex::getTablePrefix() ."d2u_machinery_used_machines_lang AS used_machines "
-			."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_export_machines AS export ON used_machines.used_machine_id = export.used_machine_id "
+		$query = "SELECT used_machines.updatedate, export.export_timestamp FROM ". \rex::getTablePrefix() ."d2u_machinery_used_machines_lang AS used_machines "
+			."LEFT JOIN ". \rex::getTablePrefix() ."d2u_machinery_export_machines AS export ON used_machines.used_machine_id = export.used_machine_id "
 			."WHERE provider_id = ". $this->provider_id ." AND clang_id = ". $this->clang_id ." "
 			."ORDER BY used_machines.updatedate DESC LIMIT 0, 1";
 		$result = rex_sql::factory();
@@ -431,7 +431,7 @@ class Provider {
 	 * @return int Timestamp of latest object update.
 	 */
 	public function isExportPossible() {
-		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_export_machines "
+		$query = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_export_machines "
 			."WHERE provider_id = ". $this->provider_id;
 		$result = rex_sql::factory();
 		$result->setQuery($query);
@@ -447,7 +447,7 @@ class Provider {
 	 * @return int Timestamp of last successful export.
 	 */
 	public function getLastExportTimestamp() {
-		$query = "SELECT export_timestamp FROM ". rex::getTablePrefix() ."d2u_machinery_export_machines "
+		$query = "SELECT export_timestamp FROM ". \rex::getTablePrefix() ."d2u_machinery_export_machines "
 			."WHERE provider_id = ". $this->provider_id ." "
 			."ORDER BY export_timestamp DESC LIMIT 0, 1";
 		$result = rex_sql::factory();
@@ -465,7 +465,7 @@ class Provider {
 	 * @return int Number of online UsedMachines
 	 */
 	public function getNumberOnlineUsedMachines() {
-		$query = "SELECT COUNT(*) as number FROM ". rex::getTablePrefix() ."d2u_machinery_export_machines WHERE provider_id = ". $this->provider_id;
+		$query = "SELECT COUNT(*) as number FROM ". \rex::getTablePrefix() ."d2u_machinery_export_machines WHERE provider_id = ". $this->provider_id;
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
@@ -479,7 +479,7 @@ class Provider {
 	public function save() {
 		$this->clang_id = $this->clang_id == 0 ? rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId()) : $this->clang_id;
 
-		$query = rex::getTablePrefix() ."d2u_machinery_export_provider SET "
+		$query = \rex::getTablePrefix() ."d2u_machinery_export_provider SET "
 				."name = '". $this->name ."', "
 				."type = '". $this->type ."', "
 				."clang_id = ". $this->clang_id .", "

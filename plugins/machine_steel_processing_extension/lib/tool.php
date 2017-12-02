@@ -8,7 +8,7 @@
 /**
  * Tool
  */
-class Tool {
+class Tool implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var int Database ID
 	 */
@@ -41,8 +41,8 @@ class Tool {
 	 */
 	 public function __construct($tool_id, $clang_id) {
 		$this->clang_id = $clang_id;
-		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_steel_tool AS tools "
-				."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_steel_tool_lang AS lang "
+		$query = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_steel_tool AS tools "
+				."LEFT JOIN ". \rex::getTablePrefix() ."d2u_machinery_steel_tool_lang AS lang "
 					."ON tools.tool_id = lang.tool_id "
 					."AND clang_id = ". $this->clang_id ." "
 				."WHERE tools.tool_id = ". $tool_id;
@@ -66,19 +66,19 @@ class Tool {
 	 * FALSE, only this translation will be deleted.
 	 */
 	public function delete($delete_all = TRUE) {
-		$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_steel_tool_lang "
+		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_steel_tool_lang "
 			."WHERE tool_id = ". $this->tool_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
 		$result_lang = rex_sql::factory();
 		$result_lang->setQuery($query_lang);
 		
 		// If no more lang objects are available, delete
-		$query_main = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_steel_tool_lang "
+		$query_main = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_steel_tool_lang "
 			."WHERE tool_id = ". $this->tool_id;
 		$result_main = rex_sql::factory();
 		$result_main->setQuery($query_main);
 		if($result_main->getRows() == 0) {
-			$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_steel_tool "
+			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_steel_tool "
 				."WHERE tool_id = ". $this->tool_id;
 			$result = rex_sql::factory();
 			$result->setQuery($query);
@@ -91,7 +91,7 @@ class Tool {
 	 * @return Tool[] Array with Tool objects.
 	 */
 	public static function getAll($clang_id) {
-		$query = "SELECT tool_id FROM ". rex::getTablePrefix() ."d2u_machinery_steel_tool_lang "
+		$query = "SELECT tool_id FROM ". \rex::getTablePrefix() ."d2u_machinery_steel_tool_lang "
 			."WHERE clang_id = ". $clang_id ." ";
 		$query .= "ORDER BY name";
 
@@ -111,7 +111,7 @@ class Tool {
 	 * @return Machine[] Machines reffering to this object.
 	 */
 	public function getRefferingMachines() {
-		$query = "SELECT machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_machines "
+		$query = "SELECT machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
 			."WHERE tool_ids LIKE '%|". $this->tool_id ."|%'";
 		$result = rex_sql::factory();
 		$result->setQuery($query);
@@ -125,6 +125,38 @@ class Tool {
 	}
 	
 	/**
+	 * Get objects concerning translation updates
+	 * @param int $clang_id Redaxo language ID
+	 * @param string $type 'update' or 'missing'
+	 * @return Tool[] Array with Tool objects.
+	 */
+	public static function getTranslationHelperObjects($clang_id, $type) {
+		$query = 'SELECT tool_id FROM '. \rex::getTablePrefix() .'d2u_machinery_steel_tool_lang '
+				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
+				.'ORDER BY name';
+		if($type == 'missing') {
+			$query = 'SELECT main.tool_id FROM '. \rex::getTablePrefix() .'d2u_machinery_steel_tool AS main '
+					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_steel_tool_lang AS target_lang '
+						.'ON main.tool_id = target_lang.tool_id AND target_lang.clang_id = '. $clang_id .' '
+					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_steel_tool_lang AS default_lang '
+						.'ON main.tool_id = default_lang.tool_id AND default_lang.clang_id = '. \rex_config::get('d2u_helper', 'default_lang') .' '
+					."WHERE target_lang.tool_id IS NULL "
+					.'ORDER BY default_lang.name';
+			$clang_id = \rex_config::get('d2u_helper', 'default_lang');
+		}
+		$result = \rex_sql::factory();
+		$result->setQuery($query);
+
+		$objects = [];
+		for($i = 0; $i < $result->getRows(); $i++) {
+			$objects[] = new Tool($result->getValue("tool_id"), $clang_id);
+			$result->next();
+		}
+		
+		return $objects;
+    }
+	
+	/**
 	 * Updates or inserts the object into database.
 	 * @return boolean TRUE if succesful
 	 */
@@ -136,7 +168,7 @@ class Tool {
 		
 		// saving the rest
 		if($this->tool_id == 0 || $pre_save_tool != $this) {
-			$query = rex::getTablePrefix() ."d2u_machinery_steel_tool SET "
+			$query = \rex::getTablePrefix() ."d2u_machinery_steel_tool SET "
 					."internal_name = '". $this->internal_name ."' ";
 			if($this->tool_id == 0) {
 				$query = "INSERT INTO ". $query;
@@ -157,7 +189,7 @@ class Tool {
 			// Save the language specific part
 			$pre_save_tool = new Tool($this->tool_id, $this->clang_id);
 			if($pre_save_tool != $this) {
-				$query = "REPLACE INTO ". rex::getTablePrefix() ."d2u_machinery_steel_tool_lang SET "
+				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_steel_tool_lang SET "
 						."tool_id = '". $this->tool_id ."', "
 						."clang_id = '". $this->clang_id ."', "
 						."name = '". $this->name ."', "

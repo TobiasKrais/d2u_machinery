@@ -1,0 +1,24 @@
+d2u_machinery_used_machines = Used machines
+d2u_machinery_used_machines_article_rent = Used machines (rent) article
+d2u_machinery_used_machines_article_sale = Used machines (sale) article
+d2u_machinery_used_machines_availability = Available from
+d2u_machinery_used_machines_category = Categories
+d2u_machinery_used_machines_currency_code = Currency code
+d2u_machinery_used_machines_downloads = Downloads
+d2u_machinery_used_machines_external_url = External URL
+d2u_machinery_used_machines_linked_machine = Link to machine
+d2u_machinery_used_machines_location = Location
+d2u_machinery_used_machines_machine = Used machine
+d2u_machinery_used_machines_manufacturer = Manufacturer
+d2u_machinery_used_machines_name = Name
+d2u_machinery_used_machines_no_used_machines_found = No used machines found.
+d2u_machinery_used_machines_offer_type = Offer type
+d2u_machinery_used_machines_offer_type_rent = Rent
+d2u_machinery_used_machines_offer_type_sale = Sale
+d2u_machinery_used_machines_price = Price
+d2u_machinery_used_machines_product_number = Product number
+d2u_machinery_used_machines_technical_data = Technical data
+d2u_machinery_used_machines_vat = % included VAT
+d2u_machinery_used_machines_year_built = Year of construction
+
+d2u_machinery_used_machines_rights = D2U Machinery addon: used machines

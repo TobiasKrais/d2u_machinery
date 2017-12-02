@@ -8,7 +8,7 @@
 /**
  * Usage Area
  */
-class UsageArea {
+class UsageArea implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var int Database ID
 	 */
@@ -46,8 +46,8 @@ class UsageArea {
 	 */
 	 public function __construct($usage_area_id, $clang_id) {
 		$this->clang_id = $clang_id;
-		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_usage_areas AS usage_areas "
-				."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_usage_areas_lang AS lang "
+		$query = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_usage_areas AS usage_areas "
+				."LEFT JOIN ". \rex::getTablePrefix() ."d2u_machinery_usage_areas_lang AS lang "
 					."ON usage_areas.usage_area_id = lang.usage_area_id "
 					."AND clang_id = ". $this->clang_id ." "
 				."WHERE usage_areas.usage_area_id = ". $usage_area_id;
@@ -72,19 +72,19 @@ class UsageArea {
 	 * FALSE, only this translation will be deleted.
 	 */
 	public function delete($delete_all = TRUE) {
-		$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_usage_areas_lang "
+		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_usage_areas_lang "
 			."WHERE usage_area_id = ". $this->usage_area_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
 		$result_lang = rex_sql::factory();
 		$result_lang->setQuery($query_lang);
 		
 		// If no more lang objects are available, delete
-		$query_main = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_usage_areas_lang "
+		$query_main = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_usage_areas_lang "
 			."WHERE usage_area_id = ". $this->usage_area_id;
 		$result_main = rex_sql::factory();
 		$result_main->setQuery($query_main);
 		if($result_main->getRows() == 0) {
-			$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_usage_areas "
+			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_usage_areas "
 				."WHERE usage_area_id = ". $this->usage_area_id;
 			$result = rex_sql::factory();
 			$result->setQuery($query);
@@ -98,8 +98,8 @@ class UsageArea {
 	 * @return UsageArea[] Array with UsageArea objects.
 	 */
 	public static function getAll($clang_id, $category_id = 0) {
-		$query = "SELECT lang.usage_area_id FROM ". rex::getTablePrefix() ."d2u_machinery_usage_areas_lang AS lang "
-			."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_usage_areas AS areas "
+		$query = "SELECT lang.usage_area_id FROM ". \rex::getTablePrefix() ."d2u_machinery_usage_areas_lang AS lang "
+			."LEFT JOIN ". \rex::getTablePrefix() ."d2u_machinery_usage_areas AS areas "
 				."ON lang.usage_area_id = areas.usage_area_id "
 			."WHERE clang_id = ". $clang_id ." ";
 		if($category_id > 0) {
@@ -123,7 +123,7 @@ class UsageArea {
 	 * @return Machine[] Machines reffering to this object.
 	 */
 	public function getMachines() {
-		$query = "SELECT machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_machines "
+		$query = "SELECT machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
 			."WHERE usage_area_ids LIKE '%|". $this->usage_area_id ."|%'";
 		$result = rex_sql::factory();
 		$result->setQuery($query);
@@ -135,6 +135,38 @@ class UsageArea {
 		}
 		return $machines;
 	}
+	
+	/**
+	 * Get objects concerning translation updates
+	 * @param int $clang_id Redaxo language ID
+	 * @param string $type 'update' or 'missing'
+	 * @return UsageArea[] Array with UsageArea objects.
+	 */
+	public static function getTranslationHelperObjects($clang_id, $type) {
+		$query = 'SELECT usage_area_id FROM '. \rex::getTablePrefix() .'d2u_machinery_usage_areas_lang '
+				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
+				.'ORDER BY name';
+		if($type == 'missing') {
+			$query = 'SELECT main.usage_area_id FROM '. \rex::getTablePrefix() .'d2u_machinery_usage_areas AS main '
+					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_usage_areas_lang AS target_lang '
+						.'ON main.usage_area_id = target_lang.usage_area_id AND target_lang.clang_id = '. $clang_id .' '
+					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_usage_areas_lang AS default_lang '
+						.'ON main.usage_area_id = default_lang.usage_area_id AND default_lang.clang_id = '. \rex_config::get('d2u_helper', 'default_lang') .' '
+					."WHERE target_lang.usage_area_id IS NULL "
+					.'ORDER BY default_lang.name';
+			$clang_id = \rex_config::get('d2u_helper', 'default_lang');
+		}
+		$result = \rex_sql::factory();
+		$result->setQuery($query);
+
+		$objects = [];
+		for($i = 0; $i < $result->getRows(); $i++) {
+			$objects[] = new UsageArea($result->getValue("usage_area_id"), $clang_id);
+			$result->next();
+		}
+		
+		return $objects;
+    }
 	
 	/**
 	 * Updates or inserts the object into database.
@@ -152,7 +184,7 @@ class UsageArea {
 		}
 
 		if($this->usage_area_id == 0 || $pre_save_usage_area != $this) {
-			$query = rex::getTablePrefix() ."d2u_machinery_usage_areas SET "
+			$query = \rex::getTablePrefix() ."d2u_machinery_usage_areas SET "
 					."category_ids = '|". implode("|", $this->category_ids) ."|', "
 					."priority = '". $this->priority ."' ";
 
@@ -175,7 +207,7 @@ class UsageArea {
 			// Save the language specific part
 			$pre_save_usage_area = new IndustrySector($this->usage_area_id, $this->clang_id);
 			if($pre_save_usage_area != $this) {
-				$query = "REPLACE INTO ". rex::getTablePrefix() ."d2u_machinery_usage_areas_lang SET "
+				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_usage_areas_lang SET "
 						."usage_area_id = '". $this->usage_area_id ."', "
 						."clang_id = '". $this->clang_id ."', "
 						."name = '". $this->name ."', "
@@ -195,7 +227,7 @@ class UsageArea {
 	 */
 	private function setPriority() {
 		// Pull prios from database
-		$query = "SELECT usage_area_id, priority FROM ". rex::getTablePrefix() ."d2u_machinery_usage_areas "
+		$query = "SELECT usage_area_id, priority FROM ". \rex::getTablePrefix() ."d2u_machinery_usage_areas "
 			."WHERE usage_area_id <> ". $this->usage_area_id ." ORDER BY priority";
 		$result = rex_sql::factory();
 		$result->setQuery($query);
@@ -219,7 +251,7 @@ class UsageArea {
 
 		// Save all priorities
 		foreach($usage_areas as $prio => $usage_area_id) {
-			$query = "UPDATE ". rex::getTablePrefix() ."d2u_machinery_usage_areas "
+			$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_usage_areas "
 					."SET priority = ". ($prio + 1) ." " // +1 because array_splice recounts at zero
 					."WHERE usage_area_id = ". $usage_area_id;
 			$result = rex_sql::factory();

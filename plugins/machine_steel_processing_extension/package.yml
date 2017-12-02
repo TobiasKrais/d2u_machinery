@@ -1,5 +1,5 @@
 package: d2u_machinery/machine_steel_processing_extension
-version: '1.0.2'
+version: '1.0.3'
 author: Tobias Krais
 supportpage: http://github.com/tobiaskrais/d2u_machinery
 
@@ -19,7 +19,5 @@ page:
 
 requires:
     redaxo: '>=5.1.0'
-    php:
-        version: '>=5.5'
     packages:
         sprog: '>=1.0.0'

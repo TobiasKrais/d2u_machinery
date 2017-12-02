@@ -2,8 +2,8 @@ d2u_machinery_machine_steel_extension = Stahlverarbeitung
 
 d2u_machinery_steel_automation_degrees = Automatisierungsgrade
 d2u_machinery_steel_material_class = Materialklassen
-d2u_machinery_steel_procedures = Verfahren
-d2u_machinery_steel_processes = Prozesse
+d2u_machinery_steel_procedures = Fertigungsverfahren
+d2u_machinery_steel_processes = Arbeitsprozesse
 d2u_machinery_steel_profiles = Profilbereiche
 d2u_machinery_steel_supply = Zu- und Abfuhrseite
 d2u_machinery_steel_tools = Werkzeuge

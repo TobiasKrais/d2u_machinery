@@ -8,7 +8,7 @@
 /**
  * Supply
  */
-class Supply {
+class Supply implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var int Database ID
 	 */
@@ -61,8 +61,8 @@ class Supply {
 	 */
 	 public function __construct($supply_id, $clang_id) {
 		$this->clang_id = $clang_id;
-		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_steel_supply AS supplys "
-				."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_steel_supply_lang AS lang "
+		$query = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_steel_supply AS supplys "
+				."LEFT JOIN ". \rex::getTablePrefix() ."d2u_machinery_steel_supply_lang AS lang "
 					."ON supplys.supply_id = lang.supply_id "
 					."AND clang_id = ". $this->clang_id ." "
 				."WHERE supplys.supply_id = ". $supply_id;
@@ -94,7 +94,7 @@ class Supply {
 	public function changeStatus() {
 		if($this->online_status == "online") {
 			if($this->supply_id > 0) {
-				$query = "UPDATE ". rex::getTablePrefix() ."d2u_machinery_steel_supply "
+				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_steel_supply "
 					."SET online_status = 'offline' "
 					."WHERE supply_id = ". $this->supply_id;
 				$result = rex_sql::factory();
@@ -104,7 +104,7 @@ class Supply {
 		}
 		else {
 			if($this->supply_id > 0) {
-				$query = "UPDATE ". rex::getTablePrefix() ."d2u_machinery_steel_supply "
+				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_steel_supply "
 					."SET online_status = 'online' "
 					."WHERE supply_id = ". $this->supply_id;
 				$result = rex_sql::factory();
@@ -120,19 +120,19 @@ class Supply {
 	 * FALSE, only this translation will be deleted.
 	 */
 	public function delete($delete_all = TRUE) {
-		$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_steel_supply_lang "
+		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_steel_supply_lang "
 			."WHERE supply_id = ". $this->supply_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
 		$result_lang = rex_sql::factory();
 		$result_lang->setQuery($query_lang);
 		
 		// If no more lang objects are available, delete
-		$query_main = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_steel_supply_lang "
+		$query_main = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_steel_supply_lang "
 			."WHERE supply_id = ". $this->supply_id;
 		$result_main = rex_sql::factory();
 		$result_main->setQuery($query_main);
 		if($result_main->getRows() == 0) {
-			$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_steel_supply "
+			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_steel_supply "
 				."WHERE supply_id = ". $this->supply_id;
 			$result = rex_sql::factory();
 			$result->setQuery($query);
@@ -146,8 +146,8 @@ class Supply {
 	 * @return Supply[] Array with Supply objects.
 	 */
 	public static function getAll($clang_id, $only_online = FALSE) {
-		$query = "SELECT lang.supply_id FROM ". rex::getTablePrefix() ."d2u_machinery_steel_supply_lang AS lang "
-			. "LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_steel_supply AS supply "
+		$query = "SELECT lang.supply_id FROM ". \rex::getTablePrefix() ."d2u_machinery_steel_supply_lang AS lang "
+			. "LEFT JOIN ". \rex::getTablePrefix() ."d2u_machinery_steel_supply AS supply "
 				. "ON lang.supply_id = supply.supply_id "
 			."WHERE clang_id = ". $clang_id ." ";
 		if($only_online) {
@@ -172,7 +172,7 @@ class Supply {
 	 * @return Machine[] Machines reffering to this object.
 	 */
 	public function getRefferingMachines() {
-		$query = "SELECT machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_machines "
+		$query = "SELECT machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
 			."WHERE automation_supply_ids LIKE '%|". $this->supply_id ."|%'";
 		$result = rex_sql::factory();
 		$result->setQuery($query);
@@ -186,6 +186,38 @@ class Supply {
 	}
 	
 	/**
+	 * Get objects concerning translation updates
+	 * @param int $clang_id Redaxo language ID
+	 * @param string $type 'update' or 'missing'
+	 * @return Supply[] Array with Supply objects.
+	 */
+	public static function getTranslationHelperObjects($clang_id, $type) {
+		$query = 'SELECT supply_id FROM '. \rex::getTablePrefix() .'d2u_machinery_steel_supply_lang '
+				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
+				.'ORDER BY name';
+		if($type == 'missing') {
+			$query = 'SELECT main.supply_id FROM '. \rex::getTablePrefix() .'d2u_machinery_steel_supply AS main '
+					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_steel_supply_lang AS target_lang '
+						.'ON main.supply_id = target_lang.supply_id AND target_lang.clang_id = '. $clang_id .' '
+					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_steel_supply_lang AS default_lang '
+						.'ON main.supply_id = default_lang.supply_id AND default_lang.clang_id = '. \rex_config::get('d2u_helper', 'default_lang') .' '
+					."WHERE target_lang.supply_id IS NULL "
+					.'ORDER BY default_lang.name';
+			$clang_id = \rex_config::get('d2u_helper', 'default_lang');
+		}
+		$result = \rex_sql::factory();
+		$result->setQuery($query);
+
+		$objects = [];
+		for($i = 0; $i < $result->getRows(); $i++) {
+			$objects[] = new Supply($result->getValue("supply_id"), $clang_id);
+			$result->next();
+		}
+		
+		return $objects;
+    }
+	
+	/**
 	 * Updates or inserts the object into database.
 	 * @return boolean TRUE if succesful
 	 */
@@ -197,7 +229,7 @@ class Supply {
 		
 		// saving the rest
 		if($this->supply_id == 0 || $pre_save_supply != $this) {
-			$query = rex::getTablePrefix() ."d2u_machinery_steel_supply SET "
+			$query = \rex::getTablePrefix() ."d2u_machinery_steel_supply SET "
 					."online_status = '". $this->online_status ."', "
 					."pic = '". $this->pic ."' ";
 			if(rex_addon::get('d2u_videos')->isAvailable() && $this->video !== FALSE) {
@@ -226,7 +258,7 @@ class Supply {
 			// Save the language specific part
 			$pre_save_supply = new Supply($this->supply_id, $this->clang_id);
 			if($pre_save_supply != $this) {
-				$query = "REPLACE INTO ". rex::getTablePrefix() ."d2u_machinery_steel_supply_lang SET "
+				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_steel_supply_lang SET "
 						."supply_id = '". $this->supply_id ."', "
 						."clang_id = '". $this->clang_id ."', "
 						."name = '". $this->name ."', "

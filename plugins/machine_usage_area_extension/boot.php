@@ -1,5 +1,5 @@
 <?php
-if(rex::isBackend()) {
+if(\rex::isBackend()) {
 	rex_extension::register('CLANG_DELETED', 'rex_d2u_machinery_usage_area_clang_deleted');
 }
 

@@ -1,0 +1,57 @@
+d2u_machinery_meta_categories = Categories
+d2u_machinery_meta_machines = Machines
+d2u_machinery_meta_title = D2U Machinery
+
+d2u_machinery_data_all_lang = General data
+d2u_machinery_internal_name = Internal name
+d2u_machinery_lang_name = Language specific name (optional)
+d2u_machinery_name = Name
+d2u_machinery_no_selection = No selection
+d2u_machinery_video = D2U Videomanager Video
+d2u_machinery_video_no = No Video
+
+d2u_machinery_rights_all = D2U Machienry addon
+d2u_machinery_rights_edit_tech_data = D2U Machienry addon: edit rights for data
+d2u_machinery_rights_edit_lang = D2U Machienry addon: edit rights for translations (languages set in user roles apply)
+d2u_machinery_rights_settings = D2U Machienry addon: settings
+
+d2u_machinery_settings_article = Machine article
+d2u_machinery_settings_categories_usage_area = Show circumscribing use case in navigation
+d2u_machinery_settings_consultation_article = Article link "Let us advice you"
+d2u_machinery_settings_consultation_pic = Picture for "Let us advice you"
+d2u_machinery_settings_default_sort = Sort
+d2u_machinery_settings_contact_phone = Consultation hotline phone number
+d2u_machinery_settings_request_form_email = Contact form e-mail receipient
+d2u_machinery_settings_show_teaser = Show short description in machine list
+d2u_machinery_settings_show_tech_data = Show machine list and machine "Technical Data" tab
+
+d2u_machinery_category = Category
+d2u_machinery_category_no_categories_found = No categories found.
+d2u_machinery_category_parent = Parent category
+d2u_machinery_category_parent_none = Has no parent category
+d2u_machinery_category_pdfs = PDF files
+d2u_machinery_category_pic_lang = Language specific picture (overwrite general picture)
+d2u_machinery_category_pic_usage = Use case picture
+d2u_machinery_category_videos = D2U Videomanager Videos
+d2u_machinery_category_usage_area = Circumscribing use case for navigation
+
+d2u_machinery_machine = Machine
+d2u_machinery_machine_alternatives = Alternative machines
+d2u_machinery_machine_depth = Depth (mm)
+d2u_machinery_machine_description = Description
+d2u_machinery_machine_engine_power = Engine power (kW)
+d2u_machinery_machine_height = Height (mm)
+d2u_machinery_machine_length = Length (mm)
+d2u_machinery_machine_name = Name
+d2u_machinery_machine_no_machines_found = No machines found.
+d2u_machinery_machine_pdfs = PDF files
+d2u_machinery_machine_product_number = Product number
+d2u_machinery_machine_references = Reference article
+d2u_machinery_machine_service = Service article
+d2u_machinery_machine_software = Software article
+d2u_machinery_machine_teaser = Short decription
+d2u_machinery_machine_voltage_a = Operating voltage (A)
+d2u_machinery_machine_voltage_hz = Operating voltage (Hz)
+d2u_machinery_machine_voltage_v = Operating voltage (V)
+d2u_machinery_machine_weight = Weight (kg)
+d2u_machinery_machine_width = Width (mm)

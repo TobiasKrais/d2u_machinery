@@ -8,7 +8,7 @@
 /**
  * Machine Feature
  */
-class Feature {
+class Feature implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var int Database ID
 	 */
@@ -66,8 +66,8 @@ class Feature {
 	 */
 	 public function __construct($feature_id, $clang_id) {
 		$this->clang_id = $clang_id;
-		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_features AS features "
-				."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_features_lang AS lang "
+		$query = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_features AS features "
+				."LEFT JOIN ". \rex::getTablePrefix() ."d2u_machinery_features_lang AS lang "
 					."ON features.feature_id = lang.feature_id "
 					."AND clang_id = ". $this->clang_id ." "
 				."WHERE features.feature_id = ". $feature_id;
@@ -109,19 +109,19 @@ class Feature {
 	 * FALSE, only this translation will be deleted.
 	 */
 	public function delete($delete_all = TRUE) {
-		$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_features_lang "
+		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_features_lang "
 			."WHERE feature_id = ". $this->feature_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
 		$result_lang = rex_sql::factory();
 		$result_lang->setQuery($query_lang);
 		
 		// If no more lang objects are available, delete
-		$query_main = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_features_lang "
+		$query_main = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_features_lang "
 			."WHERE feature_id = ". $this->feature_id;
 		$result_main = rex_sql::factory();
 		$result_main->setQuery($query_main);
 		if($result_main->getRows() == 0) {
-			$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_features "
+			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_features "
 				."WHERE feature_id = ". $this->feature_id;
 			$result = rex_sql::factory();
 			$result->setQuery($query);
@@ -135,8 +135,8 @@ class Feature {
 	 * @return Feature[] Array with Feature objects.
 	 */
 	public static function getAll($clang_id, $category_id = 0) {
-		$query = "SELECT lang.feature_id FROM ". rex::getTablePrefix() ."d2u_machinery_features_lang AS lang "
-			."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_features AS features "
+		$query = "SELECT lang.feature_id FROM ". \rex::getTablePrefix() ."d2u_machinery_features_lang AS lang "
+			."LEFT JOIN ". \rex::getTablePrefix() ."d2u_machinery_features AS features "
 				."ON lang.feature_id = features.feature_id "
 			."WHERE clang_id = ". $clang_id ." ";
 		if($category_id > 0) {
@@ -159,7 +159,7 @@ class Feature {
 	 * @return Machine[] Machines reffering to this object.
 	 */
 	public function getRefferingMachines() {
-		$query = "SELECT machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_machines "
+		$query = "SELECT machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
 			."WHERE feature_ids LIKE '%|". $this->feature_id ."|%'";
 		$result = rex_sql::factory();
 		$result->setQuery($query);
@@ -171,6 +171,38 @@ class Feature {
 		}
 		return $machines;
 	}
+	
+	/**
+	 * Get objects concerning translation updates
+	 * @param int $clang_id Redaxo language ID
+	 * @param string $type 'update' or 'missing'
+	 * @return Feature[] Array with Feature objects.
+	 */
+	public static function getTranslationHelperObjects($clang_id, $type) {
+		$query = 'SELECT feature_id FROM '. \rex::getTablePrefix() .'d2u_machinery_features_lang '
+				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
+				.'ORDER BY name';
+		if($type == 'missing') {
+			$query = 'SELECT main.feature_id FROM '. \rex::getTablePrefix() .'d2u_machinery_features AS main '
+					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_features_lang AS target_lang '
+						.'ON main.feature_id = target_lang.feature_id AND target_lang.clang_id = '. $clang_id .' '
+					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_features_lang AS default_lang '
+						.'ON main.feature_id = default_lang.feature_id AND default_lang.clang_id = '. \rex_config::get('d2u_helper', 'default_lang') .' '
+					."WHERE target_lang.feature_id IS NULL "
+					.'ORDER BY default_lang.name';
+			$clang_id = \rex_config::get('d2u_helper', 'default_lang');
+		}
+		$result = \rex_sql::factory();
+		$result->setQuery($query);
+
+		$objects = [];
+		for($i = 0; $i < $result->getRows(); $i++) {
+			$objects[] = new Feature($result->getValue("feature_id"), $clang_id);
+			$result->next();
+		}
+		
+		return $objects;
+    }
 	
 	/**
 	 * Updates or inserts the object into database.
@@ -189,7 +221,7 @@ class Feature {
 		
 		// saving the rest
 		if($this->feature_id == 0 || $pre_save_feature != $this) {
-			$query = rex::getTablePrefix() ."d2u_machinery_features SET "
+			$query = \rex::getTablePrefix() ."d2u_machinery_features SET "
 					."pic = '". $this->pic ."', "
 					."category_ids = '|". implode("|", $this->category_ids) ."|', "
 					."priority = '". $this->priority ."' ";
@@ -219,7 +251,7 @@ class Feature {
 			// Save the language specific part
 			$pre_save_feature = new Feature($this->feature_id, $this->clang_id);
 			if($pre_save_feature != $this) {
-				$query = "REPLACE INTO ". rex::getTablePrefix() ."d2u_machinery_features_lang SET "
+				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_features_lang SET "
 						."feature_id = '". $this->feature_id ."', "
 						."clang_id = '". $this->clang_id ."', "
 						."name = '". $this->name ."', "
@@ -241,7 +273,7 @@ class Feature {
 	 */
 	private function setPriority() {
 		// Pull priorities from database
-		$query = "SELECT feature_id, priority FROM ". rex::getTablePrefix() ."d2u_machinery_features "
+		$query = "SELECT feature_id, priority FROM ". \rex::getTablePrefix() ."d2u_machinery_features "
 			."WHERE feature_id <> ". $this->feature_id ." ORDER BY priority";
 		$result = rex_sql::factory();
 		$result->setQuery($query);
@@ -265,7 +297,7 @@ class Feature {
 
 		// Save all prios
 		foreach($features as $prio => $feature_id) {
-			$query = "UPDATE ". rex::getTablePrefix() ."d2u_machinery_features "
+			$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_features "
 					."SET priority = ". ($prio + 1) ." " // +1 because array_splice recounts at zero
 					."WHERE feature_id = ". $feature_id;
 			$result = rex_sql::factory();

@@ -31,16 +31,16 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 
 		// Update url schemes
 		if(rex_addon::get('url')->isAvailable()) {
-			d2u_addon_backend_helper::update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_machine_categories", $settings['article_id']);
-			d2u_addon_backend_helper::update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_machines", $settings['article_id']);
+			d2u_addon_backend_helper::update_url_scheme(\rex::getTablePrefix() ."d2u_machinery_url_machine_categories", $settings['article_id']);
+			d2u_addon_backend_helper::update_url_scheme(\rex::getTablePrefix() ."d2u_machinery_url_machines", $settings['article_id']);
 			if(rex_plugin::get('d2u_machinery', 'industry_sectors')->isAvailable()) {
-				d2u_addon_backend_helper::update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_industry_sectors", $settings['article_id']);
+				d2u_addon_backend_helper::update_url_scheme(\rex::getTablePrefix() ."d2u_machinery_url_industry_sectors", $settings['article_id']);
 			}
 			if(rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
-				d2u_addon_backend_helper::update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_used_machines_rent", $settings['used_machine_article_id_rent']);
-				d2u_addon_backend_helper::update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_used_machine_categories_rent", $settings['used_machine_article_id_rent']);		
-				d2u_addon_backend_helper::update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_used_machines_sale", $settings['used_machine_article_id_sale']);
-				d2u_addon_backend_helper::update_url_scheme(rex::getTablePrefix() ."d2u_machinery_url_used_machine_categories_sale", $settings['used_machine_article_id_sale']);		
+				d2u_addon_backend_helper::update_url_scheme(\rex::getTablePrefix() ."d2u_machinery_url_used_machines_rent", $settings['used_machine_article_id_rent']);
+				d2u_addon_backend_helper::update_url_scheme(\rex::getTablePrefix() ."d2u_machinery_url_used_machine_categories_rent", $settings['used_machine_article_id_rent']);		
+				d2u_addon_backend_helper::update_url_scheme(\rex::getTablePrefix() ."d2u_machinery_url_used_machines_sale", $settings['used_machine_article_id_sale']);
+				d2u_addon_backend_helper::update_url_scheme(\rex::getTablePrefix() ."d2u_machinery_url_used_machine_categories_sale", $settings['used_machine_article_id_sale']);		
 			}
 			UrlGenerator::generatePathFile([]);
 		}
@@ -85,10 +85,10 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 ?>
 <form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 	<div class="panel panel-edit">
-		<header class="panel-heading"><div class="panel-title"><?php print rex_i18n::msg('d2u_machinery_meta_settings'); ?></div></header>
+		<header class="panel-heading"><div class="panel-title"><?php print rex_i18n::msg('d2u_helper_settings'); ?></div></header>
 		<div class="panel-body">
 			<fieldset>
-				<legend><small><i class="rex-icon rex-icon-database"></i></small> <?php echo rex_i18n::msg('d2u_machinery_meta_settings'); ?></legend>
+				<legend><small><i class="rex-icon rex-icon-database"></i></small> <?php echo rex_i18n::msg('d2u_helper_settings'); ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
 						d2u_addon_backend_helper::form_input('d2u_machinery_settings_request_form_email', 'settings[request_form_email]', $this->getConfig('request_form_email'), TRUE, FALSE, 'email');

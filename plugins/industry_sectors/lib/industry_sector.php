@@ -8,7 +8,7 @@
 /**
  * Industry sector
  */
-class IndustrySector {
+class IndustrySector implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var int Database ID
 	 */
@@ -56,8 +56,8 @@ class IndustrySector {
 	 */
 	 public function __construct($industry_sector_id, $clang_id) {
 		$this->clang_id = $clang_id;
-		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_industry_sectors AS industry_sectors "
-				."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang AS lang "
+		$query = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors AS industry_sectors "
+				."LEFT JOIN ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang AS lang "
 					."ON industry_sectors.industry_sector_id = lang.industry_sector_id "
 					."AND clang_id = ". $this->clang_id ." "
 				."WHERE industry_sectors.industry_sector_id = ". $industry_sector_id;
@@ -83,7 +83,7 @@ class IndustrySector {
 	public function changeStatus() {
 		if($this->online_status == "online") {
 			if($this->industry_sector_id > 0) {
-				$query = "UPDATE ". rex::getTablePrefix() ."d2u_machinery_industry_sectors "
+				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors "
 					."SET online_status = 'offline' "
 					."WHERE industry_sector_id = ". $this->industry_sector_id;
 				$result = rex_sql::factory();
@@ -93,7 +93,7 @@ class IndustrySector {
 		}
 		else {
 			if($this->industry_sector_id > 0) {
-				$query = "UPDATE ". rex::getTablePrefix() ."d2u_machinery_industry_sectors "
+				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors "
 					."SET online_status = 'online' "
 					."WHERE industry_sector_id = ". $this->industry_sector_id;
 				$result = rex_sql::factory();
@@ -109,19 +109,19 @@ class IndustrySector {
 	 * FALSE, only this translation will be deleted.
 	 */
 	public function delete($delete_all = TRUE) {
-		$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang "
+		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang "
 			."WHERE industry_sector_id = ". $this->industry_sector_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
 		$result_lang = rex_sql::factory();
 		$result_lang->setQuery($query_lang);
 		
 		// If no more lang objects are available, delete
-		$query_main = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang "
+		$query_main = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang "
 			."WHERE industry_sector_id = ". $this->industry_sector_id;
 		$result_main = rex_sql::factory();
 		$result_main->setQuery($query_main);
 		if($result_main->getRows() == 0) {
-			$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_industry_sectors "
+			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors "
 				."WHERE industry_sector_id = ". $this->industry_sector_id;
 			$result = rex_sql::factory();
 			$result->setQuery($query);
@@ -135,7 +135,7 @@ class IndustrySector {
 	 * @return IndustrySector[] Array with IndustrySector objects.
 	 */
 	public static function getAll($clang_id, $online_only = FALSE) {
-		$query = "SELECT industry_sector_id FROM ". rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang "
+		$query = "SELECT industry_sector_id FROM ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang "
 			."WHERE clang_id = ". $clang_id ." ";
 		$query .= "ORDER BY name";
 
@@ -170,7 +170,7 @@ class IndustrySector {
 	 * @return Machine[] Machines reffering to this object.
 	 */
 	public function getMachines($online_only = FALSE) {
-		$query = "SELECT machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_machines "
+		$query = "SELECT machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
 			."WHERE industry_sector_ids LIKE '%|". $this->industry_sector_id ."|%'";
 		$result = rex_sql::factory();
 		$result->setQuery($query);
@@ -219,8 +219,40 @@ class IndustrySector {
 	 * @return Complete title tag.
 	 */
 	public function getTitleTag() {
-		return '<title>'. $this->name .' / '. rex::getServerName() .'</title>';
+		return '<title>'. $this->name .' / '. \rex::getServerName() .'</title>';
 	}
+	
+	/**
+	 * Get objects concerning translation updates
+	 * @param int $clang_id Redaxo language ID
+	 * @param string $type 'update' or 'missing'
+	 * @return IndustrySector[] Array with IndustrySector objects.
+	 */
+	public static function getTranslationHelperObjects($clang_id, $type) {
+		$query = 'SELECT industry_sector_id FROM '. \rex::getTablePrefix() .'d2u_machinery_industry_sectors_lang '
+				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
+				.'ORDER BY name';
+		if($type == 'missing') {
+			$query = 'SELECT main.industry_sector_id FROM '. \rex::getTablePrefix() .'d2u_machinery_industry_sectors AS main '
+					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_industry_sectors_lang AS target_lang '
+						.'ON main.industry_sector_id = target_lang.industry_sector_id AND target_lang.clang_id = '. $clang_id .' '
+					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_industry_sectors_lang AS default_lang '
+						.'ON main.industry_sector_id = default_lang.industry_sector_id AND default_lang.clang_id = '. \rex_config::get('d2u_helper', 'default_lang') .' '
+					."WHERE target_lang.industry_sector_id IS NULL "
+					.'ORDER BY default_lang.name';
+			$clang_id = \rex_config::get('d2u_helper', 'default_lang');
+		}
+		$result = \rex_sql::factory();
+		$result->setQuery($query);
+
+		$objects = [];
+		for($i = 0; $i < $result->getRows(); $i++) {
+			$objects[] = new IndustrySector($result->getValue("industry_sector_id"), $clang_id);
+			$result->next();
+		}
+		
+		return $objects;
+    }
 	
 	/**
 	 * Returns the URL of this object.
@@ -237,7 +269,7 @@ class IndustrySector {
 		}
 
 		if($including_domain) {
-			return str_replace(rex::getServer(). '/', rex::getServer(), rex::getServer() . $this->url) ;
+			return str_replace(\rex::getServer(). '/', \rex::getServer(), \rex::getServer() . $this->url) ;
 		}
 		else {
 			return $this->url;
@@ -249,7 +281,7 @@ class IndustrySector {
 	 * @return boolean TRUE if object is online, otherwise FALSE.
 	 */
 	public function isOnline() {
-		$query = "SELECT machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_machines "
+		$query = "SELECT machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
 			."WHERE industry_sector_ids LIKE '%|". $this->industry_sector_id ."|%'";
 		$result = rex_sql::factory();
 		$result->setQuery($query);
@@ -274,7 +306,7 @@ class IndustrySector {
 		
 		// saving the rest
 		if($this->industry_sector_id == 0 || $pre_save_industry_sector != $this) {
-			$query = rex::getTablePrefix() ."d2u_machinery_industry_sectors SET "
+			$query = \rex::getTablePrefix() ."d2u_machinery_industry_sectors SET "
 					."online_status = '". $this->online_status ."', "
 					."pic = '". $this->pic ."' ";
 
@@ -297,14 +329,14 @@ class IndustrySector {
 			// Save the language specific part
 			$pre_save_industry_sector = new IndustrySector($this->industry_sector_id, $this->clang_id);
 			if($pre_save_industry_sector != $this) {
-				$query = "REPLACE INTO ". rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang SET "
+				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang SET "
 						."industry_sector_id = '". $this->industry_sector_id ."', "
 						."clang_id = '". $this->clang_id ."', "
 						."name = '". $this->name ."', "
 						."teaser = '". htmlspecialchars($this->teaser) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = ". time() .", "
-						."updateuser = '". rex::getUser()->getLogin() ."' ";
+						."updateuser = '". \rex::getUser()->getLogin() ."' ";
 
 				$result = rex_sql::factory();
 				$result->setQuery($query);

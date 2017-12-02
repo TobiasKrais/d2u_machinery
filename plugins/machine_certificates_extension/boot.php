@@ -1,5 +1,5 @@
 <?php
-if(rex::isBackend()) {
+if(\rex::isBackend()) {
 	rex_extension::register('CLANG_DELETED', 'rex_d2u_machinery_certificates_clang_deleted');
 	rex_extension::register('MEDIA_IS_IN_USE', 'rex_d2u_machinery_certificates_media_is_in_use');
 }
@@ -35,8 +35,8 @@ function rex_d2u_machinery_certificates_media_is_in_use(rex_extension_point $ep)
 
 	// Certificates
 	$sql = rex_sql::factory();
-	$sql->setQuery('SELECT lang.certificate_id, name FROM `' . rex::getTablePrefix() . 'd2u_machinery_certificates_lang` AS lang '
-		.'LEFT JOIN `' . rex::getTablePrefix() . 'd2u_machinery_certificates` AS certificates ON lang.certificate_id = certificates.certificate_id '
+	$sql->setQuery('SELECT lang.certificate_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_certificates_lang` AS lang '
+		.'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_certificates` AS certificates ON lang.certificate_id = certificates.certificate_id '
 		.'WHERE pic = "'. $filename .'" AND clang_id = '. rex_config::get("d2u_helper", "default_lang"));
 	
 	// Prepare warnings

@@ -1,6 +1,5 @@
 d2u_machinery_meta_categories = Kategorien
 d2u_machinery_meta_machines = Maschinen
-d2u_machinery_meta_settings = Einstellungen
 d2u_machinery_meta_title = D2U Maschinen
 
 d2u_machinery_data_all_lang = Allgemeine Daten
@@ -25,8 +24,6 @@ d2u_machinery_settings_contact_phone = Telefonnummer Beratungshinweis
 d2u_machinery_settings_request_form_email = Empfänger E-Mail Adresse für Anfrageformular
 d2u_machinery_settings_show_teaser = Kurzbeschreibung in Maschinenlisten einblenden
 d2u_machinery_settings_show_tech_data = Tab für technische Daten in Maschinenliste und Maschine anzeigen
-
-d2u_machinery_meta_setup = Setup
 
 d2u_machinery_category = Kategorie
 d2u_machinery_category_no_categories_found = Es wurden noch keine Kategorien angelegt.

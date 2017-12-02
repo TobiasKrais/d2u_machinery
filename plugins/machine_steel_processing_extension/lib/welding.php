@@ -8,7 +8,7 @@
 /**
  * Welding
  */
-class Welding {
+class Welding implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var int Database ID
 	 */
@@ -41,8 +41,8 @@ class Welding {
 	 */
 	 public function __construct($welding_id, $clang_id) {
 		$this->clang_id = $clang_id;
-		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_steel_welding AS weldings "
-				."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_steel_welding_lang AS lang "
+		$query = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_steel_welding AS weldings "
+				."LEFT JOIN ". \rex::getTablePrefix() ."d2u_machinery_steel_welding_lang AS lang "
 					."ON weldings.welding_id = lang.welding_id "
 					."AND clang_id = ". $this->clang_id ." "
 				."WHERE weldings.welding_id = ". $welding_id;
@@ -66,19 +66,19 @@ class Welding {
 	 * FALSE, only this translation will be deleted.
 	 */
 	public function delete($delete_all = TRUE) {
-		$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_steel_welding_lang "
+		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_steel_welding_lang "
 			."WHERE welding_id = ". $this->welding_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
 		$result_lang = rex_sql::factory();
 		$result_lang->setQuery($query_lang);
 		
 		// If no more lang objects are available, delete
-		$query_main = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_steel_welding_lang "
+		$query_main = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_steel_welding_lang "
 			."WHERE welding_id = ". $this->welding_id;
 		$result_main = rex_sql::factory();
 		$result_main->setQuery($query_main);
 		if($result_main->getRows() == 0) {
-			$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_steel_welding "
+			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_steel_welding "
 				."WHERE welding_id = ". $this->welding_id;
 			$result = rex_sql::factory();
 			$result->setQuery($query);
@@ -91,7 +91,7 @@ class Welding {
 	 * @return Welding[] Array with Welding objects.
 	 */
 	public static function getAll($clang_id) {
-		$query = "SELECT welding_id FROM ". rex::getTablePrefix() ."d2u_machinery_steel_welding_lang "
+		$query = "SELECT welding_id FROM ". \rex::getTablePrefix() ."d2u_machinery_steel_welding_lang "
 			."WHERE clang_id = ". $clang_id ." ";
 		$query .= "ORDER BY name";
 
@@ -111,7 +111,7 @@ class Welding {
 	 * @return Machine[] Machines reffering to this object.
 	 */
 	public function getRefferingMachines() {
-		$query = "SELECT machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_machines "
+		$query = "SELECT machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
 			."WHERE welding_process_ids LIKE '%|". $this->welding_id ."|%'";
 		$result = rex_sql::factory();
 		$result->setQuery($query);
@@ -125,6 +125,38 @@ class Welding {
 	}
 	
 	/**
+	 * Get objects concerning translation updates
+	 * @param int $clang_id Redaxo language ID
+	 * @param string $type 'update' or 'missing'
+	 * @return Welding[] Array with Welding objects.
+	 */
+	public static function getTranslationHelperObjects($clang_id, $type) {
+		$query = 'SELECT welding_id FROM '. \rex::getTablePrefix() .'d2u_machinery_steel_welding_lang '
+				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
+				.'ORDER BY name';
+		if($type == 'missing') {
+			$query = 'SELECT main.welding_id FROM '. \rex::getTablePrefix() .'d2u_machinery_steel_welding AS main '
+					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_steel_welding_lang AS target_lang '
+						.'ON main.welding_id = target_lang.welding_id AND target_lang.clang_id = '. $clang_id .' '
+					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_steel_welding_lang AS default_lang '
+						.'ON main.welding_id = default_lang.welding_id AND default_lang.clang_id = '. \rex_config::get('d2u_helper', 'default_lang') .' '
+					."WHERE target_lang.welding_id IS NULL "
+					.'ORDER BY default_lang.name';
+			$clang_id = \rex_config::get('d2u_helper', 'default_lang');
+		}
+		$result = \rex_sql::factory();
+		$result->setQuery($query);
+
+		$objects = [];
+		for($i = 0; $i < $result->getRows(); $i++) {
+			$objects[] = new Welding($result->getValue("welding_id"), $clang_id);
+			$result->next();
+		}
+		
+		return $objects;
+    }
+	
+	/**
 	 * Updates or inserts the object into database.
 	 * @return boolean TRUE if succesful
 	 */
@@ -136,7 +168,7 @@ class Welding {
 		
 		// saving the rest
 		if($this->welding_id == 0 || $pre_save_welding != $this) {
-			$query = rex::getTablePrefix() ."d2u_machinery_steel_welding SET "
+			$query = \rex::getTablePrefix() ."d2u_machinery_steel_welding SET "
 					."internal_name = '". $this->internal_name ."' ";
 			if($this->welding_id == 0) {
 				$query = "INSERT INTO ". $query;
@@ -157,7 +189,7 @@ class Welding {
 			// Save the language specific part
 			$pre_save_welding = new Welding($this->welding_id, $this->clang_id);
 			if($pre_save_welding != $this) {
-				$query = "REPLACE INTO ". rex::getTablePrefix() ."d2u_machinery_steel_welding_lang SET "
+				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_steel_welding_lang SET "
 						."welding_id = '". $this->welding_id ."', "
 						."clang_id = '". $this->clang_id ."', "
 						."name = '". $this->name ."', "

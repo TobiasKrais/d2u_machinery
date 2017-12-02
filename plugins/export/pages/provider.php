@@ -95,7 +95,7 @@ if ($func == 'edit' || $func == 'add') {
 							d2u_addon_backend_helper::form_input('d2u_machinery_export_customer_number', 'form[customer_number]', $provider->customer_number, FALSE, $readonly, 'text');
 							$options_media = [];
 							$media_sql = rex_sql::factory();
-							$media_sql->setQuery("SELECT name FROM ". rex::getTablePrefix() ."media_manager_type");
+							$media_sql->setQuery("SELECT name FROM ". \rex::getTablePrefix() ."media_manager_type");
 							for($i = 0; $i < $media_sql->getRows(); $i++) {
 								$options_media[$media_sql->getValue("name")] = $media_sql->getValue("name");
 								$media_sql->next();
@@ -150,7 +150,7 @@ if ($func == 'edit' || $func == 'add') {
 						<button class="btn btn-apply" type="submit" name="btn_apply" value="1"><?php echo rex_i18n::msg('form_apply'); ?></button>
 						<button class="btn btn-abort" type="submit" name="btn_abort" formnovalidate="formnovalidate" value="1"><?php echo rex_i18n::msg('form_abort'); ?></button>
 						<?php
-							if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_machinery[edit_data]')) {
+							if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]')) {
 								print '<button class="btn btn-delete" type="submit" name="btn_delete" formnovalidate="formnovalidate" data-confirm="'. rex_i18n::msg('form_delete') .'?" value="1">'. rex_i18n::msg('form_delete') .'</button>';
 							}
 						?>
@@ -167,7 +167,7 @@ if ($func == 'edit' || $func == 'add') {
 
 if ($func == '') {
 	$query = 'SELECT provider_id, name, type '
-		.'FROM '. rex::getTablePrefix() .'d2u_machinery_export_provider '
+		.'FROM '. \rex::getTablePrefix() .'d2u_machinery_export_provider '
 		.'ORDER BY name';
     $list = rex_list::factory($query);
 

@@ -1,9 +1,9 @@
 <?php
-if(rex::isBackend() && is_object(rex::getUser())) {
+if(\rex::isBackend() && is_object(\rex::getUser())) {
 	rex_perm::register('d2u_machinery[used_machines]', rex_i18n::msg('d2u_machinery_used_machines_rights'));
 }
 
-if(rex::isBackend()) {
+if(\rex::isBackend()) {
 	rex_extension::register('CLANG_DELETED', 'rex_d2u_machinery_used_machines_clang_deleted');
 	rex_extension::register('MEDIA_IS_IN_USE', 'rex_d2u_machinery_used_machines_media_is_in_use');
 	rex_extension::register('ART_PRE_DELETED', 'rex_d2u_machinery_used_machines_article_is_in_use');
@@ -26,7 +26,7 @@ function rex_d2u_machinery_used_machines_article_is_in_use(rex_extension_point $
 	if($addon->hasConfig("used_machine_article_id_rent") && $addon->getConfig("used_machine_article_id_rent") == $article_id ||
 			$addon->hasConfig("used_machine_article_id_sale") && $addon->getConfig("used_machine_article_id_sale") == $article_id) {
 		$warning[] = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/settings\')">'.
-			 rex_i18n::msg('d2u_machinery_rights_all') ." - ". rex_i18n::msg('d2u_machinery_meta_settings') . '</a>';
+			 rex_i18n::msg('d2u_machinery_rights_all') ." - ". rex_i18n::msg('d2u_helper_settings') . '</a>';
 	}
 
 	if(count($warning) > 0) {
@@ -72,8 +72,8 @@ function rex_d2u_machinery_used_machines_media_is_in_use(rex_extension_point $ep
 
 	// Used machines
 	$sql = rex_sql::factory();
-	$sql->setQuery('SELECT lang.used_machine_id, manufacturer, name FROM `' . rex::getTablePrefix() . 'd2u_machinery_used_machines_lang` AS lang '
-		.'LEFT JOIN `' . rex::getTablePrefix() . 'd2u_machinery_used_machines` AS used_machines ON lang.used_machine_id = used_machines.used_machine_id '
+	$sql->setQuery('SELECT lang.used_machine_id, manufacturer, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_used_machines_lang` AS lang '
+		.'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_used_machines` AS used_machines ON lang.used_machine_id = used_machines.used_machine_id '
 		.'WHERE pics LIKE "%'. $filename .'%" AND clang_id = '. rex_config::get("d2u_helper", "default_lang"));
 	
 	// Prepare warnings

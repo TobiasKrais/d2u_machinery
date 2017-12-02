@@ -2,12 +2,12 @@
 $sql = rex_sql::factory();
 
 // Create tables: automation
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machinery_steel_automation (
+$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_automation (
 	automation_id int(10) unsigned NOT NULL auto_increment,
 	internal_name varchar(255) collate utf8_general_ci default NULL,
 	PRIMARY KEY (automation_id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machinery_steel_automation_lang (
+$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_automation_lang (
 	automation_id int(10) NOT NULL,
 	clang_id int(10) NOT NULL,
 	name varchar(255) collate utf8_general_ci default NULL,
@@ -15,12 +15,12 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machin
 	PRIMARY KEY (automation_id, clang_id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
 // Create tables: material classes
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machinery_steel_material (
+$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_material (
 	material_id int(10) unsigned NOT NULL auto_increment,
 	internal_name varchar(255) collate utf8_general_ci default NULL,
 	PRIMARY KEY (material_id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machinery_steel_material_lang (
+$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_material_lang (
 	material_id int(10) NOT NULL,
 	clang_id int(10) NOT NULL,
 	name varchar(255) collate utf8_general_ci default NULL,
@@ -28,12 +28,12 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machin
 	PRIMARY KEY (material_id, clang_id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
 // Create tables: processes
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machinery_steel_process (
+$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_process (
 	process_id int(10) unsigned NOT NULL auto_increment,
 	internal_name varchar(255) collate utf8_general_ci default NULL,
 	PRIMARY KEY (process_id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machinery_steel_process_lang (
+$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_process_lang (
 	process_id int(10) NOT NULL,
 	clang_id int(10) NOT NULL,
 	name varchar(255) collate utf8_general_ci default NULL,
@@ -41,12 +41,12 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machin
 	PRIMARY KEY (process_id, clang_id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
 // Create tables: procedures
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machinery_steel_procedure (
+$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_procedure (
 	procedure_id int(10) unsigned NOT NULL auto_increment,
 	internal_name varchar(255) collate utf8_general_ci default NULL,
 	PRIMARY KEY (procedure_id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machinery_steel_procedure_lang (
+$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_procedure_lang (
 	procedure_id int(10) NOT NULL,
 	clang_id int(10) NOT NULL,
 	name varchar(255) collate utf8_general_ci default NULL,
@@ -54,12 +54,12 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machin
 	PRIMARY KEY (procedure_id, clang_id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
 // Create tables: profile areas
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machinery_steel_profile (
+$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_profile (
 	profile_id int(10) unsigned NOT NULL auto_increment,
 	internal_name varchar(255) collate utf8_general_ci default NULL,
 	PRIMARY KEY (profile_id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machinery_steel_profile_lang (
+$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_profile_lang (
 	profile_id int(10) NOT NULL,
 	clang_id int(10) NOT NULL,
 	name varchar(255) collate utf8_general_ci default NULL,
@@ -67,14 +67,14 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machin
 	PRIMARY KEY (profile_id, clang_id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
 // Create tables: supply chain
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machinery_steel_supply (
+$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_supply (
 	supply_id int(10) unsigned NOT NULL auto_increment,
 	online_status varchar(10) collate utf8_general_ci default 'online',
 	pic varchar(255) collate utf8_general_ci default NULL,
 	video_id int(10) default NULL,
 	PRIMARY KEY (supply_id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machinery_steel_supply_lang (
+$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_supply_lang (
 	supply_id int(10) NOT NULL,
 	clang_id int(10) NOT NULL,
 	name varchar(255) collate utf8_general_ci default NULL,
@@ -84,12 +84,12 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machin
 	PRIMARY KEY (supply_id, clang_id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
 // Create tables: tools
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machinery_steel_tool (
+$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_tool (
 	tool_id int(10) unsigned NOT NULL auto_increment,
 	internal_name varchar(255) collate utf8_general_ci default NULL,
 	PRIMARY KEY (tool_id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machinery_steel_tool_lang (
+$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_tool_lang (
 	tool_id int(10) NOT NULL,
 	clang_id int(10) NOT NULL,
 	name varchar(255) collate utf8_general_ci default NULL,
@@ -97,12 +97,12 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machin
 	PRIMARY KEY (tool_id, clang_id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
 // Create tables: welding process
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machinery_steel_welding (
+$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_welding (
 	welding_id int(10) unsigned NOT NULL auto_increment,
 	internal_name varchar(255) collate utf8_general_ci default NULL,
 	PRIMARY KEY (welding_id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machinery_steel_welding_lang (
+$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_welding_lang (
 	welding_id int(10) NOT NULL,
 	clang_id int(10) NOT NULL,
 	name varchar(255) collate utf8_general_ci default NULL,
@@ -111,9 +111,9 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_machin
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
 
 // Extend machine table
-$sql->setQuery("SHOW COLUMNS FROM ". rex::getTablePrefix() ."d2u_machinery_machines LIKE 'process_ids';");
+$sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_machines LIKE 'process_ids';");
 if($sql->getRows() == 0) {
-	$sql->setQuery("ALTER TABLE ". rex::getTablePrefix() ."d2u_machinery_machines "
+	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_machines "
 		. "ADD process_ids VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER 	operating_voltage_a, "
 		. "ADD procedure_ids VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER process_ids, "
 		. "ADD material_ids VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER procedure_ids, "
@@ -171,14 +171,14 @@ if($sql->getRows() == 0) {
 }
 
 // Extend category table
-$sql->setQuery("SHOW COLUMNS FROM ". rex::getTablePrefix() ."d2u_machinery_categories_lang LIKE 'steel_processing_saw_cutting_range_file';");
+$sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_categories_lang LIKE 'steel_processing_saw_cutting_range_file';");
 if($sql->getRows() == 0) {
-	$sql->setQuery("ALTER TABLE ". rex::getTablePrefix() ."d2u_machinery_categories_lang "
+	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_categories_lang "
 		. "ADD steel_processing_saw_cutting_range_file VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER pdfs;");
 }
-$sql->setQuery("SHOW COLUMNS FROM ". rex::getTablePrefix() ."d2u_machinery_categories_lang LIKE 'steel_processing_saw_cutting_range_title';");
+$sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_categories_lang LIKE 'steel_processing_saw_cutting_range_title';");
 if($sql->getRows() == 0) {
-	$sql->setQuery("ALTER TABLE ". rex::getTablePrefix() ."d2u_machinery_categories_lang "
+	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_categories_lang "
 		. "ADD steel_processing_saw_cutting_range_title VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER steel_processing_saw_cutting_range_file;");
 }
 

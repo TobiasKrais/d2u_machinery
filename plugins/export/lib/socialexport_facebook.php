@@ -60,13 +60,13 @@ class SocialExportFacebook extends AExport {
 		}
 
 		// Logged in: short-lived access token
-		$accessToken = $accessToken->getValue();
+		$accessTokenString = $accessToken->getValue();
 
 		// The OAuth 2.0 client handler helps us manage access tokens
 		$oAuth2Client = $this->facebook->getOAuth2Client();
 
 		// Get the access token metadata from /debug_token
-		$tokenMetadata = $oAuth2Client->debugToken($accessToken);
+		$tokenMetadata = $oAuth2Client->debugToken($accessTokenString);
 
 		// Validation (these will throw FacebookSDKException's when they fail)
 		$tokenMetadata->validateAppId($this->provider->social_app_id);
@@ -96,7 +96,7 @@ class SocialExportFacebook extends AExport {
 	 */
 	function getLoginURL() {
 		$helper = $this->facebook->getRedirectLoginHelper();
-		$callback_url = rex::getServer() .'redaxo/'. rex_url::currentBackendPage(['func'=>'export', 'provider_id'=>$this->provider->provider_id, 'facebook_return'=>'true'], FALSE);
+		$callback_url = \rex::getServer() .'redaxo/'. rex_url::currentBackendPage(['func'=>'export', 'provider_id'=>$this->provider->provider_id, 'facebook_return'=>'true'], FALSE);
 
 		if($this->provider->facebook_pageid != "") {
 			$permissions = ['email', 'manage_pages', 'publish_actions', 'publish_pages']; // Optional permissions
@@ -231,7 +231,7 @@ class SocialExportFacebook extends AExport {
 						],
 					]; 
 				if(count($used_machine->pics) > 0) {
-					$news['child_attachments']['picture'] = rex::getServer() .'?rex_media_type='. $this->provider->media_manager_type .'&rex_media_file='. $used_machine->pics[0];
+					$news['child_attachments']['picture'] = \rex::getServer() .'?rex_media_type='. $this->provider->media_manager_type .'&rex_media_file='. $used_machine->pics[0];
 				}
 
 				try {

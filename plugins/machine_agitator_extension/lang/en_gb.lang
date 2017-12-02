@@ -1,0 +1,14 @@
+d2u_machinery_agitator_extension = Agitator Plugin
+
+d2u_machinery_agitators_description = Description
+d2u_machinery_agitators_name = Name
+d2u_machinery_agitators_viscosity = Max. viscosity (mPas)
+
+d2u_machinery_agitators = Agitators
+d2u_machinery_agitators_no_agitators_found = No agitators found.
+
+d2u_machinery_agitator_type = Agitator type
+d2u_machinery_agitator_types = Agitator types
+d2u_machinery_agitators_no_agitator_types_found = No agitator types found.
+
+d2u_machinery_category_show_agitators = Show agitators for machine in categories

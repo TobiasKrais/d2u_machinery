@@ -1,12 +1,12 @@
 <?php
-if(rex::isBackend() && is_object(rex::getUser())) {
+if(\rex::isBackend() && is_object(\rex::getUser())) {
 	rex_perm::register('d2u_machinery[]', rex_i18n::msg('d2u_machinery_rights_all'));
 	rex_perm::register('d2u_machinery[edit_lang]', rex_i18n::msg('d2u_machinery_rights_edit_lang'), rex_perm::OPTIONS);
 	rex_perm::register('d2u_machinery[edit_tech_data]', rex_i18n::msg('d2u_machinery_rights_edit_tech_data'), rex_perm::OPTIONS);
 	rex_perm::register('d2u_machinery[settings]', rex_i18n::msg('d2u_machinery_rights_settings'), rex_perm::OPTIONS);	
 }
 
-if(rex::isBackend()) {
+if(\rex::isBackend()) {
 	rex_extension::register('ART_PRE_DELETED', 'rex_d2u_machinery_article_is_in_use');
 	rex_extension::register('CLANG_DELETED', 'rex_d2u_machinery_clang_deleted');
 	rex_extension::register('MEDIA_IS_IN_USE', 'rex_d2u_machinery_media_is_in_use');
@@ -25,8 +25,8 @@ function rex_d2u_machinery_article_is_in_use(rex_extension_point $ep) {
 
 	// Machines
 	$sql_machine = rex_sql::factory();
-	$sql_machine->setQuery('SELECT lang.machine_id, name FROM `' . rex::getTablePrefix() . 'd2u_machinery_machines_lang` AS lang '
-		.'LEFT JOIN `' . rex::getTablePrefix() . 'd2u_machinery_machines` AS machines ON lang.machine_id = machines.machine_id '
+	$sql_machine->setQuery('SELECT lang.machine_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_machines_lang` AS lang '
+		.'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_machines` AS machines ON lang.machine_id = machines.machine_id '
 		.'WHERE article_id_software = "'. $article_id .'" OR article_id_service = "'. $article_id .'" '.
 			'OR article_id_service = "'. $article_id .'" OR article_ids_references LIKE "%,'. $article_id .',%" OR article_ids_references LIKE "%,'. $article_id .'" OR article_ids_references LIKE "'. $article_id .',%"'
 		.'GROUP BY machine_id');
@@ -102,15 +102,15 @@ function rex_d2u_machinery_media_is_in_use(rex_extension_point $ep) {
 
 	// Machines
 	$sql_machine = rex_sql::factory();
-	$sql_machine->setQuery('SELECT lang.machine_id, name FROM `' . rex::getTablePrefix() . 'd2u_machinery_machines_lang` AS lang '
-		.'LEFT JOIN `' . rex::getTablePrefix() . 'd2u_machinery_machines` AS machines ON lang.machine_id = machines.machine_id '
+	$sql_machine->setQuery('SELECT lang.machine_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_machines_lang` AS lang '
+		.'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_machines` AS machines ON lang.machine_id = machines.machine_id '
 		.'WHERE pdfs = "%'. $filename .'%" OR pics LIKE "%'. $filename .'%" '
 		.'GROUP BY machine_id');
 	
 	// Categories
 	$sql_categories = rex_sql::factory();
-	$sql_categories->setQuery('SELECT lang.category_id, name FROM `' . rex::getTablePrefix() . 'd2u_machinery_categories_lang` AS lang '
-		.'LEFT JOIN `' . rex::getTablePrefix() . 'd2u_machinery_categories` AS categories ON lang.category_id = categories.category_id '
+	$sql_categories->setQuery('SELECT lang.category_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_categories_lang` AS lang '
+		.'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_categories` AS categories ON lang.category_id = categories.category_id '
 		.'WHERE pic = "'. $filename .'" OR pic_usage = "'. $filename .'" OR pic_lang = "'. $filename .'" OR pdfs LIKE "%'. $filename .'%" ');  
 
 	// Prepare warnings

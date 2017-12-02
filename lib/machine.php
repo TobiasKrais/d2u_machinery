@@ -8,7 +8,7 @@
 /**
  * Machine
  */
-class Machine {
+class Machine implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var int Machine id
 	 */
@@ -456,8 +456,8 @@ class Machine {
 	 */
 	 public function __construct($machine_id, $clang_id) {
 		$this->clang_id = $clang_id;
-		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_machines AS machines "
-				."LEFT JOIN ". rex::getTablePrefix() ."d2u_machinery_machines_lang AS lang "
+		$query = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_machines AS machines "
+				."LEFT JOIN ". \rex::getTablePrefix() ."d2u_machinery_machines_lang AS lang "
 					."ON machines.machine_id = lang.machine_id "
 					."AND clang_id = ". $this->clang_id ." "
 				."WHERE machines.machine_id = ". $machine_id;
@@ -622,7 +622,7 @@ class Machine {
 	public function changeStatus() {
 		if($this->online_status == "online") {
 			if($this->machine_id > 0) {
-				$query = "UPDATE ". rex::getTablePrefix() ."d2u_machinery_machines "
+				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_machines "
 					."SET online_status = 'offline' "
 					."WHERE machine_id = ". $this->machine_id;
 				$result = rex_sql::factory();
@@ -632,7 +632,7 @@ class Machine {
 		}
 		else {
 			if($this->machine_id > 0) {
-				$query = "UPDATE ". rex::getTablePrefix() ."d2u_machinery_machines "
+				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_machines "
 					."SET online_status = 'online' "
 					."WHERE machine_id = ". $this->machine_id;
 				$result = rex_sql::factory();
@@ -648,19 +648,19 @@ class Machine {
 	 * FALSE, only this translation will be deleted.
 	 */
 	public function delete($delete_all = TRUE) {
-		$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_machines_lang "
+		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_machines_lang "
 			."WHERE machine_id = ". $this->machine_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
 		$result_lang = rex_sql::factory();
 		$result_lang->setQuery($query_lang);
 		
 		// If no more lang objects are available, delete
-		$query_main = "SELECT * FROM ". rex::getTablePrefix() ."d2u_machinery_machines_lang "
+		$query_main = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_machines_lang "
 			."WHERE machine_id = ". $this->machine_id;
 		$result_main = rex_sql::factory();
 		$result_main->setQuery($query_main);
 		if($result_main->getRows() == 0) {
-			$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_machinery_machines "
+			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
 				."WHERE machine_id = ". $this->machine_id;
 			$result = rex_sql::factory();
 			$result->setQuery($query);
@@ -674,7 +674,7 @@ class Machine {
 	 * @return Machines[] Array with Machine objects.
 	 */
 	public static function getAll($clang_id, $only_online = FALSE) {
-		$query = "SELECT machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_machines ";
+		$query = "SELECT machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_machines ";
 		if($only_online) {
 			$query .= "WHERE online_status = 'online' ";
 		}
@@ -748,7 +748,7 @@ class Machine {
 	 * @return Machine[] Machines reffering to this machine as alternate machine.
 	 */
 	public function getRefferingMachines() {
-		$query = "SELECT machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_machines "
+		$query = "SELECT machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
 			."WHERE alternative_machine_ids LIKE '%|". $this->machine_id ."|%'";
 		$result = rex_sql::factory();
 		$result->setQuery($query);
@@ -767,7 +767,7 @@ class Machine {
 	 */
 	public function getRefferingUsedMachines() {
 		if(rex_plugin::get("d2u_machinery", "used_machines")->isAvailable()) {
-			$query = "SELECT used_machine_id FROM ". rex::getTablePrefix() ."d2u_machinery_used_machines "
+			$query = "SELECT used_machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_used_machines "
 				."WHERE machine_id =  ". $this->machine_id;
 			$result = rex_sql::factory();
 			$result->setQuery($query);
@@ -1377,8 +1377,42 @@ class Machine {
 	 * @return Complete title tag.
 	 */
 	public function getTitleTag() {
-		return '<title>'. $this->name .' / '. $this->category->name .' / '. rex::getServerName() .'</title>';
+		return '<title>'. $this->name .' / '. $this->category->name .' / '. \rex::getServerName() .'</title>';
 	}
+	
+	/**
+	 * Get objects concerning translation updates
+	 * @param int $clang_id Redaxo language ID
+	 * @param string $type 'update' or 'missing'
+	 * @return Machine[] Array with Machine objects.
+	 */
+	public static function getTranslationHelperObjects($clang_id, $type) {
+		$query = 'SELECT lang.machine_id FROM '. \rex::getTablePrefix() .'d2u_machinery_machines_lang AS lang '
+				.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_machines AS main '
+					.'ON lang.machine_id = main.machine_id '
+				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
+				.'ORDER BY name';
+		if($type == 'missing') {
+			$query = 'SELECT main.machine_id FROM '. \rex::getTablePrefix() .'d2u_machinery_machines AS main '
+					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_machines_lang AS target_lang '
+						.'ON main.machine_id = target_lang.machine_id AND target_lang.clang_id = '. $clang_id .' '
+					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_machines_lang AS default_lang '
+						.'ON main.machine_id = default_lang.machine_id AND default_lang.clang_id = '. \rex_config::get('d2u_helper', 'default_lang') .' '
+					."WHERE target_lang.machine_id IS NULL "
+					.'ORDER BY main.name';
+			$clang_id = \rex_config::get('d2u_helper', 'default_lang');
+		}
+		$result = \rex_sql::factory();
+		$result->setQuery($query);
+
+		$objects = [];
+		for($i = 0; $i < $result->getRows(); $i++) {
+			$objects[] = new Machine($result->getValue("machine_id"), $clang_id);
+			$result->next();
+		}
+		
+		return $objects;
+    }
 	
 	/**
 	 * Returns the URL of this object.
@@ -1393,7 +1427,7 @@ class Machine {
 		}
 
 		if($including_domain) {
-			return str_replace(rex::getServer(). '/', rex::getServer(), rex::getServer() . $this->url) ;
+			return str_replace(\rex::getServer(). '/', \rex::getServer(), \rex::getServer() . $this->url) ;
 		}
 		else {
 			return $this->url;
@@ -1411,7 +1445,7 @@ class Machine {
 		$pre_save_machine = new Machine($this->machine_id, $this->clang_id);
 
 		if($this->machine_id == 0 || $pre_save_machine != $this) {
-			$query = rex::getTablePrefix() ."d2u_machinery_machines SET "
+			$query = \rex::getTablePrefix() ."d2u_machinery_machines SET "
 					."name = '". $this->name ."', "
 					."internal_name = '". $this->internal_name ."', "
 					."pics = '". implode(",", $this->pics) ."', "
@@ -1536,7 +1570,7 @@ class Machine {
 			// Save the language specific part
 			$pre_save_machine = new Machine($this->machine_id, $this->clang_id);
 			if($pre_save_machine != $this) {
-				$query = "REPLACE INTO ". rex::getTablePrefix() ."d2u_machinery_machines_lang SET "
+				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_machines_lang SET "
 						."machine_id = '". $this->machine_id ."', "
 						."clang_id = '". $this->clang_id ."', "
 						."lang_name = '". $this->lang_name ."', "
@@ -1545,7 +1579,7 @@ class Machine {
 						."pdfs = '". implode(",", $this->pdfs) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = ". time() .", "
-						."updateuser = '". rex::getUser()->getLogin() ."' ";
+						."updateuser = '". \rex::getUser()->getLogin() ."' ";
 				$result = rex_sql::factory();
 				$result->setQuery($query);
 				$error = $result->hasError();
@@ -1565,7 +1599,7 @@ class Machine {
 	 */
 	private function setPriority() {
 		// Pull prios from database
-		$query = "SELECT machine_id, priority FROM ". rex::getTablePrefix() ."d2u_machinery_machines "
+		$query = "SELECT machine_id, priority FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
 			."WHERE machine_id <> ". $this->machine_id ." ORDER BY priority";
 		$result = rex_sql::factory();
 		$result->setQuery($query);
@@ -1589,7 +1623,7 @@ class Machine {
 
 		// Save all prios
 		foreach($machines as $prio => $machine_id) {
-			$query = "UPDATE ". rex::getTablePrefix() ."d2u_machinery_machines "
+			$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_machines "
 					."SET priority = ". ($prio + 1) ." " // +1 because array_splice recounts at zero
 					."WHERE machine_id = ". $machine_id;
 			$result = rex_sql::factory();
