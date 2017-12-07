@@ -537,7 +537,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 				}
 				$tool_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("tool_ids")), PREG_GREP_INVERT);
 				foreach($tool_ids as $tool_id) {
-					$this->tools[$tool_id] = new Procedure($tool_id, $this->clang_id);
+					$this->tools[$tool_id] = new Tool($tool_id, $this->clang_id);
 				}
 				$this->automation_supply_single_stroke = $result->getValue("automation_supply_single_stroke");
 				$this->automation_supply_multi_stroke = $result->getValue("automation_supply_multi_stroke");
@@ -856,13 +856,13 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 		if(rex_plugin::get("d2u_machinery", "machine_steel_processing_extension")->isAvailable()) {
 			// Procedures
 			if(count($this->procedures) > 0) {
-				$tools = [];
-				foreach($this->procedures as $tool) {
-					$tools[] = $tool->name;
+				$procedures = [];
+				foreach($this->procedures as $procedure) {
+					$procedures[] = $procedure->name;
 				}
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_procedures" . $tag_close,
-					"value" => implode('<br>', $tools),
+					"value" => implode('<br>', $procedures),
 					"unit" => ""
 				];
 			}
