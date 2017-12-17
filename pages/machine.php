@@ -26,7 +26,6 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$machine->machine_id = $machine_id; // Ensure correct ID in case first language has no object
 			$machine->priority = $form['priority'];
 			$machine->name = $form['name'];
-			$machine->internal_name = $form['internal_name'];
 			$machine->product_number = $form['product_number'];
 			$machine->pics = preg_grep('/^\s*$/s', explode(",", $input_media_list[1]), PREG_GREP_INVERT);
 			if(isset($form['category_id'])) {
@@ -271,7 +270,6 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 							$readonly = (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_tech_data]')) ? FALSE : TRUE;
 							
 							d2u_addon_backend_helper::form_input('d2u_machinery_name', "form[name]", $machine->name, TRUE, $readonly, "text");
-							d2u_addon_backend_helper::form_input('d2u_machinery_internal_name', "form[internal_name]", $machine->internal_name, FALSE, $readonly, "text");
 							d2u_addon_backend_helper::form_input('d2u_machinery_machine_product_number', "form[product_number]", $machine->product_number, FALSE, $readonly, "text");
 							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $machine->priority, TRUE, $readonly, 'number');
 							d2u_addon_backend_helper::form_medialistfield('d2u_helper_pictures', 1, $machine->pics, $readonly);
@@ -561,7 +559,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 }
 
 if ($func == '') {
-	$query = 'SELECT machine.machine_id, machine.name, machine.internal_name, category.name AS categoryname, online_status, priority '
+	$query = 'SELECT machine.machine_id, machine.name, category.name AS categoryname, online_status, priority '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_machinery_machines AS machine '
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_categories_lang AS category '
 			. 'ON machine.category_id = category.category_id AND category.clang_id = '. rex_config::get("d2u_helper", "default_lang") .' ';
@@ -588,13 +586,11 @@ if ($func == '') {
     $list->setColumnLabel('name', rex_i18n::msg('d2u_machinery_machine_name'));
     $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###machine_id###']);
 
-	$list->setColumnLabel('internal_name', rex_i18n::msg('d2u_machinery_internal_name'));
-
 	$list->setColumnLabel('categoryname', rex_i18n::msg('d2u_machinery_category'));
 
 	$list->setColumnLabel('priority', rex_i18n::msg('header_priority'));
 
-    $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('system_update'));
+    $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
     $list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###machine_id###']);
 

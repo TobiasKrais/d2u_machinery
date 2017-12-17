@@ -4,7 +4,6 @@ $sql = rex_sql::factory();
 $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_machines (
 	machine_id int(10) unsigned NOT NULL auto_increment,
 	priority int(10) default NULL,
-	internal_name varchar(255) collate utf8_general_ci default NULL,
 	name varchar(255) collate utf8_general_ci default NULL,
 	pics text collate utf8_general_ci default NULL,
 	category_id int(10) default NULL,

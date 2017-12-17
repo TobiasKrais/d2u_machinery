@@ -20,11 +20,6 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	var $clang_id = 0;
 
 	/**
-	 * @var string Internal machine name. Also used for sorting.
-	 */
-	var $internal_name = "";
-
-	/**
 	 * @var string Machine name
 	 */
 	var $name = "";
@@ -467,7 +462,6 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 
 		if($num_rows > 0) {
 			$this->machine_id = $result->getValue("machine_id");
-			$this->internal_name = $result->getValue("internal_name");
 			$this->name = $result->getValue("name");
 			$this->pics = preg_grep('/^\s*$/s', explode(",", $result->getValue("pics")), PREG_GREP_INVERT);
 			$this->category = new Category($result->getValue("category_id"), $clang_id);
@@ -1447,7 +1441,6 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 		if($this->machine_id == 0 || $pre_save_machine != $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_machines SET "
 					."name = '". $this->name ."', "
-					."internal_name = '". $this->internal_name ."', "
 					."pics = '". implode(",", $this->pics) ."', "
 					."category_id = ". ($this->category ? $this->category->category_id : 0) .", "
 					."alternative_machine_ids = '|". implode("|", $this->alternative_machine_ids) ."|', "

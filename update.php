@@ -61,6 +61,12 @@ if($sql->getRows() == 0) {
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_machines "
 		. "CHANGE videomanager_ids video_ids varchar(255) collate utf8_general_ci default NULL;");
 }
+// 1.2 Update database
+$sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_machines LIKE 'internal_name';");
+if($sql->getRows() == 0) {
+	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_machines "
+		. "DROP internal_name;");
+}
 
 // 1.0.2 Update machine URL view and regenerate path file
 $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_machinery_url_machines AS

@@ -24,6 +24,8 @@ $d2u_module_manager->showManagerList();
 <ul>
 	<li>Maschinen Addon: <a href="http://www.promitec.de" target="_blank">
 		Promitec</a>.</li>
+	<li>Maschinen Addon: <a href="http://www.inotec-gmbh.com" target="_blank">
+		Inotec GmbH</a>.</li>
 	<li>Gebrauchtmaschinen Plugin: <a href="http://www.meier-krantechnik.de" target="_blank">
 		Meier Krantechnik</a>.</li>
 </ul>
@@ -32,8 +34,10 @@ $d2u_module_manager->showManagerList();
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_machinery" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
-<p>1.1.4 (NEXT):</p>
+<p>1.2.0 (NEXT):</p>
 <ul>
+	<li>Upgrade zu Bootstrap 4 beta2.</li>
+	<li>Internen Namen bei Maschinen entfernt.</li>
 	<li>Backendsprache Englisch hinzugefügt.</li>
 	<li>ycom/auth_media Dateirechte werden bei Downloads abgefragt.</li>
 	<li>Bugfix: Speichern wenn zweite Sprache als Standardsprache gesetzt ist schlug fehl.</li>
