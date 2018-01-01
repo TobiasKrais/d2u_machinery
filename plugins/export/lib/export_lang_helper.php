@@ -7,21 +7,21 @@ class export_lang_helper extends d2u_machinery_lang_helper {
 	 * @var string[] Array with englisch replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_english = array(
+	protected $replacements_english = [
 		'd2u_machinery_export_linkedin_comment_text' => 'Check out our latest offer. For further information click on the picture.',
 		'd2u_machinery_export_linkedin_details' => 'More information can be found on our website.',
 		'd2u_machinery_export_linkedin_offers' => 'offers'
-	);
+	];
 
 	/**
 	 * @var string[] Array with german replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_german = array(
+	protected $replacements_german = [
 		'd2u_machinery_export_linkedin_comment_text' => 'Unsere aktuellen Angebote: Klicken Sie auf das Bild.',
 		'd2u_machinery_export_linkedin_details' => 'Mehr Infos finden Sie auf unserer Webseite.',
 		'd2u_machinery_export_linkedin_offers' => 'bietet an'
-	);
+	];
 
 	/**
 	 * Factory method.

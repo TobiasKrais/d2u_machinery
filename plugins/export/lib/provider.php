@@ -122,6 +122,11 @@ class Provider {
 	var $twitter_id = "";
 
 	/**
+	 * @var string Online status. Either "online" or "offline".
+	 */
+	var $online_status = "online";
+
+	/**
 	 * Fetches the object from database.
 	 * @param int $provider_id Object id
 	 */
@@ -146,6 +151,7 @@ class Provider {
 			$this->company_name = $result->getValue("company_name");
 			$this->company_email = $result->getValue("company_email");
 			$this->media_manager_type = $result->getValue("media_manager_type");
+			$this->online_status = $result->getValue("online_status");
 			$this->social_app_id = $result->getValue("social_app_id");
 			$this->social_app_secret = $result->getValue("social_app_secret");
 			$this->social_oauth_token = $result->getValue("social_oauth_token");
@@ -248,6 +254,32 @@ class Provider {
 	}
 
 	/**
+	 * Changes the status
+	 */
+	public function changeStatus() {
+		if($this->online_status == "online") {
+			if($this->provider_id > 0) {
+				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_export_provider "
+					."SET online_status = 'offline' "
+					."WHERE provider_id = ". $this->provider_id;
+				$result = rex_sql::factory();
+				$result->setQuery($query);
+			}
+			$this->online_status = "offline";
+		}
+		else {
+			if($this->provider_id > 0) {
+				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_export_provider "
+					."SET online_status = 'online' "
+					."WHERE provider_id = ". $this->provider_id;
+				$result = rex_sql::factory();
+				$result->setQuery($query);
+			}
+			$this->online_status = "online";			
+		}
+	}
+
+	/**
 	 * Deletes the object.
 	 */
 	public function delete() {
@@ -291,30 +323,30 @@ class Provider {
 			
 			// Export
 			$facebook = new SocialExportFacebook($this);
-			if(!$facebook->hasAccessToken()) {
-				if(rex_request('facebook_return', 'string') == 'true') {
-					$facebook->getAccessToken();
-				}
-				else {
-					header("Location: ". $facebook->getLoginURL());
-					exit;
-				}
-			}
-			if($facebook->hasAccessToken()) {
-				if($facebook->isUserLoggedIn()) {
-//					return $facebook->export();
-				}
-				else {
-					if($facebook->isAnybodyLoggedIn()) {
-						// Wrong user logged in: logout first
-//						header("Location: ". $facebook->getLogoutURL());
+			if(rex_request('facebook_return', 'string') == 'true') {
+				if($facebook->getAccessToken() !== FALSE) {
+					if($facebook->isUserLoggedIn()) {
+						return $facebook->export();
 					}
 					else {
-						// If not logged in, go to log in page
-						header("Location: ". $facebook->getLoginURL());
+						if($facebook->isAnybodyLoggedIn()) {
+							// Wrong user logged in: logout first
+							header("Location: ". $facebook->getLogoutURL());
+						}
+						else {
+							// If not logged in, go to log in page
+							header("Location: ". $facebook->getLoginURL());
+						}
+						exit;
 					}
-					exit;
 				}
+				else {
+					return FALSE;
+				}
+			}
+			else {
+				header("Location: ". $facebook->getLoginURL());
+				exit;
 			}
 		}
 		else if($this->type == "twitter") {
@@ -379,11 +411,15 @@ class Provider {
 	
 	/**
 	 * Get all providers.
+	 * @param boolean $online_only Return only online (active) providers
 	 * @return Provider[] Array with Provider objects.
 	 */
-	public static function getAll() {
-		$query = "SELECT provider_id FROM ". \rex::getTablePrefix() ."d2u_machinery_export_provider "
-			."ORDER BY name";
+	public static function getAll($online_only = TRUE) {
+		$query = "SELECT provider_id FROM ". \rex::getTablePrefix() ."d2u_machinery_export_provider ";
+		if($online_only) {
+			$query .= "WHERE online_status = 'online' ";
+		}
+		$query .= "ORDER BY name";
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
@@ -487,6 +523,7 @@ class Provider {
 				."company_email = '". $this->company_email ."', "
 				."customer_number = '". $this->customer_number ."', "
 				."media_manager_type = '". $this->media_manager_type ."', "
+				."online_status = '". $this->online_status ."', "
 				."ftp_server = '". $this->ftp_server ."', "
 				."ftp_username = '". $this->ftp_username ."', "
 				."ftp_password = '". $this->ftp_password ."', "

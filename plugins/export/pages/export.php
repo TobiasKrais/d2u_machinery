@@ -29,7 +29,10 @@ else if ($func == 'export') {
 	// Export
 	$provider = new Provider($provider_id);
 	$error = $provider->export();
-	if($error != "") {
+	if($error === FALSE) {
+		print rex_view::error($provider->name .": ". rex_i18n::msg('d2u_machinery_export_facebook_upload_failed'));
+	}
+	else if($error != "") {
 		print rex_view::error($provider->name .": ". $error);
 	}
 	else {

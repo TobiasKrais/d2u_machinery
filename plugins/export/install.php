@@ -11,6 +11,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machi
 	company_email varchar(255) collate utf8_general_ci default NULL,
 	customer_number varchar(50) collate utf8_general_ci default NULL,
 	media_manager_type varchar(255) collate utf8_general_ci default NULL,
+	online_status varchar(10) collate utf8_general_ci default NULL,
 	ftp_server varchar(100) collate utf8_general_ci default NULL,
 	ftp_username varchar(50) collate utf8_general_ci default NULL,
 	ftp_password varchar(20) collate utf8_general_ci default NULL,

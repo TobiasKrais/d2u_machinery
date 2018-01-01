@@ -53,6 +53,7 @@ d2u_machinery_export_social_settings_linkedin = Settings for LinkedIn
 d2u_machinery_export_start = Export manually
 d2u_machinery_export_type = Provider type
 d2u_machinery_export_uhr = O'Clock
+d2u_machinery_export_we_offer = We offer
 
 d2u_machinery_export_rights_export = D2U Machinery addon: export
 d2u_machinery_export_rights_export_provider = D2U Machinery addon: provider settings

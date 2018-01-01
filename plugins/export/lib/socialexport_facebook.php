@@ -4,7 +4,7 @@
  */
 class SocialExportFacebook extends AExport {
 	/**
-	 * @var Facebook\Facebook Facebook object.
+	 * @var \Facebook\Facebook Facebook object.
 	 */
 	private $facebook;
 	
@@ -12,6 +12,11 @@ class SocialExportFacebook extends AExport {
 	 * Access token
 	 */
 	private $access_token = "";
+	
+	/**
+	 * Access token
+	 */
+	private $page_access_token = "";
 	
 	/**
 	 * Constructor. Initializes variables
@@ -22,9 +27,10 @@ class SocialExportFacebook extends AExport {
 		
 		$this->exported_used_machines = ExportedUsedMachine::getAll($this->provider);
 		
-		$this->facebook = new Facebook\Facebook([
+		$this->facebook = new \Facebook\Facebook([
 			'app_id'  => $this->provider->social_app_id,
-			'app_secret' => $this->provider->social_app_secret
+			'app_secret' => $this->provider->social_app_secret,
+			'default_graph_version' => 'v2.11'
 		]);
 	}	
 	
@@ -36,37 +42,36 @@ class SocialExportFacebook extends AExport {
 		$helper = $this->facebook->getRedirectLoginHelper();
 
 		try {
-			$accessToken = $helper->getAccessToken();
-		} catch(Facebook\Exceptions\FacebookResponseException $e) {
+			// Logged in: short-lived access token
+			// Do not forget to set callback URL: https://stackoverflow.com/questions/47898499/error-on-login-using-facebook-php-sdk-with-strict-mode-enabled
+			$accessToken = $helper->getAccessToken($this->getCallbackURL());
+		} catch(\Facebook\Exceptions\FacebookResponseException $e) {
 			// When Graph returns an error
-			print rex_view::error('Graph returned an error: ' . $e->getMessage());
+			print \rex_view::error('Graph returned an error: ' . $e->getMessage());
 			return FALSE;
-		} catch(Facebook\Exceptions\FacebookSDKException $e) {
+		} catch(\Facebook\Exceptions\FacebookSDKException $e) {
 			// When validation fails or other local issues
-			print rex_view::error('Facebook SDK returned an error: ' . $e->getMessage());
+			print \rex_view::error('Facebook SDK returned an error: ' . $e->getMessage());
 			return FALSE;
 		}
 
 		if (! isset($accessToken)) {
 			if ($helper->getError()) {
-				print rex_view::error("Error: " . $helper->getError() . "<br>"
+				print \rex_view::error("Error: " . $helper->getError() . "<br>"
 					."Error Code: " . $helper->getErrorCode() . "<br>"
 					."Error Reason: " . $helper->getErrorReason() . "<br>"
 					."Error Description: " . $helper->getErrorDescription());
 			} else {
-				print rex_view::error('Bad request');
+				print \rex_view::error('Bad request');
 			}
 			return FALSE;
 		}
-
-		// Logged in: short-lived access token
-		$accessTokenString = $accessToken->getValue();
 
 		// The OAuth 2.0 client handler helps us manage access tokens
 		$oAuth2Client = $this->facebook->getOAuth2Client();
 
 		// Get the access token metadata from /debug_token
-		$tokenMetadata = $oAuth2Client->debugToken($accessTokenString);
+		$tokenMetadata = $oAuth2Client->debugToken($accessToken);
 
 		// Validation (these will throw FacebookSDKException's when they fail)
 		$tokenMetadata->validateAppId($this->provider->social_app_id);
@@ -78,34 +83,72 @@ class SocialExportFacebook extends AExport {
 			// Exchanges a short-lived access token for a long-lived one
 			try {
 				$accessToken = $oAuth2Client->getLongLivedAccessToken($accessToken);
-			} catch (Facebook\Exceptions\FacebookSDKException $e) {
-				print rex_view::error("<p>Error getting long-lived access token: " . $helper->getMessage() . "</p>");
+			} catch (\Facebook\Exceptions\FacebookSDKException $e) {
+				print \rex_view::error("<p>Error getting long-lived access token: " . $helper->getMessage() . "</p>");
 				return FALSE;
 			}
-
+			// Get finally access token
 			$this->access_token = $accessToken->getValue();
+			
+			// Get page access token
+			if($this->provider->facebook_pageid != '') {
+				$this->page_access_token = $this->getPageAccessToken((string) $accessToken, $this->provider->facebook_pageid);
+			}
+
 			$this->provider->social_oauth_token = $this->access_token;
 			$this->provider->social_oauth_token_valid_until = $accessToken->getExpiresAt() != null ? strtotime($accessToken->getExpiresAt()) : 0;
 			$this->provider->save();
+			
+			return (string) $accessToken;
 		}
 	}
 
+	/**
+	 * Get access token for page
+	 * @param string $access_token Access token for Facebook user
+	 * @param int $page_id ID of Facebook page
+	 * return string|boolean Access Token or FALSE if failure occured
+	 */
+	private function getPageAccessToken($access_token, $page_id) {
+		// Get page access token
+		if($page_id != '') {
+			try {
+				// Returns a `Facebook\FacebookResponse` object
+				$response = $this->facebook->get(
+					'/'. $page_id .'?fields=access_token',
+					$access_token
+				);
+			} catch(Facebook\Exceptions\FacebookResponseException $e) {
+				print \rex_view::error('Graph returned an error: ' . $e->getMessage());
+				return FALSE;
+			} catch(Facebook\Exceptions\FacebookSDKException $e) {
+				print \rex_view::error('Facebook SDK returned an error: ' . $e->getMessage());
+				return FALSE;
+			}
+			$jsonGraphNode = $response->getGraphNode()->asJson();
+			$json = json_decode($jsonGraphNode);
+			return $json->access_token;
+		}
+
+		return FALSE;
+	}
+
+	/**
+	 * Get callback URL.
+	 * @return string Callback URL
+	 */
+	private function getCallbackURL() {
+		return 	\rex::getServer() .'redaxo/'. \rex_url::currentBackendPage(['func'=>'export', 'facebook_return'=>'true', 'provider_id'=>$this->provider->provider_id], FALSE);
+	}
+	
 	/**
 	 * Get login URL
 	 * @return string Login url
 	 */
 	function getLoginURL() {
 		$helper = $this->facebook->getRedirectLoginHelper();
-		$callback_url = \rex::getServer() .'redaxo/'. rex_url::currentBackendPage(['func'=>'export', 'provider_id'=>$this->provider->provider_id, 'facebook_return'=>'true'], FALSE);
-
-		if($this->provider->facebook_pageid != "") {
-			$permissions = ['email', 'manage_pages', 'publish_actions', 'publish_pages']; // Optional permissions
-			return $helper->getLoginUrl($callback_url, $permissions);
-		}
-		else {
-			$permissions = ['email', 'manage_pages', 'publish_actions']; // Optional permissions
-			return $helper->getLoginUrl($callback_url, $permissions);
-		}
+		$permissions = ['email', 'manage_pages', 'publish_actions', 'publish_pages'];
+		return $helper->getLoginUrl($this->getCallbackURL(), $permissions);
 	}
 
 	/**
@@ -122,7 +165,7 @@ class SocialExportFacebook extends AExport {
 	 */
 	public function hasAccessToken() {
 		if($this->provider->social_oauth_token != "") {
-			$access_token = new Facebook\Authentication\AccessToken($this->provider->social_oauth_token);
+			$access_token = new \Facebook\Authentication\AccessToken($this->provider->social_oauth_token);
 			if($access_token->isExpired()) { 
 				// Access Token is expired -> delete it
 				$this->provider->social_oauth_token = "";
@@ -142,17 +185,17 @@ class SocialExportFacebook extends AExport {
 	 */
 	function isAnybodyLoggedIn() {
 		try {
-			// Returns a `Facebook\FacebookResponse` object
-			$response = $this->facebook->get('/me?fields=id,name');
-		} catch(Facebook\Exceptions\FacebookResponseException $e) {
-			print rex_view::error('Graph returned an error: ' . $e->getMessage());
+			// Returns a `\Facebook\FacebookResponse` object
+			$response = $this->facebook->get('/me?fields=id,name', $this->provider->social_oauth_token);
+		} catch(\Facebook\Exceptions\FacebookResponseException $e) {
+			print \rex_view::error('Graph returned an error: ' . $e->getMessage());
 			return FALSE;
-		} catch(Facebook\Exceptions\FacebookSDKException $e) {
-			print rex_view::error('Facebook SDK returned an error: ' . $e->getMessage());
+		} catch(\Facebook\Exceptions\FacebookSDKException $e) {
+			print \rex_view::error('Facebook SDK returned an error: ' . $e->getMessage());
 			return FALSE;
 		}
 
-		if($response->getGraphUser() instanceof Facebook\GraphNodes\GraphUser) {
+		if($response->getGraphUser() instanceof \Facebook\GraphNodes\GraphUser) {
 			return TRUE;
 		}
 		else {
@@ -166,18 +209,17 @@ class SocialExportFacebook extends AExport {
 	 */
 	public function isUserLoggedIn() {
 		try {
-			// Returns a `Facebook\FacebookResponse` object
-			$response = $this->facebook->get('/me?fields=id,name,email');
-		} catch(Facebook\Exceptions\FacebookResponseException $e) {
-			print rex_view::error('Graph returned an error: ' . $e->getMessage());
+			// Returns a `\Facebook\FacebookResponse` object
+			$response = $this->facebook->get('/me?fields=id,name,email', $this->provider->social_oauth_token);
+		} catch(\Facebook\Exceptions\FacebookResponseException $e) {
+			print \rex_view::error('Graph returned an error: ' . $e->getMessage());
 			return FALSE;
-		} catch(Facebook\Exceptions\FacebookSDKException $e) {
-			print rex_view::error('Facebook SDK returned an error: ' . $e->getMessage());
+		} catch(\Facebook\Exceptions\FacebookSDKException $e) {
+			print \rex_view::error('Facebook SDK returned an error: ' . $e->getMessage());
 			return FALSE;
 		}
 
 		$user = $response->getGraphUser();
-
 	  	if($this->provider->facebook_email != "" && $user['email'] == $this->provider->facebook_email) {
 			return TRUE;
 		}
@@ -200,10 +242,17 @@ class SocialExportFacebook extends AExport {
 			if($exported_used_machine->export_action == "delete" || $exported_used_machine->export_action == "update") {
 				if($exported_used_machine->provider_import_id != "") {
 					try {
-						$this->facebook->delete('/me/feed', ['object' => $exported_used_machine->provider_import_id]);
-					} catch(Facebook\Exceptions\FacebookResponseException $e) {
+						if($this->provider->facebook_pageid == "") {
+							// Delete on default wall
+							$this->facebook->delete('/'. $exported_used_machine->provider_import_id, [], $this->provider->social_oauth_token);
+						}
+						else {
+							// Post on page
+							$this->facebook->delete('/'. $exported_used_machine->provider_import_id, [], $this->page_access_token);
+						}
+					} catch(\Facebook\Exceptions\FacebookResponseException $e) {
 						return 'Graph returned an error: ' . $e->getMessage();
-					} catch(Facebook\Exceptions\FacebookSDKException $e) {
+					} catch(\Facebook\Exceptions\FacebookSDKException $e) {
 						return 'Facebook SDK returned an error: ' . $e->getMessage();
 					}
 				}
@@ -220,37 +269,37 @@ class SocialExportFacebook extends AExport {
 
 			// Post on wall
 			if($exported_used_machine->export_action == "add") {
-				$news = ['access_token' => $this->getAccessToken(),
-						// 'message' => 'E.g.: We offer:',
-						
+				$news = ['message' => $this->provider->company_name ." ". Sprog\Wildcard::get('d2u_machinery_export_linkedin_offers', $this->provider->clang_id) .": "
+						. $used_machine->manufacturer ." ". $used_machine->name,
 						'link' => $used_machine->getURL(TRUE),
-						// 'caption' => 'E.g.: Small heading',
-						'child_attachments' => [
-							'name' => $used_machine->manufacturer ." ". $used_machine->name, // heading
-							'description' => $used_machine->getExtendedTeaser(), // post description
-						],
+						// Custom description cannot be added: https://developers.facebook.com/blog/post/2017/06/27/API-Change-Log-Modifying-Link-Previews/
 					]; 
-				if(count($used_machine->pics) > 0) {
-					$news['child_attachments']['picture'] = \rex::getServer() .'?rex_media_type='. $this->provider->media_manager_type .'&rex_media_file='. $used_machine->pics[0];
+				if(count($used_machine->pics) > 0 && $this->provider->facebook_pageid == "") {
+					$news['picture'] = \rex::getServer() .'?rex_media_type='. $this->provider->media_manager_type .'&rex_media_file='. $used_machine->pics[0];
 				}
 
 				try {
-					$feedback = [];
+					$response = FALSE;
 					if($this->provider->facebook_pageid == "") {
 						// Post on default wall
-						$feedback = $this->facebook->post('/me/feed', $news);
+						$response = $this->facebook->post('/me/feed', $news, $this->provider->social_oauth_token);
 					}
 					else {
 						// Post on page
-						$feedback = $this->facebook->post('/'. $this->provider->facebook_pageid .'/feed', $news);
+						$response = $this->facebook->post('/'. $this->provider->facebook_pageid .'/feed', $news, $this->page_access_token);
 					}
-					$exported_used_machine->provider_import_id = $feedback["id"];
-				} catch (FacebookApiException $e) {
+					
+					// Only if response is available
+					if($response !== FALSE) {
+						$graphNode = $response->getGraphNode();
+						$exported_used_machine->provider_import_id = $graphNode["id"];
+					}
+				} catch (\Facebook\Exceptions\FacebookSDKException $e) {
 					if($this->provider->facebook_pageid == "") {
-						return rex_i18n::msg("d2u_machinery_export_facebook_upload_failed") ." ". $e;
+						return \rex_i18n::msg("d2u_machinery_export_facebook_upload_failed") ."<br><br><pre>". $e ."</pre>";
 					}
 					else {
-						return rex_i18n::msg("d2u_machinery_export_facebook_upload_page_failed") ." ". $e;
+						return \rex_i18n::msg("d2u_machinery_export_facebook_upload_page_failed") ."<br><br><pre>". $e ."</pre>";
 					}
 				}
 				
