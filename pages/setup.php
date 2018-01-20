@@ -22,11 +22,13 @@ $d2u_module_manager->showManagerList();
 <h2>Template</h2>
 <p>Beispielseiten</p>
 <ul>
+	<li>Maschinen und Gebrauchtmaschinen Addon: <a href="https://www.kaltenbach.com/" target="_blank">
+		Kaltenbach GmbH + Co. KG</a>.</li>
 	<li>Maschinen Addon: <a href="http://www.promitec.de" target="_blank">
 		Promitec</a>.</li>
 	<li>Maschinen Addon: <a href="http://www.inotec-gmbh.com" target="_blank">
 		Inotec GmbH</a>.</li>
-	<li>Gebrauchtmaschinen Plugin: <a href="http://www.meier-krantechnik.de" target="_blank">
+	<li>Gebrauchtmaschinen Plugin: <a href="https://www.meier-krantechnik.de" target="_blank">
 		Meier Krantechnik</a>.</li>
 </ul>
 <p>Im D2U Helper Addon kann das "Big Header Template" installiert werden. In
@@ -36,7 +38,12 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.2.0 (NEXT):</p>
 <ul>
-	<li>Upgrade zu Bootstrap 4 beta2.</li>
+	<li>Export Plugin: Portale können offline geschaltet werden.</li>
+	<li>Export Plugin: Bei Installation des Autoexportes künftig Ausführung im Frontend und Backend.</li>
+	<li>Open Graph für Gebrauchtmaschinen hinzugefügt.</li>
+	<li>Facebook Export für Gebrauchtmaschinenexport hinzugefügt.</li>
+	<li>Erweiterung für Baumaschinen hinzugefügt (machine_construction_equipment)</li>
+	<li>Upgrade auf Bootstrap 4 beta2.</li>
 	<li>Internen Namen bei Maschinen entfernt.</li>
 	<li>Backendsprache Englisch hinzugefügt.</li>
 	<li>ycom/auth_media Dateirechte werden bei Downloads abgefragt.</li>
