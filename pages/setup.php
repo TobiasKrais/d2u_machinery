@@ -50,6 +50,7 @@ $d2u_module_manager->showManagerList();
 	<li>Bugfix: Speichern wenn zweite Sprache als Standardsprache gesetzt ist schlug fehl.</li>
 	<li>Eine ganze Reihe kleinerer Bugfixes auch in den Plugins.</li>
 	<li>Editierrechte für Übersetzer eingeschränkt.</li>
+	<li>Vereinheitlichung: Rechte zum Editieren von Sprachübergreifenden Inhalten umbenannt.</li>
 </ul>
 <p>1.1.3:</p>
 <ul>

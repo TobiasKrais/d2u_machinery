@@ -11,7 +11,7 @@ d2u_machinery_video = D2U Videomanager Video
 d2u_machinery_video_no = Kein Video
 
 d2u_machinery_rights_all = D2U Maschinen Addon
-d2u_machinery_rights_edit_tech_data = D2U Maschinen Addon: Editierrechte für technische Daten und sprachübergreifende Inhalte
+d2u_machinery_rights_edit_data = D2U Maschinen Addon: Editierrechte für technische Daten und sprachübergreifende Inhalte
 d2u_machinery_rights_edit_lang = D2U Maschinen Addon: Editierrechte für Übersetzungen und sprachspezifische Inhalte (es gelten die Sprachen der Rolleneinstellungen)
 d2u_machinery_rights_settings = D2U Maschinen Addon: Einstellungen
 

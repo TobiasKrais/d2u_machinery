@@ -11,7 +11,7 @@ d2u_machinery_video = D2U Videomanager Video
 d2u_machinery_video_no = No Video
 
 d2u_machinery_rights_all = D2U Machienry addon
-d2u_machinery_rights_edit_tech_data = D2U Machienry addon: edit rights for data
+d2u_machinery_rights_edit_data = D2U Machienry addon: edit rights for data
 d2u_machinery_rights_edit_lang = D2U Machienry addon: edit rights for translations (languages set in user roles apply)
 d2u_machinery_rights_settings = D2U Machienry addon: settings
 
