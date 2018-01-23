@@ -8,6 +8,9 @@ if(\rex::isBackend()) {
 	rex_extension::register('MEDIA_IS_IN_USE', 'rex_d2u_machinery_used_machines_media_is_in_use');
 	rex_extension::register('ART_PRE_DELETED', 'rex_d2u_machinery_used_machines_article_is_in_use');
 }
+else {
+	rex_extension::register('PACKAGES_INCLUDED', 'd2u_machinery_used_machines_add_open_graph_call', rex_extension::LATE);
+}
 
 /**
  * Checks if article is used by this addon
@@ -26,7 +29,7 @@ function rex_d2u_machinery_used_machines_article_is_in_use(rex_extension_point $
 	if($addon->hasConfig("used_machine_article_id_rent") && $addon->getConfig("used_machine_article_id_rent") == $article_id ||
 			$addon->hasConfig("used_machine_article_id_sale") && $addon->getConfig("used_machine_article_id_sale") == $article_id) {
 		$warning[] = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/settings\')">'.
-			 rex_i18n::msg('d2u_machinery_rights_all') ." - ". rex_i18n::msg('d2u_helper_settings') . '</a>';
+			 rex_i18n::msg('d2u_machinery_used_machines') ." - ". rex_i18n::msg('d2u_helper_settings') . '</a>';
 	}
 
 	if(count($warning) > 0) {
@@ -80,11 +83,60 @@ function rex_d2u_machinery_used_machines_media_is_in_use(rex_extension_point $ep
 	// Used machines
 	for($i = 0; $i < $sql->getRows(); $i++) {
 		$message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/used_machines&func=edit&entry_id='.
-			$sql->getValue('used_machine_id') .'\')">'. rex_i18n::msg('d2u_machinery_used_machines_rights_used_machines') ." - ". rex_i18n::msg('d2u_machinery_used_machines') .': '. $sql->getValue('manufacturer') .' '. $sql->getValue('name') .'</a>';
+			$sql->getValue('used_machine_id') .'\')">'. rex_i18n::msg('d2u_machinery_used_machines') ." - ". rex_i18n::msg('d2u_machinery_used_machines') .': '. $sql->getValue('manufacturer') .' '. $sql->getValue('name') .'</a>';
 		if(!in_array($message, $warning)) {
 			$warning[] = $message;
 		}
     }
 
 	return $warning;
+}
+
+
+/**
+ * Call Open Graph method when all functions are available <head>.
+ */
+function d2u_machinery_used_machines_add_open_graph_call() {
+	rex_extension::register('OUTPUT_FILTER', 'd2u_machinery_used_machines_add_open_graph');	
+}
+
+/**
+ * Add Open Graph to used machine sites
+ * @param rex_extension_point $ep Redaxo extension point
+ */
+function d2u_machinery_used_machines_add_open_graph(rex_extension_point $ep) {
+	$urlParamKey = "";
+	if(rex_addon::get("url")->isAvailable()) {
+		$url_data = UrlGenerator::getData();
+		$urlParamKey = isset($url_data->urlParamKey) ? $url_data->urlParamKey : "";
+	}
+	
+	if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "used_rent_machine_id"))
+			|| (filter_input(INPUT_GET, 'used_sale_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "used_sale_machine_id"))) {
+		$used_machine_id = filter_input(INPUT_GET, 'used_sale_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 ? filter_input(INPUT_GET, 'used_sale_machine_id', FILTER_VALIDATE_INT) : filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT);
+		if(rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
+			$used_machine_id = UrlGenerator::getId();
+		}
+		
+		if($used_machine_id > 0) { 
+			$used_machine = new UsedMachine($used_machine_id, rex_clang::getCurrentId());
+			$og_head = '
+				<meta property="og:url" content="'. $used_machine->getURL(TRUE) .'" />
+				<meta property="og:type" content="article" />
+				<meta property="og:title" content="'. $used_machine->manufacturer .' '. $used_machine->name .'" />
+				<meta property="og:description"	content="'. $used_machine->getExtendedTeaser() .'" />'. PHP_EOL;
+			if(count($used_machine->pics) > 0) {
+				$og_head .= '<meta property="og:image" content="'. rex_url::media($used_machine->pics[0]).'" />'. PHP_EOL;
+			}
+			if(rex_plugin::get('d2u_machinery', 'export')) {
+				$providers = Provider::getAll();
+				foreach($providers as $provider) {
+					if(strtolower($provider->type) == "facebook" && $provider->facebook_pageid != '') {
+						$og_head .= '<meta property="fb:pages" content="'. $provider->facebook_pageid .'">'. PHP_EOL;
+					}
+				}
+			}
+			$ep->setSubject(str_replace('</head>', $og_head .'</head>', $ep->getSubject()));
+		}
+	}
 }

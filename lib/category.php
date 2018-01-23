@@ -639,7 +639,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 	 * @return boolean TRUE if successful
 	 */
 	public function save() {
-		$error = 0;
+		$error = FALSE;
 
 		// Save the not language specific part
 		$pre_save_category = new Category($this->category_id, $this->clang_id);
@@ -687,7 +687,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 			}
 		}
 		
-		if($error !== FALSE) {
+		if($error === FALSE) {
 			// Save the language specific part
 			$pre_save_category = new Category($this->category_id, $this->clang_id);
 			if($pre_save_category != $this) {
@@ -714,7 +714,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 			UrlGenerator::generatePathFile([]);
 		}
 		
-		return $error;
+		return !$error;
 	}
 	
 	/**

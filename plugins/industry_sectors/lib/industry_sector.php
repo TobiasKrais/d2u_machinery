@@ -299,7 +299,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 	 * @return boolean TRUE if succesful
 	 */
 	public function save() {
-		$error = 0;
+		$error = FALSE;
 
 		// Save the not language specific part
 		$pre_save_industry_sector = new IndustrySector($this->industry_sector_id, $this->clang_id);
@@ -325,7 +325,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 			}
 		}
 		
-		if($error == 0) {
+		if($error === FALSE) {
 			// Save the language specific part
 			$pre_save_industry_sector = new IndustrySector($this->industry_sector_id, $this->clang_id);
 			if($pre_save_industry_sector != $this) {
@@ -348,7 +348,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 		if(rex_addon::get("url")->isAvailable()) {
 			UrlGenerator::generatePathFile([]);
 		}
-		
-		return $error;
+
+		return !$error;
 	}
 }

@@ -34,12 +34,12 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 		if($agitator_type->translation_needs_update == "delete") {
 			$agitator_type->delete(FALSE);
 		}
-		else if($agitator_type->save() > 0){
-			$success = FALSE;
-		}
-		else {
+		else if($agitator_type->save()){
 			// remember id, for each database lang object needs same id
 			$agitator_type_id = $agitator_type->agitator_type_id;
+		}
+		else {
+			$success = FALSE;
 		}
 	}
 
@@ -135,7 +135,7 @@ if ($func == 'edit' || $func == 'add') {
 							// Do not use last object from translations, because you don't know if it exists in DB
 							$agitator_type = new AgitatorType($entry_id, rex_config::get("d2u_helper", "default_lang"));
 							$readonly = TRUE;
-							if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_tech_data]')) {
+							if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]')) {
 								$readonly = FALSE;
 							}
 
@@ -195,7 +195,7 @@ if ($func == '') {
     $list->setColumnLabel('name', rex_i18n::msg('d2u_machinery_agitators_name'));
     $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###agitator_type_id###']);
 
-    $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('system_update'));
+    $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
     $list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###agitator_type_id###']);
 

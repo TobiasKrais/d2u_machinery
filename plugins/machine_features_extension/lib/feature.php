@@ -209,7 +209,7 @@ class Feature implements \D2U_Helper\ITranslationHelper {
 	 * @return boolean TRUE if successful
 	 */
 	public function save() {
-		$error = 0;
+		$error = FALSE;
 
 		// Save the not language specific part
 		$pre_save_feature = new Feature($this->feature_id, $this->clang_id);
@@ -247,7 +247,7 @@ class Feature implements \D2U_Helper\ITranslationHelper {
 			}
 		}
 		
-		if($error == 0) {
+		if($error === FALSE) {
 			// Save the language specific part
 			$pre_save_feature = new Feature($this->feature_id, $this->clang_id);
 			if($pre_save_feature != $this) {
@@ -265,7 +265,7 @@ class Feature implements \D2U_Helper\ITranslationHelper {
 			}
 		}
  
-		return $error;
+		return !$error;
 	}
 	
 	/**

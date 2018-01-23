@@ -34,12 +34,12 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 		if($certificate->translation_needs_update == "delete") {
 			$certificate->delete(FALSE);
 		}
-		else if($certificate->save() > 0){
-			$success = FALSE;
-		}
-		else {
+		else if($certificate->save()){
 			// remember id, for each database lang object needs same id
 			$certificate_id = $certificate->certificate_id;
+		}
+		else {
+			$success = FALSE;
 		}
 	}
 
@@ -136,7 +136,7 @@ if ($func == 'edit' || $func == 'add') {
 							// Do not use last object from translations, because you don't know if it exists in DB
 							$certificate = new Certificate($entry_id, rex_config::get("d2u_helper", "default_lang"));
 							$readonly = TRUE;
-							if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_tech_data]')) {
+							if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]')) {
 								$readonly = FALSE;
 							}
 
@@ -190,7 +190,7 @@ if ($func == '') {
     $list->setColumnLabel('name', rex_i18n::msg('d2u_machinery_certificates_name'));
     $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###certificate_id###']);
 
-    $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('system_update'));
+    $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
     $list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###certificate_id###']);
 

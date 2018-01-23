@@ -28,6 +28,6 @@ if($sql->getRows() == 0) {
 }
 
 // Insert frontend translations
-if(class_exists(d2u_machinery_machine_steel_processing_extension_lang_helper)) {
-	d2u_machinery_machine_steel_processing_extension_lang_helper::factory()->install();
+if(class_exists(machine_features_extension_lang_helper)) {
+	machine_features_extension_lang_helper::factory()->install();
 }

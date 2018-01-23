@@ -291,21 +291,21 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 	public function getExtendedTeaser() {
 		$extended_teaser = "";
 		if ($this->offer_type == "rent") {
-			$extended_teaser .= Sprog\Wildcard::get('d2u_machinery_used_machines_offer_rent', $this->clang_id) .": ";
+			$extended_teaser .= \Sprog\Wildcard::get('d2u_machinery_used_machines_offer_rent', $this->clang_id) .": ";
 		}
 		if (strlen($this->teaser) > 0) {
 			$extended_teaser .= $this->teaser ."; ";
 		}
 		if ($this->year_built > 0) {
-			$extended_teaser .= Sprog\Wildcard::get('d2u_machinery_used_machines_year_built', $this->clang_id) .":&nbsp;". $this->year_built ."; ";
+			$extended_teaser .= \Sprog\Wildcard::get('d2u_machinery_used_machines_year_built', $this->clang_id) .":&nbsp;". $this->year_built ."; ";
 		}
 		if ($this->price > 0) {
-			$extended_teaser .= Sprog\Wildcard::get('d2u_machinery_used_machines_price', $this->clang_id) .":&nbsp;".
+			$extended_teaser .= \Sprog\Wildcard::get('d2u_machinery_used_machines_price', $this->clang_id) .":&nbsp;".
 			number_format($this->price, 2, ",", ".") .'&nbsp;'.$this->currency_code ."; ";
 		}
 		else {
-			$extended_teaser .= Sprog\Wildcard::get('d2u_machinery_used_machines_price', $this->clang_id) .":&nbsp;".
-				Sprog\Wildcard::get('d2u_machinery_used_machines_price_on_request', $this->clang_id);
+			$extended_teaser .= \Sprog\Wildcard::get('d2u_machinery_used_machines_price', $this->clang_id) .":&nbsp;".
+				\Sprog\Wildcard::get('d2u_machinery_used_machines_price_on_request', $this->clang_id);
 		}
 		return $extended_teaser;
 	}
@@ -482,7 +482,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 	 * @return boolean TRUE if successful
 	 */
 	public function save() {
-		$error = 0;
+		$error = FALSE;
 		
 		$this->price = $this->price == "" ? 0 : $this->price;
 		$this->vat = $this->vat == "" ? 0 : $this->vat;
@@ -522,7 +522,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 			}
 		}
 		
-		if($error == 0) {
+		if($error === FALSE) {
 			// Save the language specific part
 			$pre_save_used_machine = new UsedMachine($this->used_machine_id, $this->clang_id);
 			if($pre_save_used_machine != $this) {
@@ -551,6 +551,6 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 			UrlGenerator::generatePathFile([]);
 		}
 		
-		return $error;
+		return !$error;
 	}
 }

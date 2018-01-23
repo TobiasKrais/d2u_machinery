@@ -177,7 +177,7 @@ class Agitator implements \D2U_Helper\ITranslationHelper {
 	 * @return boolean TRUE if succesful
 	 */
 	public function save() {
-		$error = 0;
+		$error = FALSE;
 
 		// Save the not language specific part
 		$pre_save_agitator = new Agitator($this->agitator_id, $this->clang_id);
@@ -202,7 +202,7 @@ class Agitator implements \D2U_Helper\ITranslationHelper {
 			}
 		}
 		
-		if($error == 0) {
+		if($error === FALSE) {
 			// Save the language specific part
 			$pre_save_agitator = new Agitator($this->agitator_id, $this->clang_id);
 			if($pre_save_agitator != $this) {
@@ -219,6 +219,6 @@ class Agitator implements \D2U_Helper\ITranslationHelper {
 			}
 		}
  
-		return $error;
+		return !$error;
 	}
 }

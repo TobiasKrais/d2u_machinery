@@ -42,12 +42,12 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 		if($supply->translation_needs_update == "delete") {
 			$supply->delete(FALSE);
 		}
-		else if($supply->save() > 0){
-			$success = FALSE;
-		}
-		else {
+		else if($supply->save()){
 			// remember id, for each database lang object needs same id
 			$supply_id = $supply->supply_id;
+		}
+		else {
+			$success = FALSE;
 		}
 	}
 
@@ -98,7 +98,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 // Change online status of machine
 else if($func == 'changestatus') {
 	$supply = new Supply($entry_id, rex_config::get("d2u_helper", "default_lang"));
-	$supply->supply_id = $supply_id; // Ensure correct ID in case language has no object
+	$supply->supply_id = $entry_id; // Ensure correct ID in case language has no object
 	$supply->changeStatus();
 	
 	header("Location: ". rex_url::currentBackendPage());
@@ -120,7 +120,7 @@ if ($func == 'edit' || $func == 'add') {
 							// Do not use last object from translations, because you don't know if it exists in DB
 							$supply = new Supply($entry_id, rex_config::get("d2u_helper", "default_lang"));
 							$readonly = TRUE;
-							if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_tech_data]')) {
+							if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]')) {
 								$readonly = FALSE;
 							}
 							d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', $supply->online_status == "online", $readonly);
@@ -216,7 +216,7 @@ if ($func == '') {
     $list->setColumnLabel('title', rex_i18n::msg('d2u_machinery_name'));
     $list->setColumnParams('title', ['func' => 'edit', 'entry_id' => '###supply_id###']);
 
-    $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('system_update'));
+    $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
     $list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###supply_id###']);
 

@@ -35,12 +35,12 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 		if($industry_sector->translation_needs_update == "delete") {
 			$industry_sector->delete(FALSE);
 		}
-		else if($industry_sector->save() > 0){
-			$success = FALSE;
-		}
-		else {
+		else if($industry_sector->save()){
 			// remember id, for each database lang object needs same id
 			$industry_sector_id = $industry_sector->industry_sector_id;
+		}
+		else {
+			$success = FALSE;
 		}
 	}
 
@@ -91,6 +91,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 // Change online status of machine
 else if($func == 'changestatus') {
 	$industry_sector = new IndustrySector($entry_id, rex_config::get("d2u_helper", "default_lang"));
+	$industry_sector->industry_sector_id = $entry_id;
 	$industry_sector->changeStatus();
 	
 	header("Location: ". rex_url::currentBackendPage());
@@ -145,7 +146,7 @@ if ($func == 'edit' || $func == 'add') {
 							// Do not use last object from translations, because you don't know if it exists in DB
 							$industry_sector = new IndustrySector($entry_id, rex_config::get("d2u_helper", "default_lang"));
 							$readonly = TRUE;
-							if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_tech_data]')) {
+							if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]')) {
 								$readonly = FALSE;
 							}
 
@@ -201,7 +202,7 @@ if ($func == '') {
     $list->setColumnLabel('name', rex_i18n::msg('d2u_machinery_industry_sectors_name'));
     $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###industry_sector_id###']);
 
-    $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('system_update'));
+    $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
     $list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###industry_sector_id###']);
 

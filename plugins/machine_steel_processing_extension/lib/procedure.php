@@ -161,7 +161,7 @@ class Procedure implements \D2U_Helper\ITranslationHelper {
 	 * @return boolean TRUE if succesful
 	 */
 	public function save() {
-		$error = 0;
+		$error = FALSE;
 
 		// Save the not language specific part
 		$pre_save_procedure = new Procedure($this->procedure_id, $this->clang_id);
@@ -185,7 +185,7 @@ class Procedure implements \D2U_Helper\ITranslationHelper {
 			}
 		}
 		
-		if($error == 0) {
+		if($error === FALSE) {
 			// Save the language specific part
 			$pre_save_procedure = new Procedure($this->procedure_id, $this->clang_id);
 			if($pre_save_procedure != $this) {
@@ -201,6 +201,6 @@ class Procedure implements \D2U_Helper\ITranslationHelper {
 			}
 		}
 		
-		return $error;
+		return !$error;
 	}
 }

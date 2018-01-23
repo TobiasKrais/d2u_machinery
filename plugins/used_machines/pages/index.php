@@ -50,12 +50,12 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 		if($used_machine->translation_needs_update == "delete") {
 			$used_machine->delete(FALSE);
 		}
-		else if($used_machine->save() > 0){
-			$success = FALSE;
-		}
-		else {
+		else if($used_machine->save()){
 			// remember id, for each database lang object needs same id
 			$used_machine_id = $used_machine->used_machine_id;
+		}
+		else {
+			$success = FALSE;
 		}
 	}
 
@@ -101,7 +101,7 @@ else if ($func == 'delete') {
 // Change online status of machine
 else if($func == 'changestatus') {
 	$used_machine = new UsedMachine($entry_id, rex_config::get("d2u_helper", "default_lang"));
-	$used_machine->used_machine_id = $used_machine_id; // Ensure correct ID in case language has no object
+	$used_machine->used_machine_id = $entry_id; // Ensure correct ID in case language has no object
 	$used_machine->changeStatus();
 	
 	header("Location: ". rex_url::currentBackendPage());
@@ -121,7 +121,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 					<legend><?php echo rex_i18n::msg('d2u_helper_data_all_lang'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-							$readonly = (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_tech_data]')) ? FALSE : TRUE;
+							$readonly = (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]')) ? FALSE : TRUE;
 							
 							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_manufacturer', "form[manufacturer]", $used_machine->manufacturer, TRUE, $readonly, "text");
 							d2u_addon_backend_helper::form_input('d2u_machinery_name', "form[name]", $used_machine->name, TRUE, $readonly, "text");

@@ -11,7 +11,7 @@ $sql->setQuery('ALTER TABLE ' . \rex::getTablePrefix() . 'd2u_machinery_categori
 	DROP export_machinerypark_category_id,
 	DROP export_europemachinery_category_id,
 	DROP export_europemachinery_category_name,
-	DROP export_europemachinery_category_name;');
+	DROP export_mascus_category_name;');
 
 // Delete Autoexport if activated
 if(export_backend_helper::autoexportIsInstalled()) {

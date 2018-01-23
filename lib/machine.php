@@ -1433,7 +1433,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	 * @return boolean TRUE if successful
 	 */
 	public function save() {
-		$error = 0;
+		$error = FALSE;
 
 		// Save the not language specific part
 		$pre_save_machine = new Machine($this->machine_id, $this->clang_id);
@@ -1527,11 +1527,9 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 					.", beam_color_guns = '". $this->beam_color_guns ."' "
 				;
 			}
-
 			if(rex_plugin::get("d2u_machinery", "machine_usage_area_extension")->isAvailable()) {
 				$query .= ", usage_area_ids = '|". implode("|", $this->usage_area_ids) ."|' ";
 			}
-			
 			if(rex_addon::get('d2u_videos')->isAvailable() && count($this->videos) > 0) {
 				$query .= ", video_ids = '|". implode("|", array_keys($this->videos)) ."|' ";
 			}
@@ -1545,7 +1543,6 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			else {
 				$query = "UPDATE ". $query ." WHERE machine_id = ". $this->machine_id;
 			}
-
 			$result = rex_sql::factory();
 			$result->setQuery($query);
 			if($this->machine_id == 0) {
@@ -1558,8 +1555,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			$this->setPriority();
 		}
 
-	
-		if($error !== FALSE) {
+		if($error === FALSE) {
 			// Save the language specific part
 			$pre_save_machine = new Machine($this->machine_id, $this->clang_id);
 			if($pre_save_machine != $this) {
@@ -1584,7 +1580,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			UrlGenerator::generatePathFile([]);
 		}
 		
-		return $error;
+		return !$error;
 	}
 	
 	/**

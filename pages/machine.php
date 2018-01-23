@@ -47,7 +47,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$machine->operating_voltage_a = $form['operating_voltage_a'];
 		
 			if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable()) {
-				$machine->industry_sector_ids = $form['industry_sector_ids'];
+				$machine->industry_sector_ids = isset($form['industry_sector_ids']) ? $form['industry_sector_ids'] : [];
 			}
 			if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable()) {
 				$machine->agitator_type_id = $form['agitator_type_id'] == '' ? 0 : $form['agitator_type_id'];
@@ -180,12 +180,12 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 		if($machine->translation_needs_update == "delete") {
 			$machine->delete(FALSE);
 		}
-		else if($machine->save() > 0){
-			$success = FALSE;
-		}
-		else {
+		else if($machine->save()){
 			// remember id, for each database lang object needs same id
 			$machine_id = $machine->machine_id;
+		}
+		else {
+			$success = FALSE;
 		}
 	}
 
@@ -247,7 +247,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 // Change online status of machine
 else if($func == 'changestatus') {
 	$machine = new Machine($entry_id, rex_config::get("d2u_helper", "default_lang"));
-	$machine->machine_id = $machine_id; // Ensure correct ID in case language has no object
+	$machine->machine_id = $entry_id; // Ensure correct ID in case language has no object
 	$machine->changeStatus();
 	
 	header("Location: ". rex_url::currentBackendPage());
@@ -354,7 +354,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						print '<legend><small><i class="rex-icon fa-plug"></i></small> '. rex_i18n::msg('d2u_machinery_features') .'</legend>';
 						print '<div class="panel-body-wrapper slide">';
 						$options_features = [];
-						foreach (Feature::getAll(rex_config::get("d2u_helper", "default_lang"), $machine->category->category_id) as $feature) {
+						foreach (Feature::getAll(rex_config::get("d2u_helper", "default_lang"), $machine->category !== FALSE ? $machine->category->category_id : 0) as $feature) {
 							$options_features[$feature->feature_id] = $feature->title;
 						}
 						d2u_addon_backend_helper::form_select('d2u_machinery_features', 'form[feature_ids][]', $options_features, $machine->feature_ids, 10, TRUE, $readonly);

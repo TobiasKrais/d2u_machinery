@@ -72,12 +72,12 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 		if($category->translation_needs_update == "delete") {
 			$category->delete(FALSE);
 		}
-		else if($category->save() > 0){
-			$success = FALSE;
-		}
-		else {
+		else if($category->save()){
 			// remember id, for each database lang object needs same id
 			$category_id = $category->category_id;
+		}
+		else {
+			$success = FALSE;
 		}
 	}
 
