@@ -61,27 +61,31 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			}
 			if(rex_plugin::get("d2u_machinery", "machine_steel_processing_extension")->isAvailable()) {
 				$process_ids = isset($form['process_ids']) ? $form['process_ids'] : [];
+				$machine->processes = [];
 				foreach($process_ids as $process_id) {
 					if($process_id > 0) {
 						$machine->processes[$process_id] = new Process($process_id, rex_config::get("d2u_helper", "default_lang"));
 					}
 				}
 				$procedure_ids = isset($form['procedure_ids']) ? $form['procedure_ids'] : [];
+				$machine->procedures = [];
 				foreach($procedure_ids as $procedure_id) {
 					if($procedure_id > 0) {
 						$machine->procedures[$procedure_id] = new Procedure($procedure_id, rex_config::get("d2u_helper", "default_lang"));
 					}
 				}
 				$material_ids = isset($form['material_ids']) ? $form['material_ids'] : [];
+				$machine->materials = [];
 				foreach($material_ids as $material_id) {
 					if($material_id > 0) {
-						$machine->materials[$material_id] = new Procedure($material_id, rex_config::get("d2u_helper", "default_lang"));
+						$machine->materials[$material_id] = new Material($material_id, rex_config::get("d2u_helper", "default_lang"));
 					}
 				}
 				$tool_ids = isset($form['tool_ids']) ? $form['tool_ids'] : [];
+				$machine->tools = [];
 				foreach($tool_ids as $tool_id) {
 					if($tool_id > 0) {
-						$machine->tools[$tool_id] = new Procedure($tool_id, rex_config::get("d2u_helper", "default_lang"));
+						$machine->tools[$tool_id] = new Tool($tool_id, rex_config::get("d2u_helper", "default_lang"));
 					}
 				}
 				$machine->automation_supply_single_stroke = $form['automation_supply_single_stroke'];
@@ -89,12 +93,14 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 				$machine->automation_feedrate = $form['automation_feedrate'];
 				$machine->automation_rush_leader_flyback = $form['automation_rush_leader_flyback'];
 				$automation_automationgrade_ids = isset($form['automation_automationgrade_ids']) ? $form['automation_automationgrade_ids'] : [];
+				$machine->automation_automationgrades = [];
 				foreach($automation_automationgrade_ids as $automation_automationgrade_id) {
 					if($automation_automationgrade_id > 0) {
 						$machine->automation_automationgrades[$automation_automationgrade_id] = new Automation($automation_automationgrade_id, rex_config::get("d2u_helper", "default_lang"));
 					}
 				}
 				$automation_supply_ids = isset($form['automation_supply_ids']) ? $form['automation_supply_ids'] : [];
+				$machine->automation_supplys = [];
 				foreach($automation_supply_ids as $automation_supply_id) {
 					if($automation_supply_id > 0) {
 						$machine->automation_supplys[$automation_supply_id] = new Supply($automation_supply_id, rex_config::get("d2u_helper", "default_lang"));
@@ -129,6 +135,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 				$machine->punching_tools = $form['punching_tools'];
 				$machine->shaving_unit_angle_steel_single_cut = $form['shaving_unit_angle_steel_single_cut'] == "" ? 0 : $form['shaving_unit_angle_steel_single_cut'];
 				$profile_ids = isset($form['profile_ids']) ? $form['profile_ids'] : [];
+				$machine->profiles = [];
 				foreach($profile_ids as $profile_id) {
 					if($profile_id > 0) {
 						$machine->profiles[$profile_id] = new Profile($profile_id, rex_config::get("d2u_helper", "default_lang"));
@@ -142,6 +149,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 				$machine->component_length = $form['component_length'];
 				$machine->component_weight = $form['component_weight'] == "" ? 0 : $form['component_weight'];
 				$welding_process_ids = isset($form['welding_process_ids']) ? $form['welding_process_ids'] : [];
+				$machine->weldings = [];
 				foreach($welding_process_ids as $welding_process_id) {
 					if($welding_process_id > 0) {
 						$machine->weldings[$welding_process_id] = new Welding($welding_process_id, rex_config::get("d2u_helper", "default_lang"));

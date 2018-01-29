@@ -38,12 +38,13 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.2.0 (NEXT):</p>
 <ul>
+	<li>Bugfix Maschinen technische Daten: Hz-Wert wurde fälschlicherweise statt V-Wert ausgegeben.</li>
 	<li>Export Plugin: Portale können offline geschaltet werden.</li>
 	<li>Export Plugin: Bei Installation des Autoexportes künftig Ausführung im Frontend und Backend.</li>
 	<li>Open Graph für Gebrauchtmaschinen hinzugefügt.</li>
 	<li>Facebook Export für Gebrauchtmaschinenexport hinzugefügt.</li>
 	<li>Erweiterung für Baumaschinen hinzugefügt (machine_construction_equipment)</li>
-	<li>Upgrade auf Bootstrap 4 beta2.</li>
+	<li>Upgrade auf Bootstrap 4.</li>
 	<li>Internen Namen bei Maschinen entfernt.</li>
 	<li>Backendsprache Englisch hinzugefügt.</li>
 	<li>ycom/auth_media Dateirechte werden bei Downloads abgefragt.</li>

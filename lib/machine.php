@@ -812,7 +812,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 
 		// Operating voltage
 		if($this->operating_voltage_v != "") {
-			$v = $this->operating_voltage_v == "" ? "-" : $this->operating_voltage_hz;
+			$v = $this->operating_voltage_v == "" ? "-" : $this->operating_voltage_v;
 			$h = $this->operating_voltage_hz == "" ? " / -" : " / ". $this->operating_voltage_hz;
 			$a = $this->operating_voltage_a == "" ? " / -" : " / ". $this->operating_voltage_a;
 			$tech_data[] = [
