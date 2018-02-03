@@ -19,7 +19,6 @@ d2u_machinery_settings_article = Machine article
 d2u_machinery_settings_categories_usage_area = Show circumscribing use case in navigation
 d2u_machinery_settings_consultation_article = Article link "Let us advice you"
 d2u_machinery_settings_consultation_pic = Picture for "Let us advice you"
-d2u_machinery_settings_default_sort = Sort
 d2u_machinery_settings_contact_phone = Consultation hotline phone number
 d2u_machinery_settings_request_form_email = Contact form e-mail receipient
 d2u_machinery_settings_show_teaser = Show short description in machine list
