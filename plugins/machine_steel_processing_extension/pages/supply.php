@@ -162,7 +162,7 @@ if ($func == 'edit' || $func == 'add') {
 
 								d2u_addon_backend_helper::form_input('d2u_machinery_name', "form[lang][". $rex_clang->getId() ."][name]", $supply->name, $required, $readonly_lang, "text");
 								d2u_addon_backend_helper::form_input('d2u_machinery_steel_supply_title', "form[lang][". $rex_clang->getId() ."][title]", $supply->title, $required, $readonly_lang, "text");
-								d2u_addon_backend_helper::form_textarea('d2u_machinery_name', "form[lang][". $rex_clang->getId() ."][description]", $supply->title, 5, $required, $readonly_lang, TRUE);
+								d2u_addon_backend_helper::form_textarea('d2u_machinery_name', "form[lang][". $rex_clang->getId() ."][description]", $supply->title, 5, FALSE, $readonly_lang, TRUE);
 							?>
 						</div>
 					</fieldset>

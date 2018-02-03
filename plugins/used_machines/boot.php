@@ -128,7 +128,7 @@ function d2u_machinery_used_machines_add_open_graph(rex_extension_point $ep) {
 			if(count($used_machine->pics) > 0) {
 				$og_head .= '<meta property="og:image" content="'. rex_url::media($used_machine->pics[0]).'" />'. PHP_EOL;
 			}
-			if(rex_plugin::get('d2u_machinery', 'export')) {
+			if(rex_plugin::get('d2u_machinery', 'export')->isAvailable()) {
 				$providers = Provider::getAll();
 				foreach($providers as $provider) {
 					if(strtolower($provider->type) == "facebook" && $provider->facebook_pageid != '') {
