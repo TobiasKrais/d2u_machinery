@@ -11,9 +11,9 @@
 			print '<div class="col-sm-6 col-md-4 col-lg-3 abstand">';
 			print '<a href="'. $category->getURL() .'" class="bluebox">';
 			print '<div class="box same-height">';
-			if($category->pic != "") {
+			if($category->pic != "" || $category->pic_lang != "") {
 				print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
-					$category->pic .'" alt="'. $category->name .'">';
+					($category->pic_lang != "" ? $category->pic_lang : $category->pic) .'" alt="'. $category->name .'">';
 			}
 			else {
 				print '<img src="'.	rex_addon::get("d2u_machinery")->getAssetsUrl("white_tile.gif") .'" alt="Placeholder">';

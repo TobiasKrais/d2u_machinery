@@ -95,4 +95,23 @@ class d2u_machinery_frontend_helper {
 		
 		return $breadcrumbs;
 	}
+	
+	/**
+	 * Prints Responive Multilevel Menu submenu für D2U Machinery Addon.
+	 */
+	public static function getD2UMachineryResponsiveMultiLevelSubmenu() {
+		$categories = Category::getAll(rex_clang::getCurrentId());
+		foreach ($categories as $category) {
+			print '<li><a href="'. $category->getUrl() .'">'. $category->name .'</a>';
+			print '<ul class="dl-submenu">';
+			print '<li class="dl-back"><a href="#">&nbsp;</a></li>';
+			print '<li><a href="'. $category->getUrl() .'">'. strtoupper($category->name) .'</a></li>';
+			$machines = $category->getMachines(TRUE);
+			foreach ($machines as $machine) {
+				print '<li><a href="'. $machine->getUrl() .'">'. $machine->name .'</a></li>';
+			}
+			print '</ul>';
+			print '</li>';
+		}
+	}
 }

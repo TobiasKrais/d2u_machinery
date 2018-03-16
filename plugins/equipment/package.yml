@@ -1,0 +1,12 @@
+package: d2u_machinery/equipment
+version: '1.0.0'
+author: Tobias Krais
+supportpage: http://github.com/tobiaskrais/d2u_machinery
+
+page:
+    title: 'translate:d2u_machinery_equipments'
+    perm: d2u_machinery[]
+    icon: rex-icon fa-plus
+    subpages:
+        equipment: { title: 'translate:d2u_machinery_equipments', icon: rex-icon fa-plus }
+        equipment_group: { title: 'translate:d2u_machinery_equipment_group', icon: rex-icon fa-plus-square }

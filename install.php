@@ -7,7 +7,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machi
 	name varchar(255) collate utf8_general_ci default NULL,
 	pics text collate utf8_general_ci default NULL,
 	category_id int(10) default NULL,
-	alternative_machine_ids varchar(255) collate utf8_general_ci default NULL,
+	alternative_machine_ids varchar(1000) collate utf8_general_ci default NULL,
 	product_number varchar(255) collate utf8_general_ci default NULL,
 	article_id_software int(10) default NULL,
 	article_id_service int(10) default NULL,

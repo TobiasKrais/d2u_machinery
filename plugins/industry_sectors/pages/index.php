@@ -70,16 +70,16 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$industry_sector->industry_sector_id = $industry_sector_id; // Ensure correct ID in case language has no object
 	
 	// Check if object is used
-	$reffering_machines = $industry_sector->getMachines();
+	$referring_machines = $industry_sector->getMachines();
 
 	// If not used, delete
-	if(count($reffering_machines) == 0) {
+	if(count($referring_machines) == 0) {
 		$industry_sector->delete(TRUE);
 	}
 	else {
 		$message = '<ul>';
-		foreach($reffering_machines as $reffering_machine) {
-			$message .= '<li><a href="index.php?page=d2u_machinery/machine&func=edit&entry_id='. $reffering_machine->machine_id .'">'. $reffering_machine->name.'</a></li>';
+		foreach($referring_machines as $referring_machine) {
+			$message .= '<li><a href="index.php?page=d2u_machinery/machine&func=edit&entry_id='. $referring_machine->machine_id .'">'. $referring_machine->name.'</a></li>';
 		}
 		$message .= '</ul>';
 
@@ -131,7 +131,7 @@ if ($func == 'edit' || $func == 'add') {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
 								}
 								
-								d2u_addon_backend_helper::form_input('d2u_machinery_name', "form[lang][". $rex_clang->getId() ."][name]", $industry_sector->name, $required, $readonly_lang, "text");
+								d2u_addon_backend_helper::form_input('d2u_helper_name', "form[lang][". $rex_clang->getId() ."][name]", $industry_sector->name, $required, $readonly_lang, "text");
 								d2u_addon_backend_helper::form_input('d2u_machinery_machine_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $industry_sector->teaser, FALSE, $readonly_lang, "text");
 							?>
 						</div>
@@ -140,7 +140,7 @@ if ($func == 'edit' || $func == 'add') {
 					}
 				?>
 				<fieldset>
-					<legend><?php echo rex_i18n::msg('d2u_machinery_data_all_lang'); ?></legend>
+					<legend><?php echo rex_i18n::msg('d2u_helper_data_all_lang'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
 							// Do not use last object from translations, because you don't know if it exists in DB
@@ -199,7 +199,7 @@ if ($func == '') {
     $list->setColumnLabel('industry_sector_id', rex_i18n::msg('id'));
     $list->setColumnLayout('industry_sector_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
 
-    $list->setColumnLabel('name', rex_i18n::msg('d2u_machinery_industry_sectors_name'));
+    $list->setColumnLabel('name', rex_i18n::msg('d2u_helper_name'));
     $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###industry_sector_id###']);
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));

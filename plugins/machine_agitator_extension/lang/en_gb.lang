@@ -1,7 +1,5 @@
 d2u_machinery_agitator_extension = Agitator Plugin
 
-d2u_machinery_agitators_description = Description
-d2u_machinery_agitators_name = Name
 d2u_machinery_agitators_viscosity = Max. viscosity (mPas)
 
 d2u_machinery_agitators = Agitators

@@ -61,4 +61,4 @@ if($sql->getRows() == 0) {
 }
 
 // Insert frontend translations
-export_lang_helper::factory()->install();
+d2u_machinery_export_lang_helper::factory()->install();

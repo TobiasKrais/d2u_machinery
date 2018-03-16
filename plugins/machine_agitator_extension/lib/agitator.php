@@ -123,10 +123,10 @@ class Agitator implements \D2U_Helper\ITranslationHelper {
 	}
 	
 	/**
-	 * Gets the AgitatorTypes reffering to this object.
-	 * @return AgitatorType[] AgitatorType reffering to this object.
+	 * Gets the AgitatorTypes referring to this object.
+	 * @return AgitatorType[] AgitatorType referring to this object.
 	 */
-	public function getRefferingAgitatorTypes() {
+	public function getReferringAgitatorTypes() {
 		$query = "SELECT agitator_type_id FROM ". \rex::getTablePrefix() ."d2u_machinery_agitator_types "
 			."WHERE agitator_ids LIKE '%|". $this->agitator_id ."|%'";
 		$result = rex_sql::factory();
@@ -174,7 +174,7 @@ class Agitator implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Updates or inserts the object into database.
-	 * @return boolean TRUE if succesful
+	 * @return boolean TRUE if successful
 	 */
 	public function save() {
 		$error = FALSE;

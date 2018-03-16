@@ -47,8 +47,11 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 		
 		// Install / update language replacements
 		d2u_machinery_lang_helper::factory()->install();
+		if(rex_plugin::get('d2u_machinery', 'equipment')->isAvailable()) {
+			d2u_machinery_equipment_lang_helper::factory()->install();
+		}
 		if(rex_plugin::get('d2u_machinery', 'export')->isAvailable()) {
-			export_lang_helper::factory()->install();
+			d2u_machinery_export_lang_helper::factory()->install();
 		}
 		if(rex_plugin::get('d2u_machinery', 'industry_sectors')->isAvailable()) {
 			d2u_machinery_industry_sectors_lang_helper::factory()->install();
@@ -56,11 +59,17 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 		if(rex_plugin::get('d2u_machinery', 'machine_agitator_extension')->isAvailable()) {
 			d2u_machinery_machine_agitator_extension_lang_helper::factory()->install();
 		}
+		if(rex_plugin::get('d2u_machinery', 'machine_construction_equipment_extension')->isAvailable()) {
+			d2u_machinery_machine_construction_equipment_extension_lang_helper::factory()->install();
+		}
 		if(rex_plugin::get('d2u_machinery', 'machine_features_extension')->isAvailable()) {
 			d2u_machinery_machine_features_extension_lang_helper::factory()->install();
 		}
 		if(rex_plugin::get('d2u_machinery', 'machine_usage_area_extension')->isAvailable()) {
 			d2u_machinery_machine_usage_area_extension_lang_helper::factory()->install();
+		}
+		if(rex_plugin::get('d2u_machinery', 'service_options')->isAvailable()) {
+			d2u_machinery_service_options_lang_helper::factory()->install();
 		}
 		if(rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
 			d2u_machinery_used_machines_lang_helper::factory()->install();
@@ -134,7 +143,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 				<legend><small><i class="rex-icon rex-icon-open-category"></i></small> <?php echo rex_i18n::msg('d2u_machinery_meta_categories'); ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
-						$options = array('name' => rex_i18n::msg('d2u_machinery_name'), 'priority' => rex_i18n::msg('header_priority'));
+						$options = array('name' => rex_i18n::msg('d2u_helper_name'), 'priority' => rex_i18n::msg('header_priority'));
 						d2u_addon_backend_helper::form_select('d2u_helper_translations_sort', 'settings[default_category_sort]', $options, array($this->getConfig('default_category_sort')));
 						d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_categories_usage_area', 'settings[show_categories_usage_area]', 'show', $this->getConfig('show_categories_usage_area') == 'show')
 					?>
@@ -145,7 +154,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 				<div class="panel-body-wrapper slide">
 					<?php
 						d2u_addon_backend_helper::form_linkfield('d2u_machinery_settings_article', '1', $this->getConfig('article_id'), rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId()));
-						$options = array('name' => rex_i18n::msg('d2u_machinery_name'), 'priority' => rex_i18n::msg('header_priority'));
+						$options = array('name' => rex_i18n::msg('d2u_helper_name'), 'priority' => rex_i18n::msg('header_priority'));
 						d2u_addon_backend_helper::form_select('d2u_helper_translations_sort', 'settings[default_machine_sort]', $options, array($this->getConfig('default_machine_sort')));
 						d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_show_teaser', 'settings[show_teaser]', 'show', $this->getConfig('show_teaser') == 'show');
 						d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_show_tech_data', 'settings[show_techdata]', 'show', $this->getConfig('show_techdata') == 'show');

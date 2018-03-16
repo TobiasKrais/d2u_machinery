@@ -26,6 +26,10 @@ function rex_d2u_machinery_export_clang_deleted(rex_extension_point $ep) {
 			$provider->save();
 		}
 	}
+	
+	// Delete language replacements
+	d2u_machinery_export_lang_helper::factory()->uninstall($clang_id);
+
 
 	return $warning;
 }

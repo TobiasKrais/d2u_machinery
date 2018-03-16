@@ -1,7 +1,5 @@
 d2u_machinery_agitator_extension = Rührwerke Erweiterung
 
-d2u_machinery_agitators_description = Beschreibung
-d2u_machinery_agitators_name = Name
 d2u_machinery_agitators_viscosity = Max. Viskosität (mPas)
 
 d2u_machinery_agitators = Rührorgane

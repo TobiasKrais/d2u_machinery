@@ -69,16 +69,16 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$agitator->agitator_id = $agitator_id; // Ensure correct ID in case language has no object
 	
 	// Check if object is used
-	$reffering_agitator_types = $agitator->getRefferingAgitatorTypes();
+	$referring_agitator_types = $agitator->getReferringAgitatorTypes();
 
 	// If not used, delete
-	if(count($reffering_agitator_types) == 0) {
+	if(count($referring_agitator_types) == 0) {
 		$agitator->delete(TRUE);
 	}
 	else {
 		$message = '<ul>';
-		foreach($reffering_agitator_types as $reffering_agitator_type) {
-			$message .= '<li><a href="index.php?page=d2u_machinery/machine_agitator_extension/agitator_type&func=edit&entry_id='. $reffering_agitator_type->agitator_type_id .'">'. $reffering_agitator_type->name.'</a></li>';
+		foreach($referring_agitator_types as $referring_agitator_type) {
+			$message .= '<li><a href="index.php?page=d2u_machinery/machine_agitator_extension/agitator_type&func=edit&entry_id='. $referring_agitator_type->agitator_type_id .'">'. $referring_agitator_type->name.'</a></li>';
 		}
 		$message .= '</ul>';
 
@@ -120,8 +120,8 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
 								}
 								
-								d2u_addon_backend_helper::form_input('d2u_machinery_name', "form[lang][". $rex_clang->getId() ."][name]", $agitator->name, $required, $readonly_lang, "text");
-							d2u_addon_backend_helper::form_textarea('d2u_machinery_agitators_description', "form[lang][". $rex_clang->getId() ."][description]", $agitator->description, 10, FALSE, $readonly_lang, TRUE);
+								d2u_addon_backend_helper::form_input('d2u_helper_name', "form[lang][". $rex_clang->getId() ."][name]", $agitator->name, $required, $readonly_lang, "text");
+							d2u_addon_backend_helper::form_textarea('d2u_helper_description', "form[lang][". $rex_clang->getId() ."][description]", $agitator->description, 10, FALSE, $readonly_lang, TRUE);
 							?>
 						</div>
 					</fieldset>
@@ -129,7 +129,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 					}
 				?>
 				<fieldset>
-					<legend><?php echo rex_i18n::msg('d2u_machinery_data_all_lang'); ?></legend>
+					<legend><?php echo rex_i18n::msg('d2u_helper_data_all_lang'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
 							// Do not use last object from translations, because you don't know if it exists in DB
@@ -186,7 +186,7 @@ if ($func == '') {
     $list->setColumnLabel('agitator_id', rex_i18n::msg('id'));
     $list->setColumnLayout('agitator_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
 
-    $list->setColumnLabel('name', rex_i18n::msg('d2u_machinery_agitators_name'));
+    $list->setColumnLabel('name', rex_i18n::msg('d2u_helper_name'));
     $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###agitator_id###']);
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));

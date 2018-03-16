@@ -38,12 +38,15 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.2.0 (NEXT):</p>
 <ul>
+	<li>Vereinheitlicht: Übersetzungen ins D2U Helper Addon umgezogen.</li>
 	<li>Bugfix Maschinen technische Daten: Hz-Wert wurde fälschlicherweise statt V-Wert ausgegeben.</li>
 	<li>Export Plugin: Portale können offline geschaltet werden.</li>
 	<li>Export Plugin: Bei Installation des Autoexportes künftig Ausführung im Frontend und Backend.</li>
 	<li>Open Graph für Gebrauchtmaschinen hinzugefügt.</li>
 	<li>Facebook Export für Gebrauchtmaschinenexport hinzugefügt.</li>
-	<li>Erweiterung für Baumaschinen hinzugefügt (machine_construction_equipment)</li>
+	<li>Erweiterung für Baustellenausrüstung hinzugefügt (machine_construction_equipment_extension)</li>
+	<li>Erweiterung für Serviceoptionen hinzugefügt (service_options)</li>
+	<li>Erweiterung für Zubehör hinzugefügt (equipment)</li>
 	<li>Upgrade auf Bootstrap 4.</li>
 	<li>Internen Namen bei Maschinen entfernt.</li>
 	<li>Backendsprache Englisch hinzugefügt.</li>

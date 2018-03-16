@@ -124,7 +124,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 							$readonly = (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]')) ? FALSE : TRUE;
 							
 							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_manufacturer', "form[manufacturer]", $used_machine->manufacturer, TRUE, $readonly, "text");
-							d2u_addon_backend_helper::form_input('d2u_machinery_name', "form[name]", $used_machine->name, TRUE, $readonly, "text");
+							d2u_addon_backend_helper::form_input('d2u_helper_name', "form[name]", $used_machine->name, TRUE, $readonly, "text");
 							$options = [];
 							foreach(Category::getAll(rex_config::get("d2u_helper", "default_lang")) as $category) {
 								if($category->name != "") {
@@ -178,7 +178,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="no">';
 								}
 								d2u_addon_backend_helper::form_input('d2u_machinery_machine_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $used_machine_lang->teaser, FALSE, $readonly_lang, "text");
-								d2u_addon_backend_helper::form_textarea('d2u_machinery_machine_description', "form[lang][". $rex_clang->getId() ."][description]", $used_machine_lang->description, 5, FALSE, $readonly_lang, TRUE);
+								d2u_addon_backend_helper::form_textarea('d2u_helper_description', "form[lang][". $rex_clang->getId() ."][description]", $used_machine_lang->description, 5, FALSE, $readonly_lang, TRUE);
 								d2u_addon_backend_helper::form_medialistfield('d2u_machinery_used_machines_downloads', $rex_clang->getId() + 100, $used_machine_lang->downloads, $readonly_lang);
 							?>
 						</div>
@@ -231,7 +231,7 @@ if ($func == '') {
     $list->setColumnLabel('manufacturer', rex_i18n::msg('d2u_machinery_used_machines_manufacturer'));
     $list->setColumnParams('manufacturer', ['func' => 'edit', 'entry_id' => '###used_machine_id###']);
 
-    $list->setColumnLabel('machinename', rex_i18n::msg('d2u_machinery_used_machines_name'));
+    $list->setColumnLabel('machinename', rex_i18n::msg('d2u_helper_name'));
     $list->setColumnParams('machinename', ['func' => 'edit', 'entry_id' => '###used_machine_id###']);
 
     $list->setColumnLabel('year_built', rex_i18n::msg('d2u_machinery_used_machines_year_built'));

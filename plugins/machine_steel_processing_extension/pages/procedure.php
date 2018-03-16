@@ -65,16 +65,16 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$procedure->procedure_id = $procedure_id; // Ensure correct ID in case  language has no object
 	
 	// Check if object is used
-	$reffering_machines = $procedure->getRefferingMachines();
+	$referring_machines = $procedure->getReferringMachines();
 
 	// If not used, delete
-	if(count($reffering_machines) == 0) {
+	if(count($referring_machines) == 0) {
 		$procedure->delete(TRUE);
 	}
 	else {
 		$message = '<ul>';
-		foreach($reffering_machines as $reffering_machine) {
-			$message .= '<li><a href="index.php?page=d2u_machinery/machine&func=edit&entry_id='. $reffering_machine->machine_id .'">'. $reffering_machine->name.'</a></li>';
+		foreach($referring_machines as $referring_machine) {
+			$message .= '<li><a href="index.php?page=d2u_machinery/machine&func=edit&entry_id='. $referring_machine->machine_id .'">'. $referring_machine->name.'</a></li>';
 		}
 		$message .= '</ul>';
 
@@ -102,7 +102,7 @@ if ($func == 'edit' || $func == 'add') {
 							if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]')) {
 								$readonly = FALSE;
 							}
-							d2u_addon_backend_helper::form_input('d2u_machinery_name', "form[internal_name]", $procedure->internal_name, TRUE, $readonly, "text");
+							d2u_addon_backend_helper::form_input('d2u_helper_name', "form[internal_name]", $procedure->internal_name, TRUE, $readonly, "text");
 						?>
 					</div>
 				</fieldset>
@@ -131,7 +131,7 @@ if ($func == 'edit' || $func == 'add') {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
 								}
 								
-								d2u_addon_backend_helper::form_input('d2u_machinery_name', "form[lang][". $rex_clang->getId() ."][name]", $procedure->name, $required, $readonly_lang, "text");
+								d2u_addon_backend_helper::form_input('d2u_helper_name', "form[lang][". $rex_clang->getId() ."][name]", $procedure->name, $required, $readonly_lang, "text");
 							?>
 						</div>
 					</fieldset>

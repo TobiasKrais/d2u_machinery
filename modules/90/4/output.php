@@ -18,9 +18,9 @@ if(!function_exists('print_used_machine_categories')) {
 				print '<div class="col-sm-6 col-md-4 col-lg-3 abstand">';
 				print '<a href="'. $category->getURL() .'">';
 				print '<div class="box" data-height-watch>';
-				if($category->pic != "") {
+				if($category->pic != "" || $category->pic_lang != "") {
 					print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
-						$category->pic .'" alt="'. $category->name .'">';
+						($category->pic_lang != "" ? $category->pic_lang : $category->pic) .'" alt="'. $category->name .'">';
 				}
 				else {
 					print '<img src="'.	rex_addon::get("d2u_machinery")->getAssetsUrl("white_tile.gif") .'" alt="Placeholder">';
@@ -230,12 +230,17 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 	// Availability
 	if($used_machine->availability != "") {
 		print '<div class="col-sm-12">';
-		print '<p><b>'. $tag_open .'d2u_machinery_used_machines_availability'. $tag_close .':</b> ';
-		if($d2u_machinery->hasConfig('lang_replacement_'. rex_clang::getCurrentId()) && $d2u_machinery->getConfig('lang_replacement_'. rex_clang::getCurrentId()) == "german") {
-			print date_format(date_create($used_machine->availability),"d.m.Y");
+		print '<p><b>'. $tag_open .'d2u_machinery_used_machines_availible_from'. $tag_close .':</b> ';
+		if($used_machine->availability < date("Y-m-d")) {
+			if($d2u_machinery->hasConfig('lang_replacement_'. rex_clang::getCurrentId()) && $d2u_machinery->getConfig('lang_replacement_'. rex_clang::getCurrentId()) == "german") {
+				print date_format(date_create($used_machine->availability),"d.m.Y");
+			}
+			else {
+				print date_format(date_create($used_machine->availability),"Y/m/d");
+			}
 		}
 		else {
-			print date_format(date_create($used_machine->availability),"Y/m/d");
+			print $tag_open .'d2u_machinery_used_machines_availability'. $tag_close;
 		}
 		print '</p></div>';
 	}

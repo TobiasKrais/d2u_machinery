@@ -14,9 +14,9 @@ if(!function_exists('print_categories')) {
 				print '<div class="col-sm-6 col-md-4 col-lg-3 abstand">';
 				print '<a href="'. $category->getURL() .'" class="bluebox">';
 				print '<div class="box" data-height-watch>';
-				if($category->pic != "") {
+				if($category->pic != "" || $category->pic_lang != "") {
 					print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
-						$category->pic .'" alt="'. $category->name .'">';
+						($category->pic_lang != "" ? $category->pic_lang : $category->pic) .'" alt="'. $category->name .'">';
 				}
 				else {
 					print '<img src="'.	rex_addon::get("d2u_machinery")->getAssetsUrl("white_tile.gif") .'" alt="Placeholder">';
@@ -184,7 +184,7 @@ if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['d
 		print_categories($child_categories);
 	}
 	else {
-		$machines = $category->getMachines();
+		$machines = $category->getMachines(TRUE);
 		print '<div class="col-12">';
 		print '<div class="tab-content">';
 
@@ -334,7 +334,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		print '<div class="col-12 col-md-6">';
 		if(count($machine->pics) == 1) {
 			print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
-				$machine->pics[0] .'" alt='. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .' style="max-width:100%;">';
+				$machine->pics[0] .'" alt="'. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .'" style="max-width:100%;">';
 		}
 		else {
 			// Slider
@@ -406,11 +406,9 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		if(count($alternative_machines) > 0) {
 			print '<div class="col-12 col-md-6">';
 			print '<h3>'. $tag_open .'d2u_machinery_alternative_machines'. $tag_close .'</h3>';
-			print '<ul>';
 			foreach($alternative_machines as $alternative_machine) {
-				print '<li><a href="'. $alternative_machine->getURL() .'">'. ($alternative_machine->lang_name == "" ? $alternative_machine->name : $alternative_machine->lang_name) .'</a></li>';
+				print '<a href="'. $alternative_machine->getURL() .'"><div class="downloads">'. ($alternative_machine->lang_name == "" ? $alternative_machine->name : $alternative_machine->lang_name) .'</div></a>';
 			}
-			print '</ul>';
 			print '<p>&nbsp;</p>';
 			print '</div>';
 		}
@@ -422,7 +420,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		print '<h3>'. $tag_open .'d2u_machinery_software'. $tag_close .'</h3>';
 		$article = rex_article::get($machine->article_id_software, $machine->clang_id);
 		if($article instanceof rex_article) {
-			print '<a href="'. rex_getUrl($machine->article_id_software, $machine->clang_id).'">'. $article->getValue('name') .'</a>';
+			print '<a href="'. rex_getUrl($machine->article_id_software, $machine->clang_id).'"><div class="downloads">'. $article->getValue('name') .'</div></a>';
 		}
 		print '<p>&nbsp;</p>';
 		print '</div>';
@@ -434,7 +432,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		print '<h3>'. $tag_open .'d2u_machinery_service'. $tag_close .'</h3>';
 		$article = rex_article::get($machine->article_id_service, $machine->clang_id);
 		if($article instanceof rex_article) {
-			print '<a href="'. rex_getUrl($machine->article_id_service, $machine->clang_id).'">'. $article->getValue('name') .'</a>';
+			print '<a href="'. rex_getUrl($machine->article_id_service, $machine->clang_id).'"><div class="downloads">'. $article->getValue('name') .'</div></a>';
 		}
 		print '<p>&nbsp;</p>';
 		print '</div>';
@@ -444,11 +442,10 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 	if(count($machine->article_ids_references) > 0) {
 		print '<div class="col-12 col-md-6">';
 		print '<h3>'. $tag_open .'d2u_machinery_references'. $tag_close .'</h3>';
-		print '<ul>';
 		foreach($machine->article_ids_references as $article_id_reference) {
 			$article = rex_article::get($article_id_reference, $machine->clang_id);
 			if($article instanceof rex_article) {
-				print '<li><a href="'. rex_getUrl($article_id_reference, $machine->clang_id) .'">'. $article->getValue('name') .'</a></li>';
+				print '<a href="'. rex_getUrl($article_id_reference, $machine->clang_id) .'"><div class="downloads">'. $article->getValue('name') .'</div></a>';
 			}
 		}
 		print '</ul>';
@@ -470,7 +467,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 				$has_permission = rex_ycom_auth_media::checkPerm($media);
 			}
 			if($has_permission) {
-				print '<a href="'. $media->getUrl() .'"><div class="downloads">'. $media->getTitle() .'</div></a>';
+				print '<a href="'. $media->getUrl() .'"><div class="downloads"><span class="fa-file-pdf-o"></span> '. $media->getTitle() .'</div></a>';
 			}
 		}
 		print '</div>';
@@ -542,6 +539,109 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		print '</div>';
 		print '</div>';
 		print '</div>';
+	}
+	
+	// Delivery sets
+	if(rex_plugin::get("d2u_machinery", "machine_construction_equipment_extension")->isAvailable() &&
+			(strlen($machine->delivery_set_basic) > 5 || strlen($machine->delivery_set_conversion) > 5 || strlen($machine->delivery_set_full) > 5)) {
+		print '<div id="tab_delivery_set" class="tab-pane fade machine-tab">';
+		print '<div class="row">';
+		// Number of available sets
+		$number_sets = 0;
+		if(strlen($machine->delivery_set_basic) > 5) {
+			$number_sets++;
+		}
+		if(strlen($machine->delivery_set_conversion) > 5) {
+			$number_sets++;
+		}
+		if(strlen($machine->delivery_set_full) > 5) {
+			$number_sets++;
+		}
+		
+		$class = "";
+		if($number_sets == 2) {
+			$class = "col-sm-6";
+		}
+		if($number_sets == 3) {
+			$class = "col-sm-6 col-md-4";
+		}
+
+		if(strlen($machine->delivery_set_basic) > 5) {
+			print '<div class="col-12 '. $class .'">'. $machine->delivery_set_basic .'</div>';
+		}
+		if(strlen($machine->delivery_set_conversion) > 5) {
+			print '<div class="col-12 '. $class .'">'. $machine->delivery_set_basic .'</div>';
+		}
+		if(strlen($machine->delivery_set_full) > 5) {
+			print '<div class="col-12 '. $class .'">'. $machine->delivery_set_basic .'</div>';
+		}
+		print '</div>';
+		print '</div>';
+	}
+
+	// Service options
+	if(rex_plugin::get("d2u_machinery", "service_options")->isAvailable() && count($machine->service_option_ids) > 0) {
+		print '<div id="tab_service_options" class="tab-pane fade machine-tab">';
+		$service_options = $machine->getServiceOptions();
+		foreach($service_options as $service_option) {
+			print '<div class="row">';
+			print '<div class="col-12 col-md-6 col-lg-2">';
+			if($service_option->picture != "") {
+				print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
+						$service_option->picture .'" alt='. $service_option->name .' class="featurepic">';
+			}
+			print '</div>';
+			print '<div class="col-12 col-md-6 col-lg-10 col-xl-8">';
+			print '<p><b>'. $service_option->name .'</b></p>';
+			print $service_option->description;
+			print '</div>';
+			print '</div>';
+		}
+		print '</div>';
+	}
+
+	// Equipment
+	if(rex_plugin::get("d2u_machinery", "equipment")->isAvailable() && count($machine->equipment_ids) > 0) {
+		print '<div id="tab_equipment" class="tab-pane fade machine-tab">';
+
+		$equipments = [];
+		$equipment_groups = [];
+		foreach($machine->equipment_ids as $equipment_id) {
+			$equipment = new Equipment($equipment_id, rex_clang::getCurrentId());
+			if($equipment->group !== FALSE && !array_key_exists($equipment->group->priority, $equipment_groups)) {
+				$equipment_groups[$equipment->group->priority] = $equipment->group;
+				$equipments[$equipment->group->group_id] = [];
+			}
+			if ($equipment->group !== FALSE && array_key_exists($equipment->group->priority, $equipments)) {
+				$equipments[$equipment->group->group_id][$equipment->name] = $equipment;
+			}
+		}
+		ksort($equipment_groups);
+
+		foreach($equipment_groups as $equipment_group) {
+			print '<div class="row equipline">';
+			print '<div class="col-12 col-sm-4 col-md-3 col-lg-2">';
+			if($equipment_group->picture != "") {
+				print '<a href="index.php?rex_media_type=d2u_helper_gallery_detail&rex_media_file='. $equipment_group->picture .'" '
+					.'data-toggle="lightbox_equipment" data-gallery="example-gallery_equipment" data-title="'. $equipment_group->name.'">';
+                print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='. $equipment_group->picture .'" class="img-fluid featurepic"'
+					.' alt="'. $equipment_group->name .'" title="'. $equipment_group->name .'">';
+				print '</a>';
+			}
+			print '</div>';
+			print '<div class="col-12 col-sm-8 col-md-9 col-lg-10">';
+			print '<h3>'. $equipment_group->name .'</h3>';
+			print '<p>'. $equipment_group->description .'</p>';
+			$current_equipments = $equipments[$equipment_group->group_id];
+			ksort($current_equipments);
+			foreach($current_equipments as $current_equipment) {
+				print '<p>'. $current_equipment->name .' ('. $tag_open .'d2u_machinery_equipment_artno'. $tag_close .' '. $current_equipment->article_number .')</p>';
+			}
+			print '</div>';
+			print '</div>';
+		}
+
+		print "</div>";
 	}
 
 	// Contact Request form

@@ -172,7 +172,7 @@ if ($func == 'edit' || $func == 'add') {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
 								}
 								
-								d2u_addon_backend_helper::form_input('d2u_machinery_name', "form[lang][". $rex_clang->getId() ."][name]", $category->name, $required, $readonly_lang, "text");
+								d2u_addon_backend_helper::form_input('d2u_helper_name', "form[lang][". $rex_clang->getId() ."][name]", $category->name, $required, $readonly_lang, "text");
 								d2u_addon_backend_helper::form_input('d2u_machinery_machine_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $category->teaser, FALSE, $readonly_lang, "text");
 								if($this->getConfig('show_categories_usage_area') == 'show') {
 									d2u_addon_backend_helper::form_input('d2u_machinery_category_usage_area', "form[lang][". $rex_clang->getId() ."][usage_area]", $category->usage_area, FALSE, $readonly_lang, "text");
@@ -300,7 +300,7 @@ if ($func == '') {
     $list->setColumnLabel('category_id', rex_i18n::msg('id'));
     $list->setColumnLayout('category_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
 
-    $list->setColumnLabel('categoryname', rex_i18n::msg('d2u_machinery_name'));
+    $list->setColumnLabel('categoryname', rex_i18n::msg('d2u_helper_name'));
     $list->setColumnParams('categoryname', ['func' => 'edit', 'entry_id' => '###category_id###']);
 
     $list->setColumnLabel('parentname', rex_i18n::msg('d2u_machinery_category_parent'));

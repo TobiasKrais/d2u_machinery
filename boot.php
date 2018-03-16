@@ -104,7 +104,7 @@ function rex_d2u_machinery_media_is_in_use(rex_extension_point $ep) {
 	$sql_machine = rex_sql::factory();
 	$sql_machine->setQuery('SELECT lang.machine_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_machines_lang` AS lang '
 		.'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_machines` AS machines ON lang.machine_id = machines.machine_id '
-		.'WHERE pdfs = "%'. $filename .'%" OR pics LIKE "%'. $filename .'%" '
+		.'WHERE pdfs = "%'. $filename .'%" OR pics LIKE "%'. $filename .'%" OR description LIKE "%'. $filename .'%" '
 		.'GROUP BY machine_id');
 	
 	// Categories

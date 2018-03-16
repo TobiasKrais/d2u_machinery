@@ -7,7 +7,7 @@ class d2u_machinery_used_machines_lang_helper extends d2u_machinery_lang_helper 
 	 * @var string[] Array with englisch replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_english = array(
+	protected $replacements_english = [
 		'd2u_machinery_used_machines' => 'Used machines',
 		'd2u_machinery_used_machines_availability' => 'Available',
 		'd2u_machinery_used_machines_availible_from' => 'Available from',
@@ -26,13 +26,13 @@ class d2u_machinery_used_machines_lang_helper extends d2u_machinery_lang_helper 
 		'd2u_machinery_used_machines_vat_excluded' => 'without VAT',
 		'd2u_machinery_used_machines_vat_included' => 'VAT included',
 		'd2u_machinery_used_machines_year_built' => 'Year of construction',
-		);
+		];
 
 	/**
 	 * @var string[] Array with german replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_german = array(
+	protected $replacements_german = [
 		'd2u_machinery_used_machines' => 'Gebrauchtmaschinen',
 		'd2u_machinery_used_machines_availability' => 'Sofort verfügbar',
 		'd2u_machinery_used_machines_availible_from' => 'Verfügbar ab',
@@ -51,7 +51,7 @@ class d2u_machinery_used_machines_lang_helper extends d2u_machinery_lang_helper 
 		'd2u_machinery_used_machines_vat_excluded' => 'ohne MwSt.',
 		'd2u_machinery_used_machines_vat_included' => 'MwSt. enthalten',
 		'd2u_machinery_used_machines_year_built' => 'Baujahr'
-	);
+	];
 
 	/**
 	 * @var string[] Array with french replacements. Key is the wildcard,

@@ -318,17 +318,17 @@ class Category implements \D2U_Helper\ITranslationHelper{
 	/**
 	 * Get technical data matrix for this category.
 	 * @return mixed[] Key is the name of the sprog wildcard describing the field.
-	 * Values are the unit ('unit' => $unit) and an array called 'category_ids'
+	 * Values are the unit ('unit' => $unit) and an array called 'machine_ids'
 	 * with the machine id as key and the value as value.
 	 */
 	public function getTechDataMatrix() {
-		$machines = $this->getMachines();
+		$machines = $this->getMachines(TRUE);
 		$matrix = [];
 		$tech_data_arrays = [];
 		$tech_data_wildcards = [];
 		// Get technical data
 		foreach($machines as $machine) {
-			$tech_data_arrays[$machine->category_id] = $machine->getTechnicalData();
+			$tech_data_arrays[$machine->machine_id] = $machine->getTechnicalData();
 		}
 		// Get wildcards
 		foreach($tech_data_arrays as $tech_data_array) {
@@ -339,13 +339,13 @@ class Category implements \D2U_Helper\ITranslationHelper{
 		// Create matrix
 		foreach($tech_data_wildcards as $wildcard => $unit) {
 			$key = ['description' => $wildcard, 'unit' => $unit];
-			$matrix[$wildcard] = ['unit' => $unit, 'category_ids' => []];
+			$matrix[$wildcard] = ['unit' => $unit, 'machine_ids' => []];
 			foreach($machines as $machine) {
-				$tech_data_array = $tech_data_arrays[$machine->category_id];
-				$matrix[$wildcard]['category_ids'][$machine->category_id] = "";
+				$tech_data_array = $tech_data_arrays[$machine->machine_id];
+				$matrix[$wildcard]['machine_ids'][$machine->machine_id] = "";
 				foreach($tech_data_array as $techdata) {
 					if($techdata['description'] == $wildcard) {
-						$matrix[$wildcard]['category_ids'][$machine->category_id] = $techdata['value'];
+						$matrix[$wildcard]['machine_ids'][$machine->machine_id] = $techdata['value'];
 						break;
 					}
 				}
@@ -369,14 +369,14 @@ class Category implements \D2U_Helper\ITranslationHelper{
 	 */
 	public function getUsageAreaMatrix() {
 		$usage_areas = UsageArea::getAll($this->clang_id, $this->category_id);
-		$machines = $this->getMachines();
+		$machines = $this->getMachines(TRUE);
 		
 		$matrix = [];
 		foreach($usage_areas as $usage_area) {
 			$values = [];
 			foreach($machines as $machine) {
 				if(in_array($usage_area->usage_area_id, $machine->usage_area_ids)) {
-					$values[] = $machine->category_id;
+					$values[] = $machine->machine_id;
 				}
 			}
 			$matrix[$usage_area->name] = $values;

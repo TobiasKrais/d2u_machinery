@@ -165,9 +165,9 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 	}
 	
 	/**
-	 * Gets the machines reffering to this object.
+	 * Gets the machines referring to this object.
 	 * @param boolean $online_only TRUE if only online machines should be returned.
-	 * @return Machine[] Machines reffering to this object.
+	 * @return Machine[] Machines referring to this object.
 	 */
 	public function getMachines($online_only = FALSE) {
 		$query = "SELECT machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
@@ -296,7 +296,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Updates or inserts the object into database.
-	 * @return boolean TRUE if succesful
+	 * @return boolean TRUE if successful
 	 */
 	public function save() {
 		$error = FALSE;

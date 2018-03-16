@@ -1,0 +1,59 @@
+.active-cell {
+	background-color: navi_color_bg;
+	border: 1px solid white;
+	padding: 0.25em 1em;
+}
+.featurepic {
+	border: 1px solid navi_color_bg;
+	margin-bottom: 2em;
+}
+
+.equipline {
+	border-bottom: 1px solid navi_color_bg;
+	margin-bottom: 1em;
+}
+.matrix img {
+	width: 200px;
+}
+.matrix {
+	font-size: 0.85em;
+}
+
+.consultation {
+	margin-top: 1em;
+}
+
+.techdata td, .downloads, .inactive-cell, .consultation {
+	background-color: article_color_box;
+	border: 1px solid white;
+}
+.techdata td, .downloads {
+	padding: 0.25em 1em;
+}
+@media screen and (min-width: 992px) {
+	.inactive-cell {
+		padding: 0.25em 1em;
+	}
+}
+.techdata td.description {
+	min-width: 200px;
+	width: 30%;
+}
+.techdata td.value {
+	min-width: 200px;
+	width: 70%;
+}
+.vertical {
+	writing-mode: vertical-rl;
+	-ms-writing-mode: tb-rl;
+	-webkit-writing-mode: vertical-rl;
+	-moz-transform: rotate(180deg);
+	-o-transform: rotate(180deg);
+	-ms-transform: rotate(180deg);
+	-webkit-transform: rotate(180deg);
+	transform: rotate(180deg);
+	white-space: nowrap;
+	display: block;
+	max-height: 200px;
+	min-width: 1em;
+}

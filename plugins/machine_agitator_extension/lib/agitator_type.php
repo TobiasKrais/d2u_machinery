@@ -125,10 +125,10 @@ class AgitatorType implements \D2U_Helper\ITranslationHelper {
 	}
 	
 	/**
-	 * Gets the machines reffering to this object.
-	 * @return Machine[] Machines reffering to this object.
+	 * Gets the machines referring to this object.
+	 * @return Machine[] Machines referring to this object.
 	 */
-	public function getRefferingMachines() {
+	public function getReferringMachines() {
 		$query = "SELECT machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
 			."WHERE agitator_type_id = ". $this->agitator_type_id;
 		$result = rex_sql::factory();
@@ -176,7 +176,7 @@ class AgitatorType implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Updates or inserts the object into database.
-	 * @return boolean TRUE if succesful
+	 * @return boolean TRUE if successful
 	 */
 	public function save() {
 		$error = FALSE;

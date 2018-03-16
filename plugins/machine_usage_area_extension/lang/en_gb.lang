@@ -1,7 +1,6 @@
 d2u_machinery_usage_areas = Usage areas
 
 d2u_machinery_usage_areas_categories = Available in categories
-d2u_machinery_usage_areas_name = Name
 d2u_machinery_usage_areas_no_usage_areas_found = No usage areas found.
 
 d2u_machinery_usage_areas_settings_by_machines = Machines on top, usage areas on the left
