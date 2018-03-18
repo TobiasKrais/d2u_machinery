@@ -9,6 +9,5 @@ page:
     icon: rex-icon fa-plug
 
 requires:
-    redaxo: '>=5.1.0'
     packages:
         media_manager: '>=2.0.2'

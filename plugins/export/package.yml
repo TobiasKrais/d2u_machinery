@@ -13,10 +13,8 @@ page:
         help: { title: 'translate:d2u_helper_help', icon: rex-icon rex-icon-help }
 
 requires:
-    redaxo: '>=5.1.0'
     php:
         extensions: [xml, zip]
-        version: '>=5.3'
     packages:
         d2u_machinery/used_machines: '>=1.0.1'
         media_manager: '>=2.3'

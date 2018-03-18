@@ -36,6 +36,7 @@ d2u_machinery_machine = Maschine
 d2u_machinery_machine_alternatives = Alternative Maschinen
 d2u_machinery_machine_depth = Tiefe (mm)
 d2u_machinery_machine_engine_power = Motorleistung (kW)
+d2u_machinery_machine_engine_power_frequency_controlled = Motorleistung frequenzgeregelt?
 d2u_machinery_machine_height = Höhe (mm)
 d2u_machinery_machine_length = Länge (mm)
 d2u_machinery_machine_name = Name

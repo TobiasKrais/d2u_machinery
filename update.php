@@ -67,6 +67,12 @@ if($sql->getRows() == 0) {
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_machines "
 		. "DROP internal_name;");
 }
+// 1.3 Update database
+$sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_machines LIKE 'engine_power_frequency_controlled';");
+if($sql->getRows() == 0) {
+	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_machines "
+		. "ADD engine_power_frequency_controlled VARCHAR(10) collate utf8_general_ci default NULL AFTER engine_power;");
+}
 
 // 1.0.2 Update machine URL view and regenerate path file
 $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_machinery_url_machines AS

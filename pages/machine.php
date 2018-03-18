@@ -37,6 +37,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$machine->article_id_software = $input_link['article_id_software'];
 			$machine->article_ids_references = preg_grep('/^\s*$/s', explode(",", $input_link_list[1]), PREG_GREP_INVERT);
 			$machine->engine_power = $form['engine_power'];
+			$machine->engine_power_frequency_controlled = array_key_exists('engine_power_frequency_controlled', $form);
 			$machine->length = $form['length'];
 			$machine->width = $form['width'];
 			$machine->height = $form['height'];
@@ -362,6 +363,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 							}
 
 							d2u_addon_backend_helper::form_input('d2u_machinery_machine_engine_power', "form[engine_power]", $machine->engine_power, FALSE, $readonly, "text");
+							d2u_addon_backend_helper::form_checkbox('d2u_machinery_machine_engine_power_frequency_controlled', 'form[engine_power_frequency_controlled]', 'true', $machine->engine_power_frequency_controlled, $readonly);
 							d2u_addon_backend_helper::form_input('d2u_machinery_machine_length', "form[length]", $machine->length, FALSE, $readonly, "number");
 							d2u_addon_backend_helper::form_input('d2u_machinery_machine_width', "form[width]", $machine->width, FALSE, $readonly, "number");
 							d2u_addon_backend_helper::form_input('d2u_machinery_machine_height', "form[height]", $machine->height, FALSE, $readonly, "number");

@@ -14,6 +14,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machi
 	article_ids_references varchar(255) collate utf8_general_ci default NULL,
 	online_status varchar(10) collate utf8_general_ci default 'online',
 	engine_power varchar(255) collate utf8_general_ci default NULL,
+	engine_power_frequency_controlled varchar(10) collate utf8_general_ci default NULL,
 	length int(10) default NULL,
 	width int(10) default NULL,
 	height int(10) default NULL,

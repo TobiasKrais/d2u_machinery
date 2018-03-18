@@ -18,6 +18,5 @@ page:
         welding: { title: 'translate:d2u_machinery_steel_welding', icon: rex-icon fa-magic }
 
 requires:
-    redaxo: '>=5.1.0'
     packages:
         sprog: '>=1.0.0'

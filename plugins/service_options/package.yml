@@ -7,8 +7,3 @@ page:
     title: 'translate:d2u_machinery_service_options'
     perm: d2u_machinery[]
     icon: rex-icon fa-check-square
-
-requires:
-    redaxo: '>=5.1.0'
-    packages:
-        media_manager: '>=2.0.2'

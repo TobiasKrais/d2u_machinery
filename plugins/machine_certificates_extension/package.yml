@@ -9,9 +9,5 @@ page:
     icon: rex-icon fa-certificate
 
 requires:
-    redaxo: '>=5.1.0'
-    php:
-        version: '>=5.3'
     packages:
         media_manager: '>=2.0.2'
-        tinymce4: '>=0.10'

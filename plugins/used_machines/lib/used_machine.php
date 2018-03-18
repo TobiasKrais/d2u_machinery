@@ -168,16 +168,6 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 			if(strlen($this->external_url) > 3 && substr($this->external_url, 0, 4) != "http") {
 				$this->external_url = "http://". $this->external_url;
 			}
-
-			// Convert redaxo://123 to URL
-			$this->description = preg_replace_callback(
-					'@redaxo://(\d+)(?:-(\d+))?/?@i',
-					create_function(
-							'$matches',
-							'return rex_getUrl($matches[1], isset($matches[2]) ? $matches[2] : "");'
-					),
-					$this->description
-			);
 		}
 	}
 

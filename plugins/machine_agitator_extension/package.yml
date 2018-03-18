@@ -12,7 +12,5 @@ page:
         agitator: { title: 'translate:d2u_machinery_agitators', icon: rex-icon fa-spoon }
 
 requires:
-    redaxo: '>=5.1.0'
     packages:
         media_manager: '>=2.0.2'
-        tinymce4: '>=0.10'

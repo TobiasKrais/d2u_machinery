@@ -862,7 +862,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 				$this->shaving_unit_angle_steel_single_cut = $result->getValue("shaving_unit_angle_steel_single_cut");
 				$profile_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("profile_ids")), PREG_GREP_INVERT);
 				foreach($profile_ids as $profile_id) {
-					$this->profiles[$profile_id] = new Supply($profile_id, $this->clang_id);
+					$this->profiles[$profile_id] = new Profile($profile_id, $this->clang_id);
 				}
 				$this->carrier_width = $result->getValue("carrier_width");
 				$this->carrier_height = $result->getValue("carrier_height");

@@ -7,6 +7,3 @@ page:
     title: 'translate:d2u_machinery_usage_areas'
     perm: d2u_machinery[]
     icon: rex-icon fa-codepen
-
-requires:
-    redaxo: '>=5.1.0'

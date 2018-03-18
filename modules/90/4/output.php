@@ -217,7 +217,7 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 	}
 
 	// Text
-	print '<div class="col-sm-12 col-md-6">'. $used_machine->description .'</div>';
+	print '<div class="col-sm-12 col-md-6">'. d2u_addon_frontend_helper::prepareEditorField($used_machine->description) .'</div>';
 	print '<div class="col-sm-12">&nbsp;</div>';
 		
 	// Link to machine

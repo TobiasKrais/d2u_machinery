@@ -238,7 +238,7 @@ if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['d
 				print '<table class="matrix">';
 				print '<thead><tr><td></td>';
 				foreach($machines as $machine) {
-					print '<td valign="top" align="center">';
+					print '<td valign="bottom" align="center">';
 					print '<a href="'. $machine->getURL() .'"><div class="comparison-header">';
 					if(count($machine->pics) > 0 && $machine->pics[0] != "") {
 						print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.	$machine->pics[0] .'" alt='. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .'>';
@@ -278,7 +278,7 @@ if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['d
 		print '<table class="matrix">';
 		print '<thead><tr><td></td><td></td>';
 		foreach($machines as $machine) {
-			print '<td valign="top" align="center">';
+			print '<td valign="bottom" align="center">';
 			print '<a href="'. $machine->getURL() .'"><div class="comparison-header">';
 			if(count($machine->pics) > 0 && $machine->pics[0] != "") {
 				print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.	$machine->pics[0] .'" alt='. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .'>';
@@ -325,7 +325,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 
 	// Text
 	print '<div class="col-12 col-md-6">';
-	print $machine->description;
+	print d2u_addon_frontend_helper::prepareEditorField($machine->description);
 	print '<p>&nbsp;</p>';
 	print '</div>';
 
@@ -387,7 +387,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 			print '<div class="col-12">';
 			print '<h2>'. $tag_open .'d2u_machinery_video'. $tag_close .'</h2>';
 			print '</div>';
-			print '<div class="col-12">';
+			print '<div class="col-12" id="videoplayer">';
 			$videomanager = new Videomanager();
 			$videomanager->printVideos($videos);
 			print '</div>';
@@ -414,6 +414,26 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		}
 	}
 		
+	// Downloads
+	if(count($machine->pdfs) > 0) {
+		print '<div class="col-12 col-md-6">';
+		print '<h3>'. $tag_open .'d2u_machinery_downloads'. $tag_close .'</h3>';
+		$pdfs = array_unique(array_merge($machine->pdfs, $machine->category->pdfs));
+		foreach($pdfs as $pdf) {
+			$media = rex_media::get($pdf);
+			
+			// Check permissions
+			$has_permission = TRUE;
+			if(rex_plugin::get('ycom', 'auth_media')->isAvailable() && $media instanceof rex_media) {
+				$has_permission = rex_ycom_auth_media::checkPerm($media);
+			}
+			if($has_permission) {
+				print '<a href="'. $media->getUrl() .'"><div class="downloads"><span class="fa-icon fa-file-pdf-o"></span> '. $media->getTitle() .'</div></a>';
+			}
+		}
+		print '</div>';
+	}
+
 	// Software
 	if($machine->article_id_software > 0) {
 		print '<div class="col-12 col-md-6">';
@@ -452,26 +472,6 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		print '<p>&nbsp;</p>';
 		print '</div>';
 	}
-
-	// Downloads
-	if(count($machine->pdfs) > 0) {
-		print '<div class="col-12 col-md-6">';
-		print '<h3>'. $tag_open .'d2u_machinery_downloads'. $tag_close .'</h3>';
-		$pdfs = array_unique(array_merge($machine->pdfs, $machine->category->pdfs));
-		foreach($pdfs as $pdf) {
-			$media = rex_media::get($pdf);
-			
-			// Check permissions
-			$has_permission = TRUE;
-			if(rex_plugin::get('ycom', 'auth_media')->isAvailable() && $media instanceof rex_media) {
-				$has_permission = rex_ycom_auth_media::checkPerm($media);
-			}
-			if($has_permission) {
-				print '<a href="'. $media->getUrl() .'"><div class="downloads"><span class="fa-file-pdf-o"></span> '. $media->getTitle() .'</div></a>';
-			}
-		}
-		print '</div>';
-	}
 	print '</div>'; // END class="row"
 	print '</div>'; // END tab overview
 	
@@ -493,7 +493,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 			print '</div>';
 			print '<div class="col-12 col-md-6 col-lg-10 col-xl-8">';
 			print '<p><b>'. $agitator->name .'</b></p>';
-			print $agitator->description;
+			print d2u_addon_frontend_helper::prepareEditorField($agitator->description);
 			print '</div>';
 			print '</div>';
 		}
@@ -514,7 +514,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 			print '</div>';
 			print '<div class="col-12 col-md-6 col-lg-10 col-xl-8">';
 			print '<p><b>'. $feature->title .'</b></p>';
-			print $feature->description;
+			print d2u_addon_frontend_helper::prepareEditorField($feature->description);
 			print '</div>';
 			print '</div>';
 		}
@@ -567,13 +567,13 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		}
 
 		if(strlen($machine->delivery_set_basic) > 5) {
-			print '<div class="col-12 '. $class .'">'. $machine->delivery_set_basic .'</div>';
+			print '<div class="col-12 '. $class .'">'. d2u_addon_frontend_helper::prepareEditorField($machine->delivery_set_basic) .'</div>';
 		}
 		if(strlen($machine->delivery_set_conversion) > 5) {
-			print '<div class="col-12 '. $class .'">'. $machine->delivery_set_basic .'</div>';
+			print '<div class="col-12 '. $class .'">'. d2u_addon_frontend_helper::prepareEditorField($machine->delivery_set_conversion) .'</div>';
 		}
 		if(strlen($machine->delivery_set_full) > 5) {
-			print '<div class="col-12 '. $class .'">'. $machine->delivery_set_basic .'</div>';
+			print '<div class="col-12 '. $class .'">'. d2u_addon_frontend_helper::prepareEditorField($machine->delivery_set_full) .'</div>';
 		}
 		print '</div>';
 		print '</div>';
@@ -593,7 +593,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 			print '</div>';
 			print '<div class="col-12 col-md-6 col-lg-10 col-xl-8">';
 			print '<p><b>'. $service_option->name .'</b></p>';
-			print $service_option->description;
+			print d2u_addon_frontend_helper::prepareEditorField($service_option->description);
 			print '</div>';
 			print '</div>';
 		}
@@ -623,7 +623,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 			print '<div class="col-12 col-sm-4 col-md-3 col-lg-2">';
 			if($equipment_group->picture != "") {
 				print '<a href="index.php?rex_media_type=d2u_helper_gallery_detail&rex_media_file='. $equipment_group->picture .'" '
-					.'data-toggle="lightbox_equipment" data-gallery="example-gallery_equipment" data-title="'. $equipment_group->name.'">';
+					.'data-toggle="lightbox_equipment" data-gallery="example-galleryequipment" data-title="'. $equipment_group->name.'">';
                 print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='. $equipment_group->picture .'" class="img-fluid featurepic"'
 					.' alt="'. $equipment_group->name .'" title="'. $equipment_group->name .'">';
 				print '</a>';
@@ -631,7 +631,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 			print '</div>';
 			print '<div class="col-12 col-sm-8 col-md-9 col-lg-10">';
 			print '<h3>'. $equipment_group->name .'</h3>';
-			print '<p>'. $equipment_group->description .'</p>';
+			print '<p>'. d2u_addon_frontend_helper::prepareEditorField($equipment_group->description) .'</p>';
 			$current_equipments = $equipments[$equipment_group->group_id];
 			ksort($current_equipments);
 			foreach($current_equipments as $current_equipment) {
@@ -640,7 +640,14 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 			print '</div>';
 			print '</div>';
 		}
-
+		print '<script>';
+		print "$(document).on('click', '[data-toggle=\"lightbox_equipment\"]', function(event) {
+				event.preventDefault();
+				$(this).ekkoLightbox({
+					alwaysShowClose: true
+				});
+			});";
+		print '</script>';
 		print "</div>";
 	}
 
