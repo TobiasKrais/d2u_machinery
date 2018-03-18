@@ -69,16 +69,6 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 			if($result->getValue("translation_needs_update") != "") {
 				$this->translation_needs_update = $result->getValue("translation_needs_update");
 			}
-
-			// Convert redaxo://123 to URL
-			$this->description = preg_replace_callback(
-					'@redaxo://(\d+)(?:-(\d+))?/?@i',
-					create_function(
-							'$matches',
-							'return rex_getUrl($matches[1], isset($matches[2]) ? $matches[2] : "");'
-					),
-					$this->description
-			);
 		}
 	}
 	

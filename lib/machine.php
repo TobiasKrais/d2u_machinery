@@ -100,6 +100,11 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	var $engine_power = "";
 
 	/**
+	 * @var boolean Is engine power frequency controlled?
+	 */
+	var $engine_power_frequency_controlled = false;
+
+	/**
 	 * @var int Machine length
 	 */
 	var $length = 0;
@@ -708,6 +713,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			$this->article_ids_references = preg_grep('/^\s*$/s', explode(",", $result->getValue("article_ids_references")), PREG_GREP_INVERT);
 			$this->online_status = $result->getValue("online_status");
 			$this->engine_power = $result->getValue("engine_power");
+			$this->engine_power_frequency_controlled = $result->getValue("engine_power_frequency_controlled") == "true" ? TRUE : FALSE;
 			$this->length = $result->getValue("length");
 			$this->width = $result->getValue("width");
 			$this->height = $result->getValue("height");
@@ -725,16 +731,6 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 				$this->translation_needs_update = $result->getValue("translation_needs_update");
 			}
 
-			// Convert redaxo://123 to URL
-			$this->description = preg_replace_callback(
-					'@redaxo://(\d+)(?:-(\d+))?/?@i',
-					create_function(
-							'$matches',
-							'return rex_getUrl($matches[1], isset($matches[2]) ? $matches[2] : "");'
-					),
-					$this->description
-			);
-			
 			if(rex_plugin::get("d2u_machinery", "equipment")->isAvailable()) {
 				$this->equipment_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("equipment_ids")), PREG_GREP_INVERT);
 			}
@@ -1108,7 +1104,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 		if($this->engine_power != "") {
 			$tech_data[] = [
 				"description" => $tag_open . "d2u_machinery_engine_power" . $tag_close,
-				"value" => $this->engine_power,
+				"value" => $this->engine_power . ($this->engine_power_frequency_controlled ?  ' ('. $tag_open . "d2u_machinery_engine_power_frequency_controlled" . $tag_close .')' : ''),
 				"unit" => $tag_open . "d2u_machinery_unit_kw" . $tag_close
 			];
 		}
@@ -1152,20 +1148,11 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 		if($this->weight != "") {
 			$tech_data[] = [
 				"description" => $tag_open . "d2u_machinery_weight" . $tag_close,
-				"value" => $this->weight,
+				"value" => $tag_open . "d2u_machinery_unit_ca" . $tag_close .' '. $this->weight,
 				"unit" => $tag_open . "d2u_machinery_unit_kg" . $tag_close
 			];
 		}
 		
-		// Engine power
-		if($this->engine_power != "") {
-			$tech_data[] = [
-				"description" => $tag_open . "d2u_machinery_engine_power" . $tag_close,
-				"value" => $this->engine_power,
-				"unit" => $tag_open . "d2u_machinery_unit_kw" . $tag_close
-			];
-		}
-
 		if(rex_plugin::get("d2u_machinery", "machine_steel_processing_extension")->isAvailable()) {
 			// Procedures
 			if(count($this->procedures) > 0) {
@@ -1822,7 +1809,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			if($this->pump_filling != "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_construction_equipment_pump_filling" . $tag_close,
-					"value" => $tag_open . "d2u_machinery_construction_equipment_ca" . $tag_close .' '. $this->pump_filling,
+					"value" => $tag_open . "d2u_machinery_unit_ca" . $tag_close .' '. $this->pump_filling,
 					"unit" => $tag_open . "d2u_machinery_unit_mm" . $tag_close
 				];
 			}
@@ -1939,7 +1926,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			if($this->container_waterconnect_diameter != "" && $this->container_waterconnect_pressure > 0) {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_construction_equipment_container_waterconnect" . $tag_close,
-					"value" => $this->container_waterconnect_diameter .'", '. $this->container_waterconnect_pressure,
+					"value" => $this->container_waterconnect_pressure .' ('. $this->container_waterconnect_diameter .'")',
 					"unit" => $tag_open . "d2u_machinery_unit_bar" . $tag_close
 				];
 			}
@@ -1958,15 +1945,6 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_construction_equipment_machine_technique" . $tag_close,
 					"value" => '<a href="'. $this->category->getUrl() .'">'. $this->category->name .'</a>',
-					"unit" => ""
-				];
-			}
-			
-			// Technical description
-			if($this->description_technical != "") {
-				$tech_data[] = [
-					"description" => $tag_open . "d2u_machinery_construction_equipment_description_technical" . $tag_close,
-					"value" => $this->description_technical,
 					"unit" => ""
 				];
 			}
@@ -2031,6 +2009,15 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 					"description" => $tag_open . "d2u_machinery_construction_equipment_floor_rotations" . $tag_close,
 					"value" => $this->floor_rotations,
 					"unit" => $tag_open . "d2u_machinery_unit_min1" . $tag_close
+				];
+			}
+
+			// Technical description
+			if($this->description_technical != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_construction_equipment_description_technical" . $tag_close,
+					"value" => $this->description_technical,
+					"unit" => ""
 				];
 			}
 		}
@@ -2122,6 +2109,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 					."article_ids_references = '". implode(",", $this->article_ids_references) ."', "
 					."online_status = '". $this->online_status ."', "
 					."engine_power = '". $this->engine_power ."', "
+					."engine_power_frequency_controlled = '". ($this->engine_power_frequency_controlled ? 'true' : 'false') ."', "
 					."length = '". $this->length ."', "
 					."width = '". $this->width ."', "
 					."height = '". $this->height ."', "
