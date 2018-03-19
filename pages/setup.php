@@ -38,6 +38,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.2.0 (NEXT):</p>
 <ul>
+	<li>YRewrite Multidomain Anpassungen.</li>
 	<li>Vereinheitlicht: Übersetzungen ins D2U Helper Addon umgezogen.</li>
 	<li>Bugfix Maschinen technische Daten: Hz-Wert wurde fälschlicherweise statt V-Wert ausgegeben.</li>
 	<li>Export Plugin: Portale können offline geschaltet werden.</li>
