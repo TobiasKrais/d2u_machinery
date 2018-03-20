@@ -584,7 +584,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		print '<div id="tab_service_options" class="tab-pane fade machine-tab">';
 		$service_options = $machine->getServiceOptions();
 		foreach($service_options as $service_option) {
-			print '<div class="row">';
+			print '<div class="row equipline">';
 			print '<div class="col-12 col-md-6 col-lg-2">';
 			if($service_option->picture != "") {
 				print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
@@ -612,7 +612,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 				$equipment_groups[$equipment->group->priority] = $equipment->group;
 				$equipments[$equipment->group->group_id] = [];
 			}
-			if ($equipment->group !== FALSE && array_key_exists($equipment->group->priority, $equipments)) {
+			if ($equipment->group !== FALSE && array_key_exists($equipment->group->group_id, $equipments)) {
 				$equipments[$equipment->group->group_id][$equipment->name] = $equipment;
 			}
 		}
@@ -635,7 +635,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 			$current_equipments = $equipments[$equipment_group->group_id];
 			ksort($current_equipments);
 			foreach($current_equipments as $current_equipment) {
-				print '<p>'. $current_equipment->name .' ('. $tag_open .'d2u_machinery_equipment_artno'. $tag_close .' '. $current_equipment->article_number .')</p>';
+				print '<p><b>'. $current_equipment->name .'</b> ('. $tag_open .'d2u_machinery_equipment_artno'. $tag_close .' '. $current_equipment->article_number .')</p>';
 			}
 			print '</div>';
 			print '</div>';

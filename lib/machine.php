@@ -1067,12 +1067,16 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Get Service Option objects related to this machine.
+	 * @param boolean $online_only TRUE if only online objects are returned
 	 * @return ServiceOption[] Array with ServiceOption objects.
 	 */
-	public function getServiceOptions() {
+	public function getServiceOptions($online_only = TRUE) {
 		$service_options = [];
 		foreach ($this->service_option_ids as $service_option_id) {
-			$service_options[] = new ServiceOption($service_option_id, $this->clang_id);
+			$service_option = new ServiceOption($service_option_id, $this->clang_id);
+			if(($online_only && $service_option->online_status == "online") || !$online_only) {
+				$service_options[] = $service_option;
+			}
 		}
 		return $service_options;
 	}
