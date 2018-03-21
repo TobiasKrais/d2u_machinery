@@ -24,9 +24,9 @@ $d2u_module_manager->showManagerList();
 <ul>
 	<li>Maschinen und Gebrauchtmaschinen Addon: <a href="https://www.kaltenbach.com/" target="_blank">
 		Kaltenbach GmbH + Co. KG</a>.</li>
-	<li>Maschinen Addon: <a href="http://www.promitec.de" target="_blank">
+	<li>Maschinen Addon: <a href="https://www.promitec.de" target="_blank">
 		Promitec</a>.</li>
-	<li>Maschinen Addon: <a href="http://www.inotec-gmbh.com" target="_blank">
+	<li>Maschinen Addon: <a href="https://www.inotec-gmbh.com" target="_blank">
 		Inotec GmbH</a>.</li>
 	<li>Gebrauchtmaschinen Plugin: <a href="https://www.meier-krantechnik.de" target="_blank">
 		Meier Krantechnik</a>.</li>
@@ -36,7 +36,7 @@ $d2u_module_manager->showManagerList();
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_machinery" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
-<p>1.2.0 (NEXT):</p>
+<p>1.2.0:</p>
 <ul>
 	<li>YRewrite Multidomain Anpassungen.</li>
 	<li>Vereinheitlicht: Übersetzungen ins D2U Helper Addon umgezogen.</li>

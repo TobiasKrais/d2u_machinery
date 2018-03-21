@@ -1,5 +1,5 @@
 package: d2u_machinery/machine_steel_processing_extension
-version: '1.0.3'
+version: '1.2.0'
 author: Tobias Krais
 supportpage: http://github.com/tobiaskrais/d2u_machinery
 
@@ -16,7 +16,3 @@ page:
         supply: { title: 'translate:d2u_machinery_steel_supply', icon: rex-icon fa-stack-overflow }
         tool: { title: 'translate:d2u_machinery_steel_tools', icon: rex-icon fa-magnet }
         welding: { title: 'translate:d2u_machinery_steel_welding', icon: rex-icon fa-magic }
-
-requires:
-    packages:
-        sprog: '>=1.0.0'
