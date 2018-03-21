@@ -52,18 +52,18 @@ $sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_machines_l
 		. "CHANGE `pdfs` `pdfs` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER `description`;");
 // 1.1.3 Update database
 $sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_categories LIKE 'videomanager_ids';");
-if($sql->getRows() == 0) {
+if($sql->getRows() > 0) {
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_categories "
 		. "CHANGE videomanager_ids video_ids varchar(255) collate utf8_general_ci default NULL;");
 }
 $sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_machines LIKE 'videomanager_ids';");
-if($sql->getRows() == 0) {
+if($sql->getRows() > 0) {
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_machines "
 		. "CHANGE videomanager_ids video_ids varchar(255) collate utf8_general_ci default NULL;");
 }
 // 1.2 Update database
 $sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_machines LIKE 'internal_name';");
-if($sql->getRows() == 0) {
+if($sql->getRows() > 0) {
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_machines "
 		. "DROP internal_name;");
 }
