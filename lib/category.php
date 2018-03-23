@@ -712,6 +712,10 @@ class Category implements \D2U_Helper\ITranslationHelper{
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = ". time() .", "
 						."updateuser = '". \rex::getUser()->getLogin() ."' ";
+				if(rex_plugin::get("d2u_machinery", "machine_steel_processing_extension")->isAvailable()) {
+					$query .= ", steel_processing_saw_cutting_range_file = '". $this->steel_processing_saw_cutting_range_file ."', "
+						."steel_processing_saw_cutting_range_title = '". $this->steel_processing_saw_cutting_range_title ."' ";
+				}
 
 				$result = rex_sql::factory();
 				$result->setQuery($query);
