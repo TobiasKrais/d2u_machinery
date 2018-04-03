@@ -82,7 +82,7 @@ class Feature implements \D2U_Helper\ITranslationHelper {
 			$this->title = $result->getValue("title");
 			$this->pic = $result->getValue("pic");
 			$this->category_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("category_ids")), PREG_GREP_INVERT);
-			$this->description = htmlspecialchars_decode($result->getValue("description"));
+			$this->description = htmlspecialchars_decode(stripslashes($result->getValue("description")));
 			if($result->getValue("translation_needs_update") != "") {
 				$this->translation_needs_update = $result->getValue("translation_needs_update");
 			}
@@ -246,7 +246,7 @@ class Feature implements \D2U_Helper\ITranslationHelper {
 						."clang_id = '". $this->clang_id ."', "
 						."name = '". $this->name ."', "
 						."title = '". $this->title ."', "
-						."description = '". htmlspecialchars($this->description) ."', "
+						."description = '". addslashes(htmlspecialchars($this->description)) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."' ";
 
 				$result = rex_sql::factory();

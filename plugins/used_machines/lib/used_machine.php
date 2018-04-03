@@ -157,9 +157,9 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 			}
 			$this->location = $result->getValue("location");
 			$this->external_url = $result->getValue("external_url");
-			$this->description = htmlspecialchars_decode($result->getValue("description"));
+			$this->description = stripslashes(htmlspecialchars_decode($result->getValue("description")));
 			$this->downloads = preg_grep('/^\s*$/s', explode(",", $result->getValue("downloads")), PREG_GREP_INVERT);
-			$this->teaser = htmlspecialchars_decode($result->getValue("teaser"));
+			$this->teaser = stripslashes(htmlspecialchars_decode($result->getValue("teaser")));
 			if($result->getValue("translation_needs_update") != "") {
 				$this->translation_needs_update = $result->getValue("translation_needs_update");
 			}

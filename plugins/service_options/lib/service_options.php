@@ -63,7 +63,7 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper {
 		if ($num_rows > 0) {
 			$this->service_option_id = $result->getValue("service_option_id");
 			$this->name = $result->getValue("name");
-			$this->description = htmlspecialchars_decode($result->getValue("description"));
+			$this->description = stripslashes(htmlspecialchars_decode($result->getValue("description")));
 			$this->picture = $result->getValue("picture");
 			$this->online_status = $result->getValue("online_status");
 			if($result->getValue("translation_needs_update") != "") {
@@ -244,7 +244,7 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper {
 						."service_option_id = '". $this->service_option_id ."', "
 						."clang_id = '". $this->clang_id ."', "
 						."name = '". $this->name ."', "
-						."description = '". htmlspecialchars($this->description) ."', "
+						."description = '". addslashes(htmlspecialchars($this->description)) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = ". time() .", "
 						."updateuser = '". \rex::getUser()->getLogin() ."' ";

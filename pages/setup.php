@@ -38,7 +38,9 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.2.1-DEV:</p>
 <ul>
+	<li>Bugfix: Speichern von einfachem Anführungszeichen schlug manchmal fehl.</li>
 	<li>Bugfix: Update schlug fehl</li>
+	<li>Bugfix machine_steel_processing_extension: Eingabefelder für Schnittbereichskonfigurator hinzugefügt</li>
 </ul>
 <p>1.2.0:</p>
 <ul>

@@ -157,9 +157,9 @@ class Category implements \D2U_Helper\ITranslationHelper{
 			if($result->getValue("parent_category_id") > 0) {
 				$this->parent_category = new Category($result->getValue("parent_category_id"), $clang_id);
 			}
-			$this->name = $result->getValue("name");
-			$this->teaser = htmlspecialchars_decode($result->getValue("teaser"));
-			$this->usage_area = $result->getValue("usage_area");
+			$this->name = stripslashes(htmlspecialchars_decode($result->getValue("name")));
+			$this->teaser = stripslashes(htmlspecialchars_decode($result->getValue("teaser")));
+			$this->usage_area = stripslashes(htmlspecialchars_decode($result->getValue("usage_area")));
 			$this->pic = $result->getValue("pic");
 			$this->pic_lang = $result->getValue("pic_lang");
 			$this->pic_usage = $result->getValue("pic_usage");
@@ -704,9 +704,9 @@ class Category implements \D2U_Helper\ITranslationHelper{
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_categories_lang SET "
 						."category_id = '". $this->category_id ."', "
 						."clang_id = '". $this->clang_id ."', "
-						."name = '". htmlspecialchars($this->name) ."', "
-						."teaser = '". htmlspecialchars($this->teaser) ."', "
-						."usage_area = '". htmlspecialchars($this->usage_area) ."', "
+						."name = '". addslashes(htmlspecialchars($this->name)) ."', "
+						."teaser = '". addslashes(htmlspecialchars($this->teaser)) ."', "
+						."usage_area = '". addslashes(htmlspecialchars($this->usage_area)) ."', "
 						."pic_lang = '". $this->pic_lang ."', "
 						."pdfs = '". implode(",", $this->pdfs) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
