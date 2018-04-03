@@ -67,7 +67,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 
 		if ($num_rows > 0) {
 			$this->industry_sector_id = $result->getValue("industry_sector_id");
-			$this->name = $result->getValue("name");
+			$this->name = stripslashes($result->getValue("name"));
 			$this->teaser = stripslashes(htmlspecialchars_decode($result->getValue("teaser")));
 			$this->pic = $result->getValue("pic");
 			$this->online_status = $result->getValue("online_status");
@@ -337,7 +337,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang SET "
 						."industry_sector_id = '". $this->industry_sector_id ."', "
 						."clang_id = '". $this->clang_id ."', "
-						."name = '". $this->name ."', "
+						."name = '". addslashes($this->name) ."', "
 						."teaser = '". addslashes(htmlspecialchars($this->teaser)) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = ". time() .", "

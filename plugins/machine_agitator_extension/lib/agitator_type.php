@@ -57,7 +57,7 @@ class AgitatorType implements \D2U_Helper\ITranslationHelper {
 
 		if ($num_rows > 0) {
 			$this->agitator_type_id = $result->getValue("agitator_type_id");
-			$this->name = $result->getValue("name");
+			$this->name = stripslashes($result->getValue("name"));
 			$this->pic = $result->getValue("pic");
 			$this->agitator_type_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("agitator_type_ids")), PREG_GREP_INVERT);
 			if($result->getValue("translation_needs_update") != "") {
@@ -212,7 +212,7 @@ class AgitatorType implements \D2U_Helper\ITranslationHelper {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_agitator_types_lang SET "
 						."agitator_type_id = '". $this->agitator_type_id ."', "
 						."clang_id = '". $this->clang_id ."', "
-						."name = '". $this->name ."', "
+						."name = '". addslashes($this->name) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."' ";
 
 				$result = rex_sql::factory();

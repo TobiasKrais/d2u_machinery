@@ -73,7 +73,7 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 		if ($num_rows > 0) {
 			$this->supply_id = $result->getValue("supply_id");
 			$this->online_status = $result->getValue("online_status");
-			$this->name = $result->getValue("name");
+			$this->name = stripslashes($result->getValue("name"));
 			$this->title = $result->getValue("title");
 			$this->description = $result->getValue("description");
 			$this->pic = $result->getValue("pic");
@@ -261,7 +261,7 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_steel_supply_lang SET "
 						."supply_id = '". $this->supply_id ."', "
 						."clang_id = '". $this->clang_id ."', "
-						."name = '". $this->name ."', "
+						."name = '". addslashes($this->name) ."', "
 						."title = '". $this->title ."', "
 						."description = '". $this->description ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."' ";

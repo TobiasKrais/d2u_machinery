@@ -64,7 +64,7 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 			$this->group_id = $result->getValue("group_id");
 			$this->priority = $result->getValue("priority");
 			$this->picture = $result->getValue("picture");
-			$this->name = $result->getValue("name");
+			$this->name = stripslashes($result->getValue("name"));
 			$this->description = stripslashes(htmlspecialchars_decode($result->getValue("description")));
 			if($result->getValue("translation_needs_update") != "") {
 				$this->translation_needs_update = $result->getValue("translation_needs_update");
@@ -212,7 +212,7 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_equipment_groups_lang SET "
 						."group_id = '". $this->group_id ."', "
 						."clang_id = '". $this->clang_id ."', "
-						."name = '". $this->name ."', "
+						."name = '". addslashes($this->name) ."', "
 						."description = '". addslashes(htmlspecialchars($this->description)) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."' ";
 

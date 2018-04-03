@@ -137,7 +137,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 
 		if ($num_rows > 0) {
 			$this->used_machine_id = $result->getValue("used_machines.used_machine_id");
-			$this->name = $result->getValue("name");
+			$this->name = stripslashes($result->getValue("name"));
 			$this->category = new Category($result->getValue("category_id"), $this->clang_id);
 			$this->offer_type = $result->getValue("offer_type");
 			$this->category->setOfferType($this->offer_type);
@@ -487,7 +487,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 		$pre_save_used_machine = new UsedMachine($this->used_machine_id, $this->clang_id);
 		if($this->used_machine_id == 0 || $pre_save_used_machine != $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_used_machines SET "
-					."name = '". $this->name ."', "
+					."name = '". addslashes($this->name) ."', "
 					."category_id = ". $this->category->category_id .", "
 					."offer_type = '". $this->offer_type ."', "
 					."availability = '". $this->availability ."', "

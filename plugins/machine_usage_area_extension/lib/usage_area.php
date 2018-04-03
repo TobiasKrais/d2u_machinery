@@ -57,7 +57,7 @@ class UsageArea implements \D2U_Helper\ITranslationHelper {
 
 		if ($num_rows > 0) {
 			$this->usage_area_id = $result->getValue("usage_area_id");
-			$this->name = $result->getValue("name");
+			$this->name = stripslashes($result->getValue("name"));
 			$this->priority = $result->getValue("priority");
 			$this->category_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("category_ids")), PREG_GREP_INVERT);
 			if($result->getValue("translation_needs_update") != "") {
@@ -210,7 +210,7 @@ class UsageArea implements \D2U_Helper\ITranslationHelper {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_usage_areas_lang SET "
 						."usage_area_id = '". $this->usage_area_id ."', "
 						."clang_id = '". $this->clang_id ."', "
-						."name = '". $this->name ."', "
+						."name = '". addslashes($this->name) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."' ";
 
 				$result = rex_sql::factory();

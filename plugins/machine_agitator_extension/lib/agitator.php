@@ -57,7 +57,7 @@ class Agitator implements \D2U_Helper\ITranslationHelper {
 
 		if ($num_rows > 0) {
 			$this->agitator_id = $result->getValue("agitator_id");
-			$this->name = $result->getValue("name");
+			$this->name = stripslashes($result->getValue("name"));
 			$this->pic = $result->getValue("pic");
 			$this->description = stripslashes(htmlspecialchars_decode($result->getValue("description")));
 			if($result->getValue("translation_needs_update") != "") {
@@ -199,7 +199,7 @@ class Agitator implements \D2U_Helper\ITranslationHelper {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_agitators_lang SET "
 						."agitator_id = '". $this->agitator_id ."', "
 						."clang_id = '". $this->clang_id ."', "
-						."name = '". $this->name ."', "
+						."name = '". addslashes($this->name) ."', "
 						."description = '". addslashes(htmlspecialchars($this->description)) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."' ";
 

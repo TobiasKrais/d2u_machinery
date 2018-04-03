@@ -57,7 +57,7 @@ class Certificate implements \D2U_Helper\ITranslationHelper {
 
 		if ($num_rows > 0) {
 			$this->certificate_id = $result->getValue("certificate_id");
-			$this->name = $result->getValue("name");
+			$this->name = stripslashes($result->getValue("name"));
 			$this->description = $result->getValue("description");
 			$this->pic = $result->getValue("pic");
 			if($result->getValue("translation_needs_update") != "") {
@@ -199,7 +199,7 @@ class Certificate implements \D2U_Helper\ITranslationHelper {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_certificates_lang SET "
 						."certificate_id = '". $this->certificate_id ."', "
 						."clang_id = '". $this->clang_id ."', "
-						."name = '". $this->name ."', "
+						."name = '". addslashes($this->name) ."', "
 						."description = '". $this->description ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."' ";
 

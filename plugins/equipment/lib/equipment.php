@@ -64,7 +64,7 @@ class Equipment implements \D2U_Helper\ITranslationHelper {
 			$this->equipment_id = $result->getValue("equipment_id");
 			$this->article_number = $result->getValue("article_number");
 			$this->online_status = $result->getValue("online_status");
-			$this->name = $result->getValue("name");
+			$this->name = stripslashes($result->getValue("name"));
 			if($result->getValue("group_id") > 0) {
 				$this->group = new EquipmentGroup($result->getValue("group_id"), $clang_id);
 			}
@@ -236,7 +236,7 @@ class Equipment implements \D2U_Helper\ITranslationHelper {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_equipments_lang SET "
 						."equipment_id = '". $this->equipment_id ."', "
 						."clang_id = '". $this->clang_id ."', "
-						."name = '". $this->name ."', "
+						."name = '". addslashes($this->name) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."' ";
 
 				$result = rex_sql::factory();

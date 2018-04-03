@@ -703,7 +703,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 
 		if($num_rows > 0) {
 			$this->machine_id = $result->getValue("machine_id");
-			$this->name = $result->getValue("name");
+			$this->name = stripslashes($result->getValue("name"));
 			$this->pics = preg_grep('/^\s*$/s', explode(",", $result->getValue("pics")), PREG_GREP_INVERT);
 			$this->category = new Category($result->getValue("category_id"), $clang_id);
 			$this->alternative_machine_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("alternative_machine_ids")), PREG_GREP_INVERT);
@@ -2108,7 +2108,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 
 		if($this->machine_id == 0 || $pre_save_machine != $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_machines SET "
-					."name = '". $this->name ."', "
+					."name = '". addslashes($this->name) ."', "
 					."pics = '". implode(",", $this->pics) ."', "
 					."category_id = ". ($this->category ? $this->category->category_id : 0) .", "
 					."alternative_machine_ids = '|". implode("|", $this->alternative_machine_ids) ."|', "

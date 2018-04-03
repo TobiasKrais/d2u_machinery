@@ -53,7 +53,7 @@ class Tool implements \D2U_Helper\ITranslationHelper {
 		if ($num_rows > 0) {
 			$this->tool_id = $result->getValue("tool_id");
 			$this->internal_name = $result->getValue("internal_name");
-			$this->name = $result->getValue("name");
+			$this->name = stripslashes($result->getValue("name"));
 			if($result->getValue("translation_needs_update") != "") {
 				$this->translation_needs_update = $result->getValue("translation_needs_update");
 			}
@@ -192,7 +192,7 @@ class Tool implements \D2U_Helper\ITranslationHelper {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_steel_tool_lang SET "
 						."tool_id = '". $this->tool_id ."', "
 						."clang_id = '". $this->clang_id ."', "
-						."name = '". $this->name ."', "
+						."name = '". addslashes($this->name) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."' ";
 
 				$result = rex_sql::factory();
