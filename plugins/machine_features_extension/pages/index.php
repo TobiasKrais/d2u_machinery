@@ -26,10 +26,10 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$feature->priority = $form['priority'];
 			$feature->pic = $input_media[1];
 			if(rex_addon::get("d2u_videos")->isAvailable() && isset($form['video_id']) && $form['video_id'] > 0) {
-				$supply->video = new Video($form['video_id'], rex_config::get("d2u_helper", "default_lang"));
+				$feature->video = new Video($form['video_id'], rex_config::get("d2u_helper", "default_lang"));
 			}
 			else {
-				$supply->video = FALSE;
+				$feature->video = FALSE;
 			}
 		}
 		else {
