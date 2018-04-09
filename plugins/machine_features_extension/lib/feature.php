@@ -79,7 +79,7 @@ class Feature implements \D2U_Helper\ITranslationHelper {
 			$this->feature_id = $result->getValue("feature_id");
 			$this->priority = $result->getValue("priority");
 			$this->name = stripslashes($result->getValue("name"));
-			$this->title = $result->getValue("title");
+			$this->title = stripslashes($result->getValue("title"));
 			$this->pic = $result->getValue("pic");
 			$this->category_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("category_ids")), PREG_GREP_INVERT);
 			$this->description = htmlspecialchars_decode(stripslashes($result->getValue("description")));
@@ -245,7 +245,7 @@ class Feature implements \D2U_Helper\ITranslationHelper {
 						."feature_id = '". $this->feature_id ."', "
 						."clang_id = '". $this->clang_id ."', "
 						."name = '". addslashes($this->name) ."', "
-						."title = '". $this->title ."', "
+						."title = '". addslashes($this->title) ."', "
 						."description = '". addslashes(htmlspecialchars($this->description)) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."' ";
 
