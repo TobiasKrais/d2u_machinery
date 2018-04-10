@@ -138,7 +138,7 @@ class Feature implements \D2U_Helper\ITranslationHelper {
 		
 		$features = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$features[] = new Feature($result->getValue("feature_id"), $clang_id);
+			$features[$result->getValue("feature_id")] = new Feature($result->getValue("feature_id"), $clang_id);
 			$result->next();
 		}
 		return $features;
@@ -193,6 +193,27 @@ class Feature implements \D2U_Helper\ITranslationHelper {
 		
 		return $objects;
     }
+	
+	/**
+	 * returned all unused objects in database.
+	 * @return boolean|Feature[] Array with unused features
+	 */
+	public static function getUnused() {
+		$features = Feature::getAll(rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId()));
+		
+		foreach ($features as $feature) {
+			if(count($feature->getReferringMachines()) > 0) {
+				unset($features[$feature->feature_id]);
+			}
+		}
+
+		if(count($features) > 0) {
+			return $features;
+		}
+		else {
+			return FALSE;
+		}
+	}
 	
 	/**
 	 * Updates or inserts the object into database.

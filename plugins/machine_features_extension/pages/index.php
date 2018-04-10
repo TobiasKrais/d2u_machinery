@@ -96,6 +96,19 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	
 	$func = '';
 }
+// Delete unused
+else if($func == 'delete_unused') {
+	$features = Feature::getUnused();
+	if($features !== FALSE) {
+		foreach ($features as $feature) {
+			$feature->delete(TRUE);
+		}
+
+		print rex_view::success(count($features) .' ' . rex_i18n::msg('d2u_machinery_features_delete_unused_success') . $message);
+	}
+	
+	$func = '';
+}
 
 // Eingabeformular
 if ($func == 'edit' || $func == 'add') {
@@ -235,4 +248,9 @@ if ($func == '') {
     $fragment->setVar('title', rex_i18n::msg('d2u_machinery_features'), false);
     $fragment->setVar('content', $list->get(), false);
     echo $fragment->parse('core/page/section.php');
+	
+	// Delete unused features
+	if(Feature::getUnused() !== FALSE) {
+		print '<p><a href="'. rex_url::currentBackendPage(["func" => "delete_unused"], FALSE) .'"><button class="btn btn-save">'. rex_i18n::msg('d2u_machinery_features_delete_unused') .'</button></a></p><br><br>';
+	}
 }
