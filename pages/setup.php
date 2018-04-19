@@ -36,6 +36,10 @@ $d2u_module_manager->showManagerList();
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_machinery" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
+<p>1.2.2:</p>
+<ul>
+	<li></li>
+</ul>
 <p>1.2.1:</p>
 <ul>
 	<li>Feld Datenschutzerklärung akzeptiert im Frontend Formular hinzugefügt.</li>
@@ -44,8 +48,8 @@ $d2u_module_manager->showManagerList();
 	<li>Module: Slider jetzt mit Fade.</li>
 	<li>Nicht mehr benötigte Features können automatisch gelöscht werden.</li>
 	<li>Bugfix: Speichern von einfachem Anführungszeichen schlug manchmal fehl.</li>
-	<li>Bugfix: Update schlug fehl</li>
-	<li>Bugfix machine_steel_processing_extension: Eingabefelder für Schnittbereichskonfigurator hinzugefügt</li>
+	<li>Bugfix: Update schlug fehl.</li>
+	<li>Bugfix machine_steel_processing_extension: Eingabefelder für Schnittbereichskonfigurator hinzugefügt.</li>
 </ul>
 <p>1.2.0:</p>
 <ul>
