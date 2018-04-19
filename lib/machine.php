@@ -657,6 +657,11 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	var $description_technical = "";
 
 	/**
+	 * @var string Delivery set picture name
+	 */
+	var $picture_delivery_set = "";
+
+	/**
 	 * @var string Basic delivery set description
 	 */
 	var $delivery_set_basic = "";
@@ -790,6 +795,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 				$this->container_connection_port = $result->getValue("container_connection_port");
 				$this->container_conveying_wave = $result->getValue("container_conveying_wave");
 				$this->description_technical = $result->getValue("description_technical");
+				$this->picture_delivery_set = $result->getValue("picture_delivery_set");
 				$this->delivery_set_basic = stripslashes(htmlspecialchars_decode($result->getValue("delivery_set_basic")));
 				$this->delivery_set_conversion = stripslashes(htmlspecialchars_decode($result->getValue("delivery_set_conversion")));
 				$this->delivery_set_full = stripslashes(htmlspecialchars_decode($result->getValue("delivery_set_full")));
@@ -2166,18 +2172,19 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 					.", grinder_sanding = '". $this->grinder_sanding ."' "
 					.", grinder_vacuum_connection = ". $this->grinder_vacuum_connection ." "
 					.", operating_pressure = '". $this->operating_pressure ."' "
-					.", pump_conveying_distance_fluid = ". $this->pump_conveying_distance_fluid ." "
-					.", pump_conveying_distance_mineral = ". $this->pump_conveying_distance_mineral ." "
-					.", pump_conveying_distance_pasty = ". $this->pump_conveying_distance_pasty ." "
+					.", picture_delivery_set = '". $this->picture_delivery_set ."' "
+					.", pump_conveying_distance_fluid = ". ($this->pump_conveying_distance_fluid > 0 ? $this->pump_conveying_distance_fluid : 0) ." "
+					.", pump_conveying_distance_mineral = ". ($this->pump_conveying_distance_mineral > 0 ? $this->pump_conveying_distance_mineral : 0) ." "
+					.", pump_conveying_distance_pasty = ". ($this->pump_conveying_distance_pasty > 0 ? $this->pump_conveying_distance_pasty : 0) ." "
 					.", pump_filling = '". $this->pump_filling ."' "
 					.", pump_flow_volume_fluid = '". $this->pump_flow_volume_fluid ."' "
 					.", pump_flow_volume_mineral = '". $this->pump_flow_volume_mineral ."' "
 					.", pump_flow_volume_pasty = '". $this->pump_flow_volume_pasty ."' "
 					.", pump_grain_size = '". $this->pump_grain_size ."' "
 					.", pump_material_container = '". $this->pump_material_container ."' "
-					.", pump_pressure_height_fluid = ". $this->pump_pressure_height_fluid ." "
-					.", pump_pressure_height_mineral = ". $this->pump_pressure_height_mineral ." "
-					.", pump_pressure_height_pasty = ". $this->pump_pressure_height_pasty ." "
+					.", pump_pressure_height_fluid = ". ($this->pump_pressure_height_fluid > 0 ? $this->pump_pressure_height_fluid : 0) ." "
+					.", pump_pressure_height_mineral = ". ($this->pump_pressure_height_mineral > 0 ? $this->pump_pressure_height_mineral : 0) ." "
+					.", pump_pressure_height_pasty = ". ($this->pump_pressure_height_pasty > 0 ? $this->pump_pressure_height_pasty : 0) ." "
 					.", waste_water_capacity = '". $this->waste_water_capacity ."' ";
 			}
 			if(rex_plugin::get("d2u_machinery", "service_options")->isAvailable()) {

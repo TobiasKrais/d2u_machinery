@@ -100,18 +100,49 @@ class d2u_machinery_frontend_helper {
 	 * Prints Responive Multilevel Menu submenu für D2U Machinery Addon.
 	 */
 	public static function getD2UMachineryResponsiveMultiLevelSubmenu() {
-		$categories = Category::getAll(rex_clang::getCurrentId());
-		foreach ($categories as $category) {
-			print '<li><a href="'. $category->getUrl() .'">'. $category->name .'</a>';
-			print '<ul class="dl-submenu">';
-			print '<li class="dl-back"><a href="#">&nbsp;</a></li>';
-			print '<li><a href="'. $category->getUrl() .'">'. strtoupper($category->name) .'</a></li>';
-			$machines = $category->getMachines(TRUE);
-			foreach ($machines as $machine) {
-				print '<li><a href="'. $machine->getUrl() .'">'. $machine->name .'</a></li>';
+		if(rex_config::get('d2u_machinery', 'show_categories_navi', 'hide') == 'show') {
+			// Get current IDs
+			$current_category_id = 0;
+			$current_machine_id = 0;
+			$urlParamKey = "";
+			if(rex_addon::get("url")->isAvailable()) {
+				$url_data = UrlGenerator::getData();
+				$urlParamKey = isset($url_data->urlParamKey) ? $url_data->urlParamKey : "";
+			}		
+			if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "category_id")) {
+				// Category for normal machines
+				$current_category_id = filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT);
+				if(rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
+					$current_category_id = UrlGenerator::getId();
+				}
 			}
-			print '</ul>';
-			print '</li>';
+			if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "machine_id")) {
+				$current_machine_id = filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT);
+				if(rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
+					$current_machine_id = UrlGenerator::getId();
+				}
+				if($current_machine_id > 0) {
+					$current_machine = new Machine($current_machine_id, rex_clang::getCurrentId());
+					$current_category_id = $current_machine->category->category_id;
+				}
+			}
+			
+			// Navi
+			$categories = Category::getAll(rex_clang::getCurrentId());
+			foreach ($categories as $category) {
+				print '<li'. ($category->category_id == $current_category_id ? ' class="current"' : '') .'><a href="'. $category->getUrl() .'">'. $category->name .'</a>';
+				if(rex_config::get('d2u_machinery', 'show_machines_navi', 'hide') == 'show') {
+					print '<ul class="dl-submenu">';
+					print '<li class="dl-back"><a href="#">&nbsp;</a></li>';
+					print '<li><a href="'. $category->getUrl() .'">'. strtoupper($category->name) .'</a></li>';
+					$machines = $category->getMachines(TRUE);
+					foreach ($machines as $machine) {
+						print '<li'. ($machine->machine_id == $current_machine_id ? ' class="current"' : '') .'><a href="'. $machine->getUrl() .'">'. $machine->name .'</a></li>';
+					}
+					print '</ul>';
+					print '</li>';
+				}
+			}
 		}
 	}
 }

@@ -14,10 +14,12 @@ d2u_machinery_rights_edit_lang = D2U Maschinen Addon: Editierrechte für Überse
 d2u_machinery_rights_settings = D2U Maschinen Addon: Einstellungen
 
 d2u_machinery_settings_article = Maschinen Artikel
+d2u_machinery_settings_categories_navi = Kategorien in D2U Helper Addon Navigation anzeigen.
 d2u_machinery_settings_categories_usage_area = In der Navigation zusätzlich zu den Kategorien deren umschreibende Anwendung anzeigen
 d2u_machinery_settings_consultation_article = Link hinter "Lassen Sie sich beraten"
 d2u_machinery_settings_consultation_pic = Bild zu "Lassen Sie sich beraten"
 d2u_machinery_settings_contact_phone = Telefonnummer Beratungshinweis
+d2u_machinery_settings_machines_navi = Maschine in D2U Helper Addon Navigation anzeigen.
 d2u_machinery_settings_request_form_email = Empfänger E-Mail Adresse für Anfrageformular
 d2u_machinery_settings_show_teaser = Kurzbeschreibung in Maschinenlisten einblenden
 d2u_machinery_settings_show_tech_data = Tab für technische Daten in Maschinenliste und Maschine anzeigen

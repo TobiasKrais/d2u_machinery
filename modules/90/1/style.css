@@ -21,13 +21,29 @@
 
 .consultation {
 	margin-top: 1em;
+	padding: 1em;
+}
+
+.deliverysets {
+	align-content: space-between;
+	display: flex !important;
+	flex-direction: column;
+	height: 100%;
+}
+.deliverybox {
+	flex: 1 0 auto;
+	margin-bottom: 1em;
+	padding: 0.25em 1em;
+}
+.deliverybox.picture {
+	background-color: article_color_bg;
 }
 
 #videoplayer {
 	padding-bottom: 1em;
 }
 
-.techdata td, .downloads, .inactive-cell, .consultation {
+.techdata td, .downloads, .inactive-cell, .consultation, .deliverybox {
 	background-color: article_color_box;
 	border: 1px solid white;
 }
@@ -60,4 +76,13 @@
 	display: block;
 	max-height: 200px;
 	min-width: 1em;
+}
+
+.carousel-item {
+	transition-duration: 3s !important
+}
+
+/* Captcha */
+#tab_request .input-group-addon img {
+	height: 100%;
 }

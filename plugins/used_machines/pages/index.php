@@ -131,10 +131,10 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 									$options[$category->category_id] = $category->name;
 								}
 							}
-							d2u_addon_backend_helper::form_select('d2u_machinery_category', 'form[category_id]', $options, array($used_machine->category->category_id), 1, FALSE, $readonly);
+							d2u_addon_backend_helper::form_select('d2u_machinery_category', 'form[category_id]', $options, [$used_machine->category->category_id], 1, FALSE, $readonly);
 							$options_offer_type = ["sale" => rex_i18n::msg('d2u_machinery_used_machines_offer_type_sale'),
 								"rent" => rex_i18n::msg('d2u_machinery_used_machines_offer_type_rent')];
-							d2u_addon_backend_helper::form_select('d2u_machinery_used_machines_offer_type', 'form[offer_type]', $options_offer_type, array($used_machine->offer_type), 1, FALSE, $readonly);
+							d2u_addon_backend_helper::form_select('d2u_machinery_used_machines_offer_type', 'form[offer_type]', $options_offer_type, [$used_machine->offer_type], 1, FALSE, $readonly);
 							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_availability', "form[availability]", $used_machine->availability, FALSE, $readonly, "date");
 							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_product_number', "form[product_number]", $used_machine->product_number, FALSE, $readonly, "text");
 							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_year_built', "form[year_built]", $used_machine->year_built, FALSE, $readonly, "number");
@@ -172,7 +172,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 									$options_translations["yes"] = rex_i18n::msg('d2u_helper_translation_needs_update');
 									$options_translations["no"] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
 									$options_translations["delete"] = rex_i18n::msg('d2u_helper_translation_delete');
-									d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, array($used_machine_lang->translation_needs_update), 1, FALSE, $readonly_lang);
+									d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$used_machine_lang->translation_needs_update], 1, FALSE, $readonly_lang);
 								}
 								else {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="no">';

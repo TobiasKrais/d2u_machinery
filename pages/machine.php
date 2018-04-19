@@ -13,6 +13,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	$form = (array) rex_post('form', 'array', []);
 
 	// Media fields and links need special treatment
+	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', []);
 	$input_media_list = (array) rex_post('REX_INPUT_MEDIALIST', 'array', []);
 	$input_link = (array) rex_post('REX_INPUT_LINK', 'array', []);
 	$input_link_list = (array) rex_post('REX_INPUT_LINKLIST', 'array', []);
@@ -86,6 +87,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 				$machine->grinder_sanding = $form['grinder_sanding'];
 				$machine->grinder_vacuum_connection = $form['grinder_vacuum_connection'] == '' ? 0 : $form['grinder_vacuum_connection'];
 				$machine->operating_pressure = $form['operating_pressure'];
+				$machine->picture_delivery_set = $input_media[1];
 				$machine->pump_conveying_distance_fluid = $form['pump_conveying_distance_fluid'] == '' ? 0 : $form['pump_conveying_distance_fluid'];
 				$machine->pump_conveying_distance_mineral = $form['pump_conveying_distance_mineral'] == '' ? 0 : $form['pump_conveying_distance_mineral'];
 				$machine->pump_conveying_distance_pasty = $form['pump_conveying_distance_pasty'] == '' ? 0 : $form['pump_conveying_distance_pasty'];
@@ -335,7 +337,10 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 							d2u_addon_backend_helper::form_input('d2u_helper_name', "form[name]", $machine->name, TRUE, $readonly, "text");
 							d2u_addon_backend_helper::form_input('d2u_machinery_machine_product_number', "form[product_number]", $machine->product_number, FALSE, $readonly, "text");
 							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $machine->priority, TRUE, $readonly, 'number');
-							d2u_addon_backend_helper::form_medialistfield('d2u_helper_pictures', 1, $machine->pics, $readonly);
+							d2u_addon_backend_helper::form_medialistfield('d2u_helper_picture', 1, $machine->pics, $readonly);
+							if(rex_plugin::get("d2u_machinery", "machine_construction_equipment_extension")->isAvailable()) {
+								d2u_addon_backend_helper::form_mediafield('d2u_machinery_construction_equipment_picture_delivery_set', '1', $machine->picture_delivery_set, $readonly);
+							}
 							$options = [];
 							foreach(Category::getAll(rex_config::get("d2u_helper", "default_lang")) as $category) {
 								if($category->name != "") {
@@ -408,7 +413,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						foreach (AgitatorType::getAll(rex_config::get("d2u_helper", "default_lang")) as $agitator_type) {
 							$options_agitator_types[$agitator_type->agitator_type_id] = $agitator_type->name;
 						}
-						d2u_addon_backend_helper::form_select('d2u_machinery_agitator_type', 'form[agitator_type_id]', $options_agitator_types, array($machine->agitator_type_id), 1, FALSE, $readonly);
+						d2u_addon_backend_helper::form_select('d2u_machinery_agitator_type', 'form[agitator_type_id]', $options_agitator_types, [$machine->agitator_type_id], 1, FALSE, $readonly);
 						d2u_addon_backend_helper::form_input('d2u_machinery_agitators_viscosity', "form[viscosity]", $machine->viscosity, FALSE, $readonly, "number");
 						print '</div>';
 						print '</fieldset>';
@@ -690,7 +695,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 									$options_translations["yes"] = rex_i18n::msg('d2u_helper_translation_needs_update');
 									$options_translations["no"] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
 									$options_translations["delete"] = rex_i18n::msg('d2u_helper_translation_delete');
-									d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, array($machine_lang->translation_needs_update), 1, FALSE, $readonly_lang);
+									d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$machine_lang->translation_needs_update], 1, FALSE, $readonly_lang);
 								}
 								else {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="no">';

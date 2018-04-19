@@ -29,6 +29,7 @@ if($sql->getRows() == 0) {
 		."ADD grinder_sanding VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, "
 		."ADD grinder_vacuum_connection INT(5) NOT NULL DEFAULT 0, "
 		."ADD operating_pressure VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, "
+		."ADD picture_delivery_set VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL, "
 		."ADD pump_conveying_distance_fluid INT(5) NULL DEFAULT NULL, "
 		."ADD pump_conveying_distance_mineral INT(5) NULL DEFAULT NULL, "
 		."ADD pump_conveying_distance_pasty INT(5) NULL DEFAULT NULL, "

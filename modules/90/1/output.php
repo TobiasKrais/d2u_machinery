@@ -47,7 +47,8 @@ if(!function_exists('print_consulation_hint')) {
 		// Get placeholder wildcard tags
 		$sprog = rex_addon::get("sprog");
 
-		print '<div class="col-12 consultation">';
+		print '<div class="col-12">';
+		print '<div class="consultation">';
 		print '<a href="'. rex_getUrl($d2u_machinery->getConfig('consultation_article_id')) .'">';
 		print '<div class="row abstand">';
 
@@ -66,6 +67,7 @@ if(!function_exists('print_consulation_hint')) {
 
 		print '</div>';
 		print '</a>';
+		print '</div>';
 		print '</div>';
 	}
 }
@@ -338,7 +340,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		}
 		else {
 			// Slider
-			print '<div id="machineCarousel" class="carousel slide" data-ride="carousel" data-pause="hover">';
+			print '<div id="machineCarousel" class="carousel carousel-fade slide" data-ride="carousel" data-pause="hover">';
 			// Slider indicators
 
 			print '<ol class="carousel-indicators">';
@@ -384,10 +386,8 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 	if(rex_addon::get('d2u_videos')->isAvailable()) {
 		$videos = array_merge($machine->videos, $machine->category->videos);
 		if(count($videos) > 0) {
-			print '<div class="col-12">';
-			print '<h2>'. $tag_open .'d2u_machinery_video'. $tag_close .'</h2>';
-			print '</div>';
-			print '<div class="col-12" id="videoplayer">';
+			print '<div class="col-12'. (count($videos) > 1 ? '' : ' col-lg-6') .'" id="videoplayer">';
+			print '<h3>'. $tag_open .'d2u_machinery_video'. $tag_close .'</h3>';
 			$videomanager = new Videomanager();
 			$videomanager->printVideos($videos);
 			print '</div>';
@@ -399,7 +399,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		$alternative_machines = [];
 		foreach($machine->alternative_machine_ids as $alternative_machine_id) {
 			$alternative_machine = new Machine($alternative_machine_id, $machine->clang_id);
-			if($alternative_machine->translation_needs_update != "delete") {
+			if($alternative_machine->online_status == 'online' && $alternative_machine->translation_needs_update != "delete") {
 				$alternative_machines[] = $alternative_machine;
 			}
 		}
@@ -508,8 +508,11 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 			print '<div class="row">';
 			print '<div class="col-12 col-md-6 col-lg-2">';
 			if($feature->pic != "") {
-				print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
-						$feature->pic .'" alt='. $feature->title .' class="featurepic">';
+				print '<a href="index.php?rex_media_type=d2u_helper_gallery_detail&rex_media_file='. $feature->pic .'" '
+					.'data-toggle="lightbox_equipment" data-gallery="example-galleryequipment" data-title="'. $feature->title.'">';
+                print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='. $feature->pic .'" class="img-fluid featurepic"'
+					.' alt="'. $feature->title .'" title="'. $feature->title .'">';
+				print '</a>';
 			}
 			print '</div>';
 			print '<div class="col-12 col-md-6 col-lg-10 col-xl-8">';
@@ -518,6 +521,14 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 			print '</div>';
 			print '</div>';
 		}
+		print '<script>';
+		print "$(document).on('click', '[data-toggle=\"lightbox_features\"]', function(event) {
+				event.preventDefault();
+				$(this).ekkoLightbox({
+					alwaysShowClose: true
+				});
+			});";
+		print '</script>';
 		print '</div>';
 	}
 
@@ -526,7 +537,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 	if(count($tech_datas) > 0) {
 		print '<div id="tab_tech_data" class="tab-pane fade machine-tab">';
 		print '<div class="row">';
-		print '<div class="col-12 col-md-8">';
+		print '<div class="col-12">';
 		print '<table class="techdata">';
 		foreach ($tech_datas as $tech_data) {
 			print '<tr>';
@@ -557,6 +568,9 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		if(strlen($machine->delivery_set_full) > 5) {
 			$number_sets++;
 		}
+		if(strlen($machine->picture_delivery_set) > 3) {
+			$number_sets++;
+		}
 		
 		$class = "";
 		if($number_sets == 2) {
@@ -565,15 +579,22 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		if($number_sets == 3) {
 			$class = "col-sm-6 col-md-4";
 		}
+		if($number_sets == 4) {
+			$class = "col-sm-6";
+		}
 
 		if(strlen($machine->delivery_set_basic) > 5) {
-			print '<div class="col-12 '. $class .'">'. d2u_addon_frontend_helper::prepareEditorField($machine->delivery_set_basic) .'</div>';
+			print '<div class="col-12 '. $class .'"><div class="deliverysets"><div class="deliverybox">'. d2u_addon_frontend_helper::prepareEditorField($machine->delivery_set_basic) .'</div></div></div>';
 		}
 		if(strlen($machine->delivery_set_conversion) > 5) {
-			print '<div class="col-12 '. $class .'">'. d2u_addon_frontend_helper::prepareEditorField($machine->delivery_set_conversion) .'</div>';
+			print '<div class="col-12 '. $class .'"><div class="deliverysets"><div class="deliverybox">'. d2u_addon_frontend_helper::prepareEditorField($machine->delivery_set_conversion) .'</div></div></div>';
 		}
 		if(strlen($machine->delivery_set_full) > 5) {
-			print '<div class="col-12 '. $class .'">'. d2u_addon_frontend_helper::prepareEditorField($machine->delivery_set_full) .'</div>';
+			print '<div class="col-12 '. $class .'"><div class="deliverysets"><div class="deliverybox">'. d2u_addon_frontend_helper::prepareEditorField($machine->delivery_set_full) .'</div></div></div>';
+		}
+		if(strlen($machine->picture_delivery_set) > 3) {
+			print '<div class="col-12 '. $class .'"><div class="deliverysets"><div class="deliverybox picture"><img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
+						$machine->picture_delivery_set .'" alt='. $machine->name .'></div></div></div>';
 		}
 		print '</div>';
 		print '</div>';
@@ -656,8 +677,11 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 	print '<div id="tab_request" class="tab-pane fade machine-tab">';
 	print '<div class="row">';
 	print '<div class="col-12 col-md-8">';
+	$privacy_policy_article = rex_article::get(rex_config::get('d2u_helper', 'article_id_privacy_policy', 0));
+	$privacy_policy_article_name = $privacy_policy_article instanceof rex_article ? $privacy_policy_article->getName() : '';
 	$form_data = 'hidden|machine_name|'. $machine->name .'|REQUEST
 
+			html||<h3> '. $tag_open .'d2u_machinery_request'. $tag_close .': '. $machine->name .'</h3><br>
 			text|vorname|'. $tag_open .'d2u_machinery_form_vorname'. $tag_close .'
 			text|name|'. $tag_open .'d2u_machinery_form_name'. $tag_close .' *
 			text|position|'. $tag_open .'d2u_machinery_form_position'. $tag_close .'
@@ -671,6 +695,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 			text|email|'. $tag_open .'d2u_machinery_form_email'. $tag_close .' *
 			textarea|message|'. $tag_open .'d2u_machinery_form_message'. $tag_close .'
 			checkbox|please_call|'. $tag_open .'d2u_machinery_form_please_call'. $tag_close .'|nein, ja|nein
+			'. ($privacy_policy_article_name != '' ? 'checkbox|privacy_policy_accepted|<a href="'. $privacy_policy_article->getUrl() .'" target="_blank">'. $tag_open .'d2u_machinery_form_privacy_policy'. $tag_close .'</a> *|no,yes|no' : '') .'
 
 			html||<br>* '. $tag_open .'d2u_machinery_form_required'. $tag_close .'<br><br>
 			captcha|'. $tag_open .'d2u_machinery_form_captcha'. $tag_close .'|'. $tag_open .'d2u_machinery_form_validate_captcha'. $tag_close .'|'. rex_getUrl('', '', ['machine_id' => $machine->machine_id]) .'
@@ -686,6 +711,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 			validate|empty|phone|'. $tag_open .'d2u_machinery_form_validate_phone'. $tag_close .'
 			validate|empty|email|'. $tag_open .'d2u_machinery_form_validate_email'. $tag_close .'
 			validate|email|email|'. $tag_open .'d2u_machinery_form_validate_email'. $tag_close .'
+			'. ($privacy_policy_article_name != '' ? 'validate|empty|privacy_policy_accepted|'. $tag_open .'d2u_machinery_form_validate_privacy_policy'. $tag_close .'' : '') .'
 
 			action|tpl2email|d2u_machinery_machine_request|emaillabel|'. $d2u_machinery->getConfig('request_form_email');
 

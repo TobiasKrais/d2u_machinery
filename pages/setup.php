@@ -36,8 +36,12 @@ $d2u_module_manager->showManagerList();
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_machinery" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
-<p>1.2.1-DEV:</p>
+<p>1.2.1:</p>
 <ul>
+	<li>Feld Datenschutzerklärung akzeptiert im Frontend Formular hinzugefügt.</li>
+	<li>Baustellenausrüstung Plugin: Bild zu Lieferumfang hinzugefügt.</li>
+	<li>Einstellungen: Option zum Einblenden von Kategorien und Maschinen und D2U Helper Navigation.</li>
+	<li>Module: Slider jetzt mit Fade.</li>
 	<li>Nicht mehr benötigte Features können automatisch gelöscht werden.</li>
 	<li>Bugfix: Speichern von einfachem Anführungszeichen schlug manchmal fehl.</li>
 	<li>Bugfix: Update schlug fehl</li>

@@ -18,7 +18,9 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 	}
 
 	// Checkbox also need special treatment if empty
+	$settings['show_categories_navi'] = array_key_exists('show_categories_navi', $settings) ? "show" : "hide";
 	$settings['show_categories_usage_area'] = array_key_exists('show_categories_usage_area', $settings) ? "show" : "hide";
+	$settings['show_machines_navi'] = array_key_exists('show_machines_navi', $settings) ? "show" : "hide";
 	$settings['show_teaser'] = array_key_exists('show_teaser', $settings) ? "show" : "hide";
 	$settings['show_techdata'] = array_key_exists('show_techdata', $settings) ? "show" : "hide";
 	if(rex_plugin::get('d2u_machinery', 'export')->isAvailable()) {
@@ -144,8 +146,9 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 				<div class="panel-body-wrapper slide">
 					<?php
 						$options = array('name' => rex_i18n::msg('d2u_helper_name'), 'priority' => rex_i18n::msg('header_priority'));
-						d2u_addon_backend_helper::form_select('d2u_helper_translations_sort', 'settings[default_category_sort]', $options, array($this->getConfig('default_category_sort')));
-						d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_categories_usage_area', 'settings[show_categories_usage_area]', 'show', $this->getConfig('show_categories_usage_area') == 'show')
+						d2u_addon_backend_helper::form_select('d2u_helper_translations_sort', 'settings[default_category_sort]', $options, [$this->getConfig('default_category_sort')]);
+						d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_categories_usage_area', 'settings[show_categories_usage_area]', 'show', $this->getConfig('show_categories_usage_area') == 'show');
+						d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_categories_navi', 'settings[show_categories_navi]', 'show', $this->getConfig('show_categories_navi') == 'show');
 					?>
 				</div>
 			</fieldset>
@@ -155,9 +158,10 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 					<?php
 						d2u_addon_backend_helper::form_linkfield('d2u_machinery_settings_article', '1', $this->getConfig('article_id'), rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId()));
 						$options = array('name' => rex_i18n::msg('d2u_helper_name'), 'priority' => rex_i18n::msg('header_priority'));
-						d2u_addon_backend_helper::form_select('d2u_helper_translations_sort', 'settings[default_machine_sort]', $options, array($this->getConfig('default_machine_sort')));
+						d2u_addon_backend_helper::form_select('d2u_helper_translations_sort', 'settings[default_machine_sort]', $options, [$this->getConfig('default_machine_sort')]);
 						d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_show_teaser', 'settings[show_teaser]', 'show', $this->getConfig('show_teaser') == 'show');
 						d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_show_tech_data', 'settings[show_techdata]', 'show', $this->getConfig('show_techdata') == 'show');
+						d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_machines_navi', 'settings[show_machines_navi]', 'show', $this->getConfig('show_machines_navi') == 'show');
 					?>
 				</div>
 			</fieldset>
@@ -184,7 +188,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 					<div class="panel-body-wrapper slide">
 						<?php
 						$options_usage_area_header = array('machines' => rex_i18n::msg('d2u_machinery_usage_areas_settings_by_machines'), 'usage' => rex_i18n::msg('d2u_machinery_usage_areas_settings_by_usage_areas'));
-						d2u_addon_backend_helper::form_select('d2u_machinery_usage_areas_settings_header', 'settings[usage_area_header]', $options_usage_area_header, array($this->getConfig('usage_area_header')));
+						d2u_addon_backend_helper::form_select('d2u_machinery_usage_areas_settings_header', 'settings[usage_area_header]', $options_usage_area_header, [$this->getConfig('usage_area_header')]);
 						?>
 					</div>
 				</fieldset>

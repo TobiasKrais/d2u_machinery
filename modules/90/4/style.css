@@ -21,3 +21,7 @@
 	color: darkred;
 	content: "f016";
 }
+
+.carousel-item {
+	transition-duration: 3s !important
+}

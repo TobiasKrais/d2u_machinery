@@ -28,6 +28,7 @@ $sql->setQuery('ALTER TABLE ' . \rex::getTablePrefix() . 'd2u_machinery_machines
 	. 'DROP grinder_sanding, '
 	. 'DROP grinder_vacuum_connection, '
 	. 'DROP operating_pressure, '
+	. 'DROP picture_delivery_set, '
 	. 'DROP pump_conveying_distance_fluid, '
 	. 'DROP pump_conveying_distance_mineral, '
 	. 'DROP pump_conveying_distance_pasty, '
