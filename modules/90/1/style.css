@@ -1,16 +1,16 @@
 .active-cell {
-	background-color: navi_color_bg;
+	background-color: article_color_h;
 	border: 1px solid white;
 	padding: 0.25em 1em;
 }
 .featurepic {
-	border: 1px solid navi_color_bg;
 	margin-bottom: 2em;
 }
 
 .equipline {
-	border-bottom: 1px solid navi_color_bg;
+	border-bottom: 1px solid article_color_h;
 	margin-bottom: 1em;
+	padding-bottom: 1em;
 }
 .matrix img {
 	width: 200px;
@@ -35,20 +35,27 @@
 	margin-bottom: 1em;
 	padding: 0.25em 1em;
 }
-.deliverybox.picture {
-	background-color: article_color_bg;
-}
 
 #videoplayer {
 	padding-bottom: 1em;
 }
 
-.techdata td, .downloads, .inactive-cell, .consultation, .deliverybox {
+.techdata td, .downloads, .inactive-cell, .consultation, .deliverybox, .equipment-list {
 	background-color: article_color_box;
 	border: 1px solid white;
 }
-.techdata td, .downloads {
+.techdata td, .downloads, .equipment-list {
 	padding: 0.25em 1em;
+}
+.back-list {
+	background-color: article_color_h;	
+	color: article_color_bg !important;	
+	margin-top: 1em;
+	padding: 1em;
+}
+.back-list a {
+	color: article_color_bg !important;	
+	width: 100%;
 }
 @media screen and (min-width: 992px) {
 	.inactive-cell {
@@ -80,6 +87,35 @@
 
 .carousel-item {
 	transition-duration: 3s !important
+}
+
+.fa-icon {
+	font-family: FontAwesome;
+}
+.fa-back:before {
+	content: "\f190";
+}
+.fa-dropbox:before {
+	content: "\f16b";
+}
+.fa-envelope-o:before {
+	content: "\f003";
+}
+.fa-file-pdf-o:before {
+	color: #c60000;
+	content: "\f1c1";
+}
+.fa-file-pdf-o {
+	padding-right: 0.25em;
+}
+.fa-home:before {
+	content: "\f015";
+}
+.fa-list-ul:before {
+	content: "\f0ca";
+}
+.fa-plus:before {
+	content: "\f067";
 }
 
 /* Captcha */

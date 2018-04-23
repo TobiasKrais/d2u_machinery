@@ -568,7 +568,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		if(strlen($machine->delivery_set_full) > 5) {
 			$number_sets++;
 		}
-		if(strlen($machine->picture_delivery_set) > 3) {
+		if(count($machine->pictures_delivery_set) > 0) {
 			$number_sets++;
 		}
 		
@@ -592,9 +592,54 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		if(strlen($machine->delivery_set_full) > 5) {
 			print '<div class="col-12 '. $class .'"><div class="deliverysets"><div class="deliverybox">'. d2u_addon_frontend_helper::prepareEditorField($machine->delivery_set_full) .'</div></div></div>';
 		}
-		if(strlen($machine->picture_delivery_set) > 3) {
-			print '<div class="col-12 '. $class .'"><div class="deliverysets"><div class="deliverybox picture"><img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
-						$machine->picture_delivery_set .'" alt='. $machine->name .'></div></div></div>';
+		if(count($machine->pictures_delivery_set) > 0) {
+			print '<div class="col-12 '. $class .'"><div class="deliverysets"><div class="deliverybox">';
+			if(count($machine->pictures_delivery_set) == 1) {
+				print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
+					$machine->pictures_delivery_set[0] .'" alt="'. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .'" style="max-width:100%;">';
+			}
+			else {
+				// Slider
+				print '<div id="deliverysetCarousel" class="carousel carousel-fade slide" data-ride="carousel" data-pause="hover">';
+				// Slider indicators
+
+				print '<ol class="carousel-indicators">';
+				for($i = 0; $i < count($machine->pictures_delivery_set); $i++) {
+					print '<li data-target="#deliverysetCarousel" data-slide-to="'. $i .'"';
+					if($i == 0) {
+						print 'class="active"';
+					}
+					print '></li>';
+				}
+				print '</ol>';
+
+				// Wrapper for slides
+				print '<div class="carousel-inner">';
+				for($i = 0; $i < count($machine->pictures_delivery_set); $i++) {
+					print '<div class="carousel-item';
+					if($i == 0) {
+						print ' active';
+					}
+					print '">';
+					print '<img class="d-block w-100" src="index.php?rex_media_type=d2u_machinery_construction_equipment_delivery_set_slider&rex_media_file='.
+					$machine->pictures_delivery_set[$i] .'" alt="'. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .'">';
+					print '</div>';
+				}
+				print '</div>';
+
+				// Left and right controls
+				print '<a class="carousel-control-prev" href="#deliverysetCarousel" role="button" data-slide="prev">';
+				print '<span class="carousel-control-prev-icon" aria-hidden="true"></span>';
+				print '<span class="sr-only">Previous</span>';
+				print '</a>';
+				print '<a class="carousel-control-next" href="#deliverysetCarousel" role="button" data-slide="next">';
+				print '<span class="carousel-control-next-icon" aria-hidden="true"></span>';
+				print '<span class="sr-only">Next</span>';
+				print '</a>';
+
+				print '</div>';
+			}
+			print '</div></div></div>';
 		}
 		print '</div>';
 		print '</div>';
@@ -651,13 +696,21 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 			}
 			print '</div>';
 			print '<div class="col-12 col-sm-8 col-md-9 col-lg-10">';
+			print '<div class="row">';
+			print '<div class="col-12">';
+			print '<div class="equipment-list">';
 			print '<h3>'. $equipment_group->name .'</h3>';
 			print '<p>'. d2u_addon_frontend_helper::prepareEditorField($equipment_group->description) .'</p>';
+			print '</div>';
+			print '</div>';
 			$current_equipments = $equipments[$equipment_group->group_id];
 			ksort($current_equipments);
 			foreach($current_equipments as $current_equipment) {
-				print '<p><b>'. $current_equipment->name .'</b> ('. $tag_open .'d2u_machinery_equipment_artno'. $tag_close .' '. $current_equipment->article_number .')</p>';
+				print '<div class="col-12">';
+				print '<div class="equipment-list"><b>'. $current_equipment->name .'</b> ('. $tag_open .'d2u_machinery_equipment_artno'. $tag_close .' '. $current_equipment->article_number .')</div>';
+				print '</div>';
 			}
+			print '</div>';
 			print '</div>';
 			print '</div>';
 		}
@@ -722,13 +775,23 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 	$yform->setObjectparams("Error-occured", $tag_open .'d2u_machinery_form_validate_title'. $tag_close);
 
 	// action - showtext
-	$yform->setActionField("showtext", array($tag_open .'d2u_machinery_form_thanks'. $tag_close));
+	$yform->setActionField("showtext", [$tag_open .'d2u_machinery_form_thanks'. $tag_close]);
 
 	echo $yform->getForm();
 	print '</div>';
 	print '</div>';
 	print '</div>'; // END tab_request
 	
+	print '</div>';
+	print '</div>';
+	print '</div>';
+	
+	print '<div class="row">';
+	print '<div class="col-12">';
+	print '<div class="back-list">';
+	print '<a href="'. $machine->category->getURL() .'">';
+	print '<span class="fa-icon fa-back"></span>&nbsp;'. $tag_open .'d2u_machinery_back_machine_list'. $tag_close;
+	print '</a>';
 	print '</div>';
 	print '</div>';
 }

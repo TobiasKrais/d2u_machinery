@@ -53,5 +53,9 @@ $sql->setQuery('ALTER TABLE ' . \rex::getTablePrefix() . 'd2u_machinery_machines
 	. 'DROP delivery_set_full;'
 );
 
+// Delete Media Manager media types
+$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."media_manager_type WHERE name LIKE 'd2u_machinery_construction_equipment%'");
+$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."media_manager_type_effect WHERE createuser = 'd2u_machinery_construction_equipment'");
+
 // Delete language replacements
 d2u_machinery_machine_construction_equipment_extension_lang_helper::factory()->uninstall();

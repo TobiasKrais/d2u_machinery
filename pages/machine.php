@@ -87,7 +87,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 				$machine->grinder_sanding = $form['grinder_sanding'];
 				$machine->grinder_vacuum_connection = $form['grinder_vacuum_connection'] == '' ? 0 : $form['grinder_vacuum_connection'];
 				$machine->operating_pressure = $form['operating_pressure'];
-				$machine->picture_delivery_set = $input_media[1];
+				$machine->pictures_delivery_set = preg_grep('/^\s*$/s', explode(",", $input_media_list[2]), PREG_GREP_INVERT);
 				$machine->pump_conveying_distance_fluid = $form['pump_conveying_distance_fluid'] == '' ? 0 : $form['pump_conveying_distance_fluid'];
 				$machine->pump_conveying_distance_mineral = $form['pump_conveying_distance_mineral'] == '' ? 0 : $form['pump_conveying_distance_mineral'];
 				$machine->pump_conveying_distance_pasty = $form['pump_conveying_distance_pasty'] == '' ? 0 : $form['pump_conveying_distance_pasty'];
@@ -339,7 +339,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $machine->priority, TRUE, $readonly, 'number');
 							d2u_addon_backend_helper::form_medialistfield('d2u_helper_picture', 1, $machine->pics, $readonly);
 							if(rex_plugin::get("d2u_machinery", "machine_construction_equipment_extension")->isAvailable()) {
-								d2u_addon_backend_helper::form_mediafield('d2u_machinery_construction_equipment_picture_delivery_set', '1', $machine->picture_delivery_set, $readonly);
+								d2u_addon_backend_helper::form_medialistfield('d2u_machinery_construction_equipment_picture_delivery_set', 2, $machine->pictures_delivery_set, $readonly);
 							}
 							$options = [];
 							foreach(Category::getAll(rex_config::get("d2u_helper", "default_lang")) as $category) {

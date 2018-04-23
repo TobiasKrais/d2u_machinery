@@ -38,7 +38,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.2.2:</p>
 <ul>
-	<li></li>
+	<li>Module: Detailverbesserungen und "zurück zur Maschinenliste" hinzugefügt.</li>
 </ul>
 <p>1.2.1:</p>
 <ul>

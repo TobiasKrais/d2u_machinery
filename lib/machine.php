@@ -657,9 +657,9 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	var $description_technical = "";
 
 	/**
-	 * @var string Delivery set picture name
+	 * @var string[] Delivery set picture name
 	 */
-	var $picture_delivery_set = "";
+	var $pictures_delivery_set = [];
 
 	/**
 	 * @var string Basic delivery set description
@@ -795,7 +795,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 				$this->container_connection_port = $result->getValue("container_connection_port");
 				$this->container_conveying_wave = $result->getValue("container_conveying_wave");
 				$this->description_technical = $result->getValue("description_technical");
-				$this->picture_delivery_set = $result->getValue("picture_delivery_set");
+				$this->pictures_delivery_set = preg_grep('/^\s*$/s', explode(",", $result->getValue("pictures_delivery_set")), PREG_GREP_INVERT);
 				$this->delivery_set_basic = stripslashes(htmlspecialchars_decode($result->getValue("delivery_set_basic")));
 				$this->delivery_set_conversion = stripslashes(htmlspecialchars_decode($result->getValue("delivery_set_conversion")));
 				$this->delivery_set_full = stripslashes(htmlspecialchars_decode($result->getValue("delivery_set_full")));
@@ -2172,7 +2172,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 					.", grinder_sanding = '". $this->grinder_sanding ."' "
 					.", grinder_vacuum_connection = ". $this->grinder_vacuum_connection ." "
 					.", operating_pressure = '". $this->operating_pressure ."' "
-					.", picture_delivery_set = '". $this->picture_delivery_set ."' "
+					.", pictures_delivery_set = '". implode(",", $this->pictures_delivery_set) ."' "
 					.", pump_conveying_distance_fluid = ". ($this->pump_conveying_distance_fluid > 0 ? $this->pump_conveying_distance_fluid : 0) ." "
 					.", pump_conveying_distance_mineral = ". ($this->pump_conveying_distance_mineral > 0 ? $this->pump_conveying_distance_mineral : 0) ." "
 					.", pump_conveying_distance_pasty = ". ($this->pump_conveying_distance_pasty > 0 ? $this->pump_conveying_distance_pasty : 0) ." "
