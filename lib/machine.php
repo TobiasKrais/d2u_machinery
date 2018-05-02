@@ -1149,7 +1149,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 		else if($this->length > 0) {
 			$tech_data[] = [
 				"description" => $tag_open . "d2u_machinery_dimensions_length" . $tag_close,
-				"value" => $this->depth,
+				"value" => $this->length,
 				"unit" => $tag_open . "d2u_machinery_unit_mm" . $tag_close
 			];
 		}

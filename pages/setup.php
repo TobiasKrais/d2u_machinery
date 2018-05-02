@@ -38,7 +38,10 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.2.2:</p>
 <ul>
-	<li>Module: Detailverbesserungen und "zurück zur Maschinenliste" hinzugefügt.</li>
+	<li>Modul Hauptausgabe: Zurück zur Maschinenliste eingefügt.</li>
+	<li>Modul Hauptausgabe: Features, Rührer, Service, ... Bilder mit Lightbox versehen, wenn noch nicht vorhanden.</li>
+	<li>Modul Hauptausgabe: Anwendungsgebiete optional auch in Maschine anzeigbar.</li>
+	<li>Modul Hauptausgabe: Detailverbesserungen und "zurück zur Maschinenliste" hinzugefügt.</li>
 </ul>
 <p>1.2.1:</p>
 <ul>

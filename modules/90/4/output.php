@@ -317,8 +317,6 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 	print '<div id="tab_request" class="tab-pane fade machine-tab">';
 	print '<div class="row">';
 	print '<div class="col-sm-12 col-md-8">';
-	$privacy_policy_article = rex_article::get(rex_config::get('d2u_helper', 'article_id_privacy_policy', 0));
-	$privacy_policy_article_name = $privacy_policy_article instanceof rex_article ? $privacy_policy_article->getName() : '';
 	$form_data = 'hidden|machine_name|'. $used_machine->manufacturer .' '. $used_machine->name .' (Gebrauchtmaschine)|REQUEST
 
 			text|vorname|'. $tag_open .'d2u_machinery_form_vorname'. $tag_close .'
@@ -334,7 +332,7 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 			text|email|'. $tag_open .'d2u_machinery_form_email'. $tag_close .' *
 			textarea|message|'. $tag_open .'d2u_machinery_form_message'. $tag_close .'
 			checkbox|please_call|'. $tag_open .'d2u_machinery_form_please_call'. $tag_close .'|nein, ja|nein
-			'. ($privacy_policy_article_name != '' ? 'checkbox|privacy_policy_accepted|<a href="'. $privacy_policy_article->getUrl() .'" target="_blank">'. $tag_open .'d2u_machinery_form_privacy_policy'. $tag_close .'</a> *|no,yes|no' : '') .'
+			checkbox|privacy_policy_accepted|'. $tag_open .'d2u_machinery_form_privacy_policy'. $tag_close .' *|no,yes|no
 
 			html||<br>* '. $tag_open .'d2u_machinery_form_required'. $tag_close .'<br><br>
 			captcha_calc|'. $tag_open .'d2u_machinery_form_captcha'. $tag_close .'|'. $tag_open .'d2u_machinery_form_validate_captcha'. $tag_close .'|'. rex_getUrl('', '', [($used_machine->offer_type == 'sale' ? 'used_sale_machine_id' : 'used_rent_machine_id') => $used_machine->used_machine_id]) .'
@@ -350,7 +348,7 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 			validate|empty|phone|'. $tag_open .'d2u_machinery_form_validate_phone'. $tag_close .'
 			validate|empty|email|'. $tag_open .'d2u_machinery_form_validate_email'. $tag_close .'
 			validate|email|email|'. $tag_open .'d2u_machinery_form_validate_email'. $tag_close .'
-			'. ($privacy_policy_article_name != '' ? 'validate|empty|privacy_policy_accepted|'. $tag_open .'d2u_machinery_form_validate_privacy_policy'. $tag_close .'' : '') .'
+			validate|empty|privacy_policy_accepted|'. $tag_open .'d2u_machinery_form_validate_privacy_policy'. $tag_close .'
 
 			action|tpl2email|d2u_machinery_machine_request|emaillabel|'. $d2u_machinery->getConfig('request_form_email');
 
@@ -361,7 +359,7 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 	$yform->setObjectparams("Error-occured", $tag_open .'d2u_machinery_form_validate_title'. $tag_close);
 
 	// action - showtext
-	$yform->setActionField("showtext", array($tag_open .'d2u_machinery_form_thanks'. $tag_close));
+	$yform->setActionField("showtext", [$tag_open .'d2u_machinery_form_thanks'. $tag_close]);
 
 	echo $yform->getForm();
 	print '</div>';

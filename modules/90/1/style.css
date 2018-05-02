@@ -3,11 +3,8 @@
 	border: 1px solid white;
 	padding: 0.25em 1em;
 }
-.featurepic {
-	margin-bottom: 2em;
-}
 
-.equipline {
+.deviderline {
 	border-bottom: 1px solid article_color_h;
 	margin-bottom: 1em;
 	padding-bottom: 1em;
@@ -19,6 +16,9 @@
 	font-size: 0.85em;
 }
 
+.tab-content h3 {
+	padding-top: 0.5em;
+}
 .consultation {
 	margin-top: 1em;
 	padding: 1em;
@@ -40,11 +40,11 @@
 	padding-bottom: 1em;
 }
 
-.techdata td, .downloads, .inactive-cell, .consultation, .deliverybox, .equipment-list {
+.techdata td, .downloads, .inactive-cell, .consultation, .deliverybox, .block-box {
 	background-color: article_color_box;
 	border: 1px solid white;
 }
-.techdata td, .downloads, .equipment-list {
+.techdata td, .downloads, .block-box {
 	padding: 0.25em 1em;
 }
 .back-list {
@@ -94,6 +94,9 @@
 }
 .fa-back:before {
 	content: "\f190";
+}
+.fa-codepen:before {
+	content: "\f1cb";
 }
 .fa-dropbox:before {
 	content: "\f16b";

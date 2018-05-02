@@ -1,4 +1,3 @@
-d2u_machinery_meta_categories = Kategorien
 d2u_machinery_meta_machines = Maschinen
 d2u_machinery_meta_title = D2U Maschinen
 
@@ -15,17 +14,16 @@ d2u_machinery_rights_settings = D2U Maschinen Addon: Einstellungen
 
 d2u_machinery_settings_article = Maschinen Artikel
 d2u_machinery_settings_categories_navi = Kategorien in D2U Helper Addon Navigation anzeigen.
-d2u_machinery_settings_categories_usage_area = In der Navigation zusätzlich zu den Kategorien deren umschreibende Anwendung anzeigen
+d2u_machinery_settings_categories_show_usage_areas = Tab für Anwendungsgebiete bei Kategorien anzeigen
 d2u_machinery_settings_consultation_article = Link hinter "Lassen Sie sich beraten"
 d2u_machinery_settings_consultation_pic = Bild zu "Lassen Sie sich beraten"
 d2u_machinery_settings_contact_phone = Telefonnummer Beratungshinweis
 d2u_machinery_settings_machines_navi = Maschine in D2U Helper Addon Navigation anzeigen.
+d2u_machinery_settings_machine_show_usage_areas = Tab für Anwendungsgebiete bei Maschinen anzeigen
 d2u_machinery_settings_request_form_email = Empfänger E-Mail Adresse für Anfrageformular
-d2u_machinery_settings_show_teaser = Kurzbeschreibung in Maschinenlisten einblenden
-d2u_machinery_settings_show_tech_data = Tab für technische Daten in Maschinenliste und Maschine anzeigen
+d2u_machinery_settings_show_teaser = Kurzbeschreibung der Maschine in Maschinenliste einblenden
+d2u_machinery_settings_show_tech_data = Tab für technische Daten anzeigen
 
-d2u_machinery_category = Kategorie
-d2u_machinery_category_no_categories_found = Es wurden noch keine Kategorien angelegt.
 d2u_machinery_category_parent = Elternkategorie
 d2u_machinery_category_parent_none = Hat keine Elternkategorie
 d2u_machinery_category_pdfs = PDF Dateien
@@ -41,7 +39,6 @@ d2u_machinery_machine_engine_power = Motorleistung (kW)
 d2u_machinery_machine_engine_power_frequency_controlled = Motorleistung frequenzgeregelt?
 d2u_machinery_machine_height = Höhe (mm)
 d2u_machinery_machine_length = Länge (mm)
-d2u_machinery_machine_name = Name
 d2u_machinery_machine_no_machines_found = Es wurden noch keine Maschinen angelegt.
 d2u_machinery_machine_pdfs = PDFs
 d2u_machinery_machine_product_number = Produktnummer

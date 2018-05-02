@@ -347,7 +347,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 									$options[$category->category_id] = $category->name;
 								}
 							}
-							d2u_addon_backend_helper::form_select('d2u_machinery_category', 'form[category_id]', $options, isset($machine->category->category_id) ? [$machine->category->category_id] : [], 1, FALSE, $readonly);
+							d2u_addon_backend_helper::form_select('d2u_helper_category', 'form[category_id]', $options, isset($machine->category->category_id) ? [$machine->category->category_id] : [], 1, FALSE, $readonly);
 							$options_alt_machines = [];
 							foreach(Machine::getAll(rex_config::get("d2u_helper", "default_lang")) as $alt_machine) {
 								if($alt_machine->machine_id != $machine->machine_id) {
@@ -766,10 +766,10 @@ if ($func == '') {
 
     $list->setColumnLabel('machine_id', rex_i18n::msg('id'));
 
-    $list->setColumnLabel('name', rex_i18n::msg('d2u_machinery_machine_name'));
+    $list->setColumnLabel('name', rex_i18n::msg('d2u_helper_name'));
     $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###machine_id###']);
 
-	$list->setColumnLabel('categoryname', rex_i18n::msg('d2u_machinery_category'));
+	$list->setColumnLabel('categoryname', rex_i18n::msg('d2u_helper_category'));
 
 	$list->setColumnLabel('priority', rex_i18n::msg('header_priority'));
 

@@ -59,11 +59,11 @@ class MachineryPark extends AFTPExport {
 	 */
 	private function createCSV() {
 		// Column names
-		$list = array (
-			array('Referenz', 'Kategorie', 'Hersteller', 'Typ', 'Beschreibung',
+		$list = [
+			['Referenz', 'Kategorie', 'Hersteller', 'Typ', 'Beschreibung',
 					'Postleitzahl', 'Standort', 'Land', 'Preis', 'Baujahr', 'PS',
 					'KM', 'BS', 'Gewicht', 'Treibstoff', 'Bild1', 'Bild2', 'Bild3',
-					'Bild4', 'Bild5', 'Bild6'));
+					'Bild4', 'Bild5', 'Bild6']];
 
 		foreach($this->exported_used_machines as $exported_used_machine) {
 			$used_machine = new UsedMachine($exported_used_machine->used_machine_id, $this->provider->clang_id);

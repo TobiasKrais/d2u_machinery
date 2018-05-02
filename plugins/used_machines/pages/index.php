@@ -131,7 +131,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 									$options[$category->category_id] = $category->name;
 								}
 							}
-							d2u_addon_backend_helper::form_select('d2u_machinery_category', 'form[category_id]', $options, [$used_machine->category->category_id], 1, FALSE, $readonly);
+							d2u_addon_backend_helper::form_select('d2u_helper_category', 'form[category_id]', $options, [$used_machine->category->category_id], 1, FALSE, $readonly);
 							$options_offer_type = ["sale" => rex_i18n::msg('d2u_machinery_used_machines_offer_type_sale'),
 								"rent" => rex_i18n::msg('d2u_machinery_used_machines_offer_type_rent')];
 							d2u_addon_backend_helper::form_select('d2u_machinery_used_machines_offer_type', 'form[offer_type]', $options_offer_type, [$used_machine->offer_type], 1, FALSE, $readonly);
@@ -236,7 +236,7 @@ if ($func == '') {
 
     $list->setColumnLabel('year_built', rex_i18n::msg('d2u_machinery_used_machines_year_built'));
 
-	$list->setColumnLabel('categoryname', rex_i18n::msg('d2u_machinery_used_machines_category'));
+	$list->setColumnLabel('categoryname', rex_i18n::msg('d2u_helper_category'));
 
 	$list->setColumnLabel('offer_type', rex_i18n::msg('d2u_machinery_used_machines_offer_type'));
 

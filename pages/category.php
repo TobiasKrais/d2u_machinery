@@ -144,7 +144,7 @@ if ($func == 'edit' || $func == 'add') {
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
-			<header class="panel-heading"><div class="panel-title"><?php print rex_i18n::msg('d2u_machinery_category'); ?></div></header>
+			<header class="panel-heading"><div class="panel-title"><?php print rex_i18n::msg('d2u_helper_category'); ?></div></header>
 			<div class="panel-body">
 				<input type="hidden" name="form[category_id]" value="<?php echo $entry_id; ?>">
 				<?php
@@ -323,10 +323,10 @@ if ($func == '') {
 		$list->addLinkAttribute(rex_i18n::msg('delete_module'), 'data-confirm', rex_i18n::msg('d2u_helper_confirm_delete'));
 	}
 
-    $list->setNoRowsMessage(rex_i18n::msg('d2u_machinery_category_no_categories_found'));
+    $list->setNoRowsMessage(rex_i18n::msg('d2u_helper_no_categories_found'));
 
     $fragment = new rex_fragment();
-    $fragment->setVar('title', rex_i18n::msg('d2u_machinery_meta_categories'), false);
+    $fragment->setVar('title', rex_i18n::msg('d2u_helper_categories'), false);
     $fragment->setVar('content', $list->get(), false);
     echo $fragment->parse('core/page/section.php');
 }
