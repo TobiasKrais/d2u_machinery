@@ -335,7 +335,7 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 			checkbox|privacy_policy_accepted|'. $tag_open .'d2u_machinery_form_privacy_policy'. $tag_close .' *|no,yes|no
 
 			html||<br>* '. $tag_open .'d2u_machinery_form_required'. $tag_close .'<br><br>
-			captcha_calc|'. $tag_open .'d2u_machinery_form_captcha'. $tag_close .'|'. $tag_open .'d2u_machinery_form_validate_captcha'. $tag_close .'|'. rex_getUrl('', '', [($used_machine->offer_type == 'sale' ? 'used_sale_machine_id' : 'used_rent_machine_id') => $used_machine->used_machine_id]) .'
+			captcha|'. $tag_open .'d2u_machinery_form_captcha'. $tag_close .'|'. $tag_open .'d2u_machinery_form_validate_captcha'. $tag_close .'|'. rex_getUrl('', '', [($used_machine->offer_type == 'sale' ? 'used_sale_machine_id' : 'used_rent_machine_id') => $used_machine->used_machine_id]) .'
 
 			submit|submit|'. $tag_open .'d2u_machinery_form_send'. $tag_close .'|no_db
 

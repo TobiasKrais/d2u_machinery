@@ -205,7 +205,7 @@ class UsageArea implements \D2U_Helper\ITranslationHelper {
 		
 		if($error === FALSE) {
 			// Save the language specific part
-			$pre_save_usage_area = new IndustrySector($this->usage_area_id, $this->clang_id);
+			$pre_save_usage_area = new UsageArea($this->usage_area_id, $this->clang_id);
 			if($pre_save_usage_area != $this) {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_usage_areas_lang SET "
 						."usage_area_id = '". $this->usage_area_id ."', "
