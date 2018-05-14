@@ -427,7 +427,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 				$has_permission = rex_ycom_auth_media::checkPerm($media);
 			}
 			if($has_permission) {
-				print '<a href="'. $media->getUrl() .'"><div class="downloads"><span class="fa-icon fa-file-pdf-o"></span> '. $media->getTitle() .'</div></a>';
+				print '<a href="'. rex_url::media($pdf) .'" target="_blank"><div class="downloads"><span class="fa-icon fa-file-pdf-o"></span> '. ($media instanceof rex_media && trim($media->getTitle()) != "" ? $media->getTitle() : $pdf) .'</div></a>';
 			}
 		}
 		print '</div>';

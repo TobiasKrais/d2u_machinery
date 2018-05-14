@@ -129,6 +129,10 @@
     border-bottom-left-radius: 0;
     border-top-left-radius: 0;
 }
+.btn-primary {
+	background-color: article_color_h !important;
+	border: none !important;
+}
 .btn-default {
 	background-color: article_color_h;
 	border: 1px solid article_color_h;
