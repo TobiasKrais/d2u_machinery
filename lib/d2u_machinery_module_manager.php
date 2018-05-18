@@ -27,6 +27,9 @@ class D2UMachineryModules {
 				"D2U Machinery Addon - Gebrauchtmaschinen",
 				5);
 		}
+		$modules[] = new D2UModule("90-5",
+			"D2U Machinery Addon - Box Beratungshinweis",
+			1);
 		return $modules;
 	}
 }

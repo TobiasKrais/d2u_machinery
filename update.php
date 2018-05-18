@@ -21,6 +21,9 @@ if(class_exists(D2UModuleManager)) {
 			"D2U Machinery Addon - Gebrauchtmaschinen",
 			3);
 	}
+	$modules[] = new D2UModule("90-5",
+		"D2U Machinery Addon - Box Beratungshinweis",
+		1);
 	$d2u_module_manager = new D2UModuleManager($modules, "", "d2u_machinery");
 	$d2u_module_manager->autoupdate();
 }

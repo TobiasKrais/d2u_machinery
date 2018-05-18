@@ -39,6 +39,7 @@ $d2u_module_manager->showManagerList();
 <p>1.2.3-DEV:</p>
 <ul>
 	<li>Bugfix: Bilder im Lieferumfang konnten gelöscht werden.</li>
+	<li>Neues Modul: Box mit Beratungshinweis jetzt separat in Modul erhältlich.</li>
 </ul>
 <p>1.2.2:</p>
 <ul>

@@ -26,6 +26,11 @@
 	}
 	print '</div>';
 	print '</div>';
+
+$text = "REX_VALUE[id=2 output=html]";
+if($text != '') {
+	print '<div class="col-sm-12 abstand">'. $text .'</div>';
+	print '<div class="col-sm-12 abstand"></div>';
+}
+	
 ?>
-<div class="col-sm-12 abstand">REX_VALUE[id=2 output=html]</div>
-<div class="col-sm-12 abstand"></div>
