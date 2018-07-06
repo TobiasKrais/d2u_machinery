@@ -30,7 +30,7 @@ d2u_machinery_category_pdfs = PDF Dateien
 d2u_machinery_category_pic_lang = Bild (überschreibt allg. Bild)
 d2u_machinery_category_pic_usage = Anwendungsbild
 d2u_machinery_category_videos = D2U Videomanager Videos
-d2u_machinery_category_usage_area = Umschreibende Anwendung für Navigation
+d2u_machinery_category_usage_area = Verwendeter Prozess
 
 d2u_machinery_machine = Maschine
 d2u_machinery_machine_alternatives = Alternative Maschinen

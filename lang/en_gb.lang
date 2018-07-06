@@ -31,7 +31,7 @@ d2u_machinery_category_pdfs = PDF files
 d2u_machinery_category_pic_lang = Language specific picture (overwrite general picture)
 d2u_machinery_category_pic_usage = Use case picture
 d2u_machinery_category_videos = D2U Videomanager Videos
-d2u_machinery_category_usage_area = Circumscribing use case for navigation
+d2u_machinery_category_usage_area = Used process name
 
 d2u_machinery_machine = Machine
 d2u_machinery_machine_alternatives = Alternative machines

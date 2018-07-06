@@ -38,6 +38,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.2.3-DEV:</p>
 <ul>
+	<li>Spamschutz: Kontaktformulare in Modulen mit 10 Sekunden Timer als Spamschutz versehen.</li>
 	<li>Bugfix: Bilder im Lieferumfang konnten gelöscht werden.</li>
 	<li>Neues Modul: Box mit Beratungshinweis jetzt separat in Modul erhältlich.</li>
 </ul>

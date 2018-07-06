@@ -820,6 +820,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 			textarea|message|'. $tag_open .'d2u_machinery_form_message'. $tag_close .'
 			checkbox|please_call|'. $tag_open .'d2u_machinery_form_please_call'. $tag_close .'|nein, ja|nein
 			checkbox|privacy_policy_accepted|'. $tag_open .'d2u_machinery_form_privacy_policy'. $tag_close .' *|no,yes|no
+			php|validate_timer|Spamprotection|<input name="validate_timer" type="hidden" value="'. microtime(true) .'" />|
 
 			html||<br>* '. $tag_open .'d2u_machinery_form_required'. $tag_close .'<br><br>
 			captcha|'. $tag_open .'d2u_machinery_form_captcha'. $tag_close .'|'. $tag_open .'d2u_machinery_form_validate_captcha'. $tag_close .'|'. rex_getUrl('', '', ['machine_id' => $machine->machine_id]) .'
@@ -836,6 +837,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 			validate|empty|email|'. $tag_open .'d2u_machinery_form_validate_email'. $tag_close .'
 			validate|email|email|'. $tag_open .'d2u_machinery_form_validate_email'. $tag_close .'
 			validate|empty|privacy_policy_accepted|'. $tag_open .'d2u_machinery_form_validate_privacy_policy'. $tag_close .'
+			validate|customfunction|validate_timer|d2u_addon_frontend_helper::yform_validate_timer|10|'. $tag_open .'d2u_machinery_form_validate_spambots'. $tag_close .'|
 
 			action|tpl2email|d2u_machinery_machine_request|emaillabel|'. $d2u_machinery->getConfig('request_form_email');
 
@@ -844,6 +846,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 	$yform->setObjectparams("form_action", $machine->getUrl());
 	$yform->setObjectparams("form_anchor", "tab_request");
 	$yform->setObjectparams("Error-occured", $tag_open .'d2u_machinery_form_validate_title'. $tag_close);
+	$yform->setObjectparams("real_field_names", TRUE);
 
 	// action - showtext
 	$yform->setActionField("showtext", [$tag_open .'d2u_machinery_form_thanks'. $tag_close]);
