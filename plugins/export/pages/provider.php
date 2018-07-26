@@ -103,7 +103,7 @@ if ($func == 'edit' || $func == 'add') {
 							d2u_addon_backend_helper::form_input('d2u_machinery_export_company_email', 'form[company_email]', $provider->company_email, TRUE, $readonly, 'email');
 							d2u_addon_backend_helper::form_input('d2u_machinery_export_customer_number', 'form[customer_number]', $provider->customer_number, FALSE, $readonly, 'text');
 							$options_media = [];
-							$media_sql = rex_sql::factory();
+							$media_sql = \rex_sql::factory();
 							$media_sql->setQuery("SELECT name FROM ". \rex::getTablePrefix() ."media_manager_type");
 							for($i = 0; $i < $media_sql->getRows(); $i++) {
 								$options_media[$media_sql->getValue("name")] = $media_sql->getValue("name");

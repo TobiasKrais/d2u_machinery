@@ -1,14 +1,14 @@
 <?php
-$sql = rex_sql::factory();
+$sql = \rex_sql::factory();
 $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_machinery_url_industry_sectors AS
 	SELECT industries.industry_sector_id, industries.clang_id, industries.name, industries.name AS seo_title, industries.teaser AS seo_description, industries.updatedate
 	FROM '. \rex::getTablePrefix() .'d2u_machinery_industry_sectors_lang AS industries
 	LEFT JOIN '. \rex::getTablePrefix() .'clang AS clang ON industries.clang_id = clang.id
 	WHERE clang.status = 1'
 );
-if(rex_addon::get("url")->isAvailable()) {
+if(\rex_addon::get("url")->isAvailable()) {
 	$clang_id = count(rex_clang::getAllIds()) == 1 ? rex_clang::getStartId() : 0;
-	$sql_replace = rex_sql::factory();
+	$sql_replace = \rex_sql::factory();
 	$sql->setQuery("SELECT * FROM ". \rex::getTablePrefix() ."url_generate WHERE `table` = '1_xxx_". \rex::getTablePrefix() ."d2u_machinery_url_industry_sectors'");
 	if($sql->getRows() == 0) {
 		$sql_replace->setQuery("DELETE FROM `". \rex::getTablePrefix() ."url_generate` WHERE `table` LIKE '%d2u_machinery_url_industry_sectors';");

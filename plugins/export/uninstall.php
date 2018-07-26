@@ -1,5 +1,5 @@
 <?php
-$sql = rex_sql::factory();
+$sql = \rex_sql::factory();
 
 // Delete tables
 // Delete tables

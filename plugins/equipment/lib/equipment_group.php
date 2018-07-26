@@ -56,7 +56,7 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 					."ON equipment_groups.group_id = lang.group_id "
 					."AND clang_id = ". $this->clang_id ." "
 				."WHERE equipment_groups.group_id = ". $group_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		$num_rows = $result->getRows();
 
@@ -81,18 +81,18 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_equipment_groups_lang "
 			."WHERE group_id = ". $this->group_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
-		$result_lang = rex_sql::factory();
+		$result_lang = \rex_sql::factory();
 		$result_lang->setQuery($query_lang);
 		
 		// If no more lang objects are available, delete
 		$query_main = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_equipment_groups_lang "
 			."WHERE group_id = ". $this->group_id;
-		$result_main = rex_sql::factory();
+		$result_main = \rex_sql::factory();
 		$result_main->setQuery($query_main);
 		if($result_main->getRows() == 0) {
 			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_equipment_groups "
 				."WHERE group_id = ". $this->group_id;
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 		}
 	}
@@ -108,7 +108,7 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 				."ON lang.group_id = equipment_groups.group_id "
 			."WHERE clang_id = ". $clang_id ." "
 			."ORDER BY priority";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$equipment_groups = [];
@@ -126,7 +126,7 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 	public function getReferringEquipments() {
 		$query = "SELECT equipment_id FROM ". \rex::getTablePrefix() ."d2u_machinery_equipments "
 			."WHERE group_id = ". $this->group_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$equipments = [];
@@ -197,7 +197,7 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 				$query = "UPDATE ". $query ." WHERE group_id = ". $this->group_id;
 			}
 
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 			if($this->group_id == 0) {
 				$this->group_id = $result->getLastId();
@@ -216,7 +216,7 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 						."description = '". addslashes(htmlspecialchars($this->description)) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."' ";
 
-				$result = rex_sql::factory();
+				$result = \rex_sql::factory();
 				$result->setQuery($query);
 				$error = $result->hasError();
 			}
@@ -232,7 +232,7 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 		// Pull priorities from database
 		$query = "SELECT group_id, priority FROM ". \rex::getTablePrefix() ."d2u_machinery_equipment_groups "
 			."WHERE group_id <> ". $this->group_id ." ORDER BY priority";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		// When prio is too small, set at beginning
@@ -257,7 +257,7 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 			$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_equipment_groups "
 					."SET priority = ". ($prio + 1) ." " // +1 because array_splice recounts at zero
 					."WHERE group_id = ". $group_id;
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 		}
 	}

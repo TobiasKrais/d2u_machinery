@@ -1,6 +1,6 @@
 <?php
 // 1.1.0 Update database
-$sql = rex_sql::factory();
+$sql = \rex_sql::factory();
 $sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_export_provider LIKE 'online_status';");
 if($sql->getRows() == 0) {
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_export_provider "

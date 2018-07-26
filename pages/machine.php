@@ -215,7 +215,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 				$machine->usage_area_ids = $form['usage_area_ids'];
 			}
 			
-			if(rex_addon::get("d2u_videos")->isAvailable()) {
+			if(\rex_addon::get("d2u_videos")->isAvailable()) {
 				$video_ids = isset($form['video_ids']) ? $form['video_ids'] : [];
 				$machine->videos = []; // Clear video array
 				foreach($video_ids as $video_id) {
@@ -359,7 +359,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 							d2u_addon_backend_helper::form_linkfield('d2u_machinery_machine_software', 'article_id_software', $machine->article_id_software, rex_config::get("d2u_helper", "default_lang"), $readonly);
 							d2u_addon_backend_helper::form_linkfield('d2u_machinery_machine_service', 'article_id_service', $machine->article_id_service, rex_config::get("d2u_helper", "default_lang"), $readonly);
 							d2u_addon_backend_helper::form_linklistfield('d2u_machinery_machine_references', 1, $machine->article_ids_references, rex_config::get("d2u_helper", "default_lang"), $readonly);
-							if(rex_addon::get("d2u_videos")->isAvailable()) {
+							if(\rex_addon::get("d2u_videos")->isAvailable()) {
 								$options = [];
 								foreach(Video::getAll(rex_config::get("d2u_helper", "default_lang")) as $video) {
 									$options[$video->video_id] = $video->name;

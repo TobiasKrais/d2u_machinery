@@ -74,7 +74,7 @@ function rex_d2u_machinery_used_machines_media_is_in_use(rex_extension_point $ep
 	$filename = addslashes($params['filename']);
 
 	// Used machines
-	$sql = rex_sql::factory();
+	$sql = \rex_sql::factory();
 	$sql->setQuery('SELECT lang.used_machine_id, manufacturer, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_used_machines_lang` AS lang '
 		.'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_used_machines` AS used_machines ON lang.used_machine_id = used_machines.used_machine_id '
 		.'WHERE pics LIKE "%'. $filename .'%" AND clang_id = '. \rex_config::get("d2u_helper", "default_lang", \rex_clang::getStartId()));
@@ -106,7 +106,7 @@ function d2u_machinery_used_machines_add_open_graph_call() {
  */
 function d2u_machinery_used_machines_add_open_graph(rex_extension_point $ep) {
 	$urlParamKey = "";
-	if(rex_addon::get("url")->isAvailable()) {
+	if(\rex_addon::get("url")->isAvailable()) {
 		$url_data = UrlGenerator::getData();
 		$urlParamKey = isset($url_data->urlParamKey) ? $url_data->urlParamKey : "";
 	}
@@ -114,7 +114,7 @@ function d2u_machinery_used_machines_add_open_graph(rex_extension_point $ep) {
 	if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "used_rent_machine_id"))
 			|| (filter_input(INPUT_GET, 'used_sale_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "used_sale_machine_id"))) {
 		$used_machine_id = filter_input(INPUT_GET, 'used_sale_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 ? filter_input(INPUT_GET, 'used_sale_machine_id', FILTER_VALIDATE_INT) : filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT);
-		if(rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
+		if(\rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
 			$used_machine_id = UrlGenerator::getId();
 		}
 		

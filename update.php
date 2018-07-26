@@ -19,7 +19,7 @@ if(class_exists(D2UModuleManager)) {
 	if(rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
 		$modules[] = new D2UModule("90-4",
 			"D2U Machinery Addon - Gebrauchtmaschinen",
-			6);
+			7);
 	}
 	$modules[] = new D2UModule("90-5",
 		"D2U Machinery Addon - Box Beratungshinweis",
@@ -29,7 +29,7 @@ if(class_exists(D2UModuleManager)) {
 }
 
 // 1.0.1 Update database
-$sql = rex_sql::factory();
+$sql = \rex_sql::factory();
 $sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_machines LIKE 'priority';");
 if($sql->getRows() == 0) {
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_machines "
@@ -95,9 +95,9 @@ $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_machinery
 	LEFT JOIN '. \rex::getTablePrefix() .'clang AS clang ON lang.clang_id = clang.id
 	WHERE clang.status = 1 AND machines.online_status = "online" 
 	GROUP BY category_id, clang_id, name, seo_title, seo_description, updatedate');
-if(rex_addon::get("url")->isAvailable()) {
+if(\rex_addon::get("url")->isAvailable()) {
 	$clang_id = count(rex_clang::getAllIds()) == 1 ? rex_clang::getStartId() : 0;
-	$sql_replace = rex_sql::factory();
+	$sql_replace = \rex_sql::factory();
 	$sql->setQuery("SELECT id FROM `". \rex::getTablePrefix() ."url_generate` WHERE `table_parameters` LIKE '%d2u_machinery_url_machines_url_param_key\":\"machine_id\"%';");
 	if($sql->getRows() == 0) {
 		$sql_replace->setQuery("DELETE FROM `". \rex::getTablePrefix() ."url_generate` WHERE `table_parameters` LIKE '%d2u_machinery_url_machines_url_param_key\":\"machine_id\"%';");

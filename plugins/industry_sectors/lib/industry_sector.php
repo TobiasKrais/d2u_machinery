@@ -61,7 +61,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 					."ON industry_sectors.industry_sector_id = lang.industry_sector_id "
 					."AND clang_id = ". $this->clang_id ." "
 				."WHERE industry_sectors.industry_sector_id = ". $industry_sector_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		$num_rows = $result->getRows();
 
@@ -86,7 +86,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors "
 					."SET online_status = 'offline' "
 					."WHERE industry_sector_id = ". $this->industry_sector_id;
-				$result = rex_sql::factory();
+				$result = \rex_sql::factory();
 				$result->setQuery($query);
 			}
 			$this->online_status = "offline";
@@ -96,7 +96,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors "
 					."SET online_status = 'online' "
 					."WHERE industry_sector_id = ". $this->industry_sector_id;
-				$result = rex_sql::factory();
+				$result = \rex_sql::factory();
 				$result->setQuery($query);
 			}
 			$this->online_status = "online";			
@@ -112,18 +112,18 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang "
 			."WHERE industry_sector_id = ". $this->industry_sector_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
-		$result_lang = rex_sql::factory();
+		$result_lang = \rex_sql::factory();
 		$result_lang->setQuery($query_lang);
 		
 		// If no more lang objects are available, delete
 		$query_main = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang "
 			."WHERE industry_sector_id = ". $this->industry_sector_id;
-		$result_main = rex_sql::factory();
+		$result_main = \rex_sql::factory();
 		$result_main->setQuery($query_main);
 		if($result_main->getRows() == 0) {
 			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors "
 				."WHERE industry_sector_id = ". $this->industry_sector_id;
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 		}
 	}
@@ -139,7 +139,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 			."WHERE clang_id = ". $clang_id ." ";
 		$query .= "ORDER BY name";
 
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$industry_sectors = [];
@@ -172,7 +172,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 	public function getMachines($online_only = FALSE) {
 		$query = "SELECT machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
 			."WHERE industry_sector_ids LIKE '%|". $this->industry_sector_id ."|%'";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$machines = [];
@@ -269,8 +269,8 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 		}
 
 		if($including_domain) {
-			if(rex_addon::get('yrewrite')->isAvailable())  {
-				return str_replace(rex_yrewrite::getCurrentDomain()->getUrl() .'/', rex_yrewrite::getCurrentDomain()->getUrl(), rex_yrewrite::getCurrentDomain()->getUrl() . $this->url);
+			if(\rex_addon::get('yrewrite')->isAvailable())  {
+				return str_replace(\rex_yrewrite::getCurrentDomain()->getUrl() .'/', \rex_yrewrite::getCurrentDomain()->getUrl(), \rex_yrewrite::getCurrentDomain()->getUrl() . $this->url);
 			}
 			else {
 				return str_replace(\rex::getServer(). '/', \rex::getServer(), \rex::getServer() . $this->url);
@@ -288,7 +288,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 	public function isOnline() {
 		$query = "SELECT machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
 			."WHERE industry_sector_ids LIKE '%|". $this->industry_sector_id ."|%'";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		if($result->getRows() > 0) {
@@ -322,7 +322,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 				$query = "UPDATE ". $query ." WHERE industry_sector_id = ". $this->industry_sector_id;
 			}
 
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 			if($this->industry_sector_id == 0) {
 				$this->industry_sector_id = $result->getLastId();
@@ -343,14 +343,14 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 						."updatedate = ". time() .", "
 						."updateuser = '". \rex::getUser()->getLogin() ."' ";
 
-				$result = rex_sql::factory();
+				$result = \rex_sql::factory();
 				$result->setQuery($query);
 				$error = $result->hasError();
 			}
 		}
  
 		// Update URLs
-		if(rex_addon::get("url")->isAvailable()) {
+		if(\rex_addon::get("url")->isAvailable()) {
 			UrlGenerator::generatePathFile([]);
 		}
 

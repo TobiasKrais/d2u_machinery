@@ -1,5 +1,5 @@
 <?php
-$sql = rex_sql::factory();
+$sql = \rex_sql::factory();
 
 // Delete fields
 $sql->setQuery('ALTER TABLE ' . \rex::getTablePrefix() . 'd2u_machinery_machines '

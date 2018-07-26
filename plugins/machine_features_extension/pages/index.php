@@ -25,7 +25,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$feature->category_ids = $form['category_ids'];
 			$feature->priority = $form['priority'];
 			$feature->pic = $input_media[1];
-			if(rex_addon::get("d2u_videos")->isAvailable() && isset($form['video_id']) && $form['video_id'] > 0) {
+			if(\rex_addon::get("d2u_videos")->isAvailable() && isset($form['video_id']) && $form['video_id'] > 0) {
 				$feature->video = new Video($form['video_id'], rex_config::get("d2u_helper", "default_lang"));
 			}
 			else {
@@ -172,7 +172,7 @@ if ($func == 'edit' || $func == 'add') {
 							}
 							d2u_addon_backend_helper::form_select('d2u_machinery_features_categories', 'form[category_ids][]', $options, $feature->category_ids, 10, TRUE, $readonly);
 
-							if(rex_addon::get("d2u_videos")->isAvailable()) {
+							if(\rex_addon::get("d2u_videos")->isAvailable()) {
 								$options_video = [0 => rex_i18n::msg('d2u_machinery_video_no')];
 								foreach (Video::getAll(rex_config::get("d2u_helper", "default_lang")) as $video) {
 									$options_video[$video->video_id] = $video->name;

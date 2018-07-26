@@ -56,7 +56,7 @@ class Equipment implements \D2U_Helper\ITranslationHelper {
 					."ON equipments.equipment_id = lang.equipment_id "
 					."AND clang_id = ". $this->clang_id ." "
 				."WHERE equipments.equipment_id = ". $equipment_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		$num_rows = $result->getRows();
 
@@ -83,7 +83,7 @@ class Equipment implements \D2U_Helper\ITranslationHelper {
 				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_equipments "
 					."SET online_status = 'offline' "
 					."WHERE equipment_id = ". $this->equipment_id;
-				$result = rex_sql::factory();
+				$result = \rex_sql::factory();
 				$result->setQuery($query);
 			}
 			$this->online_status = "offline";
@@ -93,7 +93,7 @@ class Equipment implements \D2U_Helper\ITranslationHelper {
 				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_equipments "
 					."SET online_status = 'online' "
 					."WHERE equipment_id = ". $this->equipment_id;
-				$result = rex_sql::factory();
+				$result = \rex_sql::factory();
 				$result->setQuery($query);
 			}
 			$this->online_status = "online";			
@@ -109,18 +109,18 @@ class Equipment implements \D2U_Helper\ITranslationHelper {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_equipments_lang "
 			."WHERE equipment_id = ". $this->equipment_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
-		$result_lang = rex_sql::factory();
+		$result_lang = \rex_sql::factory();
 		$result_lang->setQuery($query_lang);
 		
 		// If no more lang objects are available, delete
 		$query_main = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_equipments_lang "
 			."WHERE equipment_id = ". $this->equipment_id;
-		$result_main = rex_sql::factory();
+		$result_main = \rex_sql::factory();
 		$result_main->setQuery($query_main);
 		if($result_main->getRows() == 0) {
 			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_equipments "
 				."WHERE equipment_id = ". $this->equipment_id;
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 		}
 	}
@@ -136,7 +136,7 @@ class Equipment implements \D2U_Helper\ITranslationHelper {
 				."ON lang.equipment_id = equipments.equipment_id "
 			."WHERE clang_id = ". $clang_id ." ";
 		$query .= "ORDER BY name";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$equipments = [];
@@ -154,7 +154,7 @@ class Equipment implements \D2U_Helper\ITranslationHelper {
 	public function getReferringMachines() {
 		$query = "SELECT machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
 			."WHERE equipment_ids LIKE '%|". $this->equipment_id ."|%'";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$machines = [];
@@ -221,7 +221,7 @@ class Equipment implements \D2U_Helper\ITranslationHelper {
 				$query = "UPDATE ". $query ." WHERE equipment_id = ". $this->equipment_id;
 			}
 
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 			if($this->equipment_id == 0) {
 				$this->equipment_id = $result->getLastId();
@@ -239,7 +239,7 @@ class Equipment implements \D2U_Helper\ITranslationHelper {
 						."name = '". addslashes($this->name) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."' ";
 
-				$result = rex_sql::factory();
+				$result = \rex_sql::factory();
 				$result->setQuery($query);
 				$error = $result->hasError();
 			}

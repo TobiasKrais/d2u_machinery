@@ -45,7 +45,7 @@ class ExportedUsedMachine {
 		$query = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_export_machines "
 				."WHERE used_machine_id = ". $used_machine_id ." "
 					."AND provider_id = ". $provider_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		$num_rows = $result->getRows();
 
@@ -99,7 +99,7 @@ class ExportedUsedMachine {
 	public function delete() {
 		$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_export_machines "
 			."WHERE used_machine_id = ". $this->used_machine_id ." AND provider_id = ". $this->provider_id;
-		$result_lang = rex_sql::factory();
+		$result_lang = \rex_sql::factory();
 		$result_lang->setQuery($query);
 	}
 	
@@ -114,7 +114,7 @@ class ExportedUsedMachine {
 		if ($provider !== FALSE && $provider->provider_id > 0) {
 			$query .= " WHERE provider_id = ". $provider->provider_id;
 		}
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 
 		$exported_used_machines = [];
@@ -147,14 +147,14 @@ class ExportedUsedMachine {
 				."ON exported_machines.used_machine_id = used_machines.used_machine_id "
 			."WHERE used_machines.used_machine_id IS NULL "
 			."GROUP BY exported_machines.used_machine_id";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		for($i= 0; $i < $result->getRows(); $i++) {
 			$query_update = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_export_machines "
 				."SET export_action = 'delete' "
 				."WHERE used_machine_id = ". $result->getValue("exported_machines.used_machine_id");
-			$result_update = rex_sql::factory();
+			$result_update = \rex_sql::factory();
 			$result_update->setQuery($query_update);
 			
 			$result->next();
@@ -169,7 +169,7 @@ class ExportedUsedMachine {
 		$query_lang = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_export_machines "
 			."SET export_action = 'delete' "
 			."WHERE provider_id = ". $provider_id;
-		$result_lang = rex_sql::factory();
+		$result_lang = \rex_sql::factory();
 		$result_lang->setQuery($query_lang);
 	}
 	
@@ -181,7 +181,7 @@ class ExportedUsedMachine {
 		$query_lang = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_export_machines "
 			."SET export_action = 'delete' "
 			."WHERE used_machine_id = ". $used_machine_id;
-		$result_lang = rex_sql::factory();
+		$result_lang = \rex_sql::factory();
 		$result_lang->setQuery($query_lang);
 	}
 
@@ -205,7 +205,7 @@ class ExportedUsedMachine {
 				."provider_import_id = '". $this->provider_import_id ."', "
 				."export_timestamp = '". $this->export_timestamp ."'";
 
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		return !$result->hasError();

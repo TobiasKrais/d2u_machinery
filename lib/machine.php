@@ -702,7 +702,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 					."ON machines.machine_id = lang.machine_id "
 					."AND clang_id = ". $this->clang_id ." "
 				."WHERE machines.machine_id = ". $machine_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		$num_rows = $result->getRows();
 
@@ -894,7 +894,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Videos
-			if(rex_addon::get('d2u_videos')->isAvailable() && $result->getValue("video_ids") != "") {
+			if(\rex_addon::get('d2u_videos')->isAvailable() && $result->getValue("video_ids") != "") {
 				$video_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("video_ids")), PREG_GREP_INVERT);
 				foreach ($video_ids as $video_id) {
 					$this->videos[$video_id] = new Video($video_id, $clang_id);
@@ -912,7 +912,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_machines "
 					."SET online_status = 'offline' "
 					."WHERE machine_id = ". $this->machine_id;
-				$result = rex_sql::factory();
+				$result = \rex_sql::factory();
 				$result->setQuery($query);
 			}
 			$this->online_status = "offline";
@@ -922,7 +922,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_machines "
 					."SET online_status = 'online' "
 					."WHERE machine_id = ". $this->machine_id;
-				$result = rex_sql::factory();
+				$result = \rex_sql::factory();
 				$result->setQuery($query);
 			}
 			$this->online_status = "online";			
@@ -938,18 +938,18 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_machines_lang "
 			."WHERE machine_id = ". $this->machine_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
-		$result_lang = rex_sql::factory();
+		$result_lang = \rex_sql::factory();
 		$result_lang->setQuery($query_lang);
 		
 		// If no more lang objects are available, delete
 		$query_main = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_machines_lang "
 			."WHERE machine_id = ". $this->machine_id;
-		$result_main = rex_sql::factory();
+		$result_main = \rex_sql::factory();
 		$result_main->setQuery($query_main);
 		if($result_main->getRows() == 0) {
 			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
 				."WHERE machine_id = ". $this->machine_id;
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 		}
 	}
@@ -965,13 +965,13 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 		if($only_online) {
 			$query .= "WHERE online_status = 'online' ";
 		}
-		if(rex_addon::get('d2u_machinery')->getConfig('default_machine_sort') == 'priority') {
+		if(\rex_addon::get('d2u_machinery')->getConfig('default_machine_sort') == 'priority') {
 			$query .= 'ORDER BY priority ASC';
 		}
 		else {
 			$query .= 'ORDER BY name ASC';
 		}
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$machines = [];
@@ -1037,7 +1037,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	public function getReferringMachines() {
 		$query = "SELECT machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
 			."WHERE alternative_machine_ids LIKE '%|". $this->machine_id ."|%'";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$machines = [];
@@ -1056,7 +1056,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 		if(rex_plugin::get("d2u_machinery", "used_machines")->isAvailable()) {
 			$query = "SELECT used_machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_used_machines "
 				."WHERE machine_id =  ". $this->machine_id;
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 
 			$used_machines = [];
@@ -2095,8 +2095,8 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 		}
 
 		if($including_domain) {
-			if(rex_addon::get('yrewrite')->isAvailable())  {
-				return str_replace(rex_yrewrite::getCurrentDomain()->getUrl() .'/', rex_yrewrite::getCurrentDomain()->getUrl(), rex_yrewrite::getCurrentDomain()->getUrl() . $this->url);
+			if(\rex_addon::get('yrewrite')->isAvailable())  {
+				return str_replace(\rex_yrewrite::getCurrentDomain()->getUrl() .'/', \rex_yrewrite::getCurrentDomain()->getUrl(), \rex_yrewrite::getCurrentDomain()->getUrl() . $this->url);
 			}
 			else {
 				return str_replace(\rex::getServer(). '/', \rex::getServer(), \rex::getServer() . $this->url);
@@ -2257,7 +2257,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			if(rex_plugin::get("d2u_machinery", "machine_usage_area_extension")->isAvailable()) {
 				$query .= ", usage_area_ids = '|". implode("|", $this->usage_area_ids) ."|' ";
 			}
-			if(rex_addon::get('d2u_videos')->isAvailable() && count($this->videos) > 0) {
+			if(\rex_addon::get('d2u_videos')->isAvailable() && count($this->videos) > 0) {
 				$query .= ", video_ids = '|". implode("|", array_keys($this->videos)) ."|' ";
 			}
 			else {
@@ -2270,7 +2270,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			else {
 				$query = "UPDATE ". $query ." WHERE machine_id = ". $this->machine_id;
 			}
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 			if($this->machine_id == 0) {
 				$this->machine_id = $result->getLastId();
@@ -2304,14 +2304,14 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 						.", delivery_set_conversion = '". addslashes(htmlspecialchars($this->delivery_set_conversion)) ."' "
 						.", delivery_set_full = '". addslashes(htmlspecialchars($this->delivery_set_full)) ."' ";
 				}
-				$result = rex_sql::factory();
+				$result = \rex_sql::factory();
 				$result->setQuery($query);
 				$error = $result->hasError();
 			}
 		}
 
 		// Update URLs
-		if(rex_addon::get("url")->isAvailable()) {
+		if(\rex_addon::get("url")->isAvailable()) {
 			UrlGenerator::generatePathFile([]);
 		}
 		
@@ -2325,7 +2325,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 		// Pull prios from database
 		$query = "SELECT machine_id, priority FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
 			."WHERE machine_id <> ". $this->machine_id ." ORDER BY priority";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		// When priority is too small, set at beginning
@@ -2350,7 +2350,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_machines "
 					."SET priority = ". ($prio + 1) ." " // +1 because array_splice recounts at zero
 					."WHERE machine_id = ". $machine_id;
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 		}
 	}

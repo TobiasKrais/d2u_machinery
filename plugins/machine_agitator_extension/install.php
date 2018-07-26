@@ -1,5 +1,5 @@
 <?php
-$sql = rex_sql::factory();
+$sql = \rex_sql::factory();
 
 // Create tables: agitator types
 $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_agitator_types (

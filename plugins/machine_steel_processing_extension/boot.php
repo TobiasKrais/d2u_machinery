@@ -69,7 +69,7 @@ function rex_d2u_machinery_steel_processing_media_is_in_use(rex_extension_point 
 	$filename = addslashes($params['filename']);
 
 	// In-/Outfeed side (supplies)
-	$sql_machine = rex_sql::factory();
+	$sql_machine = \rex_sql::factory();
 	$sql_machine->setQuery('SELECT lang.supply_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_steel_supply_lang` AS lang '
 		.'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_steel_supply` AS supplies ON lang.supply_id = supplies.supply_id '
 		.'WHERE pic = "'. $filename .'" '

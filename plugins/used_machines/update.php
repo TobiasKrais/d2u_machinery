@@ -1,5 +1,5 @@
 <?php
-$sql = rex_sql::factory();
+$sql = \rex_sql::factory();
 $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_machinery_url_used_machines_rent AS
 	SELECT lang.used_machine_id, categories.clang_id, CONCAT(machines.manufacturer, " ", machines.name) AS name, CONCAT(machines.manufacturer, " ", machines.name, " - ", categories.name) AS seo_title, lang.teaser AS seo_description, machines.category_id, lang.updatedate
 	FROM '. \rex::getTablePrefix() .'d2u_machinery_used_machines_lang AS lang
@@ -37,9 +37,9 @@ $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_machinery
 	WHERE clang.status = 1 AND machines.online_status = "online" AND machines.offer_type = "sale"
 	GROUP BY category_id, clang_id, name, seo_title, seo_description, updatedate');
 // Insert url schemes
-if(rex_addon::get('url')->isAvailable()) {
+if(\rex_addon::get('url')->isAvailable()) {
 	$clang_id = count(rex_clang::getAllIds()) == 1 ? rex_clang::getStartId() : 0;
-	$sql_replace = rex_sql::factory();
+	$sql_replace = \rex_sql::factory();
 	$sql->setQuery("SELECT id FROM `". \rex::getTablePrefix() ."url_generate` WHERE `table_parameters` LIKE '%d2u_machinery_url_used_machines_rent_url_param_key\":\"used_machine_id\"%'");
 	if($sql->getRows() == 0) {
 		$sql_replace->setQuery("DELETE FROM `". \rex::getTablePrefix() ."url_generate` WHERE `table_parameters` LIKE '%d2u_machinery_url_used_machines_rent_url_param_key\":\"used_machine_id\"%';");

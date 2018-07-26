@@ -148,7 +148,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 					."ON categories.category_id = lang.category_id "
 					."AND clang_id = ". $this->clang_id ." "
 				."WHERE categories.category_id = ". $category_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		$num_rows = $result->getRows();
 
@@ -191,7 +191,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 			}
 
 			// Videos
-			if(rex_addon::get('d2u_videos')->isAvailable() && $result->getValue("video_ids") != "") {
+			if(\rex_addon::get('d2u_videos')->isAvailable() && $result->getValue("video_ids") != "") {
 				$video_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("video_ids")), PREG_GREP_INVERT);
 				foreach ($video_ids as $video_id) {
 					if($video_id > 0) {
@@ -213,7 +213,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 				else {
 					// Get offer type from used machine
 					$used_category_id = 0;
-					if(rex_addon::get("url")->isAvailable()) {
+					if(\rex_addon::get("url")->isAvailable()) {
 						$url_data = UrlGenerator::getData();
 						if(isset($url_data->urlParamKey) && ($url_data->urlParamKey === "used_rent_category_id" || $url_data->urlParamKey === "used_sale_category_id")) {
 							$used_category_id = UrlGenerator::getId();
@@ -245,18 +245,18 @@ class Category implements \D2U_Helper\ITranslationHelper{
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_categories_lang "
 			."WHERE category_id = ". $this->category_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
-		$result_lang = rex_sql::factory();
+		$result_lang = \rex_sql::factory();
 		$result_lang->setQuery($query_lang);
 		
 		// If no more lang objects are available, delete
 		$query_main = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_categories_lang "
 			."WHERE category_id = ". $this->category_id;
-		$result_main = rex_sql::factory();
+		$result_main = \rex_sql::factory();
 		$result_main->setQuery($query_main);
 		if($result_main->getRows() == 0) {
 			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_categories "
 				."WHERE category_id = ". $this->category_id;
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 		}
 	}
@@ -271,13 +271,13 @@ class Category implements \D2U_Helper\ITranslationHelper{
 			."LEFT JOIN ". \rex::getTablePrefix() ."d2u_machinery_categories AS categories "
 				."ON lang.category_id = categories.category_id "
 			."WHERE clang_id = ". $clang_id ." ";
-		if(rex_addon::get('d2u_machinery')->getConfig('default_category_sort') == 'priority') {
+		if(\rex_addon::get('d2u_machinery')->getConfig('default_category_sort') == 'priority') {
 			$query .= 'ORDER BY priority';
 		}
 		else {
 			$query .= 'ORDER BY name';
 		}
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$categories = [];
@@ -304,7 +304,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 	public function getChildren() {
 		$query = "SELECT category_id FROM ". \rex::getTablePrefix() ."d2u_machinery_categories "
 			."WHERE parent_category_id = ". $this->category_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$children =  [];
@@ -404,7 +404,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 		else {
 			$query .= 'ORDER BY machine_name ASC';
 		}
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$machines = [];
@@ -462,7 +462,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 				$query .= "AND offer_type = '". $this->offer_type ."' ";
 			}
 			$query .= "ORDER BY manufacturer, name";
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 
 			for($i = 0; $i < $result->getRows(); $i++) {
@@ -546,8 +546,8 @@ class Category implements \D2U_Helper\ITranslationHelper{
 		}
 
 		if($including_domain) {
-			if(rex_addon::get('yrewrite')->isAvailable())  {
-				return str_replace(rex_yrewrite::getCurrentDomain()->getUrl() .'/', rex_yrewrite::getCurrentDomain()->getUrl(), rex_yrewrite::getCurrentDomain()->getUrl() . $this->url);
+			if(\rex_addon::get('yrewrite')->isAvailable())  {
+				return str_replace(\rex_yrewrite::getCurrentDomain()->getUrl() .'/', \rex_yrewrite::getCurrentDomain()->getUrl(), \rex_yrewrite::getCurrentDomain()->getUrl() . $this->url);
 			}
 			else {
 				return str_replace(\rex::getServer(). '/', \rex::getServer(), \rex::getServer() . $this->url);
@@ -577,8 +577,8 @@ class Category implements \D2U_Helper\ITranslationHelper{
 			}
 
 			if($including_domain) {
-				if(rex_addon::get('yrewrite')->isAvailable())  {
-					return str_replace(rex_yrewrite::getCurrentDomain()->getUrl() .'/', rex_yrewrite::getCurrentDomain()->getUrl(), rex_yrewrite::getCurrentDomain()->getUrl() . $this->cutting_range_url);
+				if(\rex_addon::get('yrewrite')->isAvailable())  {
+					return str_replace(\rex_yrewrite::getCurrentDomain()->getUrl() .'/', \rex_yrewrite::getCurrentDomain()->getUrl(), \rex_yrewrite::getCurrentDomain()->getUrl() . $this->cutting_range_url);
 				}
 				else {
 					return str_replace(\rex::getServer(). '/', \rex::getServer(), \rex::getServer() . $this->cutting_range_url);
@@ -599,7 +599,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 	public function hasChildren() {
 		$query = "SELECT category_id FROM ". \rex::getTablePrefix() ."d2u_machinery_categories "
 			."WHERE parent_category_id = ". $this->category_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		if($result->getRows() > 0) {
@@ -620,7 +620,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 			."LEFT JOIN ". \rex::getTablePrefix() ."d2u_machinery_machines AS machines "
 					."ON lang.machine_id = machines.machine_id "
 			."WHERE category_id = ". $this->category_id ." AND clang_id = ". $this->clang_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		if($result->getRows() > 0) {
@@ -675,7 +675,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 				$query .= ", show_agitators = '". $this->show_agitators ."' ";
 			}
 
-			if(rex_addon::get('d2u_videos')->isAvailable() && count($this->videos) > 0) {
+			if(\rex_addon::get('d2u_videos')->isAvailable() && count($this->videos) > 0) {
 				$query .= ", video_ids = '|". implode("|", array_keys($this->videos)) ."|' ";
 			}
 			else {
@@ -689,7 +689,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 				$query = "UPDATE ". $query ." WHERE category_id = ". $this->category_id;
 			}
 
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 			if($this->category_id == 0) {
 				$this->category_id = $result->getLastId();
@@ -717,14 +717,14 @@ class Category implements \D2U_Helper\ITranslationHelper{
 						."steel_processing_saw_cutting_range_title = '". $this->steel_processing_saw_cutting_range_title ."' ";
 				}
 
-				$result = rex_sql::factory();
+				$result = \rex_sql::factory();
 				$result->setQuery($query);
 				$error = $result->hasError();
 			}
 		}
 		
 		// Update URLs
-		if(rex_addon::get("url")->isAvailable()) {
+		if(\rex_addon::get("url")->isAvailable()) {
 			UrlGenerator::generatePathFile([]);
 		}
 		
@@ -749,7 +749,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 		// Pull prios from database
 		$query = "SELECT category_id, priority FROM ". \rex::getTablePrefix() ."d2u_machinery_categories "
 			."WHERE category_id <> ". $this->category_id ." ORDER BY priority";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		// When priority is too small, set at beginning
@@ -774,7 +774,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 			$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_categories "
 					."SET priority = ". ($prio + 1) ." " // +1 because array_splice recounts at zero
 					."WHERE category_id = ". $category_id;
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 		}
 	}

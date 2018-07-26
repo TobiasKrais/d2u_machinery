@@ -66,7 +66,7 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 					."ON supplys.supply_id = lang.supply_id "
 					."AND clang_id = ". $this->clang_id ." "
 				."WHERE supplys.supply_id = ". $supply_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		$num_rows = $result->getRows();
 
@@ -81,7 +81,7 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 				$this->translation_needs_update = $result->getValue("translation_needs_update");
 			}
 
-			if(rex_addon::get('d2u_videos')->isAvailable() && $result->getValue("video_id") > 0) {
+			if(\rex_addon::get('d2u_videos')->isAvailable() && $result->getValue("video_id") > 0) {
 				$this->video = new Video($result->getValue("video_id"), $clang_id);
 			}
 		}
@@ -97,7 +97,7 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_steel_supply "
 					."SET online_status = 'offline' "
 					."WHERE supply_id = ". $this->supply_id;
-				$result = rex_sql::factory();
+				$result = \rex_sql::factory();
 				$result->setQuery($query);
 			}
 			$this->online_status = "offline";
@@ -107,7 +107,7 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_steel_supply "
 					."SET online_status = 'online' "
 					."WHERE supply_id = ". $this->supply_id;
-				$result = rex_sql::factory();
+				$result = \rex_sql::factory();
 				$result->setQuery($query);
 			}
 			$this->online_status = "online";			
@@ -123,18 +123,18 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_steel_supply_lang "
 			."WHERE supply_id = ". $this->supply_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
-		$result_lang = rex_sql::factory();
+		$result_lang = \rex_sql::factory();
 		$result_lang->setQuery($query_lang);
 		
 		// If no more lang objects are available, delete
 		$query_main = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_steel_supply_lang "
 			."WHERE supply_id = ". $this->supply_id;
-		$result_main = rex_sql::factory();
+		$result_main = \rex_sql::factory();
 		$result_main->setQuery($query_main);
 		if($result_main->getRows() == 0) {
 			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_steel_supply "
 				."WHERE supply_id = ". $this->supply_id;
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 		}
 	}
@@ -156,7 +156,7 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 
 		$query .= "ORDER BY name";
 
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$supplys = [];
@@ -174,7 +174,7 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 	public function getReferringMachines() {
 		$query = "SELECT machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
 			."WHERE automation_supply_ids LIKE '%|". $this->supply_id ."|%'";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$machines = [];
@@ -232,7 +232,7 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 			$query = \rex::getTablePrefix() ."d2u_machinery_steel_supply SET "
 					."online_status = '". $this->online_status ."', "
 					."pic = '". $this->pic ."' ";
-			if(rex_addon::get('d2u_videos')->isAvailable() && $this->video !== FALSE) {
+			if(\rex_addon::get('d2u_videos')->isAvailable() && $this->video !== FALSE) {
 				$query .= ", video_id = ". $this->video->video_id;
 			}
 			else {
@@ -246,7 +246,7 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 				$query = "UPDATE ". $query ." WHERE supply_id = ". $this->supply_id;
 			}
 
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 			if($this->supply_id == 0) {
 				$this->supply_id = $result->getLastId();
@@ -266,7 +266,7 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 						."description = '". $this->description ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."' ";
 
-				$result = rex_sql::factory();
+				$result = \rex_sql::factory();
 				$result->setQuery($query);
 				$error = $result->hasError();
 			}

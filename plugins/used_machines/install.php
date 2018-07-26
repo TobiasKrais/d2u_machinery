@@ -8,7 +8,7 @@ if(!$d2u_machinery->hasConfig('used_machine_article_id_sale')) {
 	$d2u_machinery->setConfig('used_machine_article_id_sale', rex_article::getSiteStartArticleId());
 }
 
-$sql = rex_sql::factory();
+$sql = \rex_sql::factory();
 
 // Create database
 $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_used_machines (
@@ -80,7 +80,7 @@ $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_machinery
 	WHERE clang.status = 1 AND machines.online_status = "online" AND machines.offer_type = "sale"
 	GROUP BY category_id, clang_id, name, seo_title, seo_description, updatedate');
 // Insert url schemes
-if(rex_addon::get('url')->isAvailable()) {
+if(\rex_addon::get('url')->isAvailable()) {
 	$sql->setQuery("SELECT * FROM ". \rex::getTablePrefix() ."url_generate WHERE `table` = '1_xxx_". \rex::getTablePrefix() ."d2u_machinery_url_used_machines_rent'");
 	$clang_id = count(rex_clang::getAllIds()) == 1 ? rex_clang::getStartId() : 0;
 	if($sql->getRows() == 0) {

@@ -56,7 +56,7 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper {
 					."ON service_options.service_option_id = lang.service_option_id "
 					."AND clang_id = ". $this->clang_id ." "
 				."WHERE service_options.service_option_id = ". $service_option_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		$num_rows = $result->getRows();
 
@@ -81,7 +81,7 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper {
 				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_service_options "
 					."SET online_status = 'offline' "
 					."WHERE service_option_id = ". $this->service_option_id;
-				$result = rex_sql::factory();
+				$result = \rex_sql::factory();
 				$result->setQuery($query);
 			}
 			$this->online_status = "offline";
@@ -91,7 +91,7 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper {
 				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_service_options "
 					."SET online_status = 'online' "
 					."WHERE service_option_id = ". $this->service_option_id;
-				$result = rex_sql::factory();
+				$result = \rex_sql::factory();
 				$result->setQuery($query);
 			}
 			$this->online_status = "online";			
@@ -107,18 +107,18 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_service_options_lang "
 			."WHERE service_option_id = ". $this->service_option_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
-		$result_lang = rex_sql::factory();
+		$result_lang = \rex_sql::factory();
 		$result_lang->setQuery($query_lang);
 		
 		// If no more lang objects are available, delete
 		$query_main = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_service_options_lang "
 			."WHERE service_option_id = ". $this->service_option_id;
-		$result_main = rex_sql::factory();
+		$result_main = \rex_sql::factory();
 		$result_main->setQuery($query_main);
 		if($result_main->getRows() == 0) {
 			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_service_options "
 				."WHERE service_option_id = ". $this->service_option_id;
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 		}
 	}
@@ -134,7 +134,7 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper {
 			."WHERE clang_id = ". $clang_id ." ";
 		$query .= "ORDER BY name";
 
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$service_options = [];
@@ -159,7 +159,7 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper {
 	public function getReferringMachines($online_only = FALSE) {
 		$query = "SELECT machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
 			."WHERE service_option_ids LIKE '%|". $this->service_option_id ."|%'";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$machines = [];
@@ -228,7 +228,7 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper {
 				$query = "UPDATE ". $query ." WHERE service_option_id = ". $this->service_option_id;
 			}
 
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 			if($this->service_option_id == 0) {
 				$this->service_option_id = $result->getLastId();
@@ -249,14 +249,14 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper {
 						."updatedate = ". time() .", "
 						."updateuser = '". \rex::getUser()->getLogin() ."' ";
 
-				$result = rex_sql::factory();
+				$result = \rex_sql::factory();
 				$result->setQuery($query);
 				$error = $result->hasError();
 			}
 		}
  
 		// Update URLs
-		if(rex_addon::get("url")->isAvailable()) {
+		if(\rex_addon::get("url")->isAvailable()) {
 			UrlGenerator::generatePathFile([]);
 		}
 

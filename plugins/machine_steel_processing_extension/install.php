@@ -1,5 +1,5 @@
 <?php
-$sql = rex_sql::factory();
+$sql = \rex_sql::factory();
 
 // Create tables: automation
 $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_automation (

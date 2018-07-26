@@ -1,5 +1,5 @@
 <?php
-$sql = rex_sql::factory();
+$sql = \rex_sql::factory();
 
 // Create tables
 $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors (
@@ -35,7 +35,7 @@ $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_machinery
 );
 
 // Insert url scheme
-if(rex_addon::get('url')->isAvailable()) {
+if(\rex_addon::get('url')->isAvailable()) {
 	$sql->setQuery("SELECT * FROM ". \rex::getTablePrefix() ."url_generate WHERE `table` = '1_xxx_". \rex::getTablePrefix() ."d2u_machinery_url_industry_sectors'");
 	$clang_id = count(rex_clang::getAllIds()) == 1 ? rex_clang::getStartId() : 0;
 	if($sql->getRows() == 0) {

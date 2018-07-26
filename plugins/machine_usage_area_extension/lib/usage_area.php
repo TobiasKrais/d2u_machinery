@@ -51,7 +51,7 @@ class UsageArea implements \D2U_Helper\ITranslationHelper {
 					."ON usage_areas.usage_area_id = lang.usage_area_id "
 					."AND clang_id = ". $this->clang_id ." "
 				."WHERE usage_areas.usage_area_id = ". $usage_area_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		$num_rows = $result->getRows();
 
@@ -75,18 +75,18 @@ class UsageArea implements \D2U_Helper\ITranslationHelper {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_usage_areas_lang "
 			."WHERE usage_area_id = ". $this->usage_area_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
-		$result_lang = rex_sql::factory();
+		$result_lang = \rex_sql::factory();
 		$result_lang->setQuery($query_lang);
 		
 		// If no more lang objects are available, delete
 		$query_main = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_usage_areas_lang "
 			."WHERE usage_area_id = ". $this->usage_area_id;
-		$result_main = rex_sql::factory();
+		$result_main = \rex_sql::factory();
 		$result_main->setQuery($query_main);
 		if($result_main->getRows() == 0) {
 			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_usage_areas "
 				."WHERE usage_area_id = ". $this->usage_area_id;
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 		}
 	}
@@ -107,7 +107,7 @@ class UsageArea implements \D2U_Helper\ITranslationHelper {
 		}
 		$query .= "ORDER BY name";
 
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$usage_areas = [];
@@ -125,7 +125,7 @@ class UsageArea implements \D2U_Helper\ITranslationHelper {
 	public function getMachines() {
 		$query = "SELECT machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
 			."WHERE usage_area_ids LIKE '%|". $this->usage_area_id ."|%'";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$machines = [];
@@ -195,7 +195,7 @@ class UsageArea implements \D2U_Helper\ITranslationHelper {
 				$query = "UPDATE ". $query ." WHERE usage_area_id = ". $this->usage_area_id;
 			}
 
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 			if($this->usage_area_id == 0) {
 				$this->usage_area_id = $result->getLastId();
@@ -213,7 +213,7 @@ class UsageArea implements \D2U_Helper\ITranslationHelper {
 						."name = '". addslashes($this->name) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."' ";
 
-				$result = rex_sql::factory();
+				$result = \rex_sql::factory();
 				$result->setQuery($query);
 				$error = $result->hasError();
 			}
@@ -229,7 +229,7 @@ class UsageArea implements \D2U_Helper\ITranslationHelper {
 		// Pull prios from database
 		$query = "SELECT usage_area_id, priority FROM ". \rex::getTablePrefix() ."d2u_machinery_usage_areas "
 			."WHERE usage_area_id <> ". $this->usage_area_id ." ORDER BY priority";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		// When prio is too small, set at beginning
@@ -254,7 +254,7 @@ class UsageArea implements \D2U_Helper\ITranslationHelper {
 			$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_usage_areas "
 					."SET priority = ". ($prio + 1) ." " // +1 because array_splice recounts at zero
 					."WHERE usage_area_id = ". $usage_area_id;
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 		}
 	}

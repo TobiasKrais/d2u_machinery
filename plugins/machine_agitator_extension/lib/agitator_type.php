@@ -51,7 +51,7 @@ class AgitatorType implements \D2U_Helper\ITranslationHelper {
 					."ON agitator_types.agitator_type_id = lang.agitator_type_id "
 					."AND clang_id = ". $this->clang_id ." "
 				."WHERE agitator_types.agitator_type_id = ". $agitator_type_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		$num_rows = $result->getRows();
 
@@ -75,18 +75,18 @@ class AgitatorType implements \D2U_Helper\ITranslationHelper {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_agitator_types_lang "
 			."WHERE agitator_type_id = ". $this->agitator_type_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
-		$result_lang = rex_sql::factory();
+		$result_lang = \rex_sql::factory();
 		$result_lang->setQuery($query_lang);
 		
 		// If no more lang objects are available, delete
 		$query_main = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_agitator_types_lang "
 			."WHERE agitator_type_id = ". $this->agitator_type_id;
-		$result_main = rex_sql::factory();
+		$result_main = \rex_sql::factory();
 		$result_main->setQuery($query_main);
 		if($result_main->getRows() == 0) {
 			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_agitator_types "
 				."WHERE agitator_type_id = ". $this->agitator_type_id;
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 		}
 	}
@@ -113,7 +113,7 @@ class AgitatorType implements \D2U_Helper\ITranslationHelper {
 			."WHERE clang_id = ". $clang_id ." ";
 		$query .= "ORDER BY name";
 
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$agitator_types = [];
@@ -131,7 +131,7 @@ class AgitatorType implements \D2U_Helper\ITranslationHelper {
 	public function getReferringMachines() {
 		$query = "SELECT machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
 			."WHERE agitator_type_id = ". $this->agitator_type_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$machines = [];
@@ -197,7 +197,7 @@ class AgitatorType implements \D2U_Helper\ITranslationHelper {
 				$query = "UPDATE ". $query ." WHERE agitator_type_id = ". $this->agitator_type_id;
 			}
 
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 			if($this->agitator_type_id == 0) {
 				$this->agitator_type_id = $result->getLastId();
@@ -215,7 +215,7 @@ class AgitatorType implements \D2U_Helper\ITranslationHelper {
 						."name = '". addslashes($this->name) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."' ";
 
-				$result = rex_sql::factory();
+				$result = \rex_sql::factory();
 				$result->setQuery($query);
 				$error = $result->hasError();
 			}

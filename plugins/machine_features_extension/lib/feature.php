@@ -71,7 +71,7 @@ class Feature implements \D2U_Helper\ITranslationHelper {
 					."ON features.feature_id = lang.feature_id "
 					."AND clang_id = ". $this->clang_id ." "
 				."WHERE features.feature_id = ". $feature_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		$num_rows = $result->getRows();
 
@@ -87,7 +87,7 @@ class Feature implements \D2U_Helper\ITranslationHelper {
 				$this->translation_needs_update = $result->getValue("translation_needs_update");
 			}
 			
-			if(rex_addon::get('d2u_videos')->isAvailable() && $result->getValue("video_id") > 0) {
+			if(\rex_addon::get('d2u_videos')->isAvailable() && $result->getValue("video_id") > 0) {
 				$this->video = new Video($result->getValue("video_id"), $clang_id);
 			}
 		}
@@ -102,18 +102,18 @@ class Feature implements \D2U_Helper\ITranslationHelper {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_features_lang "
 			."WHERE feature_id = ". $this->feature_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
-		$result_lang = rex_sql::factory();
+		$result_lang = \rex_sql::factory();
 		$result_lang->setQuery($query_lang);
 		
 		// If no more lang objects are available, delete
 		$query_main = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_features_lang "
 			."WHERE feature_id = ". $this->feature_id;
-		$result_main = rex_sql::factory();
+		$result_main = \rex_sql::factory();
 		$result_main->setQuery($query_main);
 		if($result_main->getRows() == 0) {
 			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_features "
 				."WHERE feature_id = ". $this->feature_id;
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 		}
 	}
@@ -133,7 +133,7 @@ class Feature implements \D2U_Helper\ITranslationHelper {
 			$query .= "AND category_ids LIKE '%|". $category_id ."|%' ";
 		}
 		$query .= "ORDER BY priority";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$features = [];
@@ -151,7 +151,7 @@ class Feature implements \D2U_Helper\ITranslationHelper {
 	public function getReferringMachines() {
 		$query = "SELECT machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
 			."WHERE feature_ids LIKE '%|". $this->feature_id ."|%'";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$machines = [];
@@ -236,7 +236,7 @@ class Feature implements \D2U_Helper\ITranslationHelper {
 					."pic = '". $this->pic ."', "
 					."category_ids = '|". implode("|", $this->category_ids) ."|', "
 					."priority = '". $this->priority ."' ";
-			if(rex_addon::get('d2u_videos')->isAvailable() && $this->video !== FALSE) {
+			if(\rex_addon::get('d2u_videos')->isAvailable() && $this->video !== FALSE) {
 				$query .= ", video_id = ". $this->video->video_id;
 			}
 			else {
@@ -250,7 +250,7 @@ class Feature implements \D2U_Helper\ITranslationHelper {
 				$query = "UPDATE ". $query ." WHERE feature_id = ". $this->feature_id;
 			}
 
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 			if($this->feature_id == 0) {
 				$this->feature_id = $result->getLastId();
@@ -270,7 +270,7 @@ class Feature implements \D2U_Helper\ITranslationHelper {
 						."description = '". addslashes(htmlspecialchars($this->description)) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."' ";
 
-				$result = rex_sql::factory();
+				$result = \rex_sql::factory();
 				$result->setQuery($query);
 				$error = $result->hasError();
 			}
@@ -286,7 +286,7 @@ class Feature implements \D2U_Helper\ITranslationHelper {
 		// Pull priorities from database
 		$query = "SELECT feature_id, priority FROM ". \rex::getTablePrefix() ."d2u_machinery_features "
 			."WHERE feature_id <> ". $this->feature_id ." ORDER BY priority";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		// When prio is too small, set at beginning
@@ -311,7 +311,7 @@ class Feature implements \D2U_Helper\ITranslationHelper {
 			$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_features "
 					."SET priority = ". ($prio + 1) ." " // +1 because array_splice recounts at zero
 					."WHERE feature_id = ". $feature_id;
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 		}
 	}

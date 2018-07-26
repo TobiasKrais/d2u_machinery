@@ -46,7 +46,7 @@ class Automation implements \D2U_Helper\ITranslationHelper {
 					."ON automations.automation_id = lang.automation_id "
 					."AND clang_id = ". $this->clang_id ." "
 				."WHERE automations.automation_id = ". $automation_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		$num_rows = $result->getRows();
 
@@ -69,18 +69,18 @@ class Automation implements \D2U_Helper\ITranslationHelper {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_steel_automation_lang "
 			."WHERE automation_id = ". $this->automation_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
-		$result_lang = rex_sql::factory();
+		$result_lang = \rex_sql::factory();
 		$result_lang->setQuery($query_lang);
 		
 		// If no more lang objects are available, delete
 		$query_main = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_steel_automation_lang "
 			."WHERE automation_id = ". $this->automation_id;
-		$result_main = rex_sql::factory();
+		$result_main = \rex_sql::factory();
 		$result_main->setQuery($query_main);
 		if($result_main->getRows() == 0) {
 			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_steel_automation "
 				."WHERE automation_id = ". $this->automation_id;
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 		}
 	}
@@ -95,7 +95,7 @@ class Automation implements \D2U_Helper\ITranslationHelper {
 			."WHERE clang_id = ". $clang_id ." ";
 		$query .= "ORDER BY name";
 
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$automations = [];
@@ -113,7 +113,7 @@ class Automation implements \D2U_Helper\ITranslationHelper {
 	public function getReferringMachines() {
 		$query = "SELECT machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
 			."WHERE automation_automationgrade_ids LIKE '%|". $this->automation_id ."|%'";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$machines = [];
@@ -177,7 +177,7 @@ class Automation implements \D2U_Helper\ITranslationHelper {
 				$query = "UPDATE ". $query ." WHERE automation_id = ". $this->automation_id;
 			}
 
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 			if($this->automation_id == 0) {
 				$this->automation_id = $result->getLastId();
@@ -195,7 +195,7 @@ class Automation implements \D2U_Helper\ITranslationHelper {
 						."name = '". addslashes($this->name) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."' ";
 
-				$result = rex_sql::factory();
+				$result = \rex_sql::factory();
 				$result->setQuery($query);
 				$error = $result->hasError();
 			}

@@ -131,7 +131,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 					."ON used_machines.used_machine_id = lang.used_machine_id "
 					."AND clang_id = ". $this->clang_id ." "
 				."WHERE used_machines.used_machine_id = ". $used_machine_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		$num_rows = $result->getRows();
 
@@ -180,7 +180,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_used_machines "
 					."SET online_status = 'offline' "
 					."WHERE used_machine_id = ". $this->used_machine_id;
-				$result = rex_sql::factory();
+				$result = \rex_sql::factory();
 				$result->setQuery($query);
 			}
 			$this->online_status = "offline";
@@ -195,7 +195,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_used_machines "
 					."SET online_status = 'online' "
 					."WHERE used_machine_id = ". $this->used_machine_id;
-				$result = rex_sql::factory();
+				$result = \rex_sql::factory();
 				$result->setQuery($query);
 			}
 			$this->online_status = "online";			
@@ -211,18 +211,18 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_used_machines_lang "
 			."WHERE used_machine_id = ". $this->used_machine_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
-		$result_lang = rex_sql::factory();
+		$result_lang = \rex_sql::factory();
 		$result_lang->setQuery($query_lang);
 		
 		// If no more lang objects are available, delete
 		$query_main = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_used_machines_lang "
 			."WHERE used_machine_id = ". $this->used_machine_id;
-		$result_main = rex_sql::factory();
+		$result_main = \rex_sql::factory();
 		$result_main->setQuery($query_main);
 		if($result_main->getRows() == 0) {
 			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_used_machines "
 				."WHERE used_machine_id = ". $this->used_machine_id;
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 		}
 
@@ -254,7 +254,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 			$query .= "WHERE ". implode(" AND ", $where);
 		}
 		$query .= " ORDER BY manufacturer, name";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$used_machines = [];
@@ -336,7 +336,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 	public static function getOfferTypeForUsedMachineId($used_machine_id) {
 		$query = "SELECT offer_type FROM ". \rex::getTablePrefix() ."d2u_machinery_used_machines "
 				."WHERE used_machine_id = ". $used_machine_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 
 		if($result->getRows() > 0) {
@@ -365,7 +365,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 				."WHERE machine_id = ". $machine->machine_id ." "
 					."AND online_status = 'online'";
 
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$used_machines = [];
@@ -393,7 +393,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 
 		}
 		$query .= "ORDER BY manufacturer, name";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$used_machines = [];
@@ -460,8 +460,8 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 		}
 
 		if($including_domain) {
-			if(rex_addon::get('yrewrite')->isAvailable())  {
-				return str_replace(rex_yrewrite::getCurrentDomain()->getUrl() .'/', rex_yrewrite::getCurrentDomain()->getUrl(), rex_yrewrite::getCurrentDomain()->getUrl() . $this->url);
+			if(\rex_addon::get('yrewrite')->isAvailable())  {
+				return str_replace(\rex_yrewrite::getCurrentDomain()->getUrl() .'/', \rex_yrewrite::getCurrentDomain()->getUrl(), \rex_yrewrite::getCurrentDomain()->getUrl() . $this->url);
 			}
 			else {
 				return str_replace(\rex::getServer(). '/', \rex::getServer(), \rex::getServer() . $this->url);
@@ -509,7 +509,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 			else {
 				$query = "UPDATE ". $query ." WHERE used_machine_id = ". $this->used_machine_id;
 			}
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 			if($this->used_machine_id == 0) {
 				$this->used_machine_id = $result->getLastId();
@@ -530,7 +530,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = ". time() .", "
 						."updateuser = '". \rex::getUser()->getLogin() ."' ";
-				$result = rex_sql::factory();
+				$result = \rex_sql::factory();
 				$result->setQuery($query);
 				$error = $result->hasError();
 			}
@@ -542,7 +542,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 		}
 
 		// Update URLs
-		if(rex_addon::get("url")->isAvailable()) {
+		if(\rex_addon::get("url")->isAvailable()) {
 			UrlGenerator::generatePathFile([]);
 		}
 		

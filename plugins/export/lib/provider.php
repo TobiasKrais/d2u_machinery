@@ -133,7 +133,7 @@ class Provider {
 	public function __construct($provider_id) {
 		$query = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_export_provider WHERE provider_id = ". $provider_id;
 
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		$num_rows = $result->getRows();
 
@@ -262,7 +262,7 @@ class Provider {
 				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_export_provider "
 					."SET online_status = 'offline' "
 					."WHERE provider_id = ". $this->provider_id;
-				$result = rex_sql::factory();
+				$result = \rex_sql::factory();
 				$result->setQuery($query);
 			}
 			$this->online_status = "offline";
@@ -272,7 +272,7 @@ class Provider {
 				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_export_provider "
 					."SET online_status = 'online' "
 					."WHERE provider_id = ". $this->provider_id;
-				$result = rex_sql::factory();
+				$result = \rex_sql::factory();
 				$result->setQuery($query);
 			}
 			$this->online_status = "online";			
@@ -292,7 +292,7 @@ class Provider {
 		// Next delete object
 		$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_export_provider "
 			."WHERE provider_id = ". $this->provider_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 	}
 
@@ -420,7 +420,7 @@ class Provider {
 			$query .= "WHERE online_status = 'online' ";
 		}
 		$query .= "ORDER BY name";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$providers = [];
@@ -440,7 +440,7 @@ class Provider {
 	private function isExportNeeded() {
 		$query = "SELECT export_action FROM ". \rex::getTablePrefix() ."d2u_machinery_export_machines "
 			."WHERE provider_id = ". $this->provider_id ." AND export_action = 'delete'";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		if($result->getRows() > 0) {
@@ -451,7 +451,7 @@ class Provider {
 			."LEFT JOIN ". \rex::getTablePrefix() ."d2u_machinery_export_machines AS export ON used_machines.used_machine_id = export.used_machine_id "
 			."WHERE provider_id = ". $this->provider_id ." AND clang_id = ". $this->clang_id ." "
 			."ORDER BY used_machines.updatedate DESC LIMIT 0, 1";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		if($result->getRows() > 0 && $result->getValue("updatedate") > $result->getValue("export_timestamp")) {
@@ -469,7 +469,7 @@ class Provider {
 	public function isExportPossible() {
 		$query = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_export_machines "
 			."WHERE provider_id = ". $this->provider_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		if($result->getRows() > 0) {
@@ -486,7 +486,7 @@ class Provider {
 		$query = "SELECT export_timestamp FROM ". \rex::getTablePrefix() ."d2u_machinery_export_machines "
 			."WHERE provider_id = ". $this->provider_id ." "
 			."ORDER BY export_timestamp DESC LIMIT 0, 1";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$time = 0;
@@ -502,7 +502,7 @@ class Provider {
 	 */
 	public function getNumberOnlineUsedMachines() {
 		$query = "SELECT COUNT(*) as number FROM ". \rex::getTablePrefix() ."d2u_machinery_export_machines WHERE provider_id = ". $this->provider_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		return $result->getValue("number");
@@ -546,7 +546,7 @@ class Provider {
 			$query = "UPDATE ". $query ." WHERE provider_id = ". $this->provider_id;
 		}
 
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		if($this->provider_id == 0) {
 			$this->provider_id = $result->getLastId();

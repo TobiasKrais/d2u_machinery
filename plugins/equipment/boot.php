@@ -41,7 +41,7 @@ function rex_d2u_machinery_equipment_media_is_in_use(rex_extension_point $ep) {
 	$filename = addslashes($params['filename']);
 
 	// Equipment Groups
-	$sql = rex_sql::factory();
+	$sql = \rex_sql::factory();
 	$sql->setQuery('SELECT lang.group_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_equipment_groups_lang` AS lang '
 		.'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_equipment_groups` AS equipment_groups ON lang.group_id = equipment_groups.group_id '
 		.'WHERE picture = "'. $filename .'" AND clang_id = '. rex_config::get("d2u_helper", "default_lang"));

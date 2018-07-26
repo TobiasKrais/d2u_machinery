@@ -1,5 +1,5 @@
 <?php
-$sql = rex_sql::factory();
+$sql = \rex_sql::factory();
 // Install database
 $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_machines (
 	machine_id int(10) unsigned NOT NULL auto_increment,
@@ -81,7 +81,7 @@ $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_machinery
 	WHERE clang.status = 1 AND machines.online_status = "online" 
 	GROUP BY category_id, clang_id, name, seo_title, seo_description, updatedate');
 // Insert url schemes
-if(rex_addon::get('url')->isAvailable()) {
+if(\rex_addon::get('url')->isAvailable()) {
 	$sql->setQuery("SELECT * FROM ". \rex::getTablePrefix() ."url_generate WHERE `table` = '1_xxx_". \rex::getTablePrefix() ."d2u_machinery_url_machines'");
 	$clang_id = count(rex_clang::getAllIds()) == 1 ? rex_clang::getStartId() : 0;
 	if($sql->getRows() == 0) {

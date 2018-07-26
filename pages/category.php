@@ -33,7 +33,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$category->pic = $input_media[1];
 			$category->pic_usage = $input_media[2];
 
-			if(rex_addon::get("d2u_videos")->isAvailable()) {
+			if(\rex_addon::get("d2u_videos")->isAvailable()) {
 				$video_ids = isset($form['video_ids']) ? $form['video_ids'] : [];
 				$category->videos = []; // Clear video array
 				foreach($video_ids as $video_id) {
@@ -209,7 +209,7 @@ if ($func == 'edit' || $func == 'add') {
 							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', '1', $category->pic, $readonly);
 							d2u_addon_backend_helper::form_mediafield('d2u_machinery_category_pic_usage', '2', $category->pic_usage, $readonly);
 
-							if(rex_addon::get("d2u_videos")->isAvailable()) {
+							if(\rex_addon::get("d2u_videos")->isAvailable()) {
 								$options = [];
 								foreach(Video::getAll(rex_config::get("d2u_helper", "default_lang")) as $video) {
 									$options[$video->video_id] = $video->name;
