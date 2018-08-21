@@ -36,7 +36,7 @@ $d2u_module_manager->showManagerList();
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_machinery" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
-<p>1.2.3-DEV:</p>
+<p>1.2.3:</p>
 <ul>
 	<li>Bugfix Modul 90-4 Gebrauchtmaschinen: Verfügbarkeit wird nun korrekt angezeigt.</li>
 	<li>Methode zum Erstellen von Meta Tags d2u_machinery_frontend_helper::getAlternateURLs() hinzugefügt.</li>

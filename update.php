@@ -70,7 +70,7 @@ if($sql->getRows() > 0) {
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_machines "
 		. "DROP internal_name;");
 }
-// 1.3 Update database
+// 1.2.3 Update database
 $sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_machines LIKE 'engine_power_frequency_controlled';");
 if($sql->getRows() == 0) {
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_machines "
