@@ -27,6 +27,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 	if(rex_plugin::get('d2u_machinery', 'export')->isAvailable()) {
 		$settings['export_autoexport'] = array_key_exists('export_autoexport', $settings) ? "active" : "inactive";
 	}
+	$settings['google_analytics_activate'] = array_key_exists('google_analytics_activate', $settings) ? "true" : "false";
 	
 	// Save settings
 	if(rex_config::set("d2u_machinery", $settings)) {
@@ -147,7 +148,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 				<div class="panel-body-wrapper slide">
 					<?php
 						$options = ['name' => rex_i18n::msg('d2u_helper_name'), 'priority' => rex_i18n::msg('header_priority')];
-						d2u_addon_backend_helper::form_select('d2u_helper_translations_sort', 'settings[default_category_sort]', $options, [$this->getConfig('default_category_sort')]);
+						d2u_addon_backend_helper::form_select('d2u_helper_sort', 'settings[default_category_sort]', $options, [$this->getConfig('default_category_sort')]);
 						d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_show_teaser', 'settings[show_teaser]', 'show', $this->getConfig('show_teaser') == 'show');
 						d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_categories_navi', 'settings[show_categories_navi]', 'show', $this->getConfig('show_categories_navi') == 'show');
 					?>
@@ -159,7 +160,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 					<?php
 						d2u_addon_backend_helper::form_linkfield('d2u_machinery_settings_article', '1', $this->getConfig('article_id'), rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId()));
 						$options = ['name' => rex_i18n::msg('d2u_helper_name'), 'priority' => rex_i18n::msg('header_priority')];
-						d2u_addon_backend_helper::form_select('d2u_helper_translations_sort', 'settings[default_machine_sort]', $options, [$this->getConfig('default_machine_sort')]);
+						d2u_addon_backend_helper::form_select('d2u_helper_sort', 'settings[default_machine_sort]', $options, [$this->getConfig('default_machine_sort')]);
 						d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_show_tech_data', 'settings[show_techdata]', 'show', $this->getConfig('show_techdata') == 'show');
 						d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_machines_navi', 'settings[show_machines_navi]', 'show', $this->getConfig('show_machines_navi') == 'show');
 					?>
@@ -212,6 +213,35 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 			<?php
 				}
 			?>
+			<fieldset>
+				<legend><small><i class="rex-icon fa-google"></i></small> <?php echo rex_i18n::msg('d2u_machinery_settings_analytics'); ?></legend>
+				<div class="panel-body-wrapper slide">
+					<?php
+						d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_analytics_activate', 'settings[google_analytics_activate]', 'true', $this->getConfig('google_analytics_activate') == 'true');
+						d2u_addon_backend_helper::form_input('d2u_machinery_settings_analytics_event_category', 'settings[analytics_event_category]', $this->getConfig('analytics_event_category'), FALSE, FALSE, 'text');
+						d2u_addon_backend_helper::form_input('d2u_machinery_settings_analytics_event_action', 'settings[analytics_event_action]', $this->getConfig('analytics_event_action'), FALSE, FALSE, 'text');
+					?>
+					<script>
+						function changeType() {
+							if($('input[name="settings\\[google_analytics_activate\\]"]').is(':checked')) {
+								$('#settings\\[analytics_event_category\\]').fadeIn();
+								$('#settings\\[analytics_event_action\\]').fadeIn();
+							}
+							else {
+								$('#settings\\[analytics_event_category\\]').hide();
+								$('#settings\\[analytics_event_action\\]').hide();
+							}
+						}
+
+						// On init
+						changeType();
+						// On change
+						$('input[name="settings\\[google_analytics_activate\\]"]').on('change', function() {
+							changeType();
+						});
+					</script>
+				</div>
+			</fieldset>
 		</div>
 		<footer class="panel-footer">
 			<div class="rex-form-panel-footer">

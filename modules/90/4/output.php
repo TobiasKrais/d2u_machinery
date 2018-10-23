@@ -317,18 +317,17 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 	print '<div class="col-sm-12 col-md-8">';
 	$form_data = 'hidden|machine_name|'. $used_machine->manufacturer .' '. $used_machine->name .' (Gebrauchtmaschine)|REQUEST
 
+			html||<h3> '. $tag_open .'d2u_machinery_request'. $tag_close .': '. $machine->name .'</h3><br>
 			text|vorname|'. $tag_open .'d2u_machinery_form_vorname'. $tag_close .'
-			text|name|'. $tag_open .'d2u_machinery_form_name'. $tag_close .' *
-			text|position|'. $tag_open .'d2u_machinery_form_position'. $tag_close .'
-			text|company|'. $tag_open .'d2u_machinery_form_company'. $tag_close .' *
-			text|address|'. $tag_open .'d2u_machinery_form_address'. $tag_close .' *
-			text|zip|'. $tag_open .'d2u_machinery_form_zip'. $tag_close .' *
-			text|city|'. $tag_open .'d2u_machinery_form_city'. $tag_close .' *
-			text|country|'. $tag_open .'d2u_machinery_form_country'. $tag_close .' *
-			text|phone|'. $tag_open .'d2u_machinery_form_phone'. $tag_close .' *
-			text|fax|'. $tag_open .'d2u_machinery_form_fax'. $tag_close .'
-			text|email|'. $tag_open .'d2u_machinery_form_email'. $tag_close .' *
-			textarea|message|'. $tag_open .'d2u_machinery_form_message'. $tag_close .'
+			text|name|'. $tag_open .'d2u_machinery_form_name'. $tag_close .' *|||{"required":"required"}
+			text|company|'. $tag_open .'d2u_machinery_form_company'. $tag_close .'
+			text|address|'. $tag_open .'d2u_machinery_form_address'. $tag_close .'
+			text|zip|'. $tag_open .'d2u_machinery_form_zip'. $tag_close .'
+			text|city|'. $tag_open .'d2u_machinery_form_city'. $tag_close .'
+			text|country|'. $tag_open .'d2u_machinery_form_country'. $tag_close .'
+			text|phone|'. $tag_open .'d2u_machinery_form_phone'. $tag_close .' *|||{"required":"required"}
+			text|email|'. $tag_open .'d2u_machinery_form_email'. $tag_close .' *|||{"required":"required"}
+			textarea|message|'. $tag_open .'d2u_machinery_form_message'. $tag_close .' *|||{"required":"required"}
 			checkbox|please_call|'. $tag_open .'d2u_machinery_form_please_call'. $tag_close .'|nein, ja|nein
 			checkbox|privacy_policy_accepted|'. $tag_open .'d2u_machinery_form_privacy_policy'. $tag_close .' *|no,yes|no
 			php|validate_timer|Spamprotection|<input name="validate_timer" type="hidden" value="'. microtime(true) .'" />|
@@ -339,14 +338,10 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 			submit|submit|'. $tag_open .'d2u_machinery_form_send'. $tag_close .'|no_db
 
 			validate|empty|name|'. $tag_open .'d2u_machinery_form_validate_name'. $tag_close .'
-			validate|empty|company|'. $tag_open .'d2u_machinery_form_validate_company'. $tag_close .'
-			validate|empty|address|'. $tag_open .'d2u_machinery_form_validate_address'. $tag_close .'
-			validate|empty|zip|'. $tag_open .'d2u_machinery_form_validate_zip'. $tag_close .'
-			validate|empty|city|'. $tag_open .'d2u_machinery_form_validate_city'. $tag_close .'
-			validate|empty|country|'. $tag_open .'d2u_machinery_form_validate_country'. $tag_close .'
 			validate|empty|phone|'. $tag_open .'d2u_machinery_form_validate_phone'. $tag_close .'
 			validate|empty|email|'. $tag_open .'d2u_machinery_form_validate_email'. $tag_close .'
 			validate|email|email|'. $tag_open .'d2u_machinery_form_validate_email'. $tag_close .'
+			validate|empty|message|'. $tag_open .'d2u_machinery_form_validate_email'. $tag_close .'
 			validate|empty|privacy_policy_accepted|'. $tag_open .'d2u_machinery_form_validate_privacy_policy'. $tag_close .'
 			validate|customfunction|validate_timer|d2u_addon_frontend_helper::yform_validate_timer|10|'. $tag_open .'d2u_machinery_form_validate_spambots'. $tag_close .'|
 
@@ -363,6 +358,30 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 	$yform->setActionField("showtext", [$tag_open .'d2u_machinery_form_thanks'. $tag_close]);
 
 	echo $yform->getForm();
+	
+	// Google Analytics Event
+	if(rex_config::get('d2u_machinery', 'google_analytics_activate', 'false') == 'true' &&
+			rex_config::get('d2u_machinery', 'analytics_event_category', '') !== '' &&
+			rex_config::get('d2u_machinery', 'analytics_event_action', '') !== '') {
+		print '<script>'. PHP_EOL;
+		print '	$(\'button[type="submit"]\').click(function(e) {'. PHP_EOL;
+		// Prevent the form being submitted just yet
+		print '	e.preventDefault();'. PHP_EOL;
+		// Keep a reference to this dom element for the callback
+		print '	var _this = this;'. PHP_EOL;
+		print '	_gaq.push('. PHP_EOL;
+		// Queue the tracking event
+		print "		['_trackEvent', '". rex_config::get('d2u_machinery', 'analytics_event_category') ."', '". rex_config::get('d2u_machinery', 'analytics_event_action') ."'],". PHP_EOL;
+		// Queue the callback function immediately after.
+		// This will execute in order.
+		print '		function() {'. PHP_EOL;
+		// Submit the parent form
+		print "			$(_this).parents('form').submit();". PHP_EOL;
+		print '		});'. PHP_EOL;
+		print '	});. PHP_EOL';
+		print '</script>'. PHP_EOL;
+	}
+
 	print '</div>';
 	print '</div>';
 	print '</div>';
