@@ -38,6 +38,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.2.4-DEV:</p>
 <ul>
+	<li>Deinstallation hatte VIEWs und Übersetzungen in Datenbank hinterlassen. Das ist jetzt behoben.</li>
 	<li>Usability in Formularen verbessert.</li>
 </ul>
 <p>1.2.3:</p>
