@@ -853,20 +853,13 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 			rex_config::get('d2u_machinery', 'analytics_event_action', '') !== '') {
 		print '<script>'. PHP_EOL;
 		print '	$(\'button[type="submit"]\').click(function(e) {'. PHP_EOL;
-		// Prevent the form being submitted just yet
-		print '	e.preventDefault();'. PHP_EOL;
-		// Keep a reference to this dom element for the callback
-		print '	var _this = this;'. PHP_EOL;
-		print '	_gaq.push('. PHP_EOL;
-		// Queue the tracking event
-		print "		['_trackEvent', '". rex_config::get('d2u_machinery', 'analytics_event_category') ."', '". rex_config::get('d2u_machinery', 'analytics_event_action') ."'],". PHP_EOL;
-		// Queue the callback function immediately after.
-		// This will execute in order.
-		print '		function() {'. PHP_EOL;
-		// Submit the parent form
-		print "			$(_this).parents('form').submit();". PHP_EOL;
-		print '		});'. PHP_EOL;
-		print '	});. PHP_EOL';
+		print "		ga('send', 'event', {". PHP_EOL;
+		print "			eventCategory: '". rex_config::get('d2u_machinery', 'analytics_event_category') ."',". PHP_EOL;
+		print "			eventAction:  '". rex_config::get('d2u_machinery', 'analytics_event_action') ."',". PHP_EOL;
+		print "			eventLabel: '". $machine->name ."',". PHP_EOL;
+		print "			transport: 'beacon'". PHP_EOL;
+		print "		});". PHP_EOL;
+		print "	});". PHP_EOL;
 		print '</script>'. PHP_EOL;
 	}
 

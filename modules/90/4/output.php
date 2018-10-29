@@ -68,32 +68,32 @@ if(!function_exists('print_used_machines')) {
 	/**
 	 * Prints used machine list.
 	 * @param UsedMachine[] $used_machines Used Machines.
-	 * @param string $title Title for the list
 	 */
-	function print_used_machines($used_machines, $title) {
+	function print_used_machines($used_machines) {
 		$d2u_machinery = rex_addon::get("d2u_machinery");
 		$counter = 0;
 		foreach($used_machines as $used_machine) {
-			if($used_machine->online_status == 'online') {
-				print '<div class="col-sm-6 col-md-4 col-lg-3 abstand">';
-				print '<a href="'. $used_machine->getURL(FALSE) .'">';
-				print '<div class="box" data-height-watch>';
-				if(count($used_machine->pics) > 0 && $used_machine->pics[0] != "") {
-					print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
-						$used_machine->pics[0] .'" alt="'. $used_machine->name .'">';
-				}
-				else {
-					print '<img src="'.	rex_addon::get("d2u_machinery")->getAssetsUrl("white_tile.gif") .'" alt="Placeholder">';
-				}
-				print '<div><b>'. $used_machine->manufacturer .' '. $used_machine->name .'</b></div>';
-				if($d2u_machinery->hasConfig('show_teaser') && $d2u_machinery->getConfig('show_teaser') == 'show') {
-					print '<div class="teaser">'. nl2br($used_machine->teaser) .'</div>';
-				}
-				print '</div>';
-				print '</a>';
-				print '</div>';
-				$counter++;
+			if($used_machine->online_status != 'online') {
+				continue;
 			}
+			print '<div class="col-sm-6 col-md-4 col-lg-3 abstand">';
+			print '<a href="'. $used_machine->getURL(FALSE) .'">';
+			print '<div class="box" data-height-watch>';
+			if(count($used_machine->pics) > 0 && $used_machine->pics[0] != "") {
+				print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
+					$used_machine->pics[0] .'" alt="'. $used_machine->name .'">';
+			}
+			else {
+				print '<img src="'.	rex_addon::get("d2u_machinery")->getAssetsUrl("white_tile.gif") .'" alt="Placeholder">';
+			}
+			print '<div><b>'. $used_machine->manufacturer .' '. $used_machine->name .'</b></div>';
+			if($d2u_machinery->getConfig('show_teaser', 'hide') == 'show') {
+				print '<div class="teaser">'. nl2br($used_machine->teaser) .'</div>';
+			}
+			print '</div>';
+			print '</a>';
+			print '</div>';
+			$counter++;
 		}
 		
 		// Directly forward if only one machine is available
@@ -142,7 +142,7 @@ if(filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['optio
 		// Overview
 		print '<div id="tab_overview" class="tab-pane fade in active machine-tab show">';
 		print '<div class="row" data-match-height>';
-		print_used_machines($used_machines, $category->name);
+		print_used_machines($used_machines);
 		print '</div>';
 		print '</div>';
 
@@ -365,20 +365,13 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 			rex_config::get('d2u_machinery', 'analytics_event_action', '') !== '') {
 		print '<script>'. PHP_EOL;
 		print '	$(\'button[type="submit"]\').click(function(e) {'. PHP_EOL;
-		// Prevent the form being submitted just yet
-		print '	e.preventDefault();'. PHP_EOL;
-		// Keep a reference to this dom element for the callback
-		print '	var _this = this;'. PHP_EOL;
-		print '	_gaq.push('. PHP_EOL;
-		// Queue the tracking event
-		print "		['_trackEvent', '". rex_config::get('d2u_machinery', 'analytics_event_category') ."', '". rex_config::get('d2u_machinery', 'analytics_event_action') ."'],". PHP_EOL;
-		// Queue the callback function immediately after.
-		// This will execute in order.
-		print '		function() {'. PHP_EOL;
-		// Submit the parent form
-		print "			$(_this).parents('form').submit();". PHP_EOL;
-		print '		});'. PHP_EOL;
-		print '	});. PHP_EOL';
+		print "		ga('send', 'event', {". PHP_EOL;
+		print "			eventCategory: '". rex_config::get('d2u_machinery', 'analytics_event_category') ."',". PHP_EOL;
+		print "			eventAction:  '". rex_config::get('d2u_machinery', 'analytics_event_action') ."',". PHP_EOL;
+		print "			eventLabel: '". $used_machine->manufacturer .' '. $used_machine->name ."',". PHP_EOL;
+		print "			transport: 'beacon'". PHP_EOL;
+		print "		});". PHP_EOL;
+		print "	});". PHP_EOL;
 		print '</script>'. PHP_EOL;
 	}
 
