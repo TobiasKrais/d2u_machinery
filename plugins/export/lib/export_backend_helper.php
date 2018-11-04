@@ -28,6 +28,8 @@ class export_backend_helper  {
 				."('". export_backend_helper::$CRONJOB_NAME ."', 'Exports used machines automatically to FTP based export providers', 'rex_cronjob_phpcode', '{\"rex_cronjob_phpcode_code\":\"<?php Provider::autoexport(); ?>\"}', '{\"minutes\":[0],\"hours\":[21],\"days\":\"all\",\"weekdays\":\"all\",\"months\":\"all\"}', '". date("Y-m-d H:i:s", strtotime("+5 min")) ."', '|frontend|backend|', 0, '1970-01-01 01:00:00', 1, '". date("Y-m-d H:i:s") ."', 'd2u_machinery');";
 			$sql = \rex_sql::factory();
 			$sql->setQuery($query);
+
+			self::setConfig();
 		}
 	}
 
@@ -47,5 +49,14 @@ class export_backend_helper  {
 				return FALSE;
 			}
 		}
+	}
+	
+	/**
+	 * Set nexttime rex_config for cronjob addon.
+	 */
+	private static function setConfig() {
+		if(rex_config::get('cronjob', 'nexttime', 0) > strtotime('+5 minutes')) {
+			rex_config::set('cronjob', 'nexttime', strtotime('+5 minutes'));
+		}		
 	}
 }
