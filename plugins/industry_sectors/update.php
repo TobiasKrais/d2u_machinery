@@ -28,4 +28,8 @@ if($sql->getRows() == 0) {
 }
 
 // Update language replacements
+if(!class_exists('d2u_machinery_industry_sectors_lang_helper')) {
+	// Load class in case addon is deactivated
+	require_once 'lib/d2u_machinery_industry_sectors_lang_helper.php';
+}
 d2u_machinery_industry_sectors_lang_helper::factory()->install();
