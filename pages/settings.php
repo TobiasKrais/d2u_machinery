@@ -82,13 +82,14 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 		
 		// Install / remove Cronjob
 		if(rex_plugin::get('d2u_machinery', 'export')->isAvailable()) {
+			$export_cronjob = d2u_machinery_export_cronjob::factory();
 			if($this->getConfig('export_autoexport') == 'active') {
-				if(!export_backend_helper::autoexportIsInstalled()) {
-					export_backend_helper::autoexportInstall();
+				if(!$export_cronjob->isInstalled()) {
+					$export_cronjob->install();
 				}
 			}
 			else {
-				export_backend_helper::autoexportDelete();
+				$export_cronjob->delete();
 			}
 		}
 	}
