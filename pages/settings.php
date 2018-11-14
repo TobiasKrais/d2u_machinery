@@ -18,6 +18,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 	}
 
 	// Checkbox also need special treatment if empty
+	$settings['lang_wildcard_overwrite'] = array_key_exists('lang_wildcard_overwrite', $settings) ? "true" : "false";
 	$settings['show_categories_navi'] = array_key_exists('show_categories_navi', $settings) ? "show" : "hide";
 	$settings['show_categories_usage_areas'] = array_key_exists('show_categories_usage_areas', $settings) ? "show" : "hide";
 	$settings['show_machines_navi'] = array_key_exists('show_machines_navi', $settings) ? "show" : "hide";
@@ -115,6 +116,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 				<legend><small><i class="rex-icon rex-icon-language"></i></small> <?php echo rex_i18n::msg('d2u_helper_lang_replacements'); ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
+						d2u_addon_backend_helper::form_checkbox('d2u_helper_lang_wildcard_overwrite', 'settings[lang_wildcard_overwrite]', 'true', $this->getConfig('lang_wildcard_overwrite') == 'true');
 						foreach(rex_clang::getAll() as $rex_clang) {
 							print '<dl class="rex-form-group form-group">';
 							print '<dt><label>'. $rex_clang->getName() .'</label></dt>';
