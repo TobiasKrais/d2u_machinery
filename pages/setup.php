@@ -31,14 +31,15 @@ $d2u_module_manager->showManagerList();
 	<li>Gebrauchtmaschinen Plugin: <a href="https://www.meier-krantechnik.de" target="_blank">
 		Meier Krantechnik</a>.</li>
 </ul>
-<p>Im D2U Helper Addon kann das "Big Header Template" installiert werden. In
-	diesem Template sind alle nötigen Änderungen integriert.</p>
+<p>Im D2U Helper Addon kann das 00-1 "Big Header Template", 02-3 "Header Slider Template with Slogan",
+	04-2 "Header Slider Template" oder installiert werden. In diesem Templates
+	sind alle nötigen Änderungen integriert.</p>
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_machinery" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
 <p>1.2.5:</p>
 <ul>
-	<li>...</li>
+	<li>Modul 90-4 "D2U Machinery Addon - Gebrauchtmaschinen" um Optionen zur Personalisierung ergänzt. U.a. können Bilder jetzt in eigenem Tab dargestellt werden.</li>
 </ul>
 <p>1.2.4:</p>
 <ul>

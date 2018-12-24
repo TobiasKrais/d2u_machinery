@@ -32,5 +32,4 @@ if($text != '') {
 	print '<div class="col-sm-12 abstand">'. $text .'</div>';
 	print '<div class="col-sm-12 abstand"></div>';
 }
-	
 ?>

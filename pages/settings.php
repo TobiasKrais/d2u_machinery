@@ -178,6 +178,8 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 						<?php
 							d2u_addon_backend_helper::form_linkfield('d2u_machinery_used_machines_article_rent', '3', $this->getConfig('used_machine_article_id_rent'), rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId()));
 							d2u_addon_backend_helper::form_linkfield('d2u_machinery_used_machines_article_sale', '4', $this->getConfig('used_machine_article_id_sale'), rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId()));
+							$options_used_machines_show_pics = ['slider' => rex_i18n::msg('d2u_machinery_used_machines_pic_type_slider'), 'lightbox' => rex_i18n::msg('d2u_machinery_used_machines_pic_type_lightbox')];
+							d2u_addon_backend_helper::form_select('d2u_machinery_used_machines_pic_type', 'settings[used_machines_pic_type]', $options_used_machines_show_pics, [$this->getConfig('used_machines_pic_type')]);
 						?>
 					</div>
 				</fieldset>
@@ -191,10 +193,10 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 					<legend><small><i class="rex-icon fa-codepen"></i></small> <?php echo rex_i18n::msg('d2u_machinery_usage_areas'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-						$options_usage_area_header = array('machines' => rex_i18n::msg('d2u_machinery_usage_areas_settings_by_machines'), 'usage' => rex_i18n::msg('d2u_machinery_usage_areas_settings_by_usage_areas'));
-						d2u_addon_backend_helper::form_select('d2u_machinery_usage_areas_settings_header', 'settings[usage_area_header]', $options_usage_area_header, [$this->getConfig('usage_area_header')]);
-						d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_categories_show_usage_areas', 'settings[show_categories_usage_areas]', 'show', $this->getConfig('show_categories_usage_areas') == 'show');
-						d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_machine_show_usage_areas', 'settings[show_machine_usage_areas]', 'show', $this->getConfig('show_machine_usage_areas') == 'show');
+							$options_usage_area_header = ['machines' => rex_i18n::msg('d2u_machinery_usage_areas_settings_by_machines'), 'usage' => rex_i18n::msg('d2u_machinery_usage_areas_settings_by_usage_areas')];
+							d2u_addon_backend_helper::form_select('d2u_machinery_usage_areas_settings_header', 'settings[usage_area_header]', $options_usage_area_header, [$this->getConfig('usage_area_header')]);
+							d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_categories_show_usage_areas', 'settings[show_categories_usage_areas]', 'show', $this->getConfig('show_categories_usage_areas') == 'show');
+							d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_machine_show_usage_areas', 'settings[show_machine_usage_areas]', 'show', $this->getConfig('show_machine_usage_areas') == 'show');
 						?>
 					</div>
 				</fieldset>
