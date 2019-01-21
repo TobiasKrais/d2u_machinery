@@ -94,6 +94,9 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 				."WHERE group_id = ". $this->group_id;
 			$result = \rex_sql::factory();
 			$result->setQuery($query);
+
+			// reset priorities
+			$this->setPriority(TRUE);			
 		}
 	}
 	
@@ -226,9 +229,10 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 	}
 	
 	/**
-	 * Reassigns priority to all EquipmentGroups in database.
+	 * Reassigns priorities in database.
+	 * @param boolean $delete Reorder priority after deletion
 	 */
-	private function setPriority() {
+	private function setPriority($delete = FALSE) {
 		// Pull priorities from database
 		$query = "SELECT group_id, priority FROM ". \rex::getTablePrefix() ."d2u_machinery_equipment_groups "
 			."WHERE group_id <> ". $this->group_id ." ORDER BY priority";
@@ -240,8 +244,8 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 			$this->priority = 1;
 		}
 		
-		// When prio is too high, simply add at end 
-		if($this->priority > $result->getRows()) {
+		// When prio is too high or was deleted, simply add at end 
+		if($this->priority > $result->getRows() || $delete) {
 			$this->priority = $result->getRows() + 1;
 		}
 

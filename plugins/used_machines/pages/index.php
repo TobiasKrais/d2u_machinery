@@ -75,7 +75,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	exit;
 }
 // Delete
-else if ($func == 'delete') {
+else if (filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$used_machine_id = $entry_id;
 	if($used_machine_id == 0) {
 		$form = (array) rex_post('form', 'array', []);

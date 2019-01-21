@@ -37,8 +37,10 @@ $d2u_module_manager->showManagerList();
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_machinery" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
-<p>1.2.5:</p>
+<p>1.2.5-DEV:</p>
 <ul>
+	<li>Bugfix: Prioritäten wurden beim Löschen nicht reorganisiert.</li>
+	<li>Bugfix: Gebrauchtmaschinen Addon: Löschen Button innerhalb der Maschine hat nicht funktioniert.</li>
 	<li>Modul 90-4 "D2U Machinery Addon - Gebrauchtmaschinen" um Optionen zur Personalisierung ergänzt. U.a. können Bilder jetzt in eigenem Tab dargestellt werden.</li>
 </ul>
 <p>1.2.4:</p>

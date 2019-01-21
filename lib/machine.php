@@ -952,6 +952,9 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 				."WHERE machine_id = ". $this->machine_id;
 			$result = \rex_sql::factory();
 			$result->setQuery($query);
+
+			// reset priorities
+			$this->setPriority(TRUE);			
 		}
 	}
 	
@@ -2320,9 +2323,10 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	}
 	
 	/**
-	 * Reassigns priority to all Machines in database.
+	 * Reassigns priorities in database.
+	 * @param boolean $delete Reorder priority after deletion
 	 */
-	private function setPriority() {
+	private function setPriority($delete = FALSE) {
 		// Pull prios from database
 		$query = "SELECT machine_id, priority FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
 			."WHERE machine_id <> ". $this->machine_id ." ORDER BY priority";
@@ -2334,8 +2338,8 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			$this->priority = 1;
 		}
 		
-		// When prio is too high, simply add at end 
-		if($this->priority > $result->getRows()) {
+		// When prio is too high or was deleted, simply add at end 
+		if($this->priority > $result->getRows() || $delete) {
 			$this->priority = $result->getRows() + 1;
 		}
 
