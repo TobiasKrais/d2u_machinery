@@ -700,19 +700,34 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 								else {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="no">';
 								}
-								d2u_addon_backend_helper::form_input('d2u_machinery_lang_name', "form[lang][". $rex_clang->getId() ."][lang_name]", $machine_lang->lang_name, FALSE, $readonly_lang, "text");
-								d2u_addon_backend_helper::form_textarea('d2u_machinery_machine_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $machine_lang->teaser, 3, FALSE, $readonly_lang, FALSE);
-								d2u_addon_backend_helper::form_textarea('d2u_helper_description', "form[lang][". $rex_clang->getId() ."][description]", $machine_lang->description, 5, FALSE, $readonly_lang, TRUE);
-								d2u_addon_backend_helper::form_medialistfield('d2u_machinery_machine_pdfs', '1'. $rex_clang->getId(), $machine_lang->pdfs, $readonly_lang);
-								if(rex_plugin::get("d2u_machinery", "machine_construction_equipment_extension")->isAvailable()) {
-									d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_container_connection_port', "form[lang][". $rex_clang->getId() ."][container_connection_port]", $machine_lang->container_connection_port, FALSE, $readonly_lang, "text");
-									d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_container_conveying_wave', "form[lang][". $rex_clang->getId() ."][container_conveying_wave]", $machine_lang->container_conveying_wave, FALSE, $readonly_lang, "text");
-									d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_description_technical', "form[lang][". $rex_clang->getId() ."][description_technical]", $machine_lang->description_technical, FALSE, $readonly_lang, "text");
-									d2u_addon_backend_helper::form_textarea('d2u_machinery_construction_equipment_delivery_set_basic', "form[lang][". $rex_clang->getId() ."][delivery_set_basic]", $machine_lang->delivery_set_basic, 5, FALSE, $readonly_lang, TRUE);
-									d2u_addon_backend_helper::form_textarea('d2u_machinery_construction_equipment_delivery_set_conversion', "form[lang][". $rex_clang->getId() ."][delivery_set_conversion]", $machine_lang->delivery_set_conversion, 5, FALSE, $readonly_lang, TRUE);
-									d2u_addon_backend_helper::form_textarea('d2u_machinery_construction_equipment_delivery_set_full', "form[lang][". $rex_clang->getId() ."][delivery_set_full]", $machine_lang->delivery_set_full, 5, FALSE, $readonly_lang, TRUE);
-								}
 							?>
+							<script>
+								// Hide on document load
+								$(document).ready(function() {
+									toggleClangDetailsView(<?php print $rex_clang->getId(); ?>);
+								});
+
+								// Hide on selection change
+								$("select[name='form[lang][1][translation_needs_update]']").on('change', function(e) {
+									toggleClangDetailsView(<?php print $rex_clang->getId(); ?>);
+								});
+							</script>
+							<div id="details_clang_<?php print $rex_clang->getId(); ?>">
+								<?php
+									d2u_addon_backend_helper::form_input('d2u_machinery_lang_name', "form[lang][". $rex_clang->getId() ."][lang_name]", $machine_lang->lang_name, FALSE, $readonly_lang, "text");
+									d2u_addon_backend_helper::form_textarea('d2u_machinery_machine_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $machine_lang->teaser, 3, FALSE, $readonly_lang, FALSE);
+									d2u_addon_backend_helper::form_textarea('d2u_helper_description', "form[lang][". $rex_clang->getId() ."][description]", $machine_lang->description, 5, FALSE, $readonly_lang, TRUE);
+									d2u_addon_backend_helper::form_medialistfield('d2u_machinery_machine_pdfs', '1'. $rex_clang->getId(), $machine_lang->pdfs, $readonly_lang);
+									if(rex_plugin::get("d2u_machinery", "machine_construction_equipment_extension")->isAvailable()) {
+										d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_container_connection_port', "form[lang][". $rex_clang->getId() ."][container_connection_port]", $machine_lang->container_connection_port, FALSE, $readonly_lang, "text");
+										d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_container_conveying_wave', "form[lang][". $rex_clang->getId() ."][container_conveying_wave]", $machine_lang->container_conveying_wave, FALSE, $readonly_lang, "text");
+										d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_description_technical', "form[lang][". $rex_clang->getId() ."][description_technical]", $machine_lang->description_technical, FALSE, $readonly_lang, "text");
+										d2u_addon_backend_helper::form_textarea('d2u_machinery_construction_equipment_delivery_set_basic', "form[lang][". $rex_clang->getId() ."][delivery_set_basic]", $machine_lang->delivery_set_basic, 5, FALSE, $readonly_lang, TRUE);
+										d2u_addon_backend_helper::form_textarea('d2u_machinery_construction_equipment_delivery_set_conversion', "form[lang][". $rex_clang->getId() ."][delivery_set_conversion]", $machine_lang->delivery_set_conversion, 5, FALSE, $readonly_lang, TRUE);
+										d2u_addon_backend_helper::form_textarea('d2u_machinery_construction_equipment_delivery_set_full', "form[lang][". $rex_clang->getId() ."][delivery_set_full]", $machine_lang->delivery_set_full, 5, FALSE, $readonly_lang, TRUE);
+									}
+								?>
+							</div>
 						</div>
 					</fieldset>
 				<?php

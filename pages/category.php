@@ -169,18 +169,32 @@ if ($func == 'edit' || $func == 'add') {
 								else {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
 								}
-								
-								d2u_addon_backend_helper::form_input('d2u_helper_name', "form[lang][". $rex_clang->getId() ."][name]", $category->name, $required, $readonly_lang, "text");
-								d2u_addon_backend_helper::form_input('d2u_machinery_machine_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $category->teaser, FALSE, $readonly_lang, "text");
-								d2u_addon_backend_helper::form_input('d2u_machinery_category_usage_area', "form[lang][". $rex_clang->getId() ."][usage_area]", $category->usage_area, FALSE, $readonly_lang, "text");
-								d2u_addon_backend_helper::form_mediafield('d2u_machinery_category_pic_lang', 'pic_lang_'. $rex_clang->getId(), $category->pic_lang, $readonly_lang);
-								d2u_addon_backend_helper::form_medialistfield('d2u_machinery_category_pdfs', intval('1'. $rex_clang->getId()), $category->pdfs, $readonly_lang);
-								// Sawing machines plugin fields
-								if(rex_plugin::get("d2u_machinery", "machine_steel_processing_extension")->isAvailable()) {
-									d2u_addon_backend_helper::form_input('d2u_machinery_steel_cutting_range_configurator_title', "form[lang][". $rex_clang->getId() ."][steel_processing_saw_cutting_range_title]", $category->steel_processing_saw_cutting_range_title, FALSE, $readonly_lang, "text");
-									d2u_addon_backend_helper::form_mediafield('d2u_machinery_steel_cutting_range_configurator_file', 'cutting_range_'.$rex_clang->getId(), $category->steel_processing_saw_cutting_range_file, $readonly_lang);
-								}
 							?>
+							<script>
+								// Hide on document load
+								$(document).ready(function() {
+									toggleClangDetailsView(<?php print $rex_clang->getId(); ?>);
+								});
+
+								// Hide on selection change
+								$("select[name='form[lang][1][translation_needs_update]']").on('change', function(e) {
+									toggleClangDetailsView(<?php print $rex_clang->getId(); ?>);
+								});
+							</script>
+							<div id="details_clang_<?php print $rex_clang->getId(); ?>">
+								<?php
+									d2u_addon_backend_helper::form_input('d2u_helper_name', "form[lang][". $rex_clang->getId() ."][name]", $category->name, $required, $readonly_lang, "text");
+									d2u_addon_backend_helper::form_input('d2u_machinery_machine_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $category->teaser, FALSE, $readonly_lang, "text");
+									d2u_addon_backend_helper::form_input('d2u_machinery_category_usage_area', "form[lang][". $rex_clang->getId() ."][usage_area]", $category->usage_area, FALSE, $readonly_lang, "text");
+									d2u_addon_backend_helper::form_mediafield('d2u_machinery_category_pic_lang', 'pic_lang_'. $rex_clang->getId(), $category->pic_lang, $readonly_lang);
+									d2u_addon_backend_helper::form_medialistfield('d2u_machinery_category_pdfs', intval('1'. $rex_clang->getId()), $category->pdfs, $readonly_lang);
+									// Sawing machines plugin fields
+									if(rex_plugin::get("d2u_machinery", "machine_steel_processing_extension")->isAvailable()) {
+										d2u_addon_backend_helper::form_input('d2u_machinery_steel_cutting_range_configurator_title', "form[lang][". $rex_clang->getId() ."][steel_processing_saw_cutting_range_title]", $category->steel_processing_saw_cutting_range_title, FALSE, $readonly_lang, "text");
+										d2u_addon_backend_helper::form_mediafield('d2u_machinery_steel_cutting_range_configurator_file', 'cutting_range_'.$rex_clang->getId(), $category->steel_processing_saw_cutting_range_file, $readonly_lang);
+									}
+								?>
+							</div>
 						</div>
 					</fieldset>
 				<?php
