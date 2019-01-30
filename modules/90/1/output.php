@@ -816,8 +816,8 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 			text|phone|'. $tag_open .'d2u_machinery_form_phone'. $tag_close .' *|||{"required":"required"}
 			text|email|'. $tag_open .'d2u_machinery_form_email'. $tag_close .' *|||{"required":"required"}
 			textarea|message|'. $tag_open .'d2u_machinery_form_message'. $tag_close .' *|||{"required":"required"}
-			checkbox|please_call|'. $tag_open .'d2u_machinery_form_please_call'. $tag_close .'|nein, ja|nein
-			checkbox|privacy_policy_accepted|'. $tag_open .'d2u_machinery_form_privacy_policy'. $tag_close .' *|no,yes|no
+			checkbox|please_call|'. $tag_open .'d2u_machinery_form_please_call'. $tag_close .'|0,1|0
+			checkbox|privacy_policy_accepted|'. $tag_open .'d2u_machinery_form_privacy_policy'. $tag_close .' *|0,1|0
 			php|validate_timer|Spamprotection|<input name="validate_timer" type="hidden" value="'. microtime(true) .'" />|
 
 			html||<br>* '. $tag_open .'d2u_machinery_form_required'. $tag_close .'<br><br>
