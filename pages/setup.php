@@ -28,7 +28,7 @@ $d2u_module_manager->showManagerList();
 		Promitec</a>.</li>
 	<li>Maschinen Addon: <a href="https://www.inotec-gmbh.com" target="_blank">
 		Inotec GmbH</a>.</li>
-	<li>Gebrauchtmaschinen Plugin: <a href="https://www.meier-krantechnik.de" target="_blank">
+	<li>Gebrauchtmaschinen Plugin: <a href="https://meier-krantechnik.de" target="_blank">
 		Meier Krantechnik</a>.</li>
 </ul>
 <p>Im D2U Helper Addon kann das 00-1 "Big Header Template", 02-3 "Header Slider Template with Slogan",
@@ -39,7 +39,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.2.5-DEV:</p>
 <ul>
-	<li>YForm 3 Anpassungen.</li>
+	<li>YForm 3 Anpassungen an Module.</li>
 	<li>Sprachdetails werden ausgeblendet, wenn Speicherung der Sprache nicht vorgesehen ist.</li>
 	<li>Bugfix: Prioritäten wurden beim Löschen nicht reorganisiert.</li>
 	<li>Bugfix: Gebrauchtmaschinen Addon: Löschen Button innerhalb der Maschine hat nicht funktioniert.</li>
