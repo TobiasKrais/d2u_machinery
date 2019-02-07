@@ -196,7 +196,10 @@ class Category implements \D2U_Helper\ITranslationHelper{
 				$video_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("video_ids")), PREG_GREP_INVERT);
 				foreach ($video_ids as $video_id) {
 					if($video_id > 0) {
-						$this->videos[$video_id] = new Video($video_id, $clang_id);
+						$video = new Video($video_id, $clang_id);
+						if($video->getVideoURL() != "") {
+							$this->videos[$video_id] = $video;
+						}
 					}
 				}
 			}
