@@ -24,7 +24,7 @@ if($sql->getRows() == 0) {
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang "
 		. "ADD updatedate int(11) default NULL AFTER translation_needs_update;");
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang "
-		. "ADD updateuser varchar(255) collate utf8_general_ci default NULL AFTER updatedate;");
+		. "ADD updateuser varchar(255) collate utf8mb4_unicode_ci default NULL AFTER updatedate;");
 }
 
 // Update language replacements
@@ -33,3 +33,7 @@ if(!class_exists('d2u_machinery_industry_sectors_lang_helper')) {
 	require_once 'lib/d2u_machinery_industry_sectors_lang_helper.php';
 }
 d2u_machinery_industry_sectors_lang_helper::factory()->install();
+
+// 1.2.6
+$sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_machinery_industry_sectors` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+$sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");

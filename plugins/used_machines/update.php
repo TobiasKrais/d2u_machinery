@@ -74,3 +74,7 @@ if(!class_exists('d2u_machinery_used_machines_lang_helper')) {
 	require_once 'lib/d2u_machinery_used_machines_lang_helper.php';
 }
 d2u_machinery_used_machines_lang_helper::factory()->install();
+
+// Update database to 1.2.6
+$sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_machinery_used_machines` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+$sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_machinery_used_machines_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");

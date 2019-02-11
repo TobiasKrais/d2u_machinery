@@ -43,30 +43,30 @@ if($sql->getRows() == 0) {
 $sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_machines_lang LIKE 'lang_name';");
 if($sql->getRows() == 0) {
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_machines_lang "
-		. "ADD lang_name varchar(255) collate utf8_general_ci default NULL AFTER clang_id;");
+		. "ADD lang_name varchar(255) collate utf8mb4_unicode_ci default NULL AFTER clang_id;");
 }
 $sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_categories LIKE 'video_ids';");
 if($sql->getRows() == 0) {
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_categories "
-		. "ADD video_ids varchar(255) collate utf8_general_ci default NULL AFTER pic_usage;");
+		. "ADD video_ids varchar(255) collate utf8mb4_unicode_ci default NULL AFTER pic_usage;");
 }
 $sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_machines LIKE 'video_ids';");
 if($sql->getRows() == 0) {
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_machines "
-		. "ADD video_ids varchar(255) collate utf8_general_ci default NULL AFTER operating_voltage_a;");
+		. "ADD video_ids varchar(255) collate utf8mb4_unicode_ci default NULL AFTER operating_voltage_a;");
 }
 $sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_machines_lang "
-		. "CHANGE `pdfs` `pdfs` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL AFTER `description`;");
+		. "CHANGE `pdfs` `pdfs` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL AFTER `description`;");
 // 1.1.3 Update database
 $sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_categories LIKE 'videomanager_ids';");
 if($sql->getRows() > 0) {
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_categories "
-		. "CHANGE videomanager_ids video_ids varchar(255) collate utf8_general_ci default NULL;");
+		. "CHANGE videomanager_ids video_ids varchar(255) collate utf8mb4_unicode_ci default NULL;");
 }
 $sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_machines LIKE 'videomanager_ids';");
 if($sql->getRows() > 0) {
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_machines "
-		. "CHANGE videomanager_ids video_ids varchar(255) collate utf8_general_ci default NULL;");
+		. "CHANGE videomanager_ids video_ids varchar(255) collate utf8mb4_unicode_ci default NULL;");
 }
 // 1.2 Update database
 $sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_machines LIKE 'internal_name';");
@@ -78,8 +78,14 @@ if($sql->getRows() > 0) {
 $sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_machines LIKE 'engine_power_frequency_controlled';");
 if($sql->getRows() == 0) {
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_machines "
-		. "ADD engine_power_frequency_controlled VARCHAR(10) collate utf8_general_ci default NULL AFTER engine_power;");
+		. "ADD engine_power_frequency_controlled VARCHAR(10) collate utf8mb4_unicode_ci default NULL AFTER engine_power;");
 }
+
+// 1.2.6
+$sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_machinery_machines` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+$sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_machinery_machines_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+$sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_machinery_categories` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+$sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_machinery_categories_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
 // 1.0.2 Update machine URL view and regenerate path file
 $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_machinery_url_machines AS
