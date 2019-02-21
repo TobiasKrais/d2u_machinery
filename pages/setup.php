@@ -40,6 +40,7 @@ $d2u_module_manager->showManagerList();
 <p>1.2.6-DEV:</p>
 <ul>
 	<li>Konvertierung der Datenbanktabellen zu utf8mb4.</li>
+	<li>Bugfix machine_steel_processing_extension: Materialklassen wurden falsch initiert.</li>
 	<li>Bugfix: Videos des D2U Videomanagers werden nur noch hinzugefügt, wenn es entweder in der Sprache oder als sprachübergreifes Video vorhanden ist.</li>
 </ul>
 <p>1.2.5:</p>

@@ -821,7 +821,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 				}
 				$material_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("material_ids")), PREG_GREP_INVERT);
 				foreach($material_ids as $material_id) {
-					$this->materials[$material_id] = new Procedure($material_id, $this->clang_id);
+					$this->materials[$material_id] = new Material($material_id, $this->clang_id);
 				}
 				$tool_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("tool_ids")), PREG_GREP_INVERT);
 				foreach($tool_ids as $tool_id) {
