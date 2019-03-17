@@ -460,7 +460,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 		}
 
 		if($including_domain) {
-			if(\rex_addon::get('yrewrite')->isAvailable())  {
+			if(\rex_addon::get('yrewrite') && \rex_addon::get('yrewrite')->isAvailable())  {
 				return str_replace(\rex_yrewrite::getCurrentDomain()->getUrl() .'/', \rex_yrewrite::getCurrentDomain()->getUrl(), \rex_yrewrite::getCurrentDomain()->getUrl() . $this->url);
 			}
 			else {

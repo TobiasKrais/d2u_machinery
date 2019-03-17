@@ -138,7 +138,8 @@ class SocialExportFacebook extends AExport {
 	 * @return string Callback URL
 	 */
 	private function getCallbackURL() {
-		return 	\rex::getServer() .'redaxo/'. \rex_url::currentBackendPage(['func'=>'export', 'facebook_return'=>'true', 'provider_id'=>$this->provider->provider_id], FALSE);
+		return 	(\rex_addon::get('yrewrite') && \rex_addon::get('yrewrite')->isAvailable() ? \rex_yrewrite::getCurrentDomain()->getUrl() : \rex::getServer())
+			.'redaxo/'. \rex_url::currentBackendPage(['func'=>'export', 'facebook_return'=>'true', 'provider_id'=>$this->provider->provider_id], FALSE);
 	}
 	
 	/**
@@ -275,7 +276,8 @@ class SocialExportFacebook extends AExport {
 						// Custom description cannot be added: https://developers.facebook.com/blog/post/2017/06/27/API-Change-Log-Modifying-Link-Previews/
 					]; 
 				if(count($used_machine->pics) > 0 && $this->provider->facebook_pageid == "") {
-					$news['picture'] = \rex::getServer() .'?rex_media_type='. $this->provider->media_manager_type .'&rex_media_file='. $used_machine->pics[0];
+					$news['picture'] = (\rex_addon::get('yrewrite') && \rex_addon::get('yrewrite')->isAvailable() ? \rex_yrewrite::getCurrentDomain()->getUrl() : \rex::getServer())
+						.'?rex_media_type='. $this->provider->media_manager_type .'&rex_media_file='. $used_machine->pics[0];
 				}
 
 				try {
