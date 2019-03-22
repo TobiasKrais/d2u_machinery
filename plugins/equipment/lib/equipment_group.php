@@ -110,7 +110,7 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 			."LEFT JOIN ". \rex::getTablePrefix() ."d2u_machinery_equipment_groups AS equipment_groups "
 				."ON lang.group_id = equipment_groups.group_id "
 			."WHERE clang_id = ". $clang_id ." "
-			."ORDER BY priority";
+			."ORDER BY lang.name";
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
