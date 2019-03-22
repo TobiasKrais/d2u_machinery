@@ -39,6 +39,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.2.6-DEV:</p>
 <ul>
+	<li>Bugfix: Zubehör Plugin speicherte Bilder nicht.</li>
 	<li>YRewrite Multidomain support.</li>
 	<li>Konvertierung der Datenbanktabellen zu utf8mb4.</li>
 	<li>Bugfix machine_steel_processing_extension: Materialklassen wurden falsch initiert.</li>

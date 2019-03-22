@@ -23,7 +23,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$equipment_group = new EquipmentGroup($group_id, $rex_clang->getId());
 			$equipment_group->group_id = $group_id; // Ensure correct ID in case first language has no object
 			$equipment_group->priority = $form['priority'];
-			$equipment_group->pic = $input_media[1];
+			$equipment_group->picture = $input_media[1];
 		}
 		else {
 			$equipment_group->clang_id = $rex_clang->getId();
