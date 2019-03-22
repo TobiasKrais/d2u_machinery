@@ -188,8 +188,8 @@ if ($func == '') {
 		. 'FROM '. \rex::getTablePrefix() .'d2u_machinery_equipment_groups AS equipment_groups '
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_equipment_groups_lang AS lang '
 			. 'ON equipment_groups.group_id = lang.group_id AND lang.clang_id = '. rex_config::get("d2u_helper", "default_lang") .' '
-		. 'ORDER BY priority ASC';
-    $list = rex_list::factory($query);
+		. 'ORDER BY name ASC';
+    $list = rex_list::factory($query, 1000);
 
     $list->addTableAttribute('class', 'table-striped table-hover');
 
