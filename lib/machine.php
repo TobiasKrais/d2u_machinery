@@ -727,7 +727,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			$this->operating_voltage_v = $result->getValue("operating_voltage_v");
 			$this->operating_voltage_hz = $result->getValue("operating_voltage_hz");
 			$this->operating_voltage_a = $result->getValue("operating_voltage_a");
-			$this->lang_name = $result->getValue("lang_name");
+			$this->lang_name = stripslashes($result->getValue("lang_name"));
 			$this->teaser = stripslashes(htmlspecialchars_decode($result->getValue("teaser")));
 			$this->description = stripslashes(htmlspecialchars_decode($result->getValue("description")));
 			$pdfs = preg_grep('/^\s*$/s', explode(",", $result->getValue("pdfs")), PREG_GREP_INVERT);
@@ -2298,7 +2298,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_machines_lang SET "
 						."machine_id = '". $this->machine_id ."', "
 						."clang_id = '". $this->clang_id ."', "
-						."lang_name = '". $this->lang_name ."', "
+						."lang_name = '". addslashes($this->lang_name) ."', "
 						."teaser = '". addslashes(htmlspecialchars($this->teaser)) ."', "
 						."description = '". addslashes(htmlspecialchars($this->description)) ."', "
 						."pdfs = '". implode(",", $this->pdfs) ."', "

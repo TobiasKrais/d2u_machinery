@@ -40,6 +40,7 @@ $d2u_module_manager->showManagerList();
 <p>1.2.6-DEV:</p>
 <ul>
 	<li>Zubehör Plugin: Zubehörgruppen jetzt nach Namen sortiert.</li>
+	<li>Bugfix: Sprachspezifischer Name von Maschinen kann jetzt auch einfache Anfürhungszeichen enthalten.</li>
 	<li>Bugfix: Zubehör Plugin speicherte Bilder nicht.</li>
 	<li>YRewrite Multidomain support.</li>
 	<li>Konvertierung der Datenbanktabellen zu utf8mb4.</li>
