@@ -182,7 +182,7 @@ if ($func == '') {
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_steel_process_lang AS lang '
 			. 'ON processs.process_id = lang.process_id AND lang.clang_id = '. rex_config::get("d2u_helper", "default_lang") .' '
 		. 'ORDER BY name ASC';
-    $list = rex_list::factory($query);
+    $list = rex_list::factory($query, 1000);
 
     $list->addTableAttribute('class', 'table-striped table-hover');
 

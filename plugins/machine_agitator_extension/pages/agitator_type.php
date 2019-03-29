@@ -191,7 +191,7 @@ if ($func == '') {
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_agitator_types_lang AS lang '
 			. 'ON agitator_types.agitator_type_id = lang.agitator_type_id AND lang.clang_id = '. rex_config::get("d2u_helper", "default_lang") .' '
 		. 'ORDER BY name ASC';
-    $list = rex_list::factory($query);
+    $list = rex_list::factory($query, 1000);
 
     $list->addTableAttribute('class', 'table-striped table-hover');
 

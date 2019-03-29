@@ -81,6 +81,8 @@ $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_machinery
 	WHERE clang.status = 1 AND machines.online_status = "online" 
 	GROUP BY category_id, clang_id, name, seo_title, seo_description, updatedate');
 // Insert url schemes
+/*
+ * URL Version 1.x
 if(\rex_addon::get('url')->isAvailable()) {
 	$sql->setQuery("SELECT * FROM ". \rex::getTablePrefix() ."url_generate WHERE `table` = '1_xxx_". \rex::getTablePrefix() ."d2u_machinery_url_machines'");
 	$clang_id = count(rex_clang::getAllIds()) == 1 ? rex_clang::getStartId() : 0;
@@ -96,7 +98,14 @@ if(\rex_addon::get('url')->isAvailable()) {
 	
 	UrlGenerator::generatePathFile([]);
 }
-
+*/
+if(\rex_addon::get('url')->isAvailable()) {
+	$sql->setQuery("SELECT * FROM ". \rex::getTablePrefix() ."rex_url_generator_profile WHERE `namespace` = 'machine_id'");
+	if($sql->getRows() == 0) {
+		$sql->setQuery("INSERT INTO `rex_url_generator_profile` (`namespace`, `article_id`, `clang_id`, `table_name`, `table_parameters`, `relation_1_table_name`, `relation_1_table_parameters`, `relation_2_table_name`, `relation_2_table_parameters`, `relation_3_table_name`, `relation_3_table_parameters`, `createdate`, `createuser`, `updatedate`, `updateuser`) VALUES
+			('machine_id', ". rex_article::getSiteStartArticleId() .", 0, '1_xxx_rex_d2u_machinery_url_machines', '{\"column_id\":\"machine_id\",\"column_clang_id\":\"clang_id\",\"restriction_1_column\":\"\",\"restriction_1_comparison_operator\":\"=\",\"restriction_1_value\":\"\",\"restriction_2_logical_operator\":\"\",\"restriction_2_column\":\"\",\"restriction_2_comparison_operator\":\"=\",\"restriction_2_value\":\"\",\"restriction_3_logical_operator\":\"\",\"restriction_3_column\":\"\",\"restriction_3_comparison_operator\":\"=\",\"restriction_3_value\":\"\",\"column_segment_part_1\":\"name\",\"column_segment_part_2_separator\":\"\\/\",\"column_segment_part_2\":\"\",\"column_segment_part_3_separator\":\"\\/\",\"column_segment_part_3\":\"\",\"relation_1_column\":\"category_id\",\"relation_1_position\":\"BEFORE\",\"relation_2_column\":\"\",\"relation_2_position\":\"BEFORE\",\"relation_3_column\":\"\",\"relation_3_position\":\"BEFORE\",\"append_user_paths\":\"\",\"append_structure_categories\":\"0\",\"column_seo_title\":\"seo_title\",\"column_seo_description\":\"seo_description\",\"column_seo_image\":\"\",\"sitemap_add\":\"1\",\"sitemap_frequency\":\"always\",\"sitemap_priority\":\"1.0\",\"column_sitemap_lastmod\":\"updatedate\"}', 'relation_1_xxx_1_xxx_rex_d2u_machinery_url_machine_categories', '{\"column_id\":\"category_id\",\"column_clang_id\":\"clang_id\",\"column_segment_part_1\":\"name\",\"column_segment_part_2_separator\":\"\\/\",\"column_segment_part_2\":\"\",\"column_segment_part_3_separator\":\"\\/\",\"column_segment_part_3\":\"\"}', '', '[]', '', '[]', '2019-03-27 13:57:13', 'tkrais', '2019-03-27 13:57:13', 'tkrais');");
+	}
+}
 // Insert frontend translations
 if(class_exists(d2u_machinery_lang_helper)) {
 	d2u_machinery_lang_helper::factory()->install();

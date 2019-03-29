@@ -179,7 +179,7 @@ if ($func == '') {
 	$query = 'SELECT provider_id, name, type, online_status '
 		.'FROM '. \rex::getTablePrefix() .'d2u_machinery_export_provider '
 		.'ORDER BY name';
-    $list = rex_list::factory($query);
+    $list = rex_list::factory($query, 1000);
 
     $list->addTableAttribute('class', 'table-striped table-hover');
 
