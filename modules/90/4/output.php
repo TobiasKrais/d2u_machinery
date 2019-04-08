@@ -118,17 +118,15 @@ $picture_type = $d2u_machinery->getConfig('used_machines_pic_type', 'slider');
 $sprog = rex_addon::get("sprog");
 $tag_open = $sprog->getConfig('wildcard_open_tag');
 $tag_close = $sprog->getConfig('wildcard_close_tag');
-$urlParamKey = "";
-if(\rex_addon::get("url")->isAvailable()) {
-	$url_data = UrlGenerator::getData();
-	$urlParamKey = isset($url_data->urlParamKey) ? $url_data->urlParamKey : "";
-}
 
-if(filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "used_rent_category_id")
-		|| filter_input(INPUT_GET, 'used_sale_category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "used_sale_category_id")) {
+$url_namespace = d2u_addon_frontend_helper::getUrlNamespace();
+$url_id = d2u_addon_frontend_helper::getUrlId();
+
+if(filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || $url_namespace === "used_rent_category_id"
+		|| filter_input(INPUT_GET, 'used_sale_category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || $url_namespace === "used_sale_category_id") {
 	$category_id = filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 ? filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT) : filter_input(INPUT_GET, 'used_sale_category_id', FILTER_VALIDATE_INT);
-	if(\rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
-		$category_id = UrlGenerator::getId();
+	if(\rex_addon::get("url")->isAvailable() && $url_id > 0) {
+		$category_id = $url_id;
 	}
 	$category = new Category($category_id, rex_clang::getCurrentId());
 	$child_categories = $category->getChildren();
@@ -155,12 +153,12 @@ if(filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['optio
 		print '</div>';
 	}
 }
-else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "used_rent_machine_id"))
-		|| (filter_input(INPUT_GET, 'used_sale_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "used_sale_machine_id"))) {
+else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || $url_namespace === "used_rent_machine_id")
+		|| (filter_input(INPUT_GET, 'used_sale_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || $url_namespace === "used_sale_machine_id")) {
 	// Print used machine
 	$used_machine_id = filter_input(INPUT_GET, 'used_sale_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 ? filter_input(INPUT_GET, 'used_sale_machine_id', FILTER_VALIDATE_INT) : filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT);
-	if(\rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
-		$used_machine_id = UrlGenerator::getId();
+	if(\rex_addon::get("url")->isAvailable() && $url_id > 0) {
+		$used_machine_id = $url_id;
 	}
 	$used_machine = new UsedMachine($used_machine_id, rex_clang::getCurrentId());
 	print '<div class="col-12">';

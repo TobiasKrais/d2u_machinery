@@ -246,7 +246,7 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper {
 						."name = '". addslashes($this->name) ."', "
 						."description = '". addslashes(htmlspecialchars($this->description)) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
-						."updatedate = ". time() .", "
+						."updatedate = CURRENT_TIMESTAMP, "
 						."updateuser = '". \rex::getUser()->getLogin() ."' ";
 
 				$result = \rex_sql::factory();
@@ -257,7 +257,7 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper {
  
 		// Update URLs
 		if(\rex_addon::get("url")->isAvailable()) {
-			UrlGenerator::generatePathFile([]);
+			\UrlGenerator::generatePathFile([]);
 		}
 
 		return !$error;

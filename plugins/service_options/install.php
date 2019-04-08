@@ -20,7 +20,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machi
 	name varchar(255) collate utf8mb4_unicode_ci default NULL,
 	description varchar(255) collate utf8mb4_unicode_ci default NULL,
 	translation_needs_update varchar(7) collate utf8mb4_unicode_ci default NULL,
-	updatedate int(11) default NULL,
+	updatedate DATETIME default NULL,
 	updateuser varchar(255) collate utf8mb4_unicode_ci default NULL,
 	PRIMARY KEY (service_option_id, clang_id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");

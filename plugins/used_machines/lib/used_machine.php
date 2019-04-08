@@ -528,7 +528,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 						."description = '". htmlspecialchars(addslashes($this->description)) ."', "
 						."downloads = '". implode(",", $this->downloads) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
-						."updatedate = ". time() .", "
+						."updatedate = CURRENT_TIMESTAMP, "
 						."updateuser = '". \rex::getUser()->getLogin() ."' ";
 				$result = \rex_sql::factory();
 				$result->setQuery($query);
@@ -543,7 +543,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 
 		// Update URLs
 		if(\rex_addon::get("url")->isAvailable()) {
-			UrlGenerator::generatePathFile([]);
+			\UrlGenerator::generatePathFile([]);
 		}
 		
 		return !$error;

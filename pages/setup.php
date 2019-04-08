@@ -39,6 +39,8 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.2.6-DEV:</p>
 <ul>
+	<li>URL Addon 2.x Anpassungen.</li>
+	<li>SEO Bilder für URL Addon wurden hinzugefügt.</li>
 	<li>Listen im Backend werden jetzt nicht mehr in Seiten unterteilt.</li>
 	<li>Zubehör Plugin: Zubehörgruppen jetzt nach Namen sortiert.</li>
 	<li>Bugfix: Sprachspezifischer Name von Maschinen kann jetzt auch einfache Anfürhungszeichen enthalten.</li>

@@ -78,7 +78,7 @@ abstract class AExport {
 	protected function saveExportedMachines() {
 		foreach($this->exported_used_machines as $exported_used_machine) {
 			if($exported_used_machine->export_action == "add" || $exported_used_machine->export_action == "update") {
-				$exported_used_machine->export_timestamp = time();
+				$exported_used_machine->export_timestamp = date("Y-m-d H:i:s");
 				$exported_used_machine->export_action = "";
 				$exported_used_machine->save();
 			}

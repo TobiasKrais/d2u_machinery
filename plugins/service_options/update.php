@@ -10,3 +10,10 @@ $sql = \rex_sql::factory();
 // Update database to 1.2.6
 $sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_machinery_service_options` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 $sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_machinery_service_options_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+
+if (rex_string::versionCompare($this->getVersion(), '1.2.6', '<')) {
+	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_service_options_lang ADD COLUMN `updatedate_new` DATETIME NOT NULL AFTER `updatedate`;");
+	$sql->setQuery("UPDATE ". \rex::getTablePrefix() ."d2u_machinery_service_options_lang SET `updatedate_new` = FROM_UNIXTIME(`updatedate`);");
+	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_service_options_lang DROP updatedate;");
+	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_service_options_lang CHANGE `updatedate_new` `updatedate` DATETIME NOT NULL;");
+}

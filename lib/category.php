@@ -117,9 +117,9 @@ class Category implements \D2U_Helper\ITranslationHelper{
 	var $translation_needs_update = "delete";
 
 	/**
-	 * @var int Unix timestamp containing the last update date
+	 * @var string Unix timestamp containing the last update date
 	 */
-	var $updatedate = 0;
+	var $updatedate = "";
 	
 	/**
 	 * @var string Redaxo update user name
@@ -218,9 +218,9 @@ class Category implements \D2U_Helper\ITranslationHelper{
 					// Get offer type from used machine
 					$used_category_id = 0;
 					if(\rex_addon::get("url")->isAvailable()) {
-						$url_data = UrlGenerator::getData();
-						if(isset($url_data->urlParamKey) && ($url_data->urlParamKey === "used_rent_category_id" || $url_data->urlParamKey === "used_sale_category_id")) {
-							$used_category_id = UrlGenerator::getId();
+						$url_namespace = d2u_addon_frontend_helper::getUrlNamespace();
+						if($url_namespace === "used_rent_category_id" || $url_namespace === "used_sale_category_id") {
+							$used_category_id = d2u_addon_frontend_helper::getUrlId();
 						}
 					}
 					else if(filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || filter_input(INPUT_GET, 'used_sale_category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0) {
@@ -717,7 +717,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 						."pic_lang = '". $this->pic_lang ."', "
 						."pdfs = '". implode(",", $this->pdfs) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
-						."updatedate = ". time() .", "
+						."updatedate = CURRENT_TIMESTAMP, "
 						."updateuser = '". \rex::getUser()->getLogin() ."' ";
 				if(rex_plugin::get("d2u_machinery", "machine_steel_processing_extension")->isAvailable()) {
 					$query .= ", steel_processing_saw_cutting_range_file = '". $this->steel_processing_saw_cutting_range_file ."', "
@@ -732,7 +732,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 		
 		// Update URLs
 		if(\rex_addon::get("url")->isAvailable()) {
-			UrlGenerator::generatePathFile([]);
+			\UrlGenerator::generatePathFile([]);
 		}
 		
 		return !$error;

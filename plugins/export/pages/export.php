@@ -68,8 +68,8 @@ if(count($providers) > 0) {
 	print "<td><b>". rex_i18n::msg('d2u_machinery_export_last_export_date') ."</b></td>";
 	foreach ($providers as $provider) {
 		print "<td>";
-		if($provider->getLastExportTimestamp() > 0) {
-			print date("d.m.Y H:i", $provider->getLastExportTimestamp()) ." ". rex_i18n::msg('d2u_machinery_export_uhr');
+		if($provider->getLastExportTimestamp() != "") {
+			print date("d.m.Y H:i", strtotime($provider->getLastExportTimestamp())) ." ". rex_i18n::msg('d2u_machinery_export_uhr');
 		}
 		print "</td>";
 	}
@@ -82,7 +82,7 @@ if(count($providers) > 0) {
 		print "<tr>";
 		print '<td><i>'. rex_i18n::msg('d2u_machinery_export_all_online') ."</i></td>";
 		foreach ($providers as $provider) {
-			print '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(array('func'=>'all_online', 'provider_id'=>$provider->provider_id))
+			print '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(['func'=>'all_online', 'provider_id'=>$provider->provider_id])
 					.'" class="rex-online"><i class="rex-icon rex-icon-online"></i> '. rex_i18n::msg('status_online') .'</a></td>';
 		}
 		print "</tr>";
@@ -90,7 +90,7 @@ if(count($providers) > 0) {
 		print "<tr>";
 		print "<td><i>". rex_i18n::msg('d2u_machinery_export_all_offline') ."</i></td>";
 		foreach ($providers as $provider) {
-			print '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(array('func'=>'all_offline', 'provider_id'=>$provider->provider_id))
+			print '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(['func'=>'all_offline', 'provider_id'=>$provider->provider_id])
 					.'" class="rex-offline"><i class="rex-icon rex-icon-offline"></i> '. rex_i18n::msg('status_offline') .'</a></td>';
 		}
 		print "</tr>";

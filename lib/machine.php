@@ -2303,7 +2303,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 						."description = '". addslashes(htmlspecialchars($this->description)) ."', "
 						."pdfs = '". implode(",", $this->pdfs) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
-						."updatedate = ". time() .", "
+						."updatedate = CURRENT_TIMESTAMP, "
 						."updateuser = '". \rex::getUser()->getLogin() ."' ";
 				if(rex_plugin::get("d2u_machinery", "machine_construction_equipment_extension")->isAvailable()) {
 					$query .= ", container_connection_port = '". $this->container_connection_port ."' "
@@ -2321,7 +2321,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 
 		// Update URLs
 		if(\rex_addon::get("url")->isAvailable()) {
-			UrlGenerator::generatePathFile([]);
+			\UrlGenerator::generatePathFile([]);
 		}
 		
 		return !$error;

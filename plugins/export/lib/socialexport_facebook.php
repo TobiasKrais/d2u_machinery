@@ -307,7 +307,7 @@ class SocialExportFacebook extends AExport {
 				
 				// Save results
 				$exported_used_machine->export_action = "";
-				$exported_used_machine->export_timestamp = time();
+				$exported_used_machine->export_timestamp = date("Y-m-d H:i:s");
 				$exported_used_machine->save();
 			}
 		}

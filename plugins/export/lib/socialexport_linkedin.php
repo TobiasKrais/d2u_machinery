@@ -275,7 +275,7 @@ class SocialExportLinkedIn extends AExport {
 						}
 						// Save results
 						$exported_used_machine->export_action = "";
-						$exported_used_machine->export_timestamp = time();
+						$exported_used_machine->export_timestamp = date("Y-m-d H:i:s");
 						$exported_used_machine->save();
 					}
 				} catch (OAuthException $e) {
@@ -289,7 +289,7 @@ class SocialExportLinkedIn extends AExport {
 	
 	/**
 	 * Parses HTTP headers into an associative array.
-	 * @param String $header string containing HTTP headers
+	 * @param String $r string containing HTTP headers
 	 * @return Returns an array on success or FALSE on failure.
 	 */
 	private static function http_parse_headers($r) {
@@ -298,7 +298,7 @@ class SocialExportLinkedIn extends AExport {
 		$r = explode("\r\n", $r);
 		foreach ($r as $h) {
 			list($v, $val) = explode(": ", $h);
-			if ($v == null) continue;
+			if ($v == null) { continue; }
 			$o[$v] = $val;
 		}
 		return $o;

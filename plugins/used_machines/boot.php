@@ -105,17 +105,14 @@ function d2u_machinery_used_machines_add_open_graph_call() {
  * @param rex_extension_point $ep Redaxo extension point
  */
 function d2u_machinery_used_machines_add_open_graph(rex_extension_point $ep) {
-	$urlParamKey = "";
-	if(\rex_addon::get("url")->isAvailable()) {
-		$url_data = UrlGenerator::getData();
-		$urlParamKey = isset($url_data->urlParamKey) ? $url_data->urlParamKey : "";
-	}
+	$url_namespace = d2u_addon_frontend_helper::getUrlNamespace();
+	$url_id = d2u_addon_frontend_helper::getUrlId();
 	
-	if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "used_rent_machine_id"))
-			|| (filter_input(INPUT_GET, 'used_sale_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "used_sale_machine_id"))) {
+	if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || $url_namespace === "used_rent_machine_id")
+			|| (filter_input(INPUT_GET, 'used_sale_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || $url_namespace === "used_sale_machine_id")) {
 		$used_machine_id = filter_input(INPUT_GET, 'used_sale_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 ? filter_input(INPUT_GET, 'used_sale_machine_id', FILTER_VALIDATE_INT) : filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT);
-		if(\rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
-			$used_machine_id = UrlGenerator::getId();
+		if(\rex_addon::get("url")->isAvailable() && $url_id > 0) {
+			$used_machine_id = $url_id;
 		}
 		
 		if($used_machine_id > 0) { 

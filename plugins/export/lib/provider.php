@@ -451,7 +451,6 @@ class Provider {
 			."LEFT JOIN ". \rex::getTablePrefix() ."d2u_machinery_export_machines AS export ON used_machines.used_machine_id = export.used_machine_id "
 			."WHERE provider_id = ". $this->provider_id ." AND clang_id = ". $this->clang_id ." "
 			."ORDER BY used_machines.updatedate DESC LIMIT 0, 1";
-		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		if($result->getRows() > 0 && $result->getValue("updatedate") > $result->getValue("export_timestamp")) {
@@ -489,7 +488,7 @@ class Provider {
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
-		$time = 0;
+		$time = "";
 		if($result->getRows() > 0) {
 			$time = $result->getValue("export_timestamp");
 		}

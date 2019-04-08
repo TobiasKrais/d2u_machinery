@@ -34,7 +34,7 @@ class ExportedUsedMachine {
 	/**
 	 * @var int Export timestamp.
 	 */
-	var $export_timestamp = 0;
+	var $export_timestamp = "";
 
 	/**
 	 * Constructor. Fetches the object from database
@@ -54,7 +54,7 @@ class ExportedUsedMachine {
 		if ($num_rows > 0) {
 			$this->export_action = $result->getValue("export_action");
 			$this->provider_import_id = $result->getValue("provider_import_id");
-			if($result->getValue("export_timestamp") > 0) {
+			if($result->getValue("export_timestamp") != "") {
 				$this->export_timestamp = $result->getValue("export_timestamp");
 			}
 		}
@@ -83,10 +83,10 @@ class ExportedUsedMachine {
 		$used_machines = UsedMachine::getAll($provider->clang_id, TRUE);
 		foreach($used_machines as $used_machine) {
 			$exported_used_machine = new ExportedUsedMachine($used_machine->used_machine_id, $provider_id);
-			if($exported_used_machine->export_action == "" && $exported_used_machine->export_timestamp == 0) {
+			if($exported_used_machine->export_action == "" && $exported_used_machine->export_timestamp == "") {
 				$exported_used_machine->export_action = "add";
 			}
-			else if(($exported_used_machine->export_action == "" && $exported_used_machine->export_timestamp > 0) || $exported_used_machine->export_action == "delete") {
+			else if(($exported_used_machine->export_action == "" && $exported_used_machine->export_timestamp != "") || $exported_used_machine->export_action == "delete") {
 				$exported_used_machine->export_action = "update";
 			}
 			$exported_used_machine->save();
@@ -130,7 +130,7 @@ class ExportedUsedMachine {
 	 * @return boolean TRUE if set, FALSE if not
 	 */
 	public function isSetForExport() {
-		if($this->export_action == "add" || $this->export_action == "update" || ($this->export_action == "" && $this->export_timestamp > 0)) {
+		if($this->export_action == "add" || $this->export_action == "update" || ($this->export_action == "" && $this->export_timestamp != "")) {
 			return TRUE;
 		}
 		else {

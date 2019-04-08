@@ -340,7 +340,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 						."name = '". addslashes($this->name) ."', "
 						."teaser = '". addslashes(htmlspecialchars($this->teaser)) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
-						."updatedate = ". time() .", "
+						."updatedate = CURRENT_TIMESTAMP, "
 						."updateuser = '". \rex::getUser()->getLogin() ."' ";
 
 				$result = \rex_sql::factory();
@@ -351,7 +351,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
  
 		// Update URLs
 		if(\rex_addon::get("url")->isAvailable()) {
-			UrlGenerator::generatePathFile([]);
+			\UrlGenerator::generatePathFile([]);
 		}
 
 		return !$error;

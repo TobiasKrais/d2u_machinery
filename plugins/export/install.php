@@ -34,7 +34,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machi
 	provider_id int(10) NOT NULL,
 	export_action varchar(10) collate utf8mb4_unicode_ci default 'online',
 	provider_import_id varchar(255) collate utf8mb4_unicode_ci default NULL,
-	export_timestamp int(11) NULL,
+	export_timestamp DATETIME NULL,
 	PRIMARY KEY (used_machine_id, provider_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
 
