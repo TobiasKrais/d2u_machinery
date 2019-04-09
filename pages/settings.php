@@ -47,7 +47,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 				d2u_addon_backend_helper::update_url_scheme(\rex::getTablePrefix() ."d2u_machinery_url_used_machines_sale", $settings['used_machine_article_id_sale']);
 				d2u_addon_backend_helper::update_url_scheme(\rex::getTablePrefix() ."d2u_machinery_url_used_machine_categories_sale", $settings['used_machine_article_id_sale']);		
 			}
-			\UrlGenerator::generatePathFile([]);
+			d2u_addon_backend_helper::generateUrlCache();
 		}
 		
 		// Install / update language replacements

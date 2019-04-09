@@ -254,11 +254,6 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper {
 				$error = $result->hasError();
 			}
 		}
- 
-		// Update URLs
-		if(\rex_addon::get("url")->isAvailable()) {
-			\UrlGenerator::generatePathFile([]);
-		}
 
 		return !$error;
 	}

@@ -542,9 +542,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 		}
 
 		// Update URLs
-		if(\rex_addon::get("url")->isAvailable()) {
-			\UrlGenerator::generatePathFile([]);
-		}
+		d2u_addon_backend_helper::generateUrlCache();
 		
 		return !$error;
 	}

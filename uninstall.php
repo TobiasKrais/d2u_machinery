@@ -4,6 +4,7 @@ $sql = \rex_sql::factory();
 // Delete views
 $sql->setQuery('DROP VIEW IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_url_machines');
 $sql->setQuery('DROP VIEW IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_url_machine_categories');
+
 // Delete url schemes
 if(\rex_addon::get('url')->isAvailable()) {
 	if(rex_string::versionCompare(\rex_addon::get('url')->getVersion(), '1.5', '>=')) {
