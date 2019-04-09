@@ -5,7 +5,12 @@ $sql = \rex_sql::factory();
 $sql->setQuery('DROP VIEW IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_url_industry_sectors');
 // Delete url scheme
 if(\rex_addon::get('url')->isAvailable()) {
-	$sql->setQuery("DELETE FROM `". \rex::getTablePrefix() ."url_generate` WHERE `table` LIKE '%d2u_machinery_url_industry_sectors%'");
+	if(rex_string::versionCompare(\rex_addon::get('url')->getVersion(), '1.5', '>=')) {
+		$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."rex_url_generator_profile WHERE `namespace` = 'industry_sector_id';");
+	}
+	else {
+		$sql->setQuery("DELETE FROM `". \rex::getTablePrefix() ."url_generate` WHERE `table` LIKE '%d2u_machinery_url_industry_sectors%'");
+	}
 }
 
 // Delete tables
