@@ -70,6 +70,6 @@ if($sql->getRows() == 0) {
 }
 
 // Insert frontend translations
-if(class_exists(d2u_machinery_machine_construction_equipment_extension_lang_helper)) {
+if(class_exists('d2u_machinery_machine_construction_equipment_extension_lang_helper')) {
 	d2u_machinery_machine_construction_equipment_extension_lang_helper::factory()->install();
 }

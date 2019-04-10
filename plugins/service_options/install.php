@@ -26,6 +26,6 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machi
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
 
 // Insert frontend translations
-if(class_exists(d2u_machinery_service_options_lang_helper)) {
+if(class_exists('d2u_machinery_service_options_lang_helper')) {
 	d2u_machinery_service_options_lang_helper::factory()->install();
 }
