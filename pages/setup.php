@@ -39,6 +39,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.2.6-DEV:</p>
 <ul>
+	<li>Modul 90-1 und 90-4 an aktuelles YCom angepasst. Medien werden nur noch zum Download angeboten, wenn Rechte existieren.</li>
 	<li>Bild in sitemap.xml eingefügt.</li>
 	<li>URL Addon 2.x Anpassungen.</li>
 	<li>SEO Bilder für URL Addon wurden hinzugefügt.</li>
@@ -109,7 +110,7 @@ $d2u_module_manager->showManagerList();
 	<li>Upgrade auf Bootstrap 4.</li>
 	<li>Internen Namen bei Maschinen entfernt.</li>
 	<li>Backendsprache Englisch hinzugefügt.</li>
-	<li>ycom/auth_media Dateirechte werden bei Downloads abgefragt.</li>
+	<li>ycom/media_auth Dateirechte werden bei Downloads abgefragt.</li>
 	<li>Bugfix: Speichern wenn zweite Sprache als Standardsprache gesetzt ist schlug fehl.</li>
 	<li>Eine ganze Reihe kleinerer Bugfixes auch in den Plugins.</li>
 	<li>Editierrechte für Übersetzer eingeschränkt.</li>

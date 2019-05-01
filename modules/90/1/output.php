@@ -421,8 +421,8 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 			
 			// Check permissions
 			$has_permission = TRUE;
-			if(rex_plugin::get('ycom', 'auth_media')->isAvailable() && $media instanceof rex_media) {
-				$has_permission = rex_ycom_auth_media::checkPerm($media);
+			if(rex_plugin::get('ycom', 'media_auth')->isAvailable() && $media instanceof rex_media) {
+				$has_permission = rex_ycom_media_auth::checkPerm(rex_media_manager::create("", $pdf));
 			}
 			if($has_permission) {
 				print '<a href="'. rex_url::media($pdf) .'" target="_blank"><div class="downloads"><span class="fa-icon fa-file-pdf-o"></span> '. ($media instanceof rex_media && trim($media->getTitle()) != "" ? $media->getTitle() : $pdf) .'</div></a>';

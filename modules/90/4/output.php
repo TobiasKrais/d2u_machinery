@@ -296,8 +296,8 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 				
 				// Check permissions
 				$has_permission = TRUE;
-				if(rex_plugin::get('ycom', 'auth_media')->isAvailable()) {
-					$has_permission = rex_ycom_auth_media::checkPerm($media);
+				if(rex_plugin::get('ycom', 'media_auth')->isAvailable()) {
+					$has_permission = rex_ycom_media_auth::checkPerm(rex_media_manager::create("", $document));
 				}
 				if($has_permission) {
 					print '<li>';
