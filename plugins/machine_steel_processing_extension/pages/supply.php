@@ -207,7 +207,7 @@ if ($func == 'edit' || $func == 'add') {
 }
 
 if ($func == '') {
-	$query = 'SELECT supplys.supply_id, title, online_status '
+	$query = 'SELECT supplys.supply_id, title, name, online_status '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_machinery_steel_supply AS supplys '
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_steel_supply_lang AS lang '
 			. 'ON supplys.supply_id = lang.supply_id AND lang.clang_id = '. rex_config::get("d2u_helper", "default_lang") .' '
@@ -227,8 +227,11 @@ if ($func == '') {
     $list->setColumnLabel('supply_id', rex_i18n::msg('id'));
     $list->setColumnLayout('supply_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
 
-    $list->setColumnLabel('title', rex_i18n::msg('d2u_helper_name'));
+    $list->setColumnLabel('title', rex_i18n::msg('d2u_machinery_steel_supply_title'));
     $list->setColumnParams('title', ['func' => 'edit', 'entry_id' => '###supply_id###']);
+
+	$list->setColumnLabel('name', rex_i18n::msg('d2u_helper_name'));
+    $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###supply_id###']);
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);

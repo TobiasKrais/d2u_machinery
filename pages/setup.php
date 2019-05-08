@@ -39,6 +39,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.2.6-DEV:</p>
 <ul>
+	<li>Stahlverarbeitung Plugin Zu-/Abfuhr Übersichtsliste nun auch mit Titel (nicht nur Name).</li>
 	<li>Modul 90-1 und 90-4 an aktuelles YCom angepasst. Medien werden nur noch zum Download angeboten, wenn Rechte existieren.</li>
 	<li>Bild in sitemap.xml eingefügt.</li>
 	<li>URL Addon 2.x Anpassungen.</li>
