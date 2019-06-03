@@ -37,7 +37,7 @@ $d2u_module_manager->showManagerList();
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_machinery" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
-<p>1.3.0-DEV:</p>
+<p>1.3.0:</p>
 <ul>
 	<li>Berechtigungen angepasst: Neu sind separate Berechtigungen für "Maschinen" und "Kategorien". Die Berechtigungen für "Branchen" gehen in Kategorien auf und die für Stahlverarbeitung und anderen Maschinenerweiterungen in "Maschinen".</li>
 	<li>Option zum Erstellen verkürzter URLs hinzugefügt, wenn Artikel nicht Startartikel ist.</li>
