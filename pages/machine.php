@@ -299,7 +299,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		}
 		if(count($referring_used_machines) > 0) {
 			foreach($referring_used_machines as $referring_used_machine) {
-				$message .= '<li><a href="index.php?page=d2u_machinery/used_machine&func=edit&entry_id='. $referring_used_machine->used_machine_id .'">'. $referring_used_machine->name.'</a></li>';
+				$message .= '<li><a href="index.php?page=d2u_machinery/used_machines&func=edit&entry_id='. $referring_used_machine->used_machine_id .'">'. $referring_used_machine->name.'</a></li>';
 			}
 		}
 		$message .= '</ul>';

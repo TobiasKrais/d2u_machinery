@@ -230,6 +230,25 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 		if(rex_plugin::get("d2u_machinery", "export")->isAvailable()) {
 			ExportedUsedMachine::removeMachineFromAllExports($this->used_machine_id);
 		}
+
+		// Delete from YRewrite forward list
+		if(rex_addon::get('yrewrite')->isAvailable()) {
+			if($delete_all) {
+				foreach(rex_clang::getAllIds() as $clang_id) {
+					$lang_object = new self($this->used_machine_id, $clang_id);
+					$query_forward = "DELETE FROM ". \rex::getTablePrefix() ."yrewrite_forward "
+						."WHERE extern = '". $lang_object->getURL(TRUE) ."'";
+					$result_forward = \rex_sql::factory();
+					$result_forward->setQuery($query_forward);
+				}
+			}
+			else {
+				$query_forward = "DELETE FROM ". \rex::getTablePrefix() ."yrewrite_forward "
+					."WHERE extern = '". $this->getURL(TRUE) ."'";
+				$result_forward = \rex_sql::factory();
+				$result_forward->setQuery($query_forward);
+			}
+		}
 	}
 	
 	/**

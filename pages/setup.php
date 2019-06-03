@@ -37,8 +37,9 @@ $d2u_module_manager->showManagerList();
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_machinery" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
-<p>1.2.6-DEV:</p>
+<p>1.3.0-DEV:</p>
 <ul>
+	<li>Option zum Erstellen verkürzter URLs hinzugefügt, wenn Artikel nicht Startartikel ist.</li>
 	<li>Stahlverarbeitung Plugin Zu-/Abfuhr Übersichtsliste nun auch mit Titel (nicht nur Name).</li>
 	<li>Modul 90-1 und 90-4 an aktuelles YCom angepasst. Medien werden nur noch zum Download angeboten, wenn Rechte existieren.</li>
 	<li>Bild in sitemap.xml eingefügt.</li>

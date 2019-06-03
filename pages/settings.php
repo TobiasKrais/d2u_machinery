@@ -28,6 +28,10 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 	if(rex_plugin::get('d2u_machinery', 'export')->isAvailable()) {
 		$settings['export_autoexport'] = array_key_exists('export_autoexport', $settings) ? "active" : "inactive";
 	}
+	if(rex_addon::get("url")->isAvailable() && rex_string::versionCompare(\rex_addon::get('url')->getVersion(), '1.5', '>=')) {
+		$settings['short_urls'] = array_key_exists('short_urls', $settings) ? "true" : "false";
+		$settings['short_urls_forward'] = array_key_exists('short_urls_forward', $settings) && $settings['short_urls'] == "true" ? "true" : "false";
+	}
 	$settings['google_analytics_activate'] = array_key_exists('google_analytics_activate', $settings) ? "true" : "false";
 	
 	// Save settings
@@ -48,6 +52,10 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 				d2u_addon_backend_helper::update_url_scheme(\rex::getTablePrefix() ."d2u_machinery_url_used_machine_categories_sale", $settings['used_machine_article_id_sale']);		
 			}
 			d2u_addon_backend_helper::generateUrlCache();
+			
+			// Update forward cache
+			rex_yrewrite_forward::init();
+			rex_yrewrite_forward::generatePathFile();
 		}
 		
 		// Install / update language replacements
@@ -110,6 +118,29 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 						d2u_addon_backend_helper::form_input('d2u_machinery_settings_contact_phone', 'settings[contact_phone]', $this->getConfig('contact_phone'), TRUE, FALSE);
 						d2u_addon_backend_helper::form_mediafield('d2u_machinery_settings_consultation_pic', 'consultation_pic', $this->getConfig('consultation_pic'));
 						d2u_addon_backend_helper::form_linkfield('d2u_machinery_settings_consultation_article', '2', $this->getConfig('consultation_article_id'), rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId()));
+						if(rex_addon::get("url")->isAvailable() && rex_string::versionCompare(\rex_addon::get('url')->getVersion(), '1.5', '>=')) {
+							d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_short_urls', 'settings[short_urls]', 'true', $this->getConfig('short_urls') == 'true');
+							d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_short_urls_forward', 'settings[short_urls_forward]', 'true', $this->getConfig('short_urls_forward') == 'true');
+							?>
+							<script>
+								function changeTypeShortURLs() {
+									if($('input[name="settings\\[short_urls\\]"]').is(':checked')) {
+										$('#settings\\[short_urls_forward\\]').fadeIn();
+									}
+									else {
+										$('#settings\\[short_urls_forward\\]').hide();
+									}
+								}
+
+								// On init
+								changeTypeShortURLs();
+								// On change
+								$('input[name="settings\\[short_urls\\]"]').on('change', function() {
+									changeTypeShortURLs();
+								});
+							</script>
+							<?php
+						}
 					?>
 				</div>
 			</fieldset>

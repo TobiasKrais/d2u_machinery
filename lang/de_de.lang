@@ -25,6 +25,8 @@ d2u_machinery_settings_analytics_event_category = Name Event Kategorie
 d2u_machinery_settings_machines_navi = Maschine in D2U Helper Addon Navigation anzeigen.
 d2u_machinery_settings_machine_show_usage_areas = Tab für Anwendungsgebiete bei Maschinen anzeigen
 d2u_machinery_settings_request_form_email = Empfänger E-Mail Adresse für Anfrageformular
+d2u_machinery_settings_short_urls = URLs verkürzen indem der Name der Redaxo Struktur Kategorie aus der URL entfernt wird.
+d2u_machinery_settings_short_urls_forward = Alte URLs auf verkürzte weiterleiten.
 d2u_machinery_settings_show_teaser = Kurzbeschreibung der Maschine in Maschinenliste einblenden
 d2u_machinery_settings_show_tech_data = Tab für technische Daten anzeigen
 

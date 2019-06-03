@@ -126,6 +126,25 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 			$result = \rex_sql::factory();
 			$result->setQuery($query);
 		}
+
+		// Delete from YRewrite forward list
+		if(rex_addon::get('yrewrite')->isAvailable()) {
+			if($delete_all) {
+				foreach(rex_clang::getAllIds() as $clang_id) {
+					$lang_object = new self($this->industry_sector_id, $clang_id);
+					$query_forward = "DELETE FROM ". \rex::getTablePrefix() ."yrewrite_forward "
+						."WHERE extern = '". $lang_object->getURL(TRUE) ."'";
+					$result_forward = \rex_sql::factory();
+					$result_forward->setQuery($query_forward);
+				}
+			}
+			else {
+				$query_forward = "DELETE FROM ". \rex::getTablePrefix() ."yrewrite_forward "
+					."WHERE extern = '". $this->getURL(TRUE) ."'";
+				$result_forward = \rex_sql::factory();
+				$result_forward->setQuery($query_forward);
+			}
+		}
 	}
 	
 	/**
