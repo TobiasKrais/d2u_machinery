@@ -40,21 +40,20 @@ $d2u_module_manager->showManagerList();
 <p>1.3.0:</p>
 <ul>
 	<li>Berechtigungen angepasst: Neu sind separate Berechtigungen für "Maschinen" und "Kategorien". Die Berechtigungen für "Branchen" gehen in Kategorien auf und die für Stahlverarbeitung und anderen Maschinenerweiterungen in "Maschinen".</li>
-	<li>Option zum Erstellen verkürzter URLs hinzugefügt, wenn Artikel nicht Startartikel ist.</li>
-	<li>Stahlverarbeitung Plugin Zu-/Abfuhr Übersichtsliste nun auch mit Titel (nicht nur Name).</li>
-	<li>Modul 90-1 und 90-4 an aktuelles YCom angepasst. Medien werden nur noch zum Download angeboten, wenn Rechte existieren.</li>
-	<li>Bild in sitemap.xml eingefügt.</li>
+	<li>Option zum Erstellen verkürzter URLs hinzugefügt, wenn Artikel nicht Startartikel ist (nur ab URL Addon 2.x oder höher).</li>
 	<li>URL Addon 2.x Anpassungen.</li>
 	<li>SEO Bilder für URL Addon wurden hinzugefügt.</li>
+	<li>YRewrite Multidomain support.</li>
+	<li>Stahlverarbeitung Plugin Zu-/Abfuhr Übersichtsliste nun auch mit Titel (nicht nur Name).</li>
+	<li>Bugfix Stahlverarbeitung Plugin: speicherte Texte mit einfachen Anführungszeichen nicht.</li>
+	<li>Bugfix Stahlverarbeitung Plugin: Materialklassen wurden falsch initiert.</li>
+	<li>Modul 90-1 und 90-4 an aktuelles YCom angepasst. Medien werden nur noch zum Download angeboten, wenn Rechte existieren.</li>
 	<li>Listen im Backend werden jetzt nicht mehr in Seiten unterteilt.</li>
 	<li>Zubehör Plugin: Zubehörgruppen jetzt nach Namen sortiert.</li>
-	<li>Bugfix: Sprachspezifischer Name von Maschinen kann jetzt auch einfache Anfürhungszeichen enthalten.</li>
 	<li>Bugfix: Zubehör Plugin speicherte Bilder nicht.</li>
-	<li>Bugfix: Stahlverarbeitung Plugin speicherte Texte mit einfachen Anführungszeichen nicht.</li>
-	<li>YRewrite Multidomain support.</li>
+	<li>Bugfix: Sprachspezifischer Name von Maschinen kann jetzt auch einfache Anführungszeichen enthalten.</li>
 	<li>Konvertierung der Datenbanktabellen zu utf8mb4.</li>
-	<li>Bugfix machine_steel_processing_extension: Materialklassen wurden falsch initiert.</li>
-	<li>Bugfix: Videos des D2U Videomanagers werden nur noch hinzugefügt, wenn es entweder in der Sprache oder als sprachübergreifes Video vorhanden ist.</li>
+	<li>Bugfix: Videos des D2U Videomanagers werden nur noch hinzugefügt, wenn es entweder in der Sprache oder als sprachübergreifendes Video vorhanden ist.</li>
 </ul>
 <p>1.2.5:</p>
 <ul>
