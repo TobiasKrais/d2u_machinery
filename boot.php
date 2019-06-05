@@ -213,7 +213,7 @@ function rex_d2u_machinery_url_shortener(rex_extension_point $ep) {
 				$result->setQuery($query);
 
 				// Add only if not already existing
-				if($result->getRows() == 0) {
+				if($result->getRows() == 0 && $domain->getId() > 0) {
 					$query_forward = "INSERT INTO `". \rex::getTablePrefix() ."yrewrite_forward` (`domain_id`, `status`, `url`, `type`, `article_id`, `clang`, `extern`, `movetype`, `expiry_date`) "
 						."VALUES (". $domain->getId() .", 1, '". trim(str_replace($domain->getName(), "/", $url->__toString()), "/") ."', 'extern', ". $article_id .", ". $clang_id .", '". str_replace("///", "", $domain->getUrl() . str_replace($domain->getName(), '', $new_url->__toString())) ."', '301', '0000-00-00');";
 					$result_forward = \rex_sql::factory();
