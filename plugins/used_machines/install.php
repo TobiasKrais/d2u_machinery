@@ -28,6 +28,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machi
 	machine_id int(10) default NULL,
 	location varchar(255) collate utf8mb4_unicode_ci default NULL,
 	external_url varchar(255) collate utf8mb4_unicode_ci default NULL,
+	video_ids varchar(255) collate utf8mb4_unicode_ci default NULL,
 	PRIMARY KEY (used_machine_id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
 $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_used_machines_lang (

@@ -140,3 +140,9 @@ if (rex_string::versionCompare($this->getVersion(), '1.2.6', '<')) {
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_used_machines_lang DROP updatedate;");
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_used_machines_lang CHANGE `updatedate_new` `updatedate` DATETIME NOT NULL;");
 }
+// Update database to 1.3.1
+$sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_used_machines LIKE 'video_ids';");
+if($sql->getRows() == 0) {
+	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_used_machines "
+		. "ADD video_ids varchar(191) collate utf8mb4_unicode_ci default NULL AFTER external_url;");
+}

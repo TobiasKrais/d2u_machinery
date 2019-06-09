@@ -39,7 +39,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.3.1-DEV:</p>
 <ul>
-	<li>...</li>
+	<li>Gebrauchtmaschinen Plugin: Videos aus D2U Videomanager hinzugefügt.</li>
 </ul>
 <p>1.3.0:</p>
 <ul>

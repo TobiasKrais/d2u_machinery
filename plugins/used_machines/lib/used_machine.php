@@ -110,6 +110,11 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 	var $downloads = [];
 
 	/**
+	 * @var Video[] Videomanager videos
+	 */
+	var $videos = [];
+
+	/**
 	 * @var string Needs translation update? "no", "yes" or "delete"
 	 */
 	var $translation_needs_update = "delete";
@@ -167,6 +172,19 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 			// URL des externen Links bei Bedarf korrigieren
 			if(strlen($this->external_url) > 3 && substr($this->external_url, 0, 4) != "http") {
 				$this->external_url = "http://". $this->external_url;
+			}
+			
+			// Videos
+			if(\rex_addon::get('d2u_videos')->isAvailable() && $result->getValue("video_ids") != "") {
+				$video_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("video_ids")), PREG_GREP_INVERT);
+				foreach ($video_ids as $video_id) {
+					if($video_id > 0) {
+						$video = new Video($video_id, $clang_id);
+						if($video->getVideoURL() != "") {
+							$this->videos[$video_id] = $video;
+						}
+					}
+				}
 			}
 		}
 	}
@@ -521,6 +539,12 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 					."machine_id = ". ($this->machine === FALSE ? 0 : $this->machine->machine_id) .", "
 					."location = '". $this->location ."', "
 					."external_url = '". $this->external_url ."' ";
+			if(\rex_addon::get('d2u_videos')->isAvailable() && count($this->videos) > 0) {
+				$query .= ", video_ids = '|". implode("|", array_keys($this->videos)) ."|' ";
+			}
+			else {
+				$query .= ", video_ids = '' ";
+			}
 
 			if($this->used_machine_id == 0) {
 				$query = "INSERT INTO ". $query;

@@ -38,6 +38,16 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$used_machine->machine = $form['machine_id'] > 0 ? new Machine($form['machine_id'], $rex_clang->getId()) : FALSE;
 			$used_machine->location = $form['location'];
 			$used_machine->external_url = $form['external_url'];
+
+			if(\rex_addon::get("d2u_videos")->isAvailable()) {
+				$video_ids = isset($form['video_ids']) ? $form['video_ids'] : [];
+				$used_machine->videos = []; // Clear video array
+				foreach($video_ids as $video_id) {
+					if($video_id > 0) {
+						$used_machine->videos[$video_id] = new Video($video_id, rex_config::get("d2u_helper", "default_lang"));
+					}
+				}
+			}
 		}
 		else {
 			$used_machine->clang_id = $rex_clang->getId();
@@ -150,6 +160,13 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 							d2u_addon_backend_helper::form_select('d2u_machinery_used_machines_linked_machine', 'form[machine_id]', $options_machines, ($used_machine->machine === FALSE ? [] : [$used_machine->machine->machine_id]), 1, FALSE, $readonly);
 							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_location', "form[location]", $used_machine->location, FALSE, $readonly, "text");
 							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_external_url', "form[external_url]", $used_machine->external_url, FALSE, $readonly, "text");
+							if(\rex_addon::get("d2u_videos")->isAvailable()) {
+								$options = [];
+								foreach(Video::getAll(rex_config::get("d2u_helper", "default_lang")) as $video) {
+									$options[$video->video_id] = $video->name;
+								}
+								d2u_addon_backend_helper::form_select('d2u_machinery_category_videos', 'form[video_ids][]', $options, array_keys($used_machine->videos), 10, TRUE, $readonly);
+							}
 						?>
 					</div>
 				</fieldset>
