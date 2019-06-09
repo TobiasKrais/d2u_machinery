@@ -230,7 +230,7 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 
 	// Video
 	if(\rex_addon::get('d2u_videos')->isAvailable()) {
-		if(count($used_machine->videos) > 0) {
+		if(is_array($used_machine->videos) && count($used_machine->videos) > 0) {
 			print '<div class="col-12'. (count($used_machine->videos) > 1 ? '' : ' col-lg-6') .'" id="videoplayer">';
 			print '<h3>'. $tag_open .'d2u_machinery_video'. $tag_close .'</h3>';
 			$videomanager = new Videomanager();
