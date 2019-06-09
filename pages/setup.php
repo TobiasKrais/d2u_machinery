@@ -40,6 +40,7 @@ $d2u_module_manager->showManagerList();
 <p>1.3.1-DEV:</p>
 <ul>
 	<li>Gebrauchtmaschinen Plugin: Videos aus D2U Videomanager hinzugefügt.</li>
+	<li>Category::getUrl() hat jetzt Artikel URL als zweiten, optionalen Parameter. Wenn Maschinen und Gebrauchtmaschinen verwendet wurden, konnte es zu fehlerhaften URLs kommen.</li>
 </ul>
 <p>1.3.0:</p>
 <ul>

@@ -534,17 +534,26 @@ class Category implements \D2U_Helper\ITranslationHelper{
 	/*
 	 * Returns the URL of this object.
 	 * @param string $including_domain TRUE if Domain name should be included
+	 * @param int $current_article_id Redaxo article id. Category can be used for different
+	 * articles, e.g. machines or used machines. When passing article id, 
+	 * category URL can be securely determined, otherwise there might be some
+	 * rare cases, the URL is parsed not correct, because article ID is set to
+	 * rex_article::getCurrentId(). The parameter is optional to be
+	 * backward compatible.
 	 * @return string URL
 	 */
-	public function getURL($including_domain = FALSE) {
+	public function getURL($including_domain = FALSE, $current_article_id = 0) {
 		if($this->url == "") {
 			$d2u_machinery = rex_addon::get("d2u_machinery");
 				
 			$parameterArray = [];
 
 			$article_id = $d2u_machinery->getConfig('article_id');
+			
 			// In case of used machines
-			$current_article_id = rex_article::getCurrentId();
+			if($current_article_id == 0) {
+				$current_article_id = rex_article::getCurrentId();
+			}
 			if(rex_plugin::get("d2u_machinery", "used_machines")->isAvailable() && ($current_article_id == $d2u_machinery->getConfig('used_machine_article_id_rent') || $current_article_id == $d2u_machinery->getConfig('used_machine_article_id_sale'))) {
 				if($this->offer_type == "sale") {
 					$article_id = $d2u_machinery->getConfig('used_machine_article_id_sale');
