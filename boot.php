@@ -12,8 +12,9 @@ if(\rex::isBackend()) {
 	rex_extension::register('ART_PRE_DELETED', 'rex_d2u_machinery_article_is_in_use');
 	rex_extension::register('CLANG_DELETED', 'rex_d2u_machinery_clang_deleted');
 	rex_extension::register('MEDIA_IS_IN_USE', 'rex_d2u_machinery_media_is_in_use');
-	rex_extension::register('URL_MANAGER_PRE_SAVE', 'rex_d2u_machinery_url_shortener');
 }
+// Call this extension point also in frontend
+rex_extension::register('URL_MANAGER_PRE_SAVE', 'rex_d2u_machinery_url_shortener');
 
 /**
  * Checks if article is used by this addon
@@ -159,11 +160,10 @@ function rex_d2u_machinery_url_shortener(rex_extension_point $ep) {
 	$url = $params['object'];
 	$article_id = $params['article_id'];
 	$clang_id = $params['clang_id'];
-
+	
 	// Only shorten URLs that are not start article and articles of this addon
 	if($article_id != rex_yrewrite::getDomainByArticleId($article_id, $clang_id)->getStartId() &&
-			($article_id == rex_config::get('d2u_machinery', 'article_id') ||
-			(rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable() && in_array($article_id, [rex_config::get('d2u_machinery', 'used_machine_article_id_rent'), rex_config::get('d2u_machinery', 'used_machine_article_id_sale')])))
+			($article_id == rex_config::get('d2u_machinery', 'article_id'))
 		) {
 		$domain = rex_yrewrite::getDomainByArticleId($article_id);
 
@@ -183,7 +183,7 @@ function rex_d2u_machinery_url_shortener(rex_extension_point $ep) {
 		// Second: make URL shorter
 		if(rex_config::get('d2u_machinery', 'short_urls', 'false') === 'true') {
 			$article_url = rex_getUrl($article_id, $clang_id);
-			$start_article_url = rex_getUrl(rex_article::getSiteStartArticleId(), $clang_id);
+			$start_article_url = rex_getUrl(rex_yrewrite::getDomainByArticleId($article_id, $clang_id)->getStartId(), $clang_id);
 			$article_url_without_lang_slug = '';
 			if(strlen($start_article_url) == 1) {
 				$article_url_without_lang_slug = str_replace('/'. strtolower(rex_clang::get($clang_id)->getCode()) .'/', '/', $article_url);
@@ -191,7 +191,16 @@ function rex_d2u_machinery_url_shortener(rex_extension_point $ep) {
 			else {
 				$article_url_without_lang_slug = str_replace($start_article_url, '/', $article_url);
 			}
-			$new_url = new \Url\Url(str_replace($article_url_without_lang_slug, '/', $url->__toString()));
+			
+			// In case $url is urlencoded, encode your url, too
+			$article_url_without_lang_slug_split = explode("/", $article_url_without_lang_slug);
+			for($i = 0; $i < count($article_url_without_lang_slug_split); $i++) {
+				$article_url_without_lang_slug_split[$i] = urlencode($article_url_without_lang_slug_split[$i]);
+			}
+			$article_url_without_lang_slug_split_encoded = implode("/", $article_url_without_lang_slug_split);
+
+			// Replace
+			$new_url = new \Url\Url(str_replace($article_url_without_lang_slug_split_encoded, '/', $url->__toString()));
 			$new_url->handleRewriterSuffix();
 
 			// Check for duplicate URLs
@@ -201,25 +210,25 @@ function rex_d2u_machinery_url_shortener(rex_extension_point $ep) {
 			$result = \rex_sql::factory();
 			$result->setQuery($query);
 			if($result->getRows() > 0) {
-				// Send old URL instead of duplicate new one
-				return $url;
+				// Return FALSE, duplicates are not allowed
+				return FALSE;
 			}
-
+			
 			// Add forwarders
 			if(rex_config::get('d2u_machinery', 'short_urls_forward', "false") === "true") {
 				$query = "SELECT id FROM ". \rex::getTablePrefix() ."yrewrite_forward "
-					."WHERE extern = '". str_replace("///", "", $domain->getUrl() . str_replace($domain->getName(), '', $new_url->__toString())) ."'";
+					."WHERE extern = '". str_replace("///", "", $domain->getUrl() . str_replace($domain->getName(), '', urldecode($new_url->__toString()))) ."'";
 				$result = \rex_sql::factory();
 				$result->setQuery($query);
 
 				// Add only if not already existing
 				if($result->getRows() == 0 && $domain->getId() > 0) {
 					$query_forward = "INSERT INTO `". \rex::getTablePrefix() ."yrewrite_forward` (`domain_id`, `status`, `url`, `type`, `article_id`, `clang`, `extern`, `movetype`, `expiry_date`) "
-						."VALUES (". $domain->getId() .", 1, '". trim(str_replace($domain->getName(), "/", $url->__toString()), "/") ."', 'extern', ". $article_id .", ". $clang_id .", '". str_replace("///", "", $domain->getUrl() . str_replace($domain->getName(), '', $new_url->__toString())) ."', '301', '0000-00-00');";
+						."VALUES (". $domain->getId() .", 1, '". trim(str_replace($domain->getName(), "/", urldecode($url->__toString())), "/") ."', 'extern', ". $article_id .", ". $clang_id .", '". str_replace("///", "", $domain->getUrl() . str_replace($domain->getName(), '', urldecode($new_url->__toString()))) ."', '301', '0000-00-00');";
 					$result_forward = \rex_sql::factory();
 					$result_forward->setQuery($query_forward);
 
-					// Don't forget to regenerate YRewrtie path file this way
+					// Don't forget to regenerate YRewrite path file this way
 					// rex_yrewrite_forward::init();
 					// rex_yrewrite_forward::generatePathFile();
 					// This cannot be done here, because method would be called to often
