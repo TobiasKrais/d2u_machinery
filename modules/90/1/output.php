@@ -413,7 +413,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		
 	// Downloads
 	$pdfs = array_unique(array_merge($machine->pdfs, $machine->category->pdfs));
-	if(count($pdfs) > 0) {
+	if(is_array($pdfs) && count($pdfs) > 0) {
 		print '<div class="col-12 col-md-6">';
 		print '<h3>'. $tag_open .'d2u_machinery_downloads'. $tag_close .'</h3>';
 		foreach($pdfs as $pdf) {
