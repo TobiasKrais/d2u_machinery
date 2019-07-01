@@ -162,8 +162,10 @@ class d2u_machinery_frontend_helper {
 			
 			if($used_machine_id > 0) {
 				$used_machine = new UsedMachine($used_machine_id, rex_clang::getCurrentId());
-				$category = $used_machine->category;
-				$category->setOfferType($used_machine->offer_type);
+				if($used_machine->category !== FALSE) {
+					$category = $used_machine->category;
+					$category->setOfferType($used_machine->offer_type);
+				}
 			}
 		}
 
