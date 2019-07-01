@@ -731,7 +731,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			$this->teaser = stripslashes(htmlspecialchars_decode($result->getValue("teaser")));
 			$this->description = stripslashes(htmlspecialchars_decode($result->getValue("description")));
 			$pdfs = preg_grep('/^\s*$/s', explode(",", $result->getValue("pdfs")), PREG_GREP_INVERT);
-			$this->pdfs = is_array($pdfs) ? $pdfs : (strlen($pdfs) > 4 ? [$pdfs] : []);
+			$this->pdfs = is_array($pdfs) ? $pdfs : ($pdfs && strlen($pdfs) > 4 ? [$pdfs] : []);
 			$this->priority = $result->getValue("priority");
 			if($result->getValue("translation_needs_update") != "") {
 				$this->translation_needs_update = $result->getValue("translation_needs_update");
