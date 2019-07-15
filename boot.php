@@ -185,7 +185,7 @@ function rex_d2u_machinery_url_shortener(rex_extension_point $ep) {
 			$article_url = rex_getUrl($article_id, $clang_id);
 			$start_article_url = rex_getUrl(rex_yrewrite::getDomainByArticleId($article_id, $clang_id)->getStartId(), $clang_id);
 			$article_url_without_lang_slug = '';
-			if(strlen($start_article_url) == 1) {
+			if(strlen($start_article_url) <= 1) {
 				$article_url_without_lang_slug = str_replace('/'. strtolower(rex_clang::get($clang_id)->getCode()) .'/', '/', $article_url);
 			}
 			else {
@@ -217,7 +217,8 @@ function rex_d2u_machinery_url_shortener(rex_extension_point $ep) {
 			// Add forwarders
 			if(rex_config::get('d2u_machinery', 'short_urls_forward', "false") === "true") {
 				$query = "SELECT id FROM ". \rex::getTablePrefix() ."yrewrite_forward "
-					."WHERE extern = '". str_replace("///", "", $domain->getUrl() . str_replace($domain->getName(), '', urldecode($new_url->__toString()))) ."'";
+					."WHERE extern = '". str_replace("///", "", $domain->getUrl() . str_replace($domain->getName(), '', urldecode($new_url->__toString()))) ."' "
+					. "OR url = '". trim(str_replace($domain->getName(), "/", urldecode($url->__toString())), "/") ."'";
 				$result = \rex_sql::factory();
 				$result->setQuery($query);
 
