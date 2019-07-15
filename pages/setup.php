@@ -39,6 +39,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.3.1-DEV:</p>
 <ul>
+	<li>Kontaktformular funktioniert nun auch wenn über Office 365 versendet wird.</li>
 	<li>Ein paar Warnungen entfernt.</li>
 	<li>URL 2.x Anpassungen können jetzt auch mit urlencoded() URLs umgehen, für den Fall, dass das YRewrite Schema aus dem D2U Helper Addon verwendet wird.</li>
 	<li>Gebrauchtmaschinen Plugin: Videos aus D2U Videomanager hinzugefügt.</li>
