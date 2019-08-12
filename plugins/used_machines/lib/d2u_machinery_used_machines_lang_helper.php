@@ -208,7 +208,7 @@ class d2u_machinery_used_machines_lang_helper extends d2u_machinery_lang_helper 
 	 * value the replacement. 
 	 */
 	protected $replacements_russian = [
-		'd2u_machinery_used_machines' => 'translation missing: d2u_machinery_used_machines',
+		'd2u_machinery_used_machines' => 'из вторых рук',
 		'd2u_machinery_used_machines_availability' => 'теперь доступен',
 		'd2u_machinery_used_machines_availible_from' => 'Доступна с',
 		'd2u_machinery_used_machines_config_error' => 'translation missing: d2u_machinery_used_machines_config_error',
