@@ -1,3 +1,12 @@
+@font-face{
+	font-family:'FontAwesome';
+	src:url("./assets/addons/be_style/fonts/fontawesome-webfont.eot?v=4.7.0");
+	src:url("./assets/addons/be_style/fonts/fontawesome-webfont.eot?#iefix&v=4.7.0") format('embedded-opentype'),
+		url("./assets/addons/be_style/fonts/fontawesome-webfont.woff2?v=4.7.0") format('woff2'),
+		url("./assets/addons/be_style/fonts/fontawesome-webfont.woff?v=4.7.0") format('woff'),
+		url("./assets/addons/be_style/fonts/fontawesome-webfont.ttf?v=4.7.0") format('truetype'),
+		url("./assets/addons/be_style/fonts/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular") format('svg');
+}
 .download-list {
 	padding: 0;
 }
@@ -8,8 +17,10 @@
 	padding: 0.5em 1em;
 }
 
-.icon {
+.fa-icon, .icon {
 	font-family: FontAwesome;
+}
+.icon {
 	font-weight: normal;
 	line-height: 1em;
 }
@@ -20,6 +31,34 @@
 .pdf:before {
 	color: darkred;
 	content: "f016";
+}
+.fa-back:before {
+	content: "\f190";
+}
+.fa-codepen:before {
+	content: "\f1cb";
+}
+.fa-dropbox:before {
+	content: "\f16b";
+}
+.fa-envelope-o:before {
+	content: "\f003";
+}
+.fa-file-pdf-o:before {
+	color: #c60000;
+	content: "\f1c1";
+}
+.fa-file-pdf-o {
+	padding-right: 0.25em;
+}
+.fa-home:before {
+	content: "\f015";
+}
+.fa-list-ul:before {
+	content: "\f0ca";
+}
+.fa-plus:before {
+	content: "\f067";
 }
 
 .carousel-item {
