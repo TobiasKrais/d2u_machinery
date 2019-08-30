@@ -298,10 +298,10 @@ class Category implements \D2U_Helper\ITranslationHelper{
 				."ON lang.category_id = categories.category_id "
 			."WHERE clang_id = ". $clang_id ." ";
 		if(\rex_addon::get('d2u_machinery')->getConfig('default_category_sort') == 'priority') {
-			$query .= 'ORDER BY priority';
+			$query .= 'ORDER BY categories.priority';
 		}
 		else {
-			$query .= 'ORDER BY name';
+			$query .= 'ORDER BY lang.name';
 		}
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
