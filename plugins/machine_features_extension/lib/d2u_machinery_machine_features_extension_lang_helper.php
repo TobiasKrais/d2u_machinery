@@ -72,7 +72,7 @@ class d2u_machinery_machine_features_extension_lang_helper extends d2u_machinery
 	 * value the replacement. 
 	 */
 	protected $replacements_russian = [
-		'd2u_machinery_features' => 'характеристики',
+		'd2u_machinery_features' => 'Функциональные возможности',
 	];
 
 	/**
