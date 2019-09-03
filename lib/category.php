@@ -557,20 +557,13 @@ class Category implements \D2U_Helper\ITranslationHelper{
 			if(rex_plugin::get("d2u_machinery", "used_machines")->isAvailable() && ($current_article_id == $d2u_machinery->getConfig('used_machine_article_id_rent') || $current_article_id == $d2u_machinery->getConfig('used_machine_article_id_sale'))) {
 				if($this->offer_type == "sale") {
 					$article_id = $d2u_machinery->getConfig('used_machine_article_id_sale');
+					// Set parameter key
+					$parameterArray['used_sale_category_id'] = $this->category_id;			
 				}
 				elseif($this->offer_type == "rent") {
 					$article_id = $d2u_machinery->getConfig('used_machine_article_id_rent');
-				}
-					
-				// Set parameter key
-				if($this->offer_type == "sale") {
-					$parameterArray['used_sale_category_id'] = $this->category_id;			
-				}
-				elseif ($this->offer_type == "rent") {
+					// Set parameter key
 					$parameterArray['used_rent_category_id'] = $this->category_id;			
-				}
-				else {
-					$parameterArray['used_sale_category_id'] = $this->category_id;			
 				}
 			}
 			else {
