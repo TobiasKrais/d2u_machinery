@@ -108,15 +108,15 @@ function rex_d2u_machinery_media_is_in_use(rex_extension_point $ep) {
 	$sql_machine = \rex_sql::factory();
 	$sql_machine->setQuery('SELECT lang.machine_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_machines_lang` AS lang '
 		.'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_machines` AS machines ON lang.machine_id = machines.machine_id '
-		.'WHERE pdfs LIKE "%'. $filename .'%" OR pics LIKE "%'. $filename .'%" OR description LIKE "%'. $filename .'%" '
-		. (rex_plugin::get('d2u_machinery', 'machine_construction_equipment_extension')->isAvailable() ? 'OR pictures_delivery_set LIKE "%'. $filename .'%"' : '')
+		.'WHERE FIND_IN_SET("'. $filename .'", pdfs) OR FIND_IN_SET("'. $filename .'", pics) OR description LIKE "%'. $filename .'%" '
+		. (rex_plugin::get('d2u_machinery', 'machine_construction_equipment_extension')->isAvailable() ? 'OR FIND_IN_SET("'. $filename .'", pictures_delivery_set) ' : '')
 		.'GROUP BY machine_id');
 	
 	// Categories
 	$sql_categories = \rex_sql::factory();
 	$sql_categories->setQuery('SELECT lang.category_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_categories_lang` AS lang '
 		.'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_categories` AS categories ON lang.category_id = categories.category_id '
-		.'WHERE pic = "'. $filename .'" OR pic_usage = "'. $filename .'" OR pic_lang = "'. $filename .'" OR pdfs LIKE "%'. $filename .'%" ');  
+		.'WHERE pic = "'. $filename .'" OR pic_usage = "'. $filename .'" OR pic_lang = "'. $filename .'" OR FIND_IN_SET("'. $filename .'", pdfs) ');  
 
 	// Prepare warnings
 	// Machines
