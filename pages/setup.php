@@ -39,7 +39,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.3.1-DEV:</p>
 <ul>
-	<li>Bugfix: das lLöschen eines Bildes im Medienpool wurde unter Umständen mit der Begründung verhindet, dass das Bild in Benutzung sei, obwohl das nicht der Fall war.</li>
+	<li>Bugfix: das Löschen eines Bildes im Medienpool wurde unter Umständen mit der Begründung verhindet, dass das Bild in Benutzung sei, obwohl das nicht der Fall war.</li>
 	<li>Kontaktformular funktioniert nun auch wenn über Office 365 versendet wird.</li>
 	<li>Ein paar Warnungen entfernt.</li>
 	<li>URL 2.x Anpassungen können jetzt auch mit urlencoded() URLs umgehen, für den Fall, dass das YRewrite Schema aus dem D2U Helper Addon verwendet wird.</li>
