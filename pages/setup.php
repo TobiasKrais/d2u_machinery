@@ -44,6 +44,7 @@ $d2u_module_manager->showManagerList();
 	<li>Ein paar Warnungen entfernt.</li>
 	<li>URL 2.x Anpassungen können jetzt auch mit urlencoded() URLs umgehen, für den Fall, dass das YRewrite Schema aus dem D2U Helper Addon verwendet wird.</li>
 	<li>Gebrauchtmaschinen Plugin: Videos aus D2U Videomanager hinzugefügt.</li>
+	<li>Gebrauchtmaschinen Plugin Bugfix: War eine Kategorie nicht übersetzt, aber eine Maschine vorhanden, wurde für die Maschine keine URL erzeugt.</li>
 	<li>Category::getUrl() hat jetzt Artikel URL als zweiten, optionalen Parameter. Wenn Maschinen und Gebrauchtmaschinen verwendet wurden, konnte es zu fehlerhaften URLs kommen.</li>
 </ul>
 <p>1.3.0:</p>
