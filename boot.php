@@ -14,7 +14,7 @@ if(\rex::isBackend()) {
 	rex_extension::register('MEDIA_IS_IN_USE', 'rex_d2u_machinery_media_is_in_use');
 }
 // Call this extension point also in frontend
-rex_extension::register('URL_MANAGER_PRE_SAVE', 'rex_d2u_machinery_url_shortener');
+rex_extension::register('URL_PRE_SAVE', 'rex_d2u_machinery_url_shortener');
 
 /**
  * Checks if article is used by this addon
