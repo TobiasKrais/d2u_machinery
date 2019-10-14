@@ -2145,6 +2145,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 		// Save the not language specific part
 		$pre_save_machine = new Machine($this->machine_id, $this->clang_id);
 
+		$regenerate_urls = false;
 		if($this->machine_id == 0 || $pre_save_machine != $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_machines SET "
 					."name = '". addslashes($this->name) ."', "
@@ -2304,6 +2305,10 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 				$this->machine_id = $result->getLastId();
 				$error = $result->hasError();
 			}
+			
+			if($pre_save_machine->name != $this->name) {
+				$regenerate_urls = true;
+			}
 		}
 		// save priority, but only if new or changed
 		if($this->priority != $pre_save_machine->priority || $this->machine_id == 0) {
@@ -2335,11 +2340,17 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 				$result = \rex_sql::factory();
 				$result->setQuery($query);
 				$error = $result->hasError();
+
+				if($pre_save_machine->lang_name != $this->lang_name) {
+					$regenerate_urls = true;
+				}
 			}
 		}
 
 		// Update URLs
-		\d2u_addon_backend_helper::generateUrlCache('machine_id');
+		if($regenerate_urls) {
+			\d2u_addon_backend_helper::generateUrlCache('machine_id');
+		}
 		
 		return !$error;
 	}

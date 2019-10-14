@@ -522,6 +522,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 
 		// Save the not language specific part
 		$pre_save_used_machine = new UsedMachine($this->used_machine_id, $this->clang_id);
+		$regenerate_urls = false;
 		if($this->used_machine_id == 0 || $pre_save_used_machine != $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_used_machines SET "
 					."name = '". addslashes($this->name) ."', "
@@ -558,6 +559,10 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 				$this->used_machine_id = $result->getLastId();
 				$error = $result->hasError();
 			}
+			
+			if($pre_save_used_machine->name != $this->name) {
+				$regenerate_urls = true;
+			}
 		}
 		
 		if($error === FALSE) {
@@ -585,11 +590,13 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 		}
 
 		// Update URLs
-		if($this->offer_type == "rent") {
-			\d2u_addon_backend_helper::generateUrlCache('used_rent_machine_id');
-		}
-		else {
-			\d2u_addon_backend_helper::generateUrlCache('used_sale_machine_id');
+		if($regenerate_urls) {
+			if($this->offer_type == "rent") {
+				\d2u_addon_backend_helper::generateUrlCache('used_rent_machine_id');
+			}
+			else {
+				\d2u_addon_backend_helper::generateUrlCache('used_sale_machine_id');
+			}
 		}
 		
 		return !$error;

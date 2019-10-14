@@ -349,6 +349,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 			}
 		}
 		
+		$regenerate_urls = false;
 		if($error === FALSE) {
 			// Save the language specific part
 			$pre_save_industry_sector = new IndustrySector($this->industry_sector_id, $this->clang_id);
@@ -365,11 +366,17 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 				$result = \rex_sql::factory();
 				$result->setQuery($query);
 				$error = $result->hasError();
+				
+				if($pre_save_industry_sector->name != $this->name) {
+					$regenerate_urls = true;
+				}
 			}
 		}
  
 		// Update URLs
-		\d2u_addon_backend_helper::generateUrlCache('industry_sector_id');
+		if($regenerate_urls) {
+			\d2u_addon_backend_helper::generateUrlCache('industry_sector_id');
+		}
 
 		return !$error;
 	}
