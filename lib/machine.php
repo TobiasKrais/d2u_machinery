@@ -2306,7 +2306,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 				$error = $result->hasError();
 			}
 			
-			if($pre_save_machine->name != $this->name) {
+			if(!$error && $pre_save_machine->name != $this->name) {
 				$regenerate_urls = true;
 			}
 		}
@@ -2341,7 +2341,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 				$result->setQuery($query);
 				$error = $result->hasError();
 
-				if($pre_save_machine->lang_name != $this->lang_name) {
+				if(!$error && $pre_save_machine->lang_name != $this->lang_name) {
 					$regenerate_urls = true;
 				}
 			}

@@ -560,7 +560,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 				$error = $result->hasError();
 			}
 			
-			if($pre_save_used_machine->name != $this->name) {
+			if(!$error && $pre_save_used_machine->name != $this->name) {
 				$regenerate_urls = true;
 			}
 		}

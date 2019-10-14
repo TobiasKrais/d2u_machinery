@@ -367,7 +367,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 				$result->setQuery($query);
 				$error = $result->hasError();
 				
-				if($pre_save_industry_sector->name != $this->name) {
+				if(!$error && $pre_save_industry_sector->name != $this->name) {
 					$regenerate_urls = true;
 				}
 			}
