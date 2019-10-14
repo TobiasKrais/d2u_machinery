@@ -2143,10 +2143,10 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 		$error = FALSE;
 
 		// Save the not language specific part
-		$pre_save_machine = new Machine($this->machine_id, $this->clang_id);
+		$pre_save_object = new Machine($this->machine_id, $this->clang_id);
 
 		$regenerate_urls = false;
-		if($this->machine_id == 0 || $pre_save_machine != $this) {
+		if($this->machine_id == 0 || $pre_save_object != $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_machines SET "
 					."name = '". addslashes($this->name) ."', "
 					."pics = '". implode(",", $this->pics) ."', "
@@ -2306,19 +2306,19 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 				$error = $result->hasError();
 			}
 			
-			if(!$error && $pre_save_machine->name != $this->name) {
+			if(!$error && $pre_save_object->name != $this->name) {
 				$regenerate_urls = true;
 			}
 		}
 		// save priority, but only if new or changed
-		if($this->priority != $pre_save_machine->priority || $this->machine_id == 0) {
+		if($this->priority != $pre_save_object->priority || $this->machine_id == 0) {
 			$this->setPriority();
 		}
 
 		if($error === FALSE) {
 			// Save the language specific part
-			$pre_save_machine = new Machine($this->machine_id, $this->clang_id);
-			if($pre_save_machine != $this) {
+			$pre_save_object = new Machine($this->machine_id, $this->clang_id);
+			if($pre_save_object != $this) {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_machines_lang SET "
 						."machine_id = '". $this->machine_id ."', "
 						."clang_id = '". $this->clang_id ."', "
@@ -2341,7 +2341,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 				$result->setQuery($query);
 				$error = $result->hasError();
 
-				if(!$error && $pre_save_machine->lang_name != $this->lang_name) {
+				if(!$error && $pre_save_object->lang_name != $this->lang_name) {
 					$regenerate_urls = true;
 				}
 			}

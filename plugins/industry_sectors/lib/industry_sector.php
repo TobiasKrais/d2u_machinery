@@ -326,10 +326,10 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 		$error = FALSE;
 
 		// Save the not language specific part
-		$pre_save_industry_sector = new IndustrySector($this->industry_sector_id, $this->clang_id);
+		$pre_save_object = new IndustrySector($this->industry_sector_id, $this->clang_id);
 		
 		// saving the rest
-		if($this->industry_sector_id == 0 || $pre_save_industry_sector != $this) {
+		if($this->industry_sector_id == 0 || $pre_save_object != $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_industry_sectors SET "
 					."online_status = '". $this->online_status ."', "
 					."pic = '". $this->pic ."' ";
@@ -352,8 +352,8 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 		$regenerate_urls = false;
 		if($error === FALSE) {
 			// Save the language specific part
-			$pre_save_industry_sector = new IndustrySector($this->industry_sector_id, $this->clang_id);
-			if($pre_save_industry_sector != $this) {
+			$pre_save_object = new IndustrySector($this->industry_sector_id, $this->clang_id);
+			if($pre_save_object != $this) {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang SET "
 						."industry_sector_id = '". $this->industry_sector_id ."', "
 						."clang_id = '". $this->clang_id ."', "
@@ -367,7 +367,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 				$result->setQuery($query);
 				$error = $result->hasError();
 				
-				if(!$error && $pre_save_industry_sector->name != $this->name) {
+				if(!$error && $pre_save_object->name != $this->name) {
 					$regenerate_urls = true;
 				}
 			}

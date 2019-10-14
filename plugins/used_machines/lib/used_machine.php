@@ -521,9 +521,9 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 		$this->year_built = $this->year_built == "" ? 0 : $this->year_built;
 
 		// Save the not language specific part
-		$pre_save_used_machine = new UsedMachine($this->used_machine_id, $this->clang_id);
+		$pre_save_object = new UsedMachine($this->used_machine_id, $this->clang_id);
 		$regenerate_urls = false;
-		if($this->used_machine_id == 0 || $pre_save_used_machine != $this) {
+		if($this->used_machine_id == 0 || $pre_save_object != $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_used_machines SET "
 					."name = '". addslashes($this->name) ."', "
 					."category_id = ". $this->category->category_id .", "
@@ -560,15 +560,15 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 				$error = $result->hasError();
 			}
 			
-			if(!$error && $pre_save_used_machine->name != $this->name) {
+			if(!$error && $pre_save_object->name != $this->name) {
 				$regenerate_urls = true;
 			}
 		}
 		
 		if($error === FALSE) {
 			// Save the language specific part
-			$pre_save_used_machine = new UsedMachine($this->used_machine_id, $this->clang_id);
-			if($pre_save_used_machine != $this) {
+			$pre_save_object = new UsedMachine($this->used_machine_id, $this->clang_id);
+			if($pre_save_object != $this) {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_used_machines_lang SET "
 						."used_machine_id = '". $this->used_machine_id ."', "
 						."clang_id = '". $this->clang_id ."', "
