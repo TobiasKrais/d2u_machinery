@@ -52,10 +52,11 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 				d2u_addon_backend_helper::update_url_scheme(\rex::getTablePrefix() ."d2u_machinery_url_used_machine_categories_sale", $settings['used_machine_article_id_sale']);		
 			}
 			\d2u_addon_backend_helper::generateUrlCache();
-			
-			// Update forward cache
-			rex_yrewrite_forward::init();
-			rex_yrewrite_forward::generatePathFile();
+
+			// Update forward cache - wait for packages included to prevent internal Server error
+			rex_extension::register('PACKAGES_INCLUDED', function ($params) {
+				rex_yrewrite_forward::generatePathFile();
+		    });
 		}
 		
 		// Install / update language replacements

@@ -752,7 +752,11 @@ class Category implements \D2U_Helper\ITranslationHelper{
 		}
 		
 		// Update URLs
-		\d2u_addon_backend_helper::generateUrlCache();
+		\d2u_addon_backend_helper::generateUrlCache('category_id');
+		if(rex_plugin::get("d2u_machinery", "used_machines")->isAvailable()) {
+			\d2u_addon_backend_helper::generateUrlCache('used_rent_category_id');
+			\d2u_addon_backend_helper::generateUrlCache('used_sale_category_id');
+		}
 		
 		return !$error;
 	}

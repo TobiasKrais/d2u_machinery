@@ -585,7 +585,12 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 		}
 
 		// Update URLs
-		\d2u_addon_backend_helper::generateUrlCache();
+		if($this->offer_type == "rent") {
+			\d2u_addon_backend_helper::generateUrlCache('used_rent_machine_id');
+		}
+		else {
+			\d2u_addon_backend_helper::generateUrlCache('used_sale_machine_id');
+		}
 		
 		return !$error;
 	}
