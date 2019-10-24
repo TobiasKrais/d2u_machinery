@@ -1,59 +1,60 @@
 <?php
-$sql = \rex_sql::factory();
-
 // Delete fields
-$sql->setQuery('ALTER TABLE ' . \rex::getTablePrefix() . 'd2u_machinery_machines '
-	. 'DROP airless_hose_connection, '
-	. 'DROP airless_hose_diameter, '
-	. 'DROP airless_hose_length, '
-	. 'DROP airless_nozzle_size, '
-	. 'DROP container_capacity, '
-	. 'DROP container_mixing_performance, '
-	. 'DROP container_waterconnect_pressure, '
-	. 'DROP container_waterconnect_diameter, '
-	. 'DROP container_weight_empty, '
-	. 'DROP cutters_cutting_depth, '
-	. 'DROP cutters_cutting_length, '
-	. 'DROP cutters_rod_length, '
-	. 'DROP floor_beam_power_on_concrete, '
-	. 'DROP floor_dust_extraction_connection, '
-	. 'DROP floor_feedrate, '
-	. 'DROP floor_filter_connection, '
-	. 'DROP floor_rotations, '
-	. 'DROP floor_working_pressure, '
-	. 'DROP floor_working_width, '
-	. 'DROP grinder_grinding_plate, '
-	. 'DROP grinder_grinding_wheel, '
-	. 'DROP grinder_rotational_frequency, '
-	. 'DROP grinder_sanding, '
-	. 'DROP grinder_vacuum_connection, '
-	. 'DROP operating_pressure, '
-	. 'DROP picture_delivery_set, '
-	. 'DROP pump_conveying_distance_fluid, '
-	. 'DROP pump_conveying_distance_mineral, '
-	. 'DROP pump_conveying_distance_pasty, '
-	. 'DROP pump_filling, '
-	. 'DROP pump_flow_volume_fluid, '
-	. 'DROP pump_flow_volume_mineral, '
-	. 'DROP pump_flow_volume_pasty, '
-	. 'DROP pump_grain_size, '
-	. 'DROP pump_material_container, '
-	. 'DROP pump_pressure_height_fluid, '
-	. 'DROP pump_pressure_height_mineral, '
-	. 'DROP pump_pressure_height_pasty, '
-	. 'DROP waste_water_capacity;'
-);
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_machines'))
+    ->removeColumn('airless_hose_connection')
+    ->removeColumn('airless_hose_diameter')
+    ->removeColumn('airless_hose_length')
+    ->removeColumn('airless_nozzle_size')
+    ->removeColumn('container_capacity')
+    ->removeColumn('container_mixing_performance')
+    ->removeColumn('container_waterconnect_pressure')
+    ->removeColumn('container_waterconnect_diameter')
+    ->removeColumn('container_weight_empty')
+    ->removeColumn('cutters_cutting_depth')
+    ->removeColumn('cutters_cutting_length')
+    ->removeColumn('cutters_rod_length')
+    ->removeColumn('floor_beam_power_on_concrete')
+    ->removeColumn('floor_dust_extraction_connection')
+    ->removeColumn('floor_feedrate')
+    ->removeColumn('floor_filter_connection')
+    ->removeColumn('floor_rotations')
+    ->removeColumn('floor_working_pressure')
+    ->removeColumn('floor_working_width')
+    ->removeColumn('grinder_grinding_plate')
+    ->removeColumn('grinder_grinding_wheel')
+    ->removeColumn('grinder_rotational_frequency')
+    ->removeColumn('grinder_sanding')
+    ->removeColumn('grinder_vacuum_connection')
+    ->removeColumn('operating_pressure')
+    ->removeColumn('picture_delivery_set')
+    ->removeColumn('pump_conveying_distance_fluid')
+    ->removeColumn('pump_conveying_distance_mineral')
+    ->removeColumn('pump_conveying_distance_pasty')
+    ->removeColumn('pump_filling')
+    ->removeColumn('pump_flow_volume_fluid')
+    ->removeColumn('pump_flow_volume_mineral')
+    ->removeColumn('pump_flow_volume_pasty')
+    ->removeColumn('pump_grain_size')
+    ->removeColumn('pump_material_container')
+    ->removeColumn('pump_pressure_height_fluid')
+    ->removeColumn('pump_pressure_height_mineral')
+    ->removeColumn('pump_pressure_height_pasty')
+    ->removeColumn('waste_water_capacity')
+    ->ensure();
 
-$sql->setQuery('ALTER TABLE ' . \rex::getTablePrefix() . 'd2u_machinery_machines_lang '
-	. 'DROP container_connection_port, '
-	. 'DROP container_conveying_wave, '
-	. 'DROP description_technical, '
-	. 'DROP delivery_set_basic, '
-	. 'DROP delivery_set_conversion, '
-	. 'DROP delivery_set_full;'
-);
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_machines_lang'))
+    ->removeColumn('container_connection_port')
+    ->removeColumn('container_conveying_wave')
+    ->removeColumn('description_technical')
+    ->removeColumn('delivery_set_basic')
+    ->removeColumn('delivery_set_conversion')
+    ->removeColumn('delivery_set_full')
+    ->ensure();
 
 // Delete Media Manager media types
+$sql = \rex_sql::factory();
 $sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."media_manager_type WHERE name LIKE 'd2u_machinery_construction_equipment%'");
 $sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."media_manager_type_effect WHERE createuser = 'd2u_machinery_construction_equipment'");
 

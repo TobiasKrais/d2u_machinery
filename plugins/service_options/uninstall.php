@@ -5,7 +5,10 @@ $sql = \rex_sql::factory();
 $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_service_options');
 $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_service_options_lang');
 
-$sql->setQuery('ALTER TABLE ' . \rex::getTablePrefix() . 'd2u_machinery_machines DROP service_option_ids;');
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_machines'))
+    ->removeColumn('service_option_ids')
+    ->ensure();
 
 // Delete language replacements
 if(!class_exists('d2u_machinery_service_options_lang_helper')) {

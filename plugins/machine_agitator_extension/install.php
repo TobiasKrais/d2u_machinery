@@ -15,23 +15,19 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machi
 	translation_needs_update varchar(7) collate utf8mb4_unicode_ci default NULL,
 	PRIMARY KEY (agitator_type_id, clang_id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
+
 // Alter machine table
-$sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_machines LIKE 'agitator_type_id';");
-if($sql->getRows() == 0) {
-	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_machines "
-		. "ADD agitator_type_id INT(10) NULL DEFAULT NULL;");
-}
-$sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_machines LIKE 'viscosity';");
-if($sql->getRows() == 0) {
-	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_machines "
-		. "ADD viscosity INT(10) NULL DEFAULT NULL;");
-}
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_machines'))
+    ->ensureColumn(new \rex_sql_column('agitator_type_id', 'INT(10)'))
+    ->ensureColumn(new \rex_sql_column('viscosity', 'INT(10)'))
+    ->ensure();
+
 // Alter category table
-$sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_categories LIKE 'show_agitators';");
-if($sql->getRows() == 0) {
-	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_categories "
-		. "ADD show_agitators VARCHAR(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
-}
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_categories'))
+    ->ensureColumn(new \rex_sql_column('show_agitators', 'VARCHAR(4)'))
+    ->ensure();
 
 // Create tables: agitators
 $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_agitators (

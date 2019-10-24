@@ -1,64 +1,59 @@
 <?php
-$sql = \rex_sql::factory();
 // Extend machine table
-$sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_machines LIKE 'airless_hose_connection';");
-if($sql->getRows() == 0) {
-	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_machines "
-		."ADD airless_hose_connection VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, "
-		."ADD airless_hose_diameter INT(5) NOT NULL DEFAULT 0, "
-		."ADD airless_hose_length INT(5) NOT NULL DEFAULT 0, "
-		."ADD airless_nozzle_size VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, "
-		."ADD container_capacity VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, "
-		."ADD container_mixing_performance VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, "
-		."ADD container_waterconnect_pressure INT(5) NOT NULL DEFAULT 0, "
-		."ADD container_waterconnect_diameter VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, "
-		."ADD container_weight_empty VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, "
-		."ADD cutters_cutting_depth VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, "
-		."ADD cutters_cutting_length VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, "
-		."ADD cutters_rod_length VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, "
-		."ADD floor_beam_power_on_concrete VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, "
-		."ADD floor_dust_extraction_connection VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, "
-		."ADD floor_feedrate VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT 0, "
-		."ADD floor_filter_connection VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, "
-		."ADD floor_rotations VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, "
-		."ADD floor_working_pressure VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, "
-		."ADD floor_working_width INT(5) NOT NULL DEFAULT 0, "
-		."ADD grinder_grinding_plate INT(5) NOT NULL DEFAULT 0, "
-		."ADD grinder_grinding_wheel INT(5) NOT NULL DEFAULT 0, "
-		."ADD grinder_rotational_frequency VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, "
-		."ADD grinder_sanding VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, "
-		."ADD grinder_vacuum_connection INT(5) NOT NULL DEFAULT 0, "
-		."ADD operating_pressure VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, "
-		."ADD pictures_delivery_set TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, "
-		."ADD pump_conveying_distance_fluid INT(5) NULL DEFAULT NULL, "
-		."ADD pump_conveying_distance_mineral INT(5) NULL DEFAULT NULL, "
-		."ADD pump_conveying_distance_pasty INT(5) NULL DEFAULT NULL, "
-		."ADD pump_filling VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, "
-		."ADD pump_flow_volume_fluid VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, "
-		."ADD pump_flow_volume_mineral VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, "
-		."ADD pump_flow_volume_pasty VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, "
-		."ADD pump_grain_size VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, "
-		."ADD pump_material_container VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, "
-		."ADD pump_pressure_height_fluid INT(5) NOT NULL DEFAULT 0, "
-		."ADD pump_pressure_height_mineral INT(5) NOT NULL DEFAULT 0, "
-		."ADD pump_pressure_height_pasty INT(5) NOT NULL DEFAULT 0, "
-		."ADD waste_water_capacity VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL "
-	);
-}
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_machines'))
+    ->ensureColumn(new \rex_sql_column('airless_hose_connection', 'VARCHAR(255)'))
+    ->ensureColumn(new \rex_sql_column('airless_hose_diameter', 'INT(5)'))
+    ->ensureColumn(new \rex_sql_column('airless_hose_length', 'INT(5)'))
+    ->ensureColumn(new \rex_sql_column('container_capacity', 'VARCHAR(50)'))
+    ->ensureColumn(new \rex_sql_column('container_mixing_performance', 'VARCHAR(255)'))
+    ->ensureColumn(new \rex_sql_column('container_waterconnect_pressure', 'INT(5)'))
+    ->ensureColumn(new \rex_sql_column('container_waterconnect_diameter', 'VARCHAR(255)'))
+    ->ensureColumn(new \rex_sql_column('container_weight_empty', 'VARCHAR(50)'))
+    ->ensureColumn(new \rex_sql_column('cutters_cutting_depth', 'VARCHAR(50)'))
+    ->ensureColumn(new \rex_sql_column('cutters_cutting_length', 'VARCHAR(50)'))
+    ->ensureColumn(new \rex_sql_column('cutters_rod_length', 'VARCHAR(50)'))
+    ->ensureColumn(new \rex_sql_column('floor_beam_power_on_concrete', 'VARCHAR(50)'))
+    ->ensureColumn(new \rex_sql_column('floor_dust_extraction_connection', 'VARCHAR(255)'))
+    ->ensureColumn(new \rex_sql_column('floor_feedrate', 'VARCHAR(50)'))
+    ->ensureColumn(new \rex_sql_column('floor_filter_connection', 'VARCHAR(255)'))
+    ->ensureColumn(new \rex_sql_column('floor_rotations', 'VARCHAR(50)'))
+    ->ensureColumn(new \rex_sql_column('floor_working_pressure', 'VARCHAR(50)'))
+    ->ensureColumn(new \rex_sql_column('floor_working_width', 'INT(5)'))
+    ->ensureColumn(new \rex_sql_column('grinder_grinding_plate', 'INT(5)'))
+    ->ensureColumn(new \rex_sql_column('grinder_grinding_wheel', 'INT(5)'))
+    ->ensureColumn(new \rex_sql_column('grinder_rotational_frequency', 'VARCHAR(50)'))
+    ->ensureColumn(new \rex_sql_column('grinder_sanding', 'VARCHAR(255)'))
+    ->ensureColumn(new \rex_sql_column('grinder_vacuum_connection', 'INT(5)'))
+    ->ensureColumn(new \rex_sql_column('operating_pressure', 'VARCHAR(50)'))
+    ->ensureColumn(new \rex_sql_column('pictures_delivery_set', 'TEXT'))
+    ->ensureColumn(new \rex_sql_column('pump_conveying_distance_fluid', 'INT(5)'))
+    ->ensureColumn(new \rex_sql_column('pump_conveying_distance_mineral', 'INT(5)'))
+    ->ensureColumn(new \rex_sql_column('pump_conveying_distance_pasty', 'INT(5)'))
+    ->ensureColumn(new \rex_sql_column('pump_filling', 'VARCHAR(255)'))
+    ->ensureColumn(new \rex_sql_column('pump_flow_volume_fluid', 'VARCHAR(50)'))
+    ->ensureColumn(new \rex_sql_column('pump_flow_volume_mineral', 'VARCHAR(50)'))
+    ->ensureColumn(new \rex_sql_column('pump_flow_volume_pasty', 'VARCHAR(50)'))
+    ->ensureColumn(new \rex_sql_column('pump_grain_size', 'VARCHAR(50)'))
+    ->ensureColumn(new \rex_sql_column('pump_material_container', 'VARCHAR(50)'))
+    ->ensureColumn(new \rex_sql_column('pump_pressure_height_fluid', 'INT(5)'))
+    ->ensureColumn(new \rex_sql_column('pump_pressure_height_mineral', 'INT(5)'))
+    ->ensureColumn(new \rex_sql_column('pump_pressure_height_pasty', 'INT(5)'))
+    ->ensureColumn(new \rex_sql_column('waste_water_capacity', 'VARCHAR(50)'))
+    ->ensure();
 
-$sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_machines_lang LIKE 'container_connection_port';");
-if($sql->getRows() == 0) {
-	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_machines_lang "
-		."ADD container_connection_port VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, "
-		."ADD container_conveying_wave VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, "
-		."ADD description_technical VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL AFTER `description`, "
-		."ADD delivery_set_basic TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, "
-		."ADD delivery_set_conversion TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, "
-		."ADD delivery_set_full TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL "
-	);
-}
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_machines_lang'))
+    ->ensureColumn(new \rex_sql_column('container_connection_port', 'VARCHAR(255)'))
+    ->ensureColumn(new \rex_sql_column('container_conveying_wave', 'VARCHAR(255)'))
+    ->ensureColumn(new \rex_sql_column('description_technical', 'VARCHAR(255)'))
+    ->ensureColumn(new \rex_sql_column('delivery_set_basic', 'TEXT'))
+    ->ensureColumn(new \rex_sql_column('delivery_set_conversion', 'TEXT'))
+    ->ensureColumn(new \rex_sql_column('delivery_set_full', 'TEXT'))
+    ->ensure();
 
 // Media Manager media types
+$sql = \rex_sql::factory();
 $sql->setQuery("SELECT * FROM ". \rex::getTablePrefix() ."media_manager_type WHERE name = 'd2u_machinery_construction_equipment_delivery_set_slider'");
 if($sql->getRows() == 0) {
 	$sql->setQuery("INSERT INTO ". \rex::getTablePrefix() ."media_manager_type (`status`, `name`, `description`) VALUES

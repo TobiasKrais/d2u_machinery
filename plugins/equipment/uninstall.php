@@ -7,7 +7,10 @@ $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery
 $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_equipment_groups');
 $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_equipment_groups_lang');
 
-$sql->setQuery('ALTER TABLE ' . \rex::getTablePrefix() . 'd2u_machinery_machines DROP equipment_ids;');
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_machines'))
+    ->removeColumn('equipment_ids')
+    ->ensure();
 
 // Delete language replacements
 if(!class_exists('d2u_machinery_equipment_lang_helper')) {

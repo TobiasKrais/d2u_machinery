@@ -7,8 +7,15 @@ $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery
 $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_agitators');
 $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_agitators_lang');
 
-$sql->setQuery('ALTER TABLE ' . \rex::getTablePrefix() . 'd2u_machinery_machines DROP agitator_type_id;');
-$sql->setQuery('ALTER TABLE ' . \rex::getTablePrefix() . 'd2u_machinery_machines DROP viscosity;');
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_machines'))
+    ->removeColumn('agitator_type_id')
+    ->removeColumn('viscosity')
+    ->ensure();
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_categories'))
+    ->removeColumn('show_agitators')
+    ->ensure();
 
 // Delete language replacements
 if(!class_exists('d2u_machinery_machine_agitator_extension_lang_helper')) {

@@ -32,31 +32,25 @@ if(class_exists("D2UModuleManager")) {
 	$d2u_module_manager->autoupdate();
 }
 
-// 1.0.1 Update database
+// Update database
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_machines'))
+    ->ensureColumn(new \rex_sql_column('priority', 'INT(10)'))
+    ->ensureColumn(new \rex_sql_column('videomanager_ids', 'TEXT'))
+    ->ensureColumn(new \rex_sql_column('pdfs', 'TEXT'))
+    ->ensure();
+
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_machines_lang'))
+    ->ensureColumn(new \rex_sql_column('lang_name', 'VARCHAR(255)'))
+    ->ensure();
+
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_categories'))
+    ->ensureColumn(new \rex_sql_column('videomanager_ids', 'TEXT'))
+    ->ensure();
+
 $sql = \rex_sql::factory();
-$sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_machines LIKE 'priority';");
-if($sql->getRows() == 0) {
-	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_machines "
-		. "ADD priority INT(10) NULL DEFAULT NULL AFTER machine_id;");
-}
-// 1.0.2 Update database
-$sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_machines_lang LIKE 'lang_name';");
-if($sql->getRows() == 0) {
-	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_machines_lang "
-		. "ADD lang_name varchar(255) collate utf8mb4_unicode_ci default NULL AFTER clang_id;");
-}
-$sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_categories LIKE 'video_ids';");
-if($sql->getRows() == 0) {
-	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_categories "
-		. "ADD video_ids varchar(255) collate utf8mb4_unicode_ci default NULL AFTER pic_usage;");
-}
-$sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_machines LIKE 'video_ids';");
-if($sql->getRows() == 0) {
-	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_machines "
-		. "ADD video_ids varchar(255) collate utf8mb4_unicode_ci default NULL AFTER operating_voltage_a;");
-}
-$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_machines_lang "
-		. "CHANGE `pdfs` `pdfs` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL AFTER `description`;");
 // 1.1.3 Update database
 $sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_categories LIKE 'videomanager_ids';");
 if($sql->getRows() > 0) {
@@ -68,18 +62,13 @@ if($sql->getRows() > 0) {
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_machines "
 		. "CHANGE videomanager_ids video_ids varchar(255) collate utf8mb4_unicode_ci default NULL;");
 }
-// 1.2 Update database
-$sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_machines LIKE 'internal_name';");
-if($sql->getRows() > 0) {
-	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_machines "
-		. "DROP internal_name;");
-}
-// 1.2.3 Update database
-$sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_machines LIKE 'engine_power_frequency_controlled';");
-if($sql->getRows() == 0) {
-	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_machines "
-		. "ADD engine_power_frequency_controlled VARCHAR(10) collate utf8mb4_unicode_ci default NULL AFTER engine_power;");
-}
+
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_machines'))
+    ->removeColumn('internal_name')
+    ->removeColumn('engine_power_frequency_controlled')
+    ->ensure();
+
 
 // 1.2.6
 $sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_machinery_machines` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");

@@ -1,13 +1,11 @@
 <?php
-$sql = \rex_sql::factory();
 // Extend machine table
-$sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_machines LIKE 'service_option_ids';");
-if($sql->getRows() == 0) {
-	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_machines "
-		."ADD service_option_ids VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL "
-	);
-}
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_machines'))
+    ->ensureColumn(new \rex_sql_column('service_option_ids', 'TEXT'))
+    ->ensure();
 
+$sql = \rex_sql::factory();
 $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_service_options (
 	service_option_id int(10) unsigned NOT NULL auto_increment,
 	online_status varchar(10) collate utf8mb4_unicode_ci default 'online',

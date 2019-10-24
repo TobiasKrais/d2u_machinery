@@ -17,7 +17,10 @@ if(\rex_addon::get('url')->isAvailable()) {
 $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_industry_sectors');
 $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_industry_sectors_lang');
 
-$sql->setQuery('ALTER TABLE ' . \rex::getTablePrefix() . 'd2u_machinery_machines DROP industry_sector_ids;');
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_machines'))
+    ->removeColumn('industry_sector_ids')
+    ->ensure();
 
 // Delete language replacements
 if(!class_exists('d2u_machinery_industry_sectors_lang_helper')) {

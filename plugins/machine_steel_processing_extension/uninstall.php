@@ -2,65 +2,68 @@
 $sql = \rex_sql::factory();
 
 // Delete columns in machine tables
-$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_machines "
-		. "DROP process_ids, "
-		. "DROP procedure_ids, "
-		. "DROP material_ids, "
-		. "DROP tool_ids, "
-		. "DROP automation_supply_single_stroke, "
-		. "DROP automation_supply_multi_stroke, "
-		. "DROP automation_feedrate, "
-		. "DROP automation_rush_leader_flyback, "
-		. "DROP automation_automationgrade_ids, "
-		. "DROP automation_supply_ids, "
-		. "DROP workspace, "
-		. "DROP workspace_square, "
-		. "DROP workspace_flat, "
-		. "DROP workspace_plate, "
-		. "DROP workspace_profile, "
-		. "DROP workspace_angle_steel, "
-		. "DROP workspace_round, "
-		. "DROP workspace_min, "
-		. "DROP sheet_width, "
-		. "DROP sheet_length, "
-		. "DROP sheet_thickness, "
-		. "DROP tool_changer_locations, "
-		. "DROP drilling_unit_vertical, "
-		. "DROP drilling_unit_horizontal, "
-		. "DROP drilling_diameter, "
-		. "DROP drilling_tools_axis, "
-		. "DROP drilling_axis_drive_power, "
-		. "DROP drilling_rpm_speed, "
-		. "DROP saw_blade, "
-		. "DROP saw_band, "
-		. "DROP saw_band_tilt, "
-		. "DROP saw_cutting_speed, "
-		. "DROP saw_miter, "
-		. "DROP bevel_angle, "
-		. "DROP punching_diameter, "
-		. "DROP punching_tools, "
-		. "DROP shaving_unit_angle_steel_single_cut, "
-		. "DROP profile_area_ids, "
-		. "DROP carrier_width, "
-		. "DROP carrier_height, "
-		. "DROP carrier_weight, "
-		. "DROP flange_thickness, "
-		. "DROP web_thickness, "
-		. "DROP component_length, "
-		. "DROP component_weight, "
-		. "DROP welding_process_ids, "
-		. "DROP welding_thickness, "
-		. "DROP welding_wire_thickness, "
-		. "DROP beam_continuous_opening, "
-		. "DROP beam_turbines, "
-		. "DROP beam_turbine_power, "
-		. "DROP beam_color_guns"
-	);
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_machines'))
+    ->removeColumn('process_ids')
+    ->removeColumn('procedure_ids')
+    ->removeColumn('material_ids')
+    ->removeColumn('tool_ids')
+    ->removeColumn('automation_supply_single_stroke')
+    ->removeColumn('automation_supply_multi_stroke')
+    ->removeColumn('automation_feedrate')
+    ->removeColumn('automation_rush_leader_flyback')
+    ->removeColumn('automation_automationgrade_ids')
+    ->removeColumn('automation_supply_ids')
+    ->removeColumn('workspace')
+    ->removeColumn('workspace_square')
+    ->removeColumn('workspace_flat')
+    ->removeColumn('workspace_plate')
+    ->removeColumn('workspace_profile')
+    ->removeColumn('workspace_angle_steel')
+    ->removeColumn('workspace_round')
+    ->removeColumn('workspace_min')
+    ->removeColumn('sheet_width')
+    ->removeColumn('sheet_length')
+    ->removeColumn('sheet_thickness')
+    ->removeColumn('tool_changer_locations')
+    ->removeColumn('drilling_unit_vertical')
+    ->removeColumn('drilling_unit_horizontal')
+    ->removeColumn('drilling_diameter')
+    ->removeColumn('drilling_tools_axis')
+    ->removeColumn('drilling_axis_drive_power')
+    ->removeColumn('drilling_rpm_speed')
+    ->removeColumn('saw_blade')
+    ->removeColumn('saw_band')
+    ->removeColumn('saw_band_tilt')
+    ->removeColumn('saw_cutting_speed')
+    ->removeColumn('saw_miter')
+    ->removeColumn('bevel_angle')
+    ->removeColumn('punching_diameter')
+    ->removeColumn('punching_tools')
+    ->removeColumn('shaving_unit_angle_steel_single_cut')
+    ->removeColumn('profile_area_ids')
+    ->removeColumn('carrier_width')
+    ->removeColumn('carrier_height')
+    ->removeColumn('carrier_weight')
+    ->removeColumn('flange_thickness')
+    ->removeColumn('web_thickness')
+    ->removeColumn('component_length')
+    ->removeColumn('component_weight')
+    ->removeColumn('welding_process_ids')
+    ->removeColumn('welding_thickness')
+    ->removeColumn('welding_wire_thickness')
+    ->removeColumn('beam_continuous_opening')
+    ->removeColumn('beam_turbines')
+    ->removeColumn('beam_turbine_power')
+    ->removeColumn('beam_color_guns')
+    ->ensure();
 
 // Delete columns in catgory tables
-$sql->setQuery('ALTER TABLE ' . \rex::getTablePrefix() . 'd2u_machinery_categories_lang
-	DROP steel_processing_saw_cutting_range_title,
-	DROP steel_processing_saw_cutting_range_file;');
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_categories_lang'))
+    ->removeColumn('steel_processing_saw_cutting_range_title')
+    ->removeColumn('steel_processing_saw_cutting_range_file')
+    ->ensure();
 
 // Delete tables
 $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_steel_automation');
