@@ -7,11 +7,13 @@ $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery
 $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_export_provider');
 
 // Delete category extensions
-$sql->setQuery('ALTER TABLE ' . \rex::getTablePrefix() . 'd2u_machinery_categories
-	DROP export_machinerypark_category_id,
-	DROP export_europemachinery_category_id,
-	DROP export_europemachinery_category_name,
-	DROP export_mascus_category_name;');
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_categories'))
+    ->removeColumn('export_machinerypark_category_id')
+    ->removeColumn('export_europemachinery_category_id')
+    ->removeColumn('export_europemachinery_category_name')
+    ->removeColumn('export_mascus_category_name')
+    ->ensure();
 
 // Delete Autoexport if activated
 if(!class_exists('export_backend_helper')) {
