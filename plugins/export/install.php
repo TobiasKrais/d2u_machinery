@@ -39,26 +39,13 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machi
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
 
 // Extend category table
-$sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_categories LIKE 'export_machinerypark_category_id';");
-if($sql->getRows() == 0) {
-	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_categories "
-		. "ADD export_machinerypark_category_id INT(10) NULL DEFAULT NULL AFTER pic_usage;");
-}
-$sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_categories LIKE 'export_europemachinery_category_id';");
-if($sql->getRows() == 0) {
-	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_categories "
-		. "ADD export_europemachinery_category_id INT(10) NULL DEFAULT NULL AFTER export_machinerypark_category_id;");
-}
-$sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_categories LIKE 'export_europemachinery_category_name';");
-if($sql->getRows() == 0) {
-	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_categories "
-		. "ADD export_europemachinery_category_name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL AFTER export_europemachinery_category_id;");
-}
-$sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_categories LIKE 'export_mascus_category_name';");
-if($sql->getRows() == 0) {
-	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_categories "
-		. "ADD export_mascus_category_name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL AFTER export_europemachinery_category_name;");
-}
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_categories'))
+    ->ensureColumn(new \rex_sql_column('export_machinerypark_category_id', 'INT(10)'))
+    ->ensureColumn(new \rex_sql_column('export_europemachinery_category_id', 'INT(10)'))
+    ->ensureColumn(new \rex_sql_column('export_europemachinery_category_name', 'VARCHAR(255)'))
+    ->ensureColumn(new \rex_sql_column('export_mascus_category_name', 'VARCHAR(255)'))
+    ->ensure();
 
 // Insert frontend translations
 d2u_machinery_export_lang_helper::factory()->install();
