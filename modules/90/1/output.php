@@ -169,7 +169,7 @@ $d2u_machinery = rex_addon::get("d2u_machinery");
 $url_namespace = d2u_addon_frontend_helper::getUrlNamespace();
 $url_id = d2u_addon_frontend_helper::getUrlId();
 
-if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || $url_namespace === "category_id" && UrlGenerator::getId()) {
+if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || $url_namespace === "category_id" && $url_id > 0) {
 	$category_id = filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT);
 	if(\rex_addon::get("url")->isAvailable() && $url_id > 0) {
 		$category_id = $url_id;
