@@ -215,7 +215,7 @@ class d2u_machinery_used_machines_lang_helper extends d2u_machinery_lang_helper 
 		'd2u_machinery_used_machines_details' => 'Детали',
 		'd2u_machinery_used_machines_external_url' => 'Детали',
 		'd2u_machinery_used_machines_infos' => 'Для получения дополнительной информации',
-		'd2u_machinery_used_machines_link_machine' => 'Дополнительная информация о типе машины',
+		'd2u_machinery_used_machines_link_machine' => 'Дополнительная информация о станке',
 		'd2u_machinery_used_machines_location' => 'место',
 		'd2u_machinery_used_machines_no_machines' => 'На данный момент нет доступных подержанных машин.',
 		'd2u_machinery_used_machines_offers_rent' => 'жилье',

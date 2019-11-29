@@ -70,7 +70,7 @@ class d2u_machinery_industry_sectors_lang_helper extends d2u_machinery_lang_help
 	 * value the replacement. 
 	 */
 	protected $replacements_russian = [
-		'd2u_machinery_industry_sectors' => 'секторов'
+		'd2u_machinery_industry_sectors' => 'Отрасли'
 	];
 
 	/**
