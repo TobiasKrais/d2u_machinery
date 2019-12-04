@@ -10,8 +10,8 @@ page:
     subpages:
         machine: { title: 'translate:d2u_machinery_meta_machines', icon: rex-icon rex-icon-module, perm: d2u_machinery[machine] }
         category: { title: 'translate:d2u_helper_categories', icon: rex-icon rex-icon-open-category, perm: d2u_machinery[category] }
-        settings: { title: 'translate:d2u_helper_settings', icon: rex-icon rex-icon-system, perm: d2u_machinery[settings] }
-        setup: { title: 'translate:d2u_helper_setup', icon: rex-icon rex-icon-install, perm: d2u_machinery[settings] }
+        settings: { title: 'translate:d2u_helper_settings', icon: rex-icon rex-icon-system, itemclass: pull-right, perm: d2u_machinery[settings] }
+        setup: { title: 'translate:d2u_helper_setup', icon: rex-icon rex-icon-install, itemclass: pull-right, perm: d2u_machinery[settings] }
 
 requires:
     packages:
