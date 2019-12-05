@@ -220,7 +220,7 @@ if ($func == 'edit' || $func == 'add') {
 }
 
 if ($func == '') {
-	$query = 'SELECT features.feature_id, title, priority '
+	$query = 'SELECT features.feature_id, name, title, priority '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_machinery_features AS features '
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_features_lang AS lang '
 			. 'ON features.feature_id = lang.feature_id AND lang.clang_id = '. rex_config::get("d2u_helper", "default_lang") .' '
@@ -239,6 +239,9 @@ if ($func == '') {
 
     $list->setColumnLabel('feature_id', rex_i18n::msg('id'));
     $list->setColumnLayout('feature_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
+
+    $list->setColumnLabel('name', rex_i18n::msg('d2u_helper_name'));
+    $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###feature_id###']);
 
     $list->setColumnLabel('title', rex_i18n::msg('d2u_machinery_features_title'));
     $list->setColumnParams('title', ['func' => 'edit', 'entry_id' => '###feature_id###']);
