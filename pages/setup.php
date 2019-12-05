@@ -37,11 +37,11 @@ $d2u_module_manager->showManagerList();
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_machinery" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
-<p>1.3.1-DEV:</p>
+<p>1.3.1:</p>
 <ul>
 	<li>Features Plugin: ab sofort werden Name und Überschrift in der Übersichtsliste angezeigt.</li>
 	<li>Backend: Einstellungen und Setup Tabs rechts eingeordnet um sie vom Inhalt besser zu unterscheiden.</li>
-	<li>Bugfix: das Löschen eines Bildes im Medienpool wurde unter Umständen mit der Begründung verhindet, dass das Bild in Benutzung sei, obwohl das nicht der Fall war.</li>
+	<li>Bugfix: das Löschen eines Bildes im Medienpool wurde unter Umständen mit der Begründung verhindert, dass das Bild in Benutzung sei, obwohl das nicht der Fall war.</li>
 	<li>Kontaktformular funktioniert nun auch wenn über Office 365 versendet wird.</li>
 	<li>Ein paar Warnungen entfernt.</li>
 	<li>URL 2.x Anpassungen können jetzt auch mit urlencoded() URLs umgehen, für den Fall, dass das YRewrite Schema aus dem D2U Helper Addon verwendet wird.</li>
