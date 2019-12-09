@@ -45,7 +45,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machi
     ->ensureColumn(new \rex_sql_column('export_europemachinery_category_id', 'INT(10)'))
     ->ensureColumn(new \rex_sql_column('export_europemachinery_category_name', 'VARCHAR(255)'))
     ->ensureColumn(new \rex_sql_column('export_mascus_category_name', 'VARCHAR(255)'))
-    ->ensure();
+    ->alter();
 
 // Insert frontend translations
 d2u_machinery_export_lang_helper::factory()->install();

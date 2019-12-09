@@ -32,24 +32,6 @@ if(class_exists("D2UModuleManager")) {
 	$d2u_module_manager->autoupdate();
 }
 
-// Update database
-\rex_sql_table::get(
-    \rex::getTable('d2u_machinery_machines'))
-    ->ensureColumn(new \rex_sql_column('priority', 'INT(10)'))
-    ->ensureColumn(new \rex_sql_column('videomanager_ids', 'TEXT'))
-    ->ensureColumn(new \rex_sql_column('pdfs', 'TEXT'))
-    ->ensure();
-
-\rex_sql_table::get(
-    \rex::getTable('d2u_machinery_machines_lang'))
-    ->ensureColumn(new \rex_sql_column('lang_name', 'VARCHAR(255)'))
-    ->ensure();
-
-\rex_sql_table::get(
-    \rex::getTable('d2u_machinery_categories'))
-    ->ensureColumn(new \rex_sql_column('videomanager_ids', 'TEXT'))
-    ->ensure();
-
 $sql = \rex_sql::factory();
 // 1.1.3 Update database
 $sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_categories LIKE 'videomanager_ids';");
@@ -63,10 +45,28 @@ if($sql->getRows() > 0) {
 		. "CHANGE videomanager_ids video_ids varchar(255) collate utf8mb4_unicode_ci default NULL;");
 }
 
+// Update database
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_machines'))
+    ->ensureColumn(new \rex_sql_column('priority', 'INT(10)', TRUE))
+    ->ensureColumn(new \rex_sql_column('video_ids', 'TEXT', TRUE))
+    ->ensureColumn(new \rex_sql_column('engine_power_frequency_controlled', 'VARCHAR(10)', TRUE))
+    ->alter();
+
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_machines_lang'))
+    ->ensureColumn(new \rex_sql_column('lang_name', 'VARCHAR(255)', TRUE))
+    ->ensureColumn(new \rex_sql_column('pdfs', 'TEXT', TRUE))
+    ->alter();
+
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_categories'))
+    ->ensureColumn(new \rex_sql_column('video_ids', 'TEXT', TRUE))
+    ->alter();
+
 \rex_sql_table::get(
     \rex::getTable('d2u_machinery_machines'))
     ->removeColumn('internal_name')
-    ->removeColumn('engine_power_frequency_controlled')
     ->ensure();
 
 

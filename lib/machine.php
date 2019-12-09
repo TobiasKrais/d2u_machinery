@@ -502,9 +502,9 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	var $container_waterconnect_diameter = "";
 
 	/**
-	 * @var string Containers: empty container weight (kg)
+	 * @var int Containers: empty container weight (kg)
 	 */
-	var $container_weight_empty = "";
+	var $container_weight_empty = 0;
 
 	/**
 	 * @var string Cutting devices: maximum cutting depth (cm)
@@ -512,9 +512,9 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	var $cutters_cutting_depth = "";
 
 	/**
-	 * @var string Cutting devices: maximum cutting length (cm)
+	 * @var int Cutting devices: maximum cutting length (cm)
 	 */
-	var $cutters_cutting_length = "";
+	var $cutters_cutting_length = 0;
 
 	/**
 	 * @var string Cutting devices: rod length (mm)
@@ -522,14 +522,14 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	var $cutters_rod_length = "";
 
 	/**
-	 * @var string Tillage machines: beam power on concrete (m²/h)
+	 * @var int Tillage machines: beam power on concrete (m²/h)
 	 */
-	var $floor_beam_power_on_concrete = "";
+	var $floor_beam_power_on_concrete = 0;
 
 	/**
-	 * @var string Tillage machines: dust extraction connection size (mm)
+	 * @var int Tillage machines: dust extraction connection size (mm)
 	 */
-	var $floor_dust_extraction_connection = "";
+	var $floor_dust_extraction_connection = 0;
 
 	/**
 	 * @var string Tillage machines: feedrate (m/min)
@@ -587,39 +587,24 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	var $operating_pressure = "";
 
 	/**
-	 * @var int Pumps: ca. conveying distance for fluid materials (m)
+	 * @var string Pumps: max. flow volume (l/min)
 	 */
-	var $pump_conveying_distance_fluid = 0;
+	var $pump_flow_volume = "";
 
 	/**
-	 * @var int Pumps: ca. conveying distance for mineral materials (m)
+	 * @var int Pumps: max. conveying distance (m)
 	 */
-	var $pump_conveying_distance_mineral = 0;
+	var $pump_conveying_distance = 0;
 
 	/**
-	 * @var int Pumps: ca. conveying distance for pasty materials (m)
+	 * @var int Pumps: max. pressure height (m)
 	 */
-	var $pump_conveying_distance_pasty = 0;
+	var $pump_pressure_height = 0;
 
 	/**
-	 * @var string Pumps: filling (mm)
+	 * @var int Pumps: filling (mm)
 	 */
-	var $pump_filling = "";
-
-	/**
-	 * @var string Pumps: flow volume for fluid materials (l/min)
-	 */
-	var $pump_flow_volume_fluid = "";
-
-	/**
-	 * @var string Pumps: flow volume for mineral materials (l/min)
-	 */
-	var $pump_flow_volume_mineral = "";
-
-	/**
-	 * @var string Pumps: flow volume for pasty materials (l/min)
-	 */
-	var $pump_flow_volume_pasty = "";
+	var $pump_filling = 0;
 
 	/**
 	 * @var string Pumps: maximum grain size (mm)
@@ -632,24 +617,9 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	var $pump_material_container = "";
 
 	/**
-	 * @var int Pumps: pressure height for fluid materials (m)
+	 * @var int Waste water containers: capacity (l)
 	 */
-	var $pump_pressure_height_fluid = 0;
-
-	/**
-	 * @var int Pumps: pressure height for mineral materials (m)
-	 */
-	var $pump_pressure_height_mineral = 0;
-
-	/**
-	 * @var int Pumps: pressure height for pasty materials (m)
-	 */
-	var $pump_pressure_height_pasty = 0;
-
-	/**
-	 * @var string Waste water containers: capacity (l)
-	 */
-	var $waste_water_capacity = "";
+	var $waste_water_capacity = 0;
 
 	/**
 	 * @var string Description shown in technical data overview
@@ -780,18 +750,12 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 				$this->grinder_sanding = $result->getValue("grinder_sanding");
 				$this->grinder_vacuum_connection = $result->getValue("grinder_vacuum_connection");
 				$this->operating_pressure = $result->getValue("operating_pressure");
-				$this->pump_conveying_distance_fluid = $result->getValue("pump_conveying_distance_fluid");
-				$this->pump_conveying_distance_mineral = $result->getValue("pump_conveying_distance_mineral");
-				$this->pump_conveying_distance_pasty = $result->getValue("pump_conveying_distance_pasty");
+				$this->pump_conveying_distance = $result->getValue("pump_conveying_distance");
 				$this->pump_filling = $result->getValue("pump_filling");
-				$this->pump_flow_volume_fluid = $result->getValue("pump_flow_volume_fluid");
-				$this->pump_flow_volume_mineral = $result->getValue("pump_flow_volume_mineral");
-				$this->pump_flow_volume_pasty = $result->getValue("pump_flow_volume_pasty");
+				$this->pump_flow_volume = $result->getValue("pump_flow_volume");
 				$this->pump_grain_size = $result->getValue("pump_grain_size");
 				$this->pump_material_container = $result->getValue("pump_material_container");
-				$this->pump_pressure_height_fluid = $result->getValue("pump_pressure_height_fluid");
-				$this->pump_pressure_height_mineral = $result->getValue("pump_pressure_height_mineral");
-				$this->pump_pressure_height_pasty = $result->getValue("pump_pressure_height_pasty");
+				$this->pump_pressure_height = $result->getValue("pump_pressure_height");
 				$this->waste_water_capacity = $result->getValue("waste_water_capacity");
 				$this->container_connection_port = $result->getValue("container_connection_port");
 				$this->container_conveying_wave = $result->getValue("container_conveying_wave");
@@ -1174,7 +1138,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 		
 		if(rex_plugin::get("d2u_machinery", "machine_construction_equipment_extension")->isAvailable()) {
 			// Water capacity
-			if($this->waste_water_capacity != "") {
+			if($this->waste_water_capacity > 0) {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_construction_equipment_waste_water_capacity" . $tag_close,
 					"value" => $tag_open . "d2u_machinery_construction_equipment_max" . $tag_close .' '. $this->waste_water_capacity,
@@ -1192,7 +1156,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Empty weight
-			if($this->container_weight_empty != "") {
+			if($this->container_weight_empty > 0) {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_construction_equipment_container_weight_empty" . $tag_close,
 					"value" => $this->container_weight_empty,
@@ -1210,73 +1174,28 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Flow volume
-			if($this->pump_flow_volume_fluid != "") {
+			if($this->pump_flow_volume != "") {
 				$tech_data[] = [
-					"description" => $tag_open . "d2u_machinery_construction_equipment_pump_flow_volume_fluid" . $tag_close,
-					"value" => $tag_open . "d2u_machinery_construction_equipment_max" . $tag_close .' '. $this->pump_flow_volume_fluid,
-					"unit" => $tag_open . "d2u_machinery_unit_l_min" . $tag_close
-				];
-			}
-			
-			// Flow volume
-			if($this->pump_flow_volume_mineral != "") {
-				$tech_data[] = [
-					"description" => $tag_open . "d2u_machinery_construction_equipment_pump_flow_volume_mineral" . $tag_close,
-					"value" => $tag_open . "d2u_machinery_construction_equipment_max" . $tag_close .' '. $this->pump_flow_volume_mineral,
-					"unit" => $tag_open . "d2u_machinery_unit_l_min" . $tag_close
-				];
-			}
-			
-			// Flow volume
-			if($this->pump_flow_volume_pasty != "") {
-				$tech_data[] = [
-					"description" => $tag_open . "d2u_machinery_construction_equipment_pump_flow_volume_pasty" . $tag_close,
-					"value" => $tag_open . "d2u_machinery_construction_equipment_max" . $tag_close .' '. $this->pump_flow_volume_pasty,
+					"description" => $tag_open . "d2u_machinery_construction_equipment_pump_flow_volume" . $tag_close,
+					"value" => $tag_open . "d2u_machinery_construction_equipment_max" . $tag_close .' '. $this->pump_flow_volume,
 					"unit" => $tag_open . "d2u_machinery_unit_l_min" . $tag_close
 				];
 			}
 			
 			// Conveying distance
-			if($this->pump_conveying_distance_fluid > 0) {
+			if($this->pump_conveying_distance > 0) {
 				$tech_data[] = [
-					"description" => $tag_open . "d2u_machinery_construction_equipment_pump_conveying_distance_fluid" . $tag_close,
-					"value" => $tag_open . "d2u_machinery_construction_equipment_max" . $tag_close .' '. $this->pump_conveying_distance_fluid,
-					"unit" => $tag_open . "d2u_machinery_unit_m" . $tag_close
-				];
-			}
-			
-			// Conveying distance
-			if($this->pump_conveying_distance_mineral > 0) {
-				$tech_data[] = [
-					"description" => $tag_open . "d2u_machinery_construction_equipment_pump_conveying_distance_mineral" . $tag_close,
-					"value" => $tag_open . "d2u_machinery_construction_equipment_max" . $tag_close .' '. $this->pump_conveying_distance_mineral,
-					"unit" => $tag_open . "d2u_machinery_unit_m" . $tag_close
-				];
-			}
-			
-			// Conveying distance
-			if($this->pump_conveying_distance_pasty > 0) {
-				$tech_data[] = [
-					"description" => $tag_open . "d2u_machinery_construction_equipment_pump_conveying_distance_pasty" . $tag_close,
-					"value" => $tag_open . "d2u_machinery_construction_equipment_max" . $tag_close .' '. $this->pump_conveying_distance_pasty,
+					"description" => $tag_open . "d2u_machinery_construction_equipment_pump_conveying_distance" . $tag_close,
+					"value" => $tag_open . "d2u_machinery_construction_equipment_max" . $tag_close .' '. $this->pump_conveying_distance,
 					"unit" => $tag_open . "d2u_machinery_unit_m" . $tag_close
 				];
 			}
 			
 			// Pressure height
-			if($this->pump_pressure_height_fluid > 0) {
+			if($this->pump_pressure_height > 0) {
 				$tech_data[] = [
-					"description" => $tag_open . "d2u_machinery_construction_equipment_pump_pressure_height_fluid" . $tag_close,
-					"value" => $tag_open . "d2u_machinery_construction_equipment_max" . $tag_close .' '. $this->pump_pressure_height_fluid,
-					"unit" => $tag_open . "d2u_machinery_unit_m" . $tag_close
-				];
-			}
-			
-			// Pressure height
-			if($this->pump_pressure_height_mineral > 0) {
-				$tech_data[] = [
-					"description" => $tag_open . "d2u_machinery_construction_equipment_pump_pressure_height_mineral" . $tag_close,
-					"value" => $tag_open . "d2u_machinery_construction_equipment_max" . $tag_close .' '. $this->pump_pressure_height_mineral,
+					"description" => $tag_open . "d2u_machinery_construction_equipment_pump_pressure_height" . $tag_close,
+					"value" => $tag_open . "d2u_machinery_construction_equipment_max" . $tag_close .' '. $this->pump_pressure_height,
 					"unit" => $tag_open . "d2u_machinery_unit_m" . $tag_close
 				];
 			}
@@ -1309,7 +1228,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Filling
-			if($this->pump_filling != "") {
+			if($this->pump_filling > 0) {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_construction_equipment_pump_filling" . $tag_close,
 					"value" => $tag_open . "d2u_machinery_unit_ca" . $tag_close .' '. $this->pump_filling,
@@ -1390,7 +1309,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Cutting length
-			if($this->cutters_cutting_length != "") {
+			if($this->cutters_cutting_length > 0) {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_construction_equipment_cutters_cutting_length" . $tag_close,
 					"value" => $tag_open . "d2u_machinery_construction_equipment_max" . $tag_close .' '. $this->cutters_cutting_length,
@@ -1471,7 +1390,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Dust extraction connection
-			if($this->floor_dust_extraction_connection != "") {
+			if($this->floor_dust_extraction_connection > 0) {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_construction_equipment_floor_dust_extraction_connection" . $tag_close,
 					"value" => $this->floor_dust_extraction_connection,
@@ -1489,7 +1408,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Beam power on concrete
-			if($this->floor_beam_power_on_concrete != "") {
+			if($this->floor_beam_power_on_concrete > 0) {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_construction_equipment_floor_beam_power_on_concrete" . $tag_close,
 					"value" => $this->floor_beam_power_on_concrete,
@@ -2189,12 +2108,12 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 					.", container_mixing_performance = '". $this->container_mixing_performance ."' "
 					.", container_waterconnect_pressure = ". $this->container_waterconnect_pressure ." "
 					.", container_waterconnect_diameter = '". $this->container_waterconnect_diameter ."' "
-					.", container_weight_empty = '". $this->container_weight_empty ."' "
+					.", container_weight_empty = ". ($this->container_weight_empty > 0 ? $this->container_weight_empty : 0) ." "
 					.", cutters_cutting_depth = '". $this->cutters_cutting_depth ."' "
-					.", cutters_cutting_length = '". $this->cutters_cutting_length ."' "
+					.", cutters_cutting_length = ". ($this->cutters_cutting_length > 0 ? $this->cutters_cutting_length : 0) ." "
 					.", cutters_rod_length = '". $this->cutters_rod_length ."' "
-					.", floor_beam_power_on_concrete = '". $this->floor_beam_power_on_concrete ."' "
-					.", floor_dust_extraction_connection = '". $this->floor_dust_extraction_connection ."' "
+					.", floor_beam_power_on_concrete = ". ($this->floor_beam_power_on_concrete > 0 ? $this->floor_beam_power_on_concrete : 0) ." "
+					.", floor_dust_extraction_connection = ". ($this->floor_dust_extraction_connection > 0 ? $this->floor_dust_extraction_connection : 0) ." "
 					.", floor_feedrate = '". $this->floor_feedrate ."' "
 					.", floor_filter_connection = '". $this->floor_filter_connection ."' "
 					.", floor_rotations = '". $this->floor_rotations ."' "
@@ -2207,19 +2126,13 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 					.", grinder_vacuum_connection = ". $this->grinder_vacuum_connection ." "
 					.", operating_pressure = '". $this->operating_pressure ."' "
 					.", pictures_delivery_set = '". implode(",", $this->pictures_delivery_set) ."' "
-					.", pump_conveying_distance_fluid = ". ($this->pump_conveying_distance_fluid > 0 ? $this->pump_conveying_distance_fluid : 0) ." "
-					.", pump_conveying_distance_mineral = ". ($this->pump_conveying_distance_mineral > 0 ? $this->pump_conveying_distance_mineral : 0) ." "
-					.", pump_conveying_distance_pasty = ". ($this->pump_conveying_distance_pasty > 0 ? $this->pump_conveying_distance_pasty : 0) ." "
-					.", pump_filling = '". $this->pump_filling ."' "
-					.", pump_flow_volume_fluid = '". $this->pump_flow_volume_fluid ."' "
-					.", pump_flow_volume_mineral = '". $this->pump_flow_volume_mineral ."' "
-					.", pump_flow_volume_pasty = '". $this->pump_flow_volume_pasty ."' "
+					.", pump_conveying_distance = ". ($this->pump_conveying_distance > 0 ? $this->pump_conveying_distance : 0) ." "
+					.", pump_filling = ". ($this->pump_filling > 0 ? $this->pump_filling : 0) ." "
+					.", pump_flow_volume = '". $this->pump_flow_volume ."' "
 					.", pump_grain_size = '". $this->pump_grain_size ."' "
 					.", pump_material_container = '". $this->pump_material_container ."' "
-					.", pump_pressure_height_fluid = ". ($this->pump_pressure_height_fluid > 0 ? $this->pump_pressure_height_fluid : 0) ." "
-					.", pump_pressure_height_mineral = ". ($this->pump_pressure_height_mineral > 0 ? $this->pump_pressure_height_mineral : 0) ." "
-					.", pump_pressure_height_pasty = ". ($this->pump_pressure_height_pasty > 0 ? $this->pump_pressure_height_pasty : 0) ." "
-					.", waste_water_capacity = '". $this->waste_water_capacity ."' ";
+					.", pump_pressure_height = ". ($this->pump_pressure_height > 0 ? $this->pump_pressure_height : 0) ." "
+					.", waste_water_capacity = ". ($this->waste_water_capacity > 0 ? $this->waste_water_capacity : 0) ." ";
 			}
 			if(rex_plugin::get("d2u_machinery", "service_options")->isAvailable()) {
 				$query .= ", service_option_ids = '|". implode("|", $this->service_option_ids) ."|' ";

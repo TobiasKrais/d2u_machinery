@@ -20,7 +20,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machi
 \rex_sql_table::get(
     \rex::getTable('d2u_machinery_machines'))
     ->ensureColumn(new \rex_sql_column('usage_area_ids', 'TEXT'))
-    ->ensure();
+    ->alter();
 
 // Insert frontend translations
 if(class_exists('d2u_machinery_machine_usage_area_extension_lang_helper')) {

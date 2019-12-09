@@ -166,14 +166,14 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machi
     ->ensureColumn(new \rex_sql_column('beam_turbines', 'INT(3)'))
     ->ensureColumn(new \rex_sql_column('beam_turbine_power', 'VARCHAR(255)'))
     ->ensureColumn(new \rex_sql_column('beam_color_guns', 'VARCHAR(255)'))
-    ->ensure();
+    ->alter();
 
 // Extend category table
 \rex_sql_table::get(
     \rex::getTable('d2u_machinery_categories_lang'))
     ->ensureColumn(new \rex_sql_column('steel_processing_saw_cutting_range_file', 'VARCHAR(255)'))
     ->ensureColumn(new \rex_sql_column('steel_processing_saw_cutting_range_title', 'VARCHAR(255)'))
-    ->ensure();
+    ->alter();
 
 // Insert frontend translations
 if(class_exists('d2u_machinery_machine_steel_processing_extension_lang_helper')) {

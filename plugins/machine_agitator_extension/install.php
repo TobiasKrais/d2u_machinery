@@ -21,13 +21,13 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machi
     \rex::getTable('d2u_machinery_machines'))
     ->ensureColumn(new \rex_sql_column('agitator_type_id', 'INT(10)'))
     ->ensureColumn(new \rex_sql_column('viscosity', 'INT(10)'))
-    ->ensure();
+    ->alter();
 
 // Alter category table
 \rex_sql_table::get(
     \rex::getTable('d2u_machinery_categories'))
     ->ensureColumn(new \rex_sql_column('show_agitators', 'VARCHAR(4)'))
-    ->ensure();
+    ->alter();
 
 // Create tables: agitators
 $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_agitators (

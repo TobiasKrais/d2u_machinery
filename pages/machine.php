@@ -70,12 +70,12 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 				$machine->container_mixing_performance = $form['container_mixing_performance'];
 				$machine->container_waterconnect_pressure = $form['container_waterconnect_pressure'] == '' ? 0 : $form['container_waterconnect_pressure'];
 				$machine->container_waterconnect_diameter = $form['container_waterconnect_diameter'];
-				$machine->container_weight_empty = $form['container_weight_empty'];
+				$machine->container_weight_empty = $form['container_weight_empty'] == '' ? 0 : $form['container_weight_empty'];
 				$machine->cutters_cutting_depth = $form['cutters_cutting_depth'];
-				$machine->cutters_cutting_length = $form['cutters_cutting_length'];
+				$machine->cutters_cutting_length = $form['cutters_cutting_length'] == '' ? 0 : $form['cutters_cutting_length'];
 				$machine->cutters_rod_length = $form['cutters_rod_length'];
-				$machine->floor_beam_power_on_concrete = $form['floor_beam_power_on_concrete'];
-				$machine->floor_dust_extraction_connection = $form['floor_dust_extraction_connection'];
+				$machine->floor_beam_power_on_concrete = $form['floor_beam_power_on_concrete'] == '' ? 0 : $form['floor_beam_power_on_concrete'];
+				$machine->floor_dust_extraction_connection = $form['floor_dust_extraction_connection'] == '' ? 0 : $form['floor_dust_extraction_connection'];
 				$machine->floor_feedrate = $form['floor_feedrate'];
 				$machine->floor_filter_connection = $form['floor_filter_connection'];
 				$machine->floor_rotations = $form['floor_rotations'];
@@ -88,19 +88,13 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 				$machine->grinder_vacuum_connection = $form['grinder_vacuum_connection'] == '' ? 0 : $form['grinder_vacuum_connection'];
 				$machine->operating_pressure = $form['operating_pressure'];
 				$machine->pictures_delivery_set = preg_grep('/^\s*$/s', explode(",", $input_media_list[2]), PREG_GREP_INVERT);
-				$machine->pump_conveying_distance_fluid = $form['pump_conveying_distance_fluid'] == '' ? 0 : $form['pump_conveying_distance_fluid'];
-				$machine->pump_conveying_distance_mineral = $form['pump_conveying_distance_mineral'] == '' ? 0 : $form['pump_conveying_distance_mineral'];
-				$machine->pump_conveying_distance_pasty = $form['pump_conveying_distance_pasty'] == '' ? 0 : $form['pump_conveying_distance_pasty'];
-				$machine->pump_filling = $form['pump_filling'];
-				$machine->pump_flow_volume_fluid = $form['pump_flow_volume_fluid'];
-				$machine->pump_flow_volume_mineral = $form['pump_flow_volume_mineral'];
-				$machine->pump_flow_volume_pasty = $form['pump_flow_volume_pasty'];
+				$machine->pump_conveying_distance = $form['pump_conveying_distance'] == '' ? 0 : $form['pump_conveying_distance'];
+				$machine->pump_filling = $form['pump_filling'] == '' ? 0 : $form['pump_filling'];
+				$machine->pump_flow_volume = $form['pump_flow_volume'];
 				$machine->pump_grain_size = $form['pump_grain_size'];
 				$machine->pump_material_container = $form['pump_material_container'];
-				$machine->pump_pressure_height_fluid = $form['pump_pressure_height_fluid'] == '' ? 0 : $form['pump_pressure_height_fluid'];
-				$machine->pump_pressure_height_mineral = $form['pump_pressure_height_mineral'] == '' ? 0 : $form['pump_pressure_height_mineral'];
-				$machine->pump_pressure_height_pasty = $form['pump_pressure_height_pasty'] == '' ? 0 : $form['pump_pressure_height_pasty'];
-				$machine->waste_water_capacity = $form['waste_water_capacity'];
+				$machine->pump_pressure_height = $form['pump_pressure_height'] == '' ? 0 : $form['pump_pressure_height'];
+				$machine->waste_water_capacity = $form['waste_water_capacity'] == '' ? 0 : $form['waste_water_capacity'];
 			}
 			if(rex_plugin::get("d2u_machinery", "service_options")->isAvailable()) {
 				$machine->service_option_ids = isset($form['service_option_ids']) ? $form['service_option_ids'] : [];
@@ -449,7 +443,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_container_mixing_performance', 'form[container_mixing_performance]', $machine->container_mixing_performance, FALSE, $readonly, "text");
 						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_container_waterconnect_pressure', 'form[container_waterconnect_pressure]', $machine->container_waterconnect_pressure, FALSE, $readonly, "number");
 						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_container_waterconnect_diameter', 'form[container_waterconnect_diameter]', $machine->container_waterconnect_diameter, FALSE, $readonly, "text");
-						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_container_weight_empty', 'form[container_weight_empty]', $machine->container_weight_empty, FALSE, $readonly, "text");
+						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_container_weight_empty', 'form[container_weight_empty]', $machine->container_weight_empty, FALSE, $readonly, "number");
 						print '</div>';
 						print '</fieldset>';
 	
@@ -457,7 +451,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						print '<legend><small><i class="rex-icon fa-cut"></i></small> '. rex_i18n::msg('d2u_machinery_construction_equipment') .' - '. rex_i18n::msg('d2u_machinery_construction_equipment_cutters') .'</legend>';
 						print '<div class="panel-body-wrapper slide">';
 						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_cutters_cutting_depth', 'form[cutters_cutting_depth]', $machine->cutters_cutting_depth, FALSE, $readonly, "text");
-						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_cutters_cutting_length', 'form[cutters_cutting_length]', $machine->cutters_cutting_length, FALSE, $readonly, "text");
+						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_cutters_cutting_length', 'form[cutters_cutting_length]', $machine->cutters_cutting_length, FALSE, $readonly, "number");
 						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_cutters_rod_length', 'form[cutters_rod_length]', $machine->cutters_rod_length, FALSE, $readonly, "text");
 						print '</div>';
 						print '</fieldset>';
@@ -465,8 +459,8 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						print '<fieldset>';
 						print '<legend><small><i class="rex-icon fa-window-minimize"></i></small> '. rex_i18n::msg('d2u_machinery_construction_equipment') .' - '. rex_i18n::msg('d2u_machinery_construction_equipment_floor') .'</legend>';
 						print '<div class="panel-body-wrapper slide">';
-						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_floor_beam_power_on_concrete', 'form[floor_beam_power_on_concrete]', $machine->floor_beam_power_on_concrete, FALSE, $readonly, "text");
-						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_floor_dust_extraction_connection', 'form[floor_dust_extraction_connection]', $machine->floor_dust_extraction_connection, FALSE, $readonly, "text");
+						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_floor_beam_power_on_concrete', 'form[floor_beam_power_on_concrete]', $machine->floor_beam_power_on_concrete, FALSE, $readonly, "number");
+						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_floor_dust_extraction_connection', 'form[floor_dust_extraction_connection]', $machine->floor_dust_extraction_connection, FALSE, $readonly, "number");
 						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_floor_feedrate', 'form[floor_feedrate]', $machine->floor_feedrate, FALSE, $readonly, "text");
 						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_floor_filter_connection', 'form[floor_filter_connection]', $machine->floor_filter_connection, FALSE, $readonly, "text");
 						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_floor_rotations', 'form[floor_rotations]', $machine->floor_rotations, FALSE, $readonly, "text");
@@ -490,25 +484,19 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						print '<legend><small><i class="rex-icon fa-arrow-up"></i></small> '. rex_i18n::msg('d2u_machinery_construction_equipment') .' - '. rex_i18n::msg('d2u_machinery_construction_equipment_pumps') .'</legend>';
 						print '<div class="panel-body-wrapper slide">';
 						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_operating_pressure', 'form[operating_pressure]', $machine->operating_pressure, FALSE, $readonly, "text");
-						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_pump_conveying_distance_fluid', 'form[pump_conveying_distance_fluid]', $machine->pump_conveying_distance_fluid, FALSE, $readonly, "number");
-						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_pump_conveying_distance_mineral', 'form[pump_conveying_distance_mineral]', $machine->pump_conveying_distance_mineral, FALSE, $readonly, "number");
-						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_pump_conveying_distance_pasty', 'form[pump_conveying_distance_pasty]', $machine->pump_conveying_distance_pasty, FALSE, $readonly, "number");
-						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_pump_filling', 'form[pump_filling]', $machine->pump_filling, FALSE, $readonly, "text");
-						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_pump_flow_volume_fluid', 'form[pump_flow_volume_fluid]', $machine->pump_flow_volume_fluid, FALSE, $readonly, "text");
-						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_pump_flow_volume_mineral', 'form[pump_flow_volume_mineral]', $machine->pump_flow_volume_mineral, FALSE, $readonly, "text");
-						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_pump_flow_volume_pasty', 'form[pump_flow_volume_pasty]', $machine->pump_flow_volume_pasty, FALSE, $readonly, "text");
+						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_pump_filling', 'form[pump_filling]', $machine->pump_filling, FALSE, $readonly, "number");
 						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_pump_grain_size', 'form[pump_grain_size]', $machine->pump_grain_size, FALSE, $readonly, "text");
 						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_pump_material_container', 'form[pump_material_container]', $machine->pump_material_container, FALSE, $readonly, "text");
-						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_pump_pressure_height_fluid', 'form[pump_pressure_height_fluid]', $machine->pump_pressure_height_fluid, FALSE, $readonly, "number");
-						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_pump_pressure_height_mineral', 'form[pump_pressure_height_mineral]', $machine->pump_pressure_height_mineral, FALSE, $readonly, "number");
-						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_pump_pressure_height_pasty', 'form[pump_pressure_height_pasty]', $machine->pump_pressure_height_pasty, FALSE, $readonly, "number");
+						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_pump_flow_volume', 'form[pump_flow_volume]', $machine->pump_flow_volume, FALSE, $readonly, "text");
+						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_pump_conveying_distance', 'form[pump_conveying_distance]', $machine->pump_conveying_distance, FALSE, $readonly, "number");
+						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_pump_pressure_height', 'form[pump_pressure_height]', $machine->pump_pressure_height, FALSE, $readonly, "number");
 						print '</div>';
 						print '</fieldset>';
 
 						print '<fieldset>';
 						print '<legend><small><i class="rex-icon fa-arrow-up"></i></small> '. rex_i18n::msg('d2u_machinery_construction_equipment') .' - '. rex_i18n::msg('d2u_machinery_construction_equipment_waste_water') .'</legend>';
 						print '<div class="panel-body-wrapper slide">';
-						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_waste_water_capacity', 'form[waste_water_capacity]', $machine->waste_water_capacity, FALSE, $readonly, "text");
+						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_waste_water_capacity', 'form[waste_water_capacity]', $machine->waste_water_capacity, FALSE, $readonly, "number");
 						print '</div>';
 						print '</fieldset>';
 					}

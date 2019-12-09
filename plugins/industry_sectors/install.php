@@ -23,7 +23,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machi
 \rex_sql_table::get(
     \rex::getTable('d2u_machinery_machines'))
     ->ensureColumn(new \rex_sql_column('industry_sector_ids', 'TEXT'))
-    ->ensure();
+    ->alter();
 
 // Create views for url addon
 $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_machinery_url_industry_sectors AS

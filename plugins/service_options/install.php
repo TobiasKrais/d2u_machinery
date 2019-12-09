@@ -3,7 +3,7 @@
 \rex_sql_table::get(
     \rex::getTable('d2u_machinery_machines'))
     ->ensureColumn(new \rex_sql_column('service_option_ids', 'TEXT'))
-    ->ensure();
+    ->alter();
 
 $sql = \rex_sql::factory();
 $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_service_options (
