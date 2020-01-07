@@ -24,3 +24,8 @@ if($sql->getRows() == 0) {
 // Update database to 1.2.6
 $sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_machinery_features` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 $sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_machinery_features_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_features_lang'))
+    ->removeColumn('title')
+    ->ensure();

@@ -14,7 +14,6 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machi
 	feature_id int(10) NOT NULL,
 	clang_id int(10) NOT NULL,
 	name varchar(255) collate utf8mb4_unicode_ci default NULL,
-	title varchar(255) collate utf8mb4_unicode_ci default NULL,
 	description text collate utf8mb4_unicode_ci default NULL,
 	translation_needs_update varchar(7) collate utf8mb4_unicode_ci default NULL,
 	PRIMARY KEY (feature_id, clang_id)

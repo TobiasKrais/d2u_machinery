@@ -39,6 +39,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.3.2-DEV:</p>
 <ul>
+	<li>Features Plugin: title wurde entfernt und statt dessen der Name verwendet.</li>
 	<li>Bugfix: Update über Installer auf Version 1.3.1 war nicht möglich.</li>
 	<li>machine_construction_equipment_extension Plugin: die jeweils drei Felder für verschiedene Materialsorten der Förderweite, -leistung und -höhe wurden zu je einem Feld zusammen gefasst.</li>
 </ul>

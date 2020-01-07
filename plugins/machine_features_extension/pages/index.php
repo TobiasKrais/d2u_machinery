@@ -36,7 +36,6 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$feature->clang_id = $rex_clang->getId();
 		}
 		$feature->name = $form['lang'][$rex_clang->getId()]['name'];
-		$feature->title = $form['lang'][$rex_clang->getId()]['title'];
 		$feature->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 		$feature->description = $form['lang'][$rex_clang->getId()]['description'];
 
@@ -157,7 +156,6 @@ if ($func == 'edit' || $func == 'add') {
 							<div id="details_clang_<?php print $rex_clang->getId(); ?>">
 								<?php
 									d2u_addon_backend_helper::form_input('d2u_helper_name', "form[lang][". $rex_clang->getId() ."][name]", $feature->name, $required, $readonly_lang, "text");
-									d2u_addon_backend_helper::form_input('d2u_machinery_features_title', "form[lang][". $rex_clang->getId() ."][title]", $feature->title, $required, $readonly_lang, "text");
 									d2u_addon_backend_helper::form_textarea('d2u_helper_description', "form[lang][". $rex_clang->getId() ."][description]", $feature->description, 10, FALSE, $readonly_lang, TRUE);
 								?>
 							</div>
@@ -220,11 +218,11 @@ if ($func == 'edit' || $func == 'add') {
 }
 
 if ($func == '') {
-	$query = 'SELECT features.feature_id, name, title, priority '
+	$query = 'SELECT features.feature_id, name, category_ids, priority '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_machinery_features AS features '
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_features_lang AS lang '
 			. 'ON features.feature_id = lang.feature_id AND lang.clang_id = '. rex_config::get("d2u_helper", "default_lang") .' '
-		. 'ORDER BY priority ASC';
+		. 'ORDER BY name, priority ASC';
     $list = rex_list::factory($query, 1000);
 
     $list->addTableAttribute('class', 'table-striped table-hover');
@@ -243,10 +241,9 @@ if ($func == '') {
     $list->setColumnLabel('name', rex_i18n::msg('d2u_helper_name'));
     $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###feature_id###']);
 
-    $list->setColumnLabel('title', rex_i18n::msg('d2u_machinery_features_title'));
-    $list->setColumnParams('title', ['func' => 'edit', 'entry_id' => '###feature_id###']);
+    $list->setColumnLabel('name', rex_i18n::msg('d2u_helper_categories'));
 
-    $list->setColumnLabel('priority', rex_i18n::msg('header_priority'));
+	$list->setColumnLabel('priority', rex_i18n::msg('header_priority'));
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);

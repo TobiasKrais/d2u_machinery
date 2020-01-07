@@ -520,16 +520,16 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 			print '<div class="col-12 col-sm-4 col-md-3 col-lg-2">';
 			if($feature->pic != "") {
 				print '<a href="index.php?rex_media_type=d2u_helper_gallery_detail&rex_media_file='. $feature->pic .'" '
-					.'data-toggle="lightbox_features" data-gallery="example-galleryfeatures" data-title="'. $feature->title.'">';
+					.'data-toggle="lightbox_features" data-gallery="example-galleryfeatures" data-title="'. $feature->name.'">';
                 print '<img src="index.php?rex_media_type=d2u_machinery_features&rex_media_file='. $feature->pic .'" class="img-fluid featurepic"'
-					.' alt="'. $feature->title .'" title="'. $feature->title .'">';
+					.' alt="'. $feature->name .'" title="'. $feature->name .'">';
 				print '</a>';
 			}
 			print '</div>';
 
 			print '<div class="col-12 col-sm-8 col-md-9 col-lg-10">';
 			print '<div class="block-box">';
-			print '<p><b>'. $feature->title .'</b></p>';
+			print '<p><b>'. $feature->name .'</b></p>';
 			print d2u_addon_frontend_helper::prepareEditorField($feature->description);
 			print '</div>';
 			print '</div>';
@@ -707,7 +707,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 			print '<div class="col-12 col-md-6 col-lg-2">';
 			if($service_option->picture != "") {
 				print '<a href="index.php?rex_media_type=d2u_helper_gallery_detail&rex_media_file='. $feature->pic .'" '
-					.'data-toggle="lightbox_service" data-gallery="example-galleryservice" data-title="'. $feature->title.'">';
+					.'data-toggle="lightbox_service" data-gallery="example-galleryservice" data-title="'. $feature->name.'">';
 				print '<img src="index.php?rex_media_type=d2u_machinery_features&rex_media_file='.
 						$service_option->picture .'" alt='. $service_option->name .' class="featurepic">';
 				print '</a>';
