@@ -260,6 +260,11 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	var $tool_changer_locations = "";	
 
 	/**
+	 * @var string machine_steel_processing_extension: number of drilling units from below.
+	 */
+	var $drilling_unit_below = "";	
+
+	/**
 	 * @var string machine_steel_processing_extension: number of vertical drilling units.
 	 */
 	var $drilling_unit_vertical = "";	
@@ -815,6 +820,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 				$this->sheet_length = $result->getValue("sheet_length");
 				$this->sheet_thickness = $result->getValue("sheet_thickness");
 				$this->tool_changer_locations = $result->getValue("tool_changer_locations");
+				$this->drilling_unit_below = $result->getValue("drilling_unit_below");
 				$this->drilling_unit_vertical = $result->getValue("drilling_unit_vertical");
 				$this->drilling_unit_horizontal = $result->getValue("drilling_unit_horizontal");
 				$this->drilling_diameter = $result->getValue("drilling_diameter");
@@ -1694,7 +1700,16 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 				];
 			}
 
-			// Horizontal drilling units 
+			// Drilling units from below
+			if($this->drilling_unit_below != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_drilling_unit_below" . $tag_close,
+					"value" => $this->drilling_unit_below,
+					"unit" => $tag_open . "d2u_machinery_unit_pieces" . $tag_close
+				];
+			}
+
+			// Drilling diameter
 			if($this->drilling_diameter != "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_drilling_diameter" . $tag_close,
@@ -2168,6 +2183,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 					.", sheet_length = '". $this->sheet_length ."' "
 					.", sheet_thickness = '". $this->sheet_thickness ."' "
 					.", tool_changer_locations = '". $this->tool_changer_locations ."' "
+					.", drilling_unit_below = ". ($this->drilling_unit_below > 0 ? $this->drilling_unit_below : 0) ." "
 					.", drilling_unit_vertical = '". $this->drilling_unit_vertical ."' "
 					.", drilling_unit_horizontal = '". $this->drilling_unit_horizontal ."' "
 					.", drilling_diameter = '". $this->drilling_diameter ."' "

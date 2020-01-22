@@ -79,6 +79,9 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 		if(rex_plugin::get('d2u_machinery', 'machine_features_extension')->isAvailable()) {
 			d2u_machinery_machine_features_extension_lang_helper::factory()->install();
 		}
+		if(rex_plugin::get('d2u_machinery', 'machine_steel_processing_extension')->isAvailable()) {
+			d2u_machinery_machine_steel_processing_extension_lang_helper::factory()->install();
+		}
 		if(rex_plugin::get('d2u_machinery', 'machine_usage_area_extension')->isAvailable()) {
 			d2u_machinery_machine_usage_area_extension_lang_helper::factory()->install();
 		}

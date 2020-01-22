@@ -161,6 +161,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 				$machine->sheet_length = $form['sheet_length'];
 				$machine->sheet_thickness = $form['sheet_thickness'];
 				$machine->tool_changer_locations = $form['tool_changer_locations'];
+				$machine->drilling_unit_below = $form['drilling_unit_below'] == "" ? 0 : $form['drilling_unit_below'];
 				$machine->drilling_unit_vertical = $form['drilling_unit_vertical'];
 				$machine->drilling_unit_horizontal = $form['drilling_unit_horizontal'];
 				$machine->drilling_diameter = $form['drilling_diameter'];
@@ -594,6 +595,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						print '<div class="panel-body-wrapper slide">';
 						d2u_addon_backend_helper::form_input('d2u_machinery_steel_drilling_unit_vertical', 'form[drilling_unit_vertical]', $machine->drilling_unit_vertical, FALSE, $readonly, "text");
 						d2u_addon_backend_helper::form_input('d2u_machinery_steel_drilling_unit_horizontal', 'form[drilling_unit_horizontal]', $machine->drilling_unit_horizontal, FALSE, $readonly, "text");
+						d2u_addon_backend_helper::form_input('d2u_machinery_steel_drilling_unit_below', 'form[drilling_unit_below]', $machine->drilling_unit_below, FALSE, $readonly, "number");
 						d2u_addon_backend_helper::form_input('d2u_machinery_steel_drilling_diameter', 'form[drilling_diameter]', $machine->drilling_diameter, FALSE, $readonly, "text");
 						d2u_addon_backend_helper::form_input('d2u_machinery_steel_drilling_tools_axis', 'form[drilling_tools_axis]', $machine->drilling_tools_axis, FALSE, $readonly, "text");
 						d2u_addon_backend_helper::form_input('d2u_machinery_steel_drilling_axis_drive_power', 'form[drilling_axis_drive_power]', $machine->drilling_axis_drive_power, FALSE, $readonly, "text");

@@ -37,6 +37,7 @@ d2u_machinery_steel_drilling_axis_drive_power = Axis drive power
 d2u_machinery_steel_drilling_diameter = Drilling diameter (mm)
 d2u_machinery_steel_drilling_rpm_speed = Max. spindle speed (min-1)
 d2u_machinery_steel_drilling_tools_axis = Number tools per axis
+d2u_machinery_steel_drilling_unit_below = Number drilling units from below (u-axis)
 d2u_machinery_steel_drilling_unit_horizontal = Number horizontal drilling units (z- and y-axis)
 d2u_machinery_steel_drilling_unit_vertical = Number vertical drilling units (y-axis)
 d2u_machinery_steel_punching = Technical data - punching machines / welding machines / coping robots

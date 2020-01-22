@@ -37,6 +37,7 @@ d2u_machinery_steel_drilling_axis_drive_power = Antriebsleistung pro Achse
 d2u_machinery_steel_drilling_diameter = Bohrdurchmesser (mm)
 d2u_machinery_steel_drilling_rpm_speed = Spindeldrehzahl max. (min-1)
 d2u_machinery_steel_drilling_tools_axis = Anzahl Werkzeuge pro Achse (Stück)
+d2u_machinery_steel_drilling_unit_below = Bohreinheiten von unten (U-Achse) (Stück)
 d2u_machinery_steel_drilling_unit_horizontal = Bohreinheiten Horizontal (Z- und W-Achse) (Stück)
 d2u_machinery_steel_drilling_unit_vertical = Bohreinheiten vertical (Y-Achse) (Stück)
 d2u_machinery_steel_punching = Technische Daten – Stanz- / Ausklink- / Schweißmaschinen

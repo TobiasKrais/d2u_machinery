@@ -44,6 +44,7 @@ $d2u_module_manager->showManagerList();
 	<li>Gebrauchtmaschinen Plugin Backend: Beim online stellen einer Gebrauchtmaschine in der Gebrauchtmaschinenliste gab es beim Aufruf im Frontend einen Fatal Error, da der URL cache nicht neu generiert wurde.</li>
 	<li>Features Plugin: title wurde entfernt und statt dessen der Name verwendet.</li>
 	<li>Bugfix: Update über Installer auf Version 1.3.1 war nicht möglich.</li>
+	<li>machine_steel_processing_extension Plugin: Feld Bohreinheiten von unten (U-Achse) hinzugefügt.</li>
 	<li>machine_construction_equipment_extension Plugin: die jeweils drei Felder für verschiedene Materialsorten der Förderweite, -leistung und -höhe wurden zu je einem Feld zusammen gefasst.</li>
 </ul>
 <p>1.3.1:</p>
