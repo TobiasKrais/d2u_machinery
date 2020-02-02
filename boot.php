@@ -203,17 +203,6 @@ function rex_d2u_machinery_url_shortener(rex_extension_point $ep) {
 			$new_url = new \Url\Url(str_replace($article_url_without_lang_slug_split_encoded, '/', $url->__toString()));
 			$new_url->handleRewriterSuffix();
 
-			// Check for duplicate URLs
-			$query = "SELECT * FROM ". \rex::getTablePrefix() ."url_generator_url "
-				."WHERE url = '". $new_url->__toString() ."'";
-
-			$result = \rex_sql::factory();
-			$result->setQuery($query);
-			if($result->getRows() > 0) {
-				// Return FALSE, duplicates are not allowed
-				return FALSE;
-			}
-			
 			// Add forwarders
 			if(rex_config::get('d2u_machinery', 'short_urls_forward', "false") === "true") {
 				$query = "SELECT id FROM ". \rex::getTablePrefix() ."yrewrite_forward "
