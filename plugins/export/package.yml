@@ -10,7 +10,6 @@ page:
     subpages:
         export: { title: 'translate:d2u_machinery_export', icon: rex-icon fa-cloud-upload, perm: d2u_machinery[export] }
         provider: { title: 'translate:d2u_machinery_export_provider', icon: rex-icon fa-cloud, perm: d2u_machinery[export_provider] }
-        help: { title: 'translate:d2u_helper_help', icon: rex-icon rex-icon-help }
 
 requires:
     php:

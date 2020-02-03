@@ -39,6 +39,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.3.2-DEV:</p>
 <ul>
+	<li>Facebook Export für Gebrauchtmaschinen entfernt.</li>
 	<li>Backend: Beim online stellen einer Maschine in der Maschinenliste gab es beim Aufruf im Frontend einen Fatal Error, da der URL cache nicht neu generiert wurde.</li>
 	<li>Branchen Plugin Backend: Beim online stellen einer Branche in der Branchenliste gab es beim Aufruf im Frontend einen Fatal Error, da der URL cache nicht neu generiert wurde.</li>
 	<li>Gebrauchtmaschinen Plugin Backend: Beim online stellen einer Gebrauchtmaschine in der Gebrauchtmaschinenliste gab es beim Aufruf im Frontend einen Fatal Error, da der URL cache nicht neu generiert wurde.</li>

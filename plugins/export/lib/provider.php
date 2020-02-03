@@ -15,7 +15,7 @@ class Provider {
 	
 	/**
 	 * @var string Provider interface name. Current implemented types are:
-	 * europemachinery, machinerypark, mascus, facebook, twitter and linkedin.
+	 * europemachinery, machinerypark, mascus, twitter and linkedin.
 	 */
 	var $type = "";
 		
@@ -97,16 +97,6 @@ class Provider {
 	var $social_oauth_token_valid_until = "";
 
 	/**
-	 * @var string Facebook login email address
-	 */
-	var $facebook_email = "";
-
-	/**
-	 * @var string Facebook page id.
-	 */
-	var $facebook_pageid = "";
-
-	/**
 	 * @var string Linkedin id.
 	 */
 	var $linkedin_email = "";
@@ -157,8 +147,6 @@ class Provider {
 			$this->social_oauth_token = $result->getValue("social_oauth_token");
 			$this->social_oauth_token_secret = $result->getValue("social_oauth_token_secret");
 			$this->social_oauth_token_valid_until = $result->getValue("social_oauth_token_valid_until");
-			$this->facebook_email = $result->getValue("facebook_email");
-			$this->facebook_pageid = $result->getValue("facebook_pageid");
 			$this->linkedin_email = $result->getValue("linkedin_email");
 			$this->linkedin_groupid = $result->getValue("linkedin_groupid");
 			$this->twitter_id = $result->getValue("twitter_id");
@@ -311,43 +299,6 @@ class Provider {
 		else if($this->type == "mascus") {
 			$mascus = new Mascus($this);
 			return $mascus->export();
-		}
-		else if($this->type == "facebook") {
-			// Check requirements
-			if (!function_exists('curl_init')) {
-				return rex_i18n::msg('d2u_machinery_export_failure_curl');
-			}
-			else if (!function_exists('json_decode')) {
-				return rex_i18n::msg('d2u_machinery_export_failure_json');				
-			}
-			
-			// Export
-			$facebook = new SocialExportFacebook($this);
-			if(rex_request('facebook_return', 'string') == 'true') {
-				if($facebook->getAccessToken() !== FALSE) {
-					if($facebook->isUserLoggedIn()) {
-						return $facebook->export();
-					}
-					else {
-						if($facebook->isAnybodyLoggedIn()) {
-							// Wrong user logged in: logout first
-							header("Location: ". $facebook->getLogoutURL());
-						}
-						else {
-							// If not logged in, go to log in page
-							header("Location: ". $facebook->getLoginURL());
-						}
-						exit;
-					}
-				}
-				else {
-					return FALSE;
-				}
-			}
-			else {
-				header("Location: ". $facebook->getLoginURL());
-				exit;
-			}
 		}
 		else if($this->type == "twitter") {
 			return "Schnittstelle ist nicht programmiert.";
@@ -532,8 +483,6 @@ class Provider {
 				."social_oauth_token = '". $this->social_oauth_token ."', "
 				."social_oauth_token_secret = '". $this->social_oauth_token_secret ."', "
 				."social_oauth_token_valid_until = '". $this->social_oauth_token_valid_until ."', "
-				."facebook_email = '". $this->facebook_email ."', "
-				."facebook_pageid = '". $this->facebook_pageid ."', "
 				."linkedin_email = '". $this->linkedin_email ."', "
 				."linkedin_groupid = '". $this->linkedin_groupid ."', "
 				."twitter_id = '". $this->twitter_id ."' ";

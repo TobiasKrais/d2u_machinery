@@ -1,6 +1,7 @@
 <?php
-// 1.1.0 Update database
 $sql = \rex_sql::factory();
+
+// 1.1.0 Update database
 $sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_export_provider LIKE 'online_status';");
 if($sql->getRows() == 0) {
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_export_provider "
@@ -17,3 +18,11 @@ if (rex_string::versionCompare($this->getVersion(), '1.2.6', '<')) {
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_export_machines DROP export_timestamp;");
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_export_machines CHANGE `export_timestamp_new` `export_timestamp` DATETIME NOT NULL;");
 }
+
+// 1.3.2 remove Facebook support
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_export_provider'))
+    ->removeColumn('facebook_email')
+    ->removeColumn('facebook_pageid')
+    ->ensure();
+$sql->setQuery("DELETE FROM `". rex::getTablePrefix() ."d2u_machinery_export_provider` WHERE type = 'facebook';");
