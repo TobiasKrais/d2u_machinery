@@ -2128,12 +2128,12 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 					.", container_mixing_performance = '". $this->container_mixing_performance ."' "
 					.", container_waterconnect_pressure = ". $this->container_waterconnect_pressure ." "
 					.", container_waterconnect_diameter = '". $this->container_waterconnect_diameter ."' "
-					.", container_weight_empty = ". ($this->container_weight_empty > 0 ? $this->container_weight_empty : 0) ." "
+					.", container_weight_empty = ". ($this->container_weight_empty ?: 0) ." "
 					.", cutters_cutting_depth = '". $this->cutters_cutting_depth ."' "
-					.", cutters_cutting_length = ". ($this->cutters_cutting_length > 0 ? $this->cutters_cutting_length : 0) ." "
+					.", cutters_cutting_length = ". ($this->cutters_cutting_length ?: 0) ." "
 					.", cutters_rod_length = '". $this->cutters_rod_length ."' "
-					.", floor_beam_power_on_concrete = ". ($this->floor_beam_power_on_concrete > 0 ? $this->floor_beam_power_on_concrete : 0) ." "
-					.", floor_dust_extraction_connection = ". ($this->floor_dust_extraction_connection > 0 ? $this->floor_dust_extraction_connection : 0) ." "
+					.", floor_beam_power_on_concrete = ". ($this->floor_beam_power_on_concrete ?: 0) ." "
+					.", floor_dust_extraction_connection = ". ($this->floor_dust_extraction_connection ?: 0) ." "
 					.", floor_feedrate = '". $this->floor_feedrate ."' "
 					.", floor_filter_connection = '". $this->floor_filter_connection ."' "
 					.", floor_rotations = '". $this->floor_rotations ."' "
@@ -2146,13 +2146,13 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 					.", grinder_vacuum_connection = ". $this->grinder_vacuum_connection ." "
 					.", operating_pressure = '". $this->operating_pressure ."' "
 					.", pictures_delivery_set = '". implode(",", $this->pictures_delivery_set) ."' "
-					.", pump_conveying_distance = ". ($this->pump_conveying_distance > 0 ? $this->pump_conveying_distance : 0) ." "
-					.", pump_filling = ". ($this->pump_filling > 0 ? $this->pump_filling : 0) ." "
+					.", pump_conveying_distance = ". ($this->pump_conveying_distance ?: 0) ." "
+					.", pump_filling = ". ($this->pump_filling ?: 0) ." "
 					.", pump_flow_volume = '". $this->pump_flow_volume ."' "
 					.", pump_grain_size = '". $this->pump_grain_size ."' "
 					.", pump_material_container = '". $this->pump_material_container ."' "
-					.", pump_pressure_height = ". ($this->pump_pressure_height > 0 ? $this->pump_pressure_height : 0) ." "
-					.", waste_water_capacity = ". ($this->waste_water_capacity > 0 ? $this->waste_water_capacity : 0) ." ";
+					.", pump_pressure_height = ". ($this->pump_pressure_height ?: 0) ." "
+					.", waste_water_capacity = ". ($this->waste_water_capacity ?: 0) ." ";
 			}
 			if(rex_plugin::get("d2u_machinery", "service_options")->isAvailable()) {
 				$query .= ", service_option_ids = '|". implode("|", $this->service_option_ids) ."|' ";
@@ -2183,7 +2183,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 					.", sheet_length = '". $this->sheet_length ."' "
 					.", sheet_thickness = '". $this->sheet_thickness ."' "
 					.", tool_changer_locations = '". $this->tool_changer_locations ."' "
-					.", drilling_unit_below = ". ($this->drilling_unit_below > 0 ? $this->drilling_unit_below : 0) ." "
+					.", drilling_unit_below = ". ($this->drilling_unit_below ?: 0) ." "
 					.", drilling_unit_vertical = '". $this->drilling_unit_vertical ."' "
 					.", drilling_unit_horizontal = '". $this->drilling_unit_horizontal ."' "
 					.", drilling_diameter = '". $this->drilling_diameter ."' "
