@@ -88,3 +88,6 @@ input[type="checkbox"] {
 	width: auto;
 	margin-right: 5px;
 }
+.hide-validation {
+	display: none;
+}
