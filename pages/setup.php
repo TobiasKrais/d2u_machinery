@@ -46,6 +46,10 @@ $d2u_module_manager->showManagerList();
 	</form>
 </fieldset>
 <h2>Changelog</h2>
+<p>1.3.3-DEV:</p>
+<ul>
+	<li>machine_steel_processing_extension: neues Feld Sägeblatt-Vorschub.</li>
+</ul>
 <p>1.3.2:</p>
 <ul>
 	<li>Kontaktformulare aller Module mit zweitem Spamschutz versehen: Honeypot.</li>

@@ -134,6 +134,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 				$machine->automation_supply_single_stroke = $form['automation_supply_single_stroke'];
 				$machine->automation_supply_multi_stroke = $form['automation_supply_multi_stroke'];
 				$machine->automation_feedrate = $form['automation_feedrate'];
+				$machine->automation_feedrate_sawblade = $form['automation_feedrate_sawblade'];
 				$machine->automation_rush_leader_flyback = $form['automation_rush_leader_flyback'];
 				$automation_automationgrade_ids = isset($form['automation_automationgrade_ids']) ? $form['automation_automationgrade_ids'] : [];
 				$machine->automation_automationgrades = [];
@@ -609,6 +610,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						d2u_addon_backend_helper::form_input('d2u_machinery_steel_saw_blade', 'form[saw_blade]', $machine->saw_blade, FALSE, $readonly, "text");
 						d2u_addon_backend_helper::form_input('d2u_machinery_steel_saw_band', 'form[saw_band]', $machine->saw_band, FALSE, $readonly, "text");
 						d2u_addon_backend_helper::form_input('d2u_machinery_steel_saw_band_tilt', 'form[saw_band_tilt]', $machine->saw_band_tilt, FALSE, $readonly, "text");
+						d2u_addon_backend_helper::form_input('d2u_machinery_steel_automation_feedrate_sawblade', 'form[automation_feedrate_sawblade]', $machine->automation_feedrate_sawblade, FALSE, $readonly, "text");
 						d2u_addon_backend_helper::form_input('d2u_machinery_steel_saw_cutting_speed', 'form[saw_cutting_speed]', $machine->saw_cutting_speed, FALSE, $readonly, "text");
 						d2u_addon_backend_helper::form_input('d2u_machinery_steel_saw_miter', 'form[saw_miter]', $machine->saw_miter, FALSE, $readonly, "text");
 						print '</div>';

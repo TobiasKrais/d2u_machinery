@@ -10,6 +10,7 @@ class d2u_machinery_machine_steel_processing_extension_lang_helper extends d2u_m
 	protected $replacements_english = [
 		'd2u_machinery_steel_automation_automationgrades' => 'Degree of Automation',
 		'd2u_machinery_steel_automation_feedrate' => 'Feedrate',
+		'd2u_machinery_steel_automation_feedrate_sawblade' => 'Sawblade feedrate',
 		'd2u_machinery_steel_automation_rush_leader_flyback' => 'Rapid advance/return movement',
 		'd2u_machinery_steel_automation_supply_ids' => 'In-/Outfeed side',
 		'd2u_machinery_steel_automation_supply_multi_stroke' => 'Multiple stroke length',
@@ -71,6 +72,7 @@ class d2u_machinery_machine_steel_processing_extension_lang_helper extends d2u_m
 	protected $replacements_german = [
 		'd2u_machinery_steel_automation_automationgrades' => 'Automatisierungsgrad',
 		'd2u_machinery_steel_automation_feedrate' => 'Vorschub',
+		'd2u_machinery_steel_automation_feedrate_sawblade' => 'Sägeblatt-Vorschub',
 		'd2u_machinery_steel_automation_rush_leader_flyback' => 'Eilvor-/-Rücklauf',
 		'd2u_machinery_steel_automation_supply_ids' => 'Zu-/Abfuhrseite',
 		'd2u_machinery_steel_automation_supply_multi_stroke' => 'Materialnachschub Mehrfachhub',
@@ -104,7 +106,7 @@ class d2u_machinery_machine_steel_processing_extension_lang_helper extends d2u_m
 		'd2u_machinery_steel_saw_band_tilt' => 'Sägebandneigung',
 		'd2u_machinery_steel_saw_blade' => 'Sägeblatt',
 		'd2u_machinery_steel_saw_cutting_speed' => 'Schnittgeschwindigkeit',
-		'd2u_machinery_steel_saw_miter' => 'Gehrungsbereich',
+		'd2u_machinery_steel_saw_miter' => 'Schwenkbereich für Gehrungsschnitte',
 		'd2u_machinery_steel_shaving_unit_angle_steel_single_cut' => 'Winkelstahl-Schereinheit single cut',
 		'd2u_machinery_steel_sheet_length' => 'Blech-Ausgangsmaterial Blechlänge',
 		'd2u_machinery_steel_sheet_thickness' => 'Blech-Ausgangsmaterial Blechdicke',
@@ -132,6 +134,7 @@ class d2u_machinery_machine_steel_processing_extension_lang_helper extends d2u_m
 	protected $replacements_french = [
 		'd2u_machinery_steel_automation_automationgrades' => 'Degré d\'automatisation',
 		'd2u_machinery_steel_automation_feedrate' => 'Avance',
+		'd2u_machinery_steel_automation_feedrate_sawblade' => "d'avance de la lame de scie",
 		'd2u_machinery_steel_automation_rush_leader_flyback' => 'Avance / retour rapide',
 		'd2u_machinery_steel_automation_supply_ids' => 'Amenage / Evacuation',
 		'd2u_machinery_steel_automation_supply_multi_stroke' => 'Amenage matière course multiple',
@@ -193,6 +196,7 @@ class d2u_machinery_machine_steel_processing_extension_lang_helper extends d2u_m
 	protected $replacements_spanish = [
 		'd2u_machinery_steel_automation_automationgrades' => 'Grado de automatización',
 		'd2u_machinery_steel_automation_feedrate' => 'Avance',
+		'd2u_machinery_steel_automation_feedrate_sawblade' => 'Avance hoja de corte',
 		'd2u_machinery_steel_automation_rush_leader_flyback' => 'Avance/retorno rápido',
 		'd2u_machinery_steel_automation_supply_ids' => 'Lado de entrada/salida',
 		'd2u_machinery_steel_automation_supply_multi_stroke' => 'Alimentación del material Carrera múltiple',
@@ -254,6 +258,7 @@ class d2u_machinery_machine_steel_processing_extension_lang_helper extends d2u_m
 	protected $replacements_italian = [
 		'd2u_machinery_steel_automation_automationgrades' => 'Grado di automazione',
 		'd2u_machinery_steel_automation_feedrate' => 'Avanzamento',
+		'd2u_machinery_steel_automation_feedrate_sawblade' => 'Avanzamento della lama della sega',
 		'd2u_machinery_steel_automation_rush_leader_flyback' => 'Avanzamento rapido / ritorno',
 		'd2u_machinery_steel_automation_supply_ids' => 'Lato di alimentazione / lato di asporto',
 		'd2u_machinery_steel_automation_supply_multi_stroke' => 'Aggiunta materiale corsa multipla',
@@ -315,6 +320,7 @@ class d2u_machinery_machine_steel_processing_extension_lang_helper extends d2u_m
 	protected $replacements_polish = [
 		'd2u_machinery_steel_automation_automationgrades' => 'Stopień automatyzacji',
 		'd2u_machinery_steel_automation_feedrate' => 'Posuw',
+		'd2u_machinery_steel_automation_feedrate_sawblade' => 'Posuw piły',
 		'd2u_machinery_steel_automation_rush_leader_flyback' => 'Szybki bieg do przodu / do tyłu',
 		'd2u_machinery_steel_automation_supply_ids' => 'Strona do-/odprowadzająca',
 		'd2u_machinery_steel_automation_supply_multi_stroke' => 'Dosuwanie materiału – skok wielokrotny',
@@ -376,6 +382,7 @@ class d2u_machinery_machine_steel_processing_extension_lang_helper extends d2u_m
 	protected $replacements_dutch = [
 		'd2u_machinery_steel_automation_automationgrades' => 'Automatiseringsgraad',
 		'd2u_machinery_steel_automation_feedrate' => 'Voeding',
+		'd2u_machinery_steel_automation_feedrate_sawblade' => 'Zaagblad doorvoersnelheid',
 		'd2u_machinery_steel_automation_rush_leader_flyback' => 'Snelle voor-/terugloop',
 		'd2u_machinery_steel_automation_supply_ids' => 'Aan- en afvoerkant',
 		'd2u_machinery_steel_automation_supply_multi_stroke' => 'Materiaalvoeding meervoudige slag',
@@ -437,6 +444,7 @@ class d2u_machinery_machine_steel_processing_extension_lang_helper extends d2u_m
 	protected $replacements_czech = [
 		'd2u_machinery_steel_automation_automationgrades' => 'Stupeň automatizace',
 		'd2u_machinery_steel_automation_feedrate' => 'Posuv',
+		'd2u_machinery_steel_automation_feedrate_sawblade' => 'Rychlost posuvu pilového kotouče',
 		'd2u_machinery_steel_automation_rush_leader_flyback' => 'Rychloposuv vpřed/vzad',
 		'd2u_machinery_steel_automation_supply_ids' => 'vstupní/výstupní strana',
 		'd2u_machinery_steel_automation_supply_multi_stroke' => 'Posuv materiálu – vícenásobný zdvih',
@@ -498,6 +506,7 @@ class d2u_machinery_machine_steel_processing_extension_lang_helper extends d2u_m
 	protected $replacements_russian = [
 		'd2u_machinery_steel_automation_automationgrades' => 'Степень автоматизации',
 		'd2u_machinery_steel_automation_feedrate' => 'Сторона загрузки',
+		'd2u_machinery_steel_automation_feedrate_sawblade' => 'Скорость подачи пилы',
 		'd2u_machinery_steel_automation_rush_leader_flyback' => 'Ускоренный ход вперед и назад',
 		'd2u_machinery_steel_automation_supply_ids' => 'Сторона загрузки/ разгрузки',
 		'd2u_machinery_steel_automation_supply_multi_stroke' => 'Подача заготовки - многократное продвижение материала',
@@ -559,6 +568,7 @@ class d2u_machinery_machine_steel_processing_extension_lang_helper extends d2u_m
 	protected $replacements_portuguese = [
 		'd2u_machinery_steel_automation_automationgrades' => 'Nível de automação',
 		'd2u_machinery_steel_automation_feedrate' => 'Avanço',
+		'd2u_machinery_steel_automation_feedrate_sawblade' => 'Taxa de alimentação da lâmina de serra',
 		'd2u_machinery_steel_automation_rush_leader_flyback' => 'Avanço rápido/recuo',
 		'd2u_machinery_steel_automation_supply_ids' => 'Lado da alimentação/saída',
 		'd2u_machinery_steel_automation_supply_multi_stroke' => 'Deslocação do material após processamento com levantamento múltiplo',
@@ -620,6 +630,7 @@ class d2u_machinery_machine_steel_processing_extension_lang_helper extends d2u_m
 	protected $replacements_chinese = [
 		'd2u_machinery_steel_automation_automationgrades' => '自动化程度',
 		'd2u_machinery_steel_automation_feedrate' => '喂料',
+		'd2u_machinery_steel_automation_feedrate_sawblade' => '锯片进给速度',
 		'd2u_machinery_steel_automation_rush_leader_flyback' => '快速前进流/回流',
 		'd2u_machinery_steel_automation_supply_ids' => '进料/出料端',
 		'd2u_machinery_steel_automation_supply_multi_stroke' => '进料多冲程',

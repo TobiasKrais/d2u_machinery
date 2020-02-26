@@ -185,6 +185,11 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	var $automation_feedrate = "";
 
 	/**
+	 * @var string machine_steel_processing_extension: Automation - Feed rate range for saw blades (mm/min)
+	 */
+	var $automation_feedrate_sawblade = "";
+
+	/**
 	 * @var int machine_steel_processing_extension: Automation - Rush leader flyback (mm/min)
 	 */
 	var $automation_rush_leader_flyback = 0;
@@ -260,9 +265,9 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	var $tool_changer_locations = "";	
 
 	/**
-	 * @var string machine_steel_processing_extension: number of drilling units from below.
+	 * @var int machine_steel_processing_extension: number of drilling units from below.
 	 */
-	var $drilling_unit_below = "";	
+	var $drilling_unit_below = 0;	
 
 	/**
 	 * @var string machine_steel_processing_extension: number of vertical drilling units.
@@ -799,6 +804,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 				$this->automation_supply_single_stroke = $result->getValue("automation_supply_single_stroke");
 				$this->automation_supply_multi_stroke = $result->getValue("automation_supply_multi_stroke");
 				$this->automation_feedrate = $result->getValue("automation_feedrate");
+				$this->automation_feedrate_sawblade = $result->getValue("automation_feedrate_sawblade");
 				$this->automation_rush_leader_flyback = $result->getValue("automation_rush_leader_flyback");
 				$automation_automationgrade_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("automation_automationgrade_ids")), PREG_GREP_INVERT);
 				foreach($automation_automationgrade_ids as $automation_automationgrade_id) {
@@ -1547,6 +1553,15 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 				];
 			}
 
+			// Feed rate for saw blades
+			if($this->automation_feedrate_sawblade != "") {
+				$tech_data[] = [
+					"description" => $tag_open . "d2u_machinery_steel_automation_feedrate_sawblade" . $tag_close,
+					"value" => $this->automation_feedrate_sawblade,
+					"unit" => $tag_open . "d2u_machinery_unit_mm_min" . $tag_close
+				];
+			}
+
 			// Rush leader flyback
 			if($this->automation_rush_leader_flyback != "") {
 				$tech_data[] = [
@@ -1701,7 +1716,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Drilling units from below
-			if($this->drilling_unit_below != "") {
+			if($this->drilling_unit_below > 0) {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_drilling_unit_below" . $tag_close,
 					"value" => $this->drilling_unit_below,
@@ -2168,6 +2183,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 					.", automation_supply_single_stroke = '". $this->automation_supply_single_stroke ."' "
 					.", automation_supply_multi_stroke = '". $this->automation_supply_multi_stroke ."' "
 					.", automation_feedrate = '". $this->automation_feedrate ."' "
+					.", automation_feedrate_sawblade = '". $this->automation_feedrate_sawblade ."' "
 					.", automation_rush_leader_flyback = '". $this->automation_rush_leader_flyback ."' "
 					.", automation_automationgrade_ids = '|". implode("|", array_keys($this->automation_automationgrades)) ."|' "
 					.", automation_supply_ids = '|". implode("|", array_keys($this->automation_supplys)) ."|' "

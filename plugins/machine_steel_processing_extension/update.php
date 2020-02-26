@@ -28,6 +28,7 @@ $sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_machinery_steel_weld
 \rex_sql_table::get(
     \rex::getTable('d2u_machinery_machines'))
     ->ensureColumn(new \rex_sql_column('drilling_unit_below', 'INT(10)', TRUE))
+    ->ensureColumn(new \rex_sql_column('automation_feedrate_sawblade', 'VARCHAR(250)', TRUE))
     ->alter();
 
 // Insert frontend translations

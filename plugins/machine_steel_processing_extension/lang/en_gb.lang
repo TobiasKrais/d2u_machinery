@@ -21,6 +21,7 @@ d2u_machinery_steel_welding_no_weldings_found = No welding processes found.
 d2u_machinery_steel_automation = Technical data - automation
 d2u_machinery_steel_automation_automationgrades = Automation degrees
 d2u_machinery_steel_automation_feedrate = Feedrate (mm/min)
+d2u_machinery_steel_automation_feedrate_sawblade = Sawblade feedrate (mm/min)
 d2u_machinery_steel_automation_rush_leader_flyback = Rush leader / flyback (mm/min)
 d2u_machinery_steel_automation_supply_multi_stroke = Material supply multi stroke (mm)
 d2u_machinery_steel_automation_supply_single_stroke = Material supply single stroke (mm)

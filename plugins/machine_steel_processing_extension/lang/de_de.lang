@@ -21,6 +21,7 @@ d2u_machinery_steel_welding_no_weldings_found = Es wurden noch keine Schweißver
 d2u_machinery_steel_automation = Technische Daten – Automatisierung
 d2u_machinery_steel_automation_automationgrades = Automatisierungsgrad
 d2u_machinery_steel_automation_feedrate = Vorschub (mm/min)
+d2u_machinery_steel_automation_feedrate_sawblade = Sägeblatt-Vorschub (mm/min)
 d2u_machinery_steel_automation_rush_leader_flyback = Eilvor-/-Rücklauf (mm/min)
 d2u_machinery_steel_automation_supply_multi_stroke = Materialnachschub Mehrfachhub (mm)
 d2u_machinery_steel_automation_supply_single_stroke = Materialnachschub Einfachhub (mm)
