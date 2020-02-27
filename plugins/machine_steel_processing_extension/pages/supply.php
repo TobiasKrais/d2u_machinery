@@ -35,7 +35,6 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$supply->clang_id = $rex_clang->getId();
 		}
 		$supply->name = $form['lang'][$rex_clang->getId()]['name'];
-		$supply->title = $form['lang'][$rex_clang->getId()]['title'];
 		$supply->description = $form['lang'][$rex_clang->getId()]['description'];
 		$supply->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 
@@ -174,8 +173,7 @@ if ($func == 'edit' || $func == 'add') {
 							<div id="details_clang_<?php print $rex_clang->getId(); ?>">
 								<?php
 									d2u_addon_backend_helper::form_input('d2u_helper_name', "form[lang][". $rex_clang->getId() ."][name]", $supply->name, $required, $readonly_lang, "text");
-									d2u_addon_backend_helper::form_input('d2u_machinery_steel_supply_title', "form[lang][". $rex_clang->getId() ."][title]", $supply->title, $required, $readonly_lang, "text");
-									d2u_addon_backend_helper::form_textarea('d2u_helper_name', "form[lang][". $rex_clang->getId() ."][description]", $supply->title, 5, FALSE, $readonly_lang, TRUE);
+									d2u_addon_backend_helper::form_textarea('d2u_helper_description', "form[lang][". $rex_clang->getId() ."][description]", $supply->description, 5, FALSE, $readonly_lang, TRUE);
 								?>
 							</div>
 						</div>
@@ -207,11 +205,11 @@ if ($func == 'edit' || $func == 'add') {
 }
 
 if ($func == '') {
-	$query = 'SELECT supplys.supply_id, title, name, online_status '
+	$query = 'SELECT supplys.supply_id, name, online_status '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_machinery_steel_supply AS supplys '
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_steel_supply_lang AS lang '
 			. 'ON supplys.supply_id = lang.supply_id AND lang.clang_id = '. rex_config::get("d2u_helper", "default_lang") .' '
-		. 'ORDER BY title ASC ';
+		. 'ORDER BY name ASC ';
     $list = rex_list::factory($query, 1000);
 
     $list->addTableAttribute('class', 'table-striped table-hover');
@@ -226,9 +224,6 @@ if ($func == '') {
 
     $list->setColumnLabel('supply_id', rex_i18n::msg('id'));
     $list->setColumnLayout('supply_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
-
-    $list->setColumnLabel('title', rex_i18n::msg('d2u_machinery_steel_supply_title'));
-    $list->setColumnParams('title', ['func' => 'edit', 'entry_id' => '###supply_id###']);
 
 	$list->setColumnLabel('name', rex_i18n::msg('d2u_helper_name'));
     $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###supply_id###']);

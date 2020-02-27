@@ -31,6 +31,11 @@ $sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_machinery_steel_weld
     ->ensureColumn(new \rex_sql_column('automation_feedrate_sawblade', 'VARCHAR(250)', TRUE))
     ->alter();
 
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_steel_supply_lang'))
+	->removeColumn('title')
+    ->alter();
+
 // Insert frontend translations
 if(!class_exists('d2u_machinery_machine_steel_processing_extension_lang_helper')) {
 	// Load class in case addon is deactivated

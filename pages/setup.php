@@ -49,6 +49,7 @@ $d2u_module_manager->showManagerList();
 <p>1.3.3-DEV:</p>
 <ul>
 	<li>machine_steel_processing_extension: neues Feld Sägeblatt-Vorschub.</li>
+	<li>machine_steel_processing_extension: in der Zu-/Abfuhr wurde das Feld Überschrift entfernt (statt dessen Name verwenden).</li>
 </ul>
 <p>1.3.2:</p>
 <ul>

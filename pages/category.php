@@ -119,14 +119,14 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	else {
 		$message = '<ul>';
 		foreach($uses_categories as $uses_category) {
-			$message .= '<li><a href="index.php?page=d2u_machinery/category&func=edit&entry_id='. $uses_category->category_id .'">'. $uses_category->name.'</a></li>';
+			$message .= '<li><a href="index.php?page=d2u_machinery/category&func=edit&entry_id='. $uses_category->category_id .'">'. $uses_category->name .'</a></li>';
 		}
 		foreach($uses_machines as $uses_machine) {
-			$message .= '<li><a href="index.php?page=d2u_machinery/machine&func=edit&entry_id='. $uses_machine->machine_id .'">'. $uses_machine->name.'</a></li>';
+			$message .= '<li><a href="index.php?page=d2u_machinery/machine&func=edit&entry_id='. $uses_machine->machine_id .'">'. $uses_machine->name .'</a></li>';
 		}
 		if(rex_plugin::get("d2u_machinery", "used_machines")->isAvailable()) {
 			foreach($uses_used_machines as $uses_used_machine) {
-				$message .= '<li><a href="index.php?page=d2u_machinery/used_machines&func=edit&entry_id='. $uses_used_machine->used_machine_id .'">'. $uses_used_machine->name.'</a></li>';
+				$message .= '<li><a href="index.php?page=d2u_machinery/used_machines&func=edit&entry_id='. $uses_used_machine->used_machine_id .'">'. $uses_used_machine->name .'</a></li>';
 			}
 		}
 		$message .= '</ul>';

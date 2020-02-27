@@ -30,11 +30,6 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 	var $name = "";
 	
 	/**
-	 * @var string Title
-	 */
-	var $title = "";
-	
-	/**
 	 * @var string Description
 	 */
 	var $description = "";
@@ -74,7 +69,6 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 			$this->supply_id = $result->getValue("supply_id");
 			$this->online_status = $result->getValue("online_status");
 			$this->name = stripslashes($result->getValue("name"));
-			$this->title = stripslashes($result->getValue("title"));
 			$this->description = stripslashes($result->getValue("description"));
 			$this->pic = $result->getValue("pic");
 			if($result->getValue("translation_needs_update") != "") {
@@ -262,7 +256,6 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 						."supply_id = '". $this->supply_id ."', "
 						."clang_id = '". $this->clang_id ."', "
 						."name = '". addslashes($this->name) ."', "
-						."title = '". addslashes($this->title) ."', "
 						."description = '". addslashes($this->description) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."' ";
 
