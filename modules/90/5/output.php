@@ -34,4 +34,3 @@ if(!function_exists('print_consulation_hint')) {
 }
 
 print_consulation_hint();
-?>

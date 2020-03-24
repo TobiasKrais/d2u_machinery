@@ -13,7 +13,7 @@ class D2UMachineryModules {
 		$modules = [];
 		$modules[] = new D2UModule("90-1",
 			"D2U Machinery Addon - Hauptausgabe",
-			11);
+			12);
 		if(rex_plugin::get('d2u_machinery', 'industry_sectors')->isAvailable()) {
 			$modules[] = new D2UModule("90-2",
 				"D2U Machinery Addon - Branchen",
@@ -21,11 +21,11 @@ class D2UMachineryModules {
 		}
 		$modules[] = new D2UModule("90-3",
 			"D2U Machinery Addon - Kategorien",
-			3);
+			4);
 		if(rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
 			$modules[] = new D2UModule("90-4",
 				"D2U Machinery Addon - Gebrauchtmaschinen",
-				12);
+				13);
 		}
 		$modules[] = new D2UModule("90-5",
 			"D2U Machinery Addon - Box Beratungshinweis",

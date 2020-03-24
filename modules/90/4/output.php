@@ -425,7 +425,8 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 	// Google Analytics Event
 	if(rex_config::get('d2u_machinery', 'google_analytics_activate', 'false') == 'true' &&
 			rex_config::get('d2u_machinery', 'analytics_event_category', '') !== '' &&
-			rex_config::get('d2u_machinery', 'analytics_event_action', '') !== '') {
+			rex_config::get('d2u_machinery', 'analytics_event_action', '') !== '' &&
+			rex_request('search_it_build_index', 'int', FALSE) === FALSE) {
 		print '<script>'. PHP_EOL;
 		print '	$(\'button[type="submit"]\').click(function(e) {'. PHP_EOL;
 		print "		ga('send', 'event', {". PHP_EOL;
