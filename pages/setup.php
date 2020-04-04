@@ -48,6 +48,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.3.3-DEV:</p>
 <ul>
+	<li>Spanische Frontend Übersetzungen aktualisiert.</li>
 	<li>machine_steel_processing_extension: neues Feld Sägeblatt-Vorschub.</li>
 	<li>machine_steel_processing_extension: in der Zu-/Abfuhr wurde das Feld Überschrift entfernt (statt dessen Name verwenden).</li>
 	<li>Alle Module: wenn Google Analytics in den Einstellungen aktiviert ist wird der Google Code nicht ausgegeben, wenn search_it die Seite zur Indexierung aufruft.</li>

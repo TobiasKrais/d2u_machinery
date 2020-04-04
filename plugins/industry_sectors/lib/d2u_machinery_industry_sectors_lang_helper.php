@@ -30,7 +30,7 @@ class d2u_machinery_industry_sectors_lang_helper extends d2u_machinery_lang_help
 	 * value the replacement. 
 	 */
 	protected $replacements_spanish = [
-		'd2u_machinery_industry_sectors' => 'translation missing: d2u_machinery_industry_sectors'
+		'd2u_machinery_industry_sectors' => 'Industrias'
 	];
 
 	/**

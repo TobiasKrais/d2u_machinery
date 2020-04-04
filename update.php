@@ -196,3 +196,7 @@ if($this->getConfig('show_usage_areas', 'hide') == 'show') {
 	$this->setConfig('show_categories_usage_areas', 'show');
 	$this->removeConfig('show_usage_areas');
 }
+
+// Remove not needed sprog translations
+$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE `wildcard` = 'd2u_machinery_form_captcha';");
+$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE `wildcard` = 'd2u_machinery_form_validate_captcha';");
