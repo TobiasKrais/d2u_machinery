@@ -48,6 +48,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.3.3-DEV:</p>
 <ul>
+	<li>Aktualisiert beim Speichern automatisch den search_it index.</li>
 	<li>Spanische Frontend Übersetzungen aktualisiert.</li>
 	<li>machine_steel_processing_extension: neues Feld Sägeblatt-Vorschub.</li>
 	<li>machine_steel_processing_extension: in der Zu-/Abfuhr wurde das Feld Überschrift entfernt (statt dessen Name verwenden).</li>
