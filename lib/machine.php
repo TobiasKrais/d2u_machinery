@@ -910,10 +910,8 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			$this->online_status = "online";			
 		}
 		
-		// Don't forget to regenerate URL cache to make online machine available
-		if(rex_addon::get("url")->isAvailable()) {
-			d2u_addon_backend_helper::generateUrlCache();
-		}
+		// Don't forget to regenerate URL cache and search_it index
+		\d2u_addon_backend_helper::generateUrlCache();
 	}
 	
 	/**
@@ -942,6 +940,9 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			// reset priorities
 			$this->setPriority(TRUE);			
 		}
+
+		// Don't forget to regenerate URL cache / search_it index
+		\d2u_addon_backend_helper::generateUrlCache();
 
 		// Delete from YRewrite forward list
 		if(rex_addon::get('yrewrite')->isAvailable()) {
@@ -2297,10 +2298,8 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 		}
 
-		// Update URLs
-		if($regenerate_urls) {
-			\d2u_addon_backend_helper::generateUrlCache('machine_id');
-		}
+		// Don't forget to regenerate URL cache / search_it index
+		\d2u_addon_backend_helper::generateUrlCache();
 		
 		return !$error;
 	}

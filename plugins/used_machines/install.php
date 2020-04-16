@@ -165,6 +165,7 @@ if(\rex_addon::get('url')->isAvailable()) {
 	}
 
 	\d2u_addon_backend_helper::generateUrlCache();
+	\d2u_addon_backend_helper::update_searchit_url_index();
 }
 
 // Insert frontend translations

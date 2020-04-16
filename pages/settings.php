@@ -52,6 +52,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 				d2u_addon_backend_helper::update_url_scheme(\rex::getTablePrefix() ."d2u_machinery_url_used_machine_categories_sale", $settings['used_machine_article_id_sale']);		
 			}
 			\d2u_addon_backend_helper::generateUrlCache();
+			\d2u_addon_backend_helper::update_searchit_url_index();
 
 			// Update forward cache - wait for packages included to prevent internal Server error
 			rex_extension::register('PACKAGES_INCLUDED', function ($params) {

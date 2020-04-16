@@ -61,6 +61,9 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$used_machine->delete(FALSE);
 		}
 		else if($used_machine->save()){
+			// And regenerate search_it index
+			\d2u_addon_backend_helper::update_searchit_url_index();
+
 			// remember id, for each database lang object needs same id
 			$used_machine_id = $used_machine->used_machine_id;
 		}
@@ -104,6 +107,9 @@ else if (filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 			$used_machine->clang_id = $rex_clang->getId();
 		}
 		$used_machine->delete();
+
+		// And regenerate search_it index
+		\d2u_addon_backend_helper::update_searchit_url_index();
 	}
 	
 	$func = '';
@@ -113,6 +119,9 @@ else if($func == 'changestatus') {
 	$used_machine = new UsedMachine($entry_id, rex_config::get("d2u_helper", "default_lang"));
 	$used_machine->used_machine_id = $entry_id; // Ensure correct ID in case language has no object
 	$used_machine->changeStatus();
+
+	// And regenerate search_it index
+	\d2u_addon_backend_helper::update_searchit_url_index();
 	
 	header("Location: ". rex_url::currentBackendPage());
 	exit;

@@ -34,6 +34,8 @@ if(\rex_addon::get('url')->isAvailable()) {
 			. "'', '[]', 'before', UNIX_TIMESTAMP(), 'd2u_machinery_addon_installer', UNIX_TIMESTAMP(), 'd2u_machinery_addon_installer');");
 		\d2u_addon_backend_helper::generateUrlCache();
 	}
+
+	\d2u_addon_backend_helper::update_searchit_url_index();
 }
 
 // 1.0.1 Update database

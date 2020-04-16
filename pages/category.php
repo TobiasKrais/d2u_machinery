@@ -71,6 +71,9 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$category->delete(FALSE);
 		}
 		else if($category->save()){
+			// And regenerate search_it index
+			\d2u_addon_backend_helper::update_searchit_url_index();
+
 			// remember id, for each database lang object needs same id
 			$category_id = $category->category_id;
 		}
@@ -115,6 +118,8 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	// If not used, delete
 	if(count($uses_machines) == 0 && count($uses_used_machines) == 0 && count($uses_categories) == 0) {
 		$category->delete(TRUE);
+		// And regenerate search_it index
+		\d2u_addon_backend_helper::update_searchit_url_index();
 	}
 	else {
 		$message = '<ul>';

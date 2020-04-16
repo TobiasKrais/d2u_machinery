@@ -219,10 +219,8 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 			$this->online_status = "online";			
 		}
 		
-		// Don't forget to regenerate URL cache to make online machine available
-		if(rex_addon::get("url")->isAvailable()) {
-			d2u_addon_backend_helper::generateUrlCache();
-		}
+		// Don't forget to regenerate URL cache / search_it index
+		\d2u_addon_backend_helper::generateUrlCache();
 	}
 	
 	/**
@@ -253,6 +251,9 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 		if(rex_plugin::get("d2u_machinery", "export")->isAvailable()) {
 			ExportedUsedMachine::removeMachineFromAllExports($this->used_machine_id);
 		}
+
+		// Don't forget to regenerate URL cache / search_it index
+		\d2u_addon_backend_helper::generateUrlCache();
 
 		// Delete from YRewrite forward list
 		if(rex_addon::get('yrewrite')->isAvailable()) {

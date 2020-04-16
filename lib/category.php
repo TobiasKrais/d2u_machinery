@@ -267,6 +267,9 @@ class Category implements \D2U_Helper\ITranslationHelper{
 			$this->setPriority(TRUE);			
 		}
 
+		// Don't forget to regenerate URL list and search_it index
+		\d2u_addon_backend_helper::generateUrlCache();
+
 		// Delete from YRewrite forward list
 		if(rex_addon::get('yrewrite')->isAvailable()) {
 			if($delete_all) {
