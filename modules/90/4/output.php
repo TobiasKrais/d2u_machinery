@@ -161,6 +161,10 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 		$used_machine_id = $url_id;
 	}
 	$used_machine = new UsedMachine($used_machine_id, rex_clang::getCurrentId());
+	// Redirect if object is not online
+	if($used_machine->online_status != "online") {
+		\rex_redirect(rex_article::getNotfoundArticleId(), rex_clang::getCurrentId());
+	}
 	print '<div class="col-12">';
 	print '<div class="tab-content">';
 	
