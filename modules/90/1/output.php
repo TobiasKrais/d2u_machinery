@@ -316,6 +316,11 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		$machine_id = $url_id;
 	}
 	$machine = new Machine($machine_id, rex_clang::getCurrentId());
+	// Redirect if machine is not online
+	if($machine->online_status != "online") {
+		\rex_redirect(rex_article::getNotfoundArticleId(), rex_clang::getCurrentId());
+	}
+
 	print '<div class="col-12">';
 	print '<div class="tab-content">';
 	
