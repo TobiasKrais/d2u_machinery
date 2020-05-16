@@ -278,8 +278,11 @@ if ($func == '') {
 
 	$list->removeColumn('online_status');
 	if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]')) {
-		$list->addColumn(rex_i18n::msg('status_online'), '<a class="rex-###online_status###" href="' . rex_url::currentBackendPage(['func' => 'changestatus']) . '&entry_id=###used_machine_id###"><i class="rex-icon rex-icon-###online_status###"></i> ###online_status###</a>');
+		$list->addColumn(rex_i18n::msg('status_online'), '<i class="rex-icon rex-icon-###online_status###"></i> ###online_status###');
 		$list->setColumnLayout(rex_i18n::msg('status_online'), ['', '<td class="rex-table-action">###VALUE###</td>']);
+		$list->setColumnParams(rex_i18n::msg('status_online'), ['func' => 'changestatus', 'entry_id' => '###used_machine_id###']);
+		$list->addLinkAttribute(rex_i18n::msg('status_online'), 'class', 'rex-###online_status###');
+		$list->addLinkAttribute(rex_i18n::msg('status_online'), 'data-confirm', rex_i18n::msg('d2u_machinery_used_machines_confirm_status_change'));
 
 		$list->addColumn(rex_i18n::msg('d2u_helper_clone'), '<i class="rex-icon fa-copy"></i> ' . rex_i18n::msg('d2u_helper_clone'));
 		$list->setColumnLayout(rex_i18n::msg('d2u_helper_clone'), ['', '<td class="rex-table-action">###VALUE###</td>']);
