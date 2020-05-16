@@ -51,8 +51,9 @@ $d2u_module_manager->showManagerList();
 	<li>Modul 90-1 "D2U Machinery Addon - Hauptausgabe" leitet Offlinekurse auf die Fehlerseite weiter.</li>
 	<li>Aktualisiert beim Speichern automatisch den search_it index.</li>
 	<li>Spanische Frontend Übersetzungen aktualisiert.</li>
-	<li>machine_steel_processing_extension: neues Feld Sägeblatt-Vorschub.</li>
-	<li>machine_steel_processing_extension: in der Zu-/Abfuhr wurde das Feld Überschrift entfernt (statt dessen Name verwenden).</li>
+	<li>machine_steel_processing_extension Plugin: neues Feld Sägeblatt-Vorschub.</li>
+	<li>machine_steel_processing_extension Plugin: in der Zu-/Abfuhr wurde das Feld Überschrift entfernt (statt dessen Name verwenden).</li>
+	<li>used_machines Plugin: Beim umstellen des Status in der Maschinenliste wird der Benutzer gespeichert.</li>
 	<li>Alle Module: wenn Google Analytics in den Einstellungen aktiviert ist wird der Google Code nicht ausgegeben, wenn search_it die Seite zur Indexierung aufruft.</li>
 </ul>
 <p>1.3.2:</p>

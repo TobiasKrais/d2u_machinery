@@ -196,7 +196,9 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 		if($this->online_status == "online") {
 			if($this->used_machine_id > 0) {
 				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_used_machines "
-					."SET online_status = 'offline' "
+					."SET online_status = 'offline', "
+						."updatedate = CURRENT_TIMESTAMP, "
+						."updateuser = '". \rex::getUser()->getLogin() ."' "
 					."WHERE used_machine_id = ". $this->used_machine_id;
 				$result = \rex_sql::factory();
 				$result->setQuery($query);
@@ -211,7 +213,9 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 		else {
 			if($this->used_machine_id > 0) {
 				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_used_machines "
-					."SET online_status = 'online' "
+					."SET online_status = 'online', "
+						."updatedate = CURRENT_TIMESTAMP, "
+						."updateuser = '". \rex::getUser()->getLogin() ."' "
 					."WHERE used_machine_id = ". $this->used_machine_id;
 				$result = \rex_sql::factory();
 				$result->setQuery($query);
@@ -545,7 +549,9 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 					."pics = '". implode(",", $this->pics) ."', "
 					."machine_id = ". ($this->machine === FALSE ? 0 : $this->machine->machine_id) .", "
 					."location = '". $this->location ."', "
-					."external_url = '". $this->external_url ."' ";
+					."external_url = '". $this->external_url ."', "
+					."updatedate = CURRENT_TIMESTAMP, "
+					."updateuser = '". \rex::getUser()->getLogin() ."' ";
 			if(\rex_addon::get('d2u_videos')->isAvailable() && count($this->videos) > 0) {
 				$query .= ", video_ids = '|". implode("|", array_keys($this->videos)) ."|' ";
 			}
