@@ -88,7 +88,7 @@ if(\rex_addon::get('url')->isAvailable()) {
 	$clang_id = count(rex_clang::getAllIds()) == 1 ? rex_clang::getStartId() : 0;
 	$article_id_rent = rex_config::get('d2u_machinery', 'used_machine_article_id_rent', 0) > 0 ? rex_config::get('d2u_machinery', 'used_machine_article_id_rent') : rex_article::getSiteStartArticleId(); 
 	$article_id_sale = rex_config::get('d2u_machinery', 'used_machine_article_id_sale', 0) > 0 ? rex_config::get('d2u_machinery', 'used_machine_article_id_sale') : rex_article::getSiteStartArticleId(); 
-	if(rex_string::versionCompare(\rex_addon::get('url')->getVersion(), '1.5', '>=')) {
+	if(rex_version::compare(\rex_addon::get('url')->getVersion(), '1.5', '>=')) {
 		$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."url_generator_profile WHERE `namespace` = 'used_rent_machine_id';");
 		$sql->setQuery("INSERT INTO ". \rex::getTablePrefix() ."url_generator_profile (`namespace`, `article_id`, `clang_id`, `table_name`, `table_parameters`, `relation_1_table_name`, `relation_1_table_parameters`, `relation_2_table_name`, `relation_2_table_parameters`, `relation_3_table_name`, `relation_3_table_parameters`, `createdate`, `createuser`, `updatedate`, `updateuser`) VALUES
 			('used_rent_machine_id', "

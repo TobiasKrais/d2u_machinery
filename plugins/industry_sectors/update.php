@@ -10,7 +10,7 @@ $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_machinery
 if(\rex_addon::get('url')->isAvailable()) {
 	$clang_id = count(rex_clang::getAllIds()) == 1 ? rex_clang::getStartId() : 0;
 	$article_id = rex_config::get('d2u_machinery', 'article_id', 0) > 0 ? rex_config::get('d2u_machinery', 'article_id') : rex_article::getSiteStartArticleId(); 
-	if(rex_string::versionCompare(\rex_addon::get('url')->getVersion(), '1.5', '>=')) {
+	if(rex_version::compare(\rex_addon::get('url')->getVersion(), '1.5', '>=')) {
 		// Insert url schemes Version 2.x
 		$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."url_generator_profile WHERE `namespace` = 'industry_sector_id'");
 		$sql->setQuery("INSERT INTO ". \rex::getTablePrefix() ."url_generator_profile (`namespace`, `article_id`, `clang_id`, `table_name`, `table_parameters`, `relation_1_table_name`, `relation_1_table_parameters`, `relation_2_table_name`, `relation_2_table_parameters`, `relation_3_table_name`, `relation_3_table_parameters`, `createdate`, `createuser`, `updatedate`, `updateuser`) VALUES
@@ -56,7 +56,7 @@ d2u_machinery_industry_sectors_lang_helper::factory()->install();
 $sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_machinery_industry_sectors` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 $sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
-if (rex_string::versionCompare($this->getVersion(), '1.2.6', '<')) {
+if (rex_version::compare($this->getVersion(), '1.2.6', '<')) {
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang ADD COLUMN `updatedate_new` DATETIME NOT NULL AFTER `updatedate`;");
 	$sql->setQuery("UPDATE ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang SET `updatedate_new` = FROM_UNIXTIME(`updatedate`);");
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang DROP updatedate;");

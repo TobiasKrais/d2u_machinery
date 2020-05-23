@@ -48,6 +48,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.3.3-DEV:</p>
 <ul>
+	<li>Benötigt Redaxo >= 5.10, da die neue Klasse rex_version verwendet wird.</li>
 	<li>Modul 90-1 "D2U Machinery Addon - Hauptausgabe" leitet Offlinekurse auf die Fehlerseite weiter.</li>
 	<li>Aktualisiert beim Speichern automatisch den search_it index.</li>
 	<li>Spanische Frontend Übersetzungen aktualisiert.</li>
