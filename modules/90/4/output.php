@@ -412,7 +412,7 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 			validate|empty|privacy_policy_accepted|'. $tag_open .'d2u_machinery_form_validate_privacy_policy'. $tag_close .'
 			validate|customfunction|validate_timer|d2u_addon_frontend_helper::yform_validate_timer|3|'. $tag_open .'d2u_machinery_form_validate_spambots'. $tag_close .'|
 
-			action|tpl2email|d2u_machinery_machine_request|emaillabel|'. $d2u_machinery->getConfig('request_form_email');
+			action|tpl2email|d2u_machinery_machine_request|'. $d2u_machinery->getConfig('request_form_email');
 
 	$yform = new rex_yform;
 	$yform->setFormData(trim($form_data));
