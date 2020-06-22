@@ -49,6 +49,7 @@ $d2u_module_manager->showManagerList();
 <p>1.3.3-DEV:</p>
 <ul>
 	<li>Benötigt Redaxo >= 5.10, da die neue Klasse rex_version verwendet wird.</li>
+	<li>Anpassung an aktuelle Git Version des URL Addons (Version vom 22.06.2020).</li>
 	<li>Modul 90-1 "D2U Machinery Addon - Hauptausgabe" leitet Offlinekurse auf die Fehlerseite weiter.</li>
 	<li>Module 90-1 "D2U Machinery Addon - Hauptausgabe" und 90-4 "D2U Machinery Addon - Gebrauchtmaschinen" an YForm 3.4 angepasst.</li>
 	<li>Aktualisiert beim Speichern automatisch den search_it index.</li>

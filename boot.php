@@ -201,7 +201,6 @@ function rex_d2u_machinery_url_shortener(rex_extension_point $ep) {
 
 			// Replace
 			$new_url = new \Url\Url(str_replace($article_url_without_lang_slug_split_encoded, '/', $url->__toString()));
-			$new_url->handleRewriterSuffix();
 
 			// Add forwarders
 			if(rex_config::get('d2u_machinery', 'short_urls_forward', "false") === "true") {
