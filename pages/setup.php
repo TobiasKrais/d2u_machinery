@@ -46,6 +46,10 @@ $d2u_module_manager->showManagerList();
 	</form>
 </fieldset>
 <h2>Changelog</h2>
+<p>1.3.4-DEV:</p>
+<ul>
+	<li>...</li>
+</ul>
 <p>1.3.3:</p>
 <ul>
 	<li>Benötigt Redaxo >= 5.10, da die neue Klasse rex_version verwendet wird.</li>
