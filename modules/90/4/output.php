@@ -266,7 +266,7 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 	}
 	print '</p></div>';
 	// Year built
-	if($used_machine->year_built != "") {
+	if($used_machine->year_built > 0) {
 		print '<div class="col-12">';
 		print '<p><b>'. $tag_open .'d2u_machinery_used_machines_year_built'. $tag_close .':</b> '. $used_machine->year_built .'</p>';
 		print '</div>';
