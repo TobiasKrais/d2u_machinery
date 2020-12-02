@@ -55,7 +55,7 @@ $d2u_module_manager->showManagerList();
 <ul>
 	<li>Benötigt Redaxo >= 5.10, da die neue Klasse rex_version verwendet wird.</li>
 	<li>Anpassung an aktuelle Git Version des URL Addons (Version vom 22.06.2020).</li>
-	<li>Modul 90-1 "D2U Machinery Addon - Hauptausgabe" leitet Offlinekurse auf die Fehlerseite weiter.</li>
+	<li>Modul 90-1 "D2U Machinery Addon - Hauptausgabe" leitet Offlinemaschinen auf die Fehlerseite weiter.</li>
 	<li>Module 90-1 "D2U Machinery Addon - Hauptausgabe" und 90-4 "D2U Machinery Addon - Gebrauchtmaschinen" an YForm 3.4 angepasst.</li>
 	<li>Spanische Frontend Übersetzungen aktualisiert.</li>
 	<li>machine_steel_processing_extension Plugin: neues Feld Sägeblatt-Vorschub.</li>
