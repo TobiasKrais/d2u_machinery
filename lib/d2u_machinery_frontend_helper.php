@@ -175,10 +175,6 @@ class d2u_machinery_frontend_helper {
 				$breadcrumbs[] = '<a href="' . $category->parent_category->getUrl() . '">' . $category->parent_category->name . '</a>';
 			}
 			$breadcrumbs[] = '<a href="' . $category->getUrl() . '">' . $category->name . '</a>';
-			// Cutting range configurator
-			if(rex_plugin::get("d2u_machinery", "machine_steel_processing_extension")->isAvailable() && filter_input(INPUT_GET, 'cutting_range_configurator') != "") {
-				$breadcrumbs[] = '<a href="' . $category->getURLCuttingRangeConfigurator() . '">' . $category->steel_processing_saw_cutting_range_title . '</a>';
-			}
 		}
 		if($machine !== FALSE) {
 			$breadcrumbs[] = '<a href="' . $machine->getUrl() . '">' . ($machine->lang_name == "" ? $machine->name : $machine->lang_name) . '</a>';

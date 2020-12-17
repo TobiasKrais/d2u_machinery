@@ -77,16 +77,6 @@ class Category implements \D2U_Helper\ITranslationHelper{
 	var $export_mascus_category_name = "";
 	
 	/**
-	 * @var string Title cutting range 
-	 */
-	var $steel_processing_saw_cutting_range_title = "";
-		
-	/**
-	 * @var string Cutting range configurator file
-	 */
-	var $steel_processing_saw_cutting_range_file = "";
-
-	/**
 	 * @var string Show agitators in machines of this category. Values are "hide" or "show"
 	 */
 	var $show_agitators = "hide";
@@ -183,12 +173,6 @@ class Category implements \D2U_Helper\ITranslationHelper{
 			// Agitator fields
 			if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable()) {
 				$this->show_agitators = $result->getValue("show_agitators");
-			}
-
-			// Sawing machines plugin fields
-			if(rex_plugin::get("d2u_machinery", "machine_steel_processing_extension")->isAvailable()) {
-				$this->steel_processing_saw_cutting_range_title = $result->getValue("steel_processing_saw_cutting_range_title");
-				$this->steel_processing_saw_cutting_range_file = $result->getValue("steel_processing_saw_cutting_range_file");
 			}
 
 			// Videos
@@ -588,40 +572,6 @@ class Category implements \D2U_Helper\ITranslationHelper{
 			return $this->url;
 		}
 	}
-	
-	/*
-	 * Returns the URL of this object.
-	 * @param string $including_domain TRUE if Domain name should be included
-	 * @return string URL
-	 */
-	public function getURLCuttingRangeConfigurator($including_domain = FALSE) {
-		if(rex_plugin::get("d2u_machinery", "machine_steel_processing_extension")->isAvailable()) {
-			if($this->cutting_range_url == "") {
-				$d2u_machinery = rex_addon::get("d2u_machinery");
-
-				$parameterArray = [];
-				$parameterArray['category_id'] = $this->category_id;
-				$parameterArray['cutting_range_configurator'] = $this->steel_processing_saw_cutting_range_file;
-
-				$article_id = $d2u_machinery->getConfig('article_id');
-				$this->cutting_range_url = rex_getUrl($article_id, $this->clang_id, $parameterArray, "&");
-			}
-
-			if($including_domain) {
-				if(\rex_addon::get('yrewrite') && \rex_addon::get('yrewrite')->isAvailable())  {
-					return str_replace(\rex_yrewrite::getCurrentDomain()->getUrl() .'/', \rex_yrewrite::getCurrentDomain()->getUrl(), \rex_yrewrite::getCurrentDomain()->getUrl() . $this->cutting_range_url);
-				}
-				else {
-					return str_replace(\rex::getServer(). '/', \rex::getServer(), \rex::getServer() . $this->cutting_range_url);
-				}
-			}
-			else {
-				return $this->cutting_range_url;
-			}
-		}
-		
-		return FALSE;
-	}
 
 	/**
 	 * Detects usage of this category as parent category.
@@ -744,10 +694,6 @@ class Category implements \D2U_Helper\ITranslationHelper{
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = CURRENT_TIMESTAMP, "
 						."updateuser = '". \rex::getUser()->getLogin() ."' ";
-				if(rex_plugin::get("d2u_machinery", "machine_steel_processing_extension")->isAvailable()) {
-					$query .= ", steel_processing_saw_cutting_range_file = '". $this->steel_processing_saw_cutting_range_file ."', "
-						."steel_processing_saw_cutting_range_title = '". $this->steel_processing_saw_cutting_range_title ."' ";
-				}
 
 				$result = \rex_sql::factory();
 				$result->setQuery($query);

@@ -58,13 +58,6 @@ $sql = \rex_sql::factory();
     ->removeColumn('beam_color_guns')
     ->ensure();
 
-// Delete columns in catgory tables
-\rex_sql_table::get(
-    \rex::getTable('d2u_machinery_categories_lang'))
-    ->removeColumn('steel_processing_saw_cutting_range_title')
-    ->removeColumn('steel_processing_saw_cutting_range_file')
-    ->ensure();
-
 // Delete tables
 $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_steel_automation');
 $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_steel_automation_lang');

@@ -36,6 +36,12 @@ $sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_machinery_steel_weld
 	->removeColumn('title')
     ->alter();
 
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_categories_lang'))
+	->removeColumn('steel_processing_saw_cutting_range_file')
+	->removeColumn('steel_processing_saw_cutting_range_title')
+    ->alter();
+
 // Insert frontend translations
 if(!class_exists('d2u_machinery_machine_steel_processing_extension_lang_helper')) {
 	// Load class in case addon is deactivated

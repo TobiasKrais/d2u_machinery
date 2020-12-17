@@ -61,11 +61,6 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			// Checkbox also need special treatment if empty
 			$category->show_agitators = array_key_exists('show_agitators', $form) ? 'show' : 'hide';
 		}
-		// Sawing machines plugin fields
-		if(rex_plugin::get("d2u_machinery", "machine_steel_processing_extension")->isAvailable()) {
-			$category->steel_processing_saw_cutting_range_title = $form['lang'][$rex_clang->getId()]['steel_processing_saw_cutting_range_title'];
-			$category->steel_processing_saw_cutting_range_file = $input_media['cutting_range_'. $rex_clang->getId()];
-		}
 		
 		if($category->translation_needs_update == "delete") {
 			$category->delete(FALSE);
@@ -188,11 +183,6 @@ if ($func == 'edit' || $func == 'add') {
 									d2u_addon_backend_helper::form_input('d2u_machinery_category_usage_area', "form[lang][". $rex_clang->getId() ."][usage_area]", $category->usage_area, FALSE, $readonly_lang, "text");
 									d2u_addon_backend_helper::form_mediafield('d2u_machinery_category_pic_lang', 'pic_lang_'. $rex_clang->getId(), $category->pic_lang, $readonly_lang);
 									d2u_addon_backend_helper::form_medialistfield('d2u_machinery_category_pdfs', intval('1'. $rex_clang->getId()), $category->pdfs, $readonly_lang);
-									// Sawing machines plugin fields
-									if(rex_plugin::get("d2u_machinery", "machine_steel_processing_extension")->isAvailable()) {
-										d2u_addon_backend_helper::form_input('d2u_machinery_steel_cutting_range_configurator_title', "form[lang][". $rex_clang->getId() ."][steel_processing_saw_cutting_range_title]", $category->steel_processing_saw_cutting_range_title, FALSE, $readonly_lang, "text");
-										d2u_addon_backend_helper::form_mediafield('d2u_machinery_steel_cutting_range_configurator_file', 'cutting_range_'.$rex_clang->getId(), $category->steel_processing_saw_cutting_range_file, $readonly_lang);
-									}
 								?>
 							</div>
 						</div>
