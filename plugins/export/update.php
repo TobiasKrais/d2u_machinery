@@ -24,5 +24,6 @@ if (rex_version::compare($this->getVersion(), '1.2.6', '<')) {
     \rex::getTable('d2u_machinery_export_provider'))
     ->removeColumn('facebook_email')
     ->removeColumn('facebook_pageid')
+    ->removeColumn('twitter_id')
     ->ensure();
 $sql->setQuery("DELETE FROM `". rex::getTablePrefix() ."d2u_machinery_export_provider` WHERE type = 'facebook';");

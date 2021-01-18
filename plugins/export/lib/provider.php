@@ -300,9 +300,6 @@ class Provider {
 			$mascus = new Mascus($this);
 			return $mascus->export();
 		}
-		else if($this->type == "twitter") {
-			return "Schnittstelle ist nicht programmiert.";
-		}
 		else if($this->type == "linkedin") {
 			// Check requirements
 			if (!function_exists('curl_init')) {

@@ -29,7 +29,6 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	$provider->social_app_secret = $form['social_app_secret'];
 	$provider->linkedin_email = $form['linkedin_email'];
 	$provider->linkedin_groupid = $form['linkedin_groupid'];
-//	$provider->twitter_id = $form['twitter_id'];
 
 	if($provider->save() == FALSE){
 		$message = 'form_save_error';

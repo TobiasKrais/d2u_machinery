@@ -23,7 +23,6 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machi
 	social_oauth_token_valid_until int(11) collate utf8mb4_unicode_ci default NULL,
 	linkedin_email varchar(255) collate utf8mb4_unicode_ci default NULL,
 	linkedin_groupid varchar(255) collate utf8mb4_unicode_ci default NULL,
-	twitter_id varchar(255) collate utf8mb4_unicode_ci default NULL,
 	PRIMARY KEY (provider_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
  
