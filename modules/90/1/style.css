@@ -49,6 +49,10 @@
 	padding-bottom: 1em;
 }
 
+.subhead-nav .nav-item {
+    padding: 0 15px;
+}
+
 .techdata td, .downloads, .inactive-cell, .consultation, .deliverybox, .block-box {
 	background-color: article_color_box;
 	border: 1px solid white;

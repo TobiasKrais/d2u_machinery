@@ -7,6 +7,10 @@
 		url("./assets/addons/be_style/fonts/fontawesome-webfont.ttf?v=4.7.0") format('truetype'),
 		url("./assets/addons/be_style/fonts/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular") format('svg');
 }
+.subhead-nav .nav-item {
+    padding: 0 15px;
+}
+
 .download-list {
 	padding: 0;
 }
