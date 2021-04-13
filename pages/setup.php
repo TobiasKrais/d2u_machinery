@@ -51,6 +51,7 @@ $d2u_module_manager->showManagerList();
 	<li>machine_steel_processing_extension Plugin: Schnittbereichskonfigurator entfernt.</li>
 	<li>used_machines Plugin Fehler beim Speichern behoben.</li>
 	<li>Module 90-1 "D2U Machinery Addon - Hauptausgabe" und 90-4 "D2U Machinery Addon - Gebrauchtmaschinen" verwenden das Addon yform_spam_protection falls installiert.</li>
+	<li>Module 90-1 "D2U Machinery Addon - Hauptausgabe" und 90-4 "D2U Machinery Addon - Gebrauchtmaschinen" CSS Fehler behoben.</li>
 </ul>
 <p>1.3.3:</p>
 <ul>
