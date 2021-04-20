@@ -20,6 +20,11 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 	var $clang_id = 0;
 	
 	/**
+	 * @var int Sort Priority
+	 */
+	var $priority = 0;
+	
+	/**
 	 * @var String Status. Either "online" or "offline".
 	 */
 	var $online_status = "online";
@@ -67,6 +72,7 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 
 		if ($num_rows > 0) {
 			$this->supply_id = $result->getValue("supply_id");
+			$this->priority = $result->getValue("priority");
 			$this->online_status = $result->getValue("online_status");
 			$this->name = stripslashes($result->getValue("name"));
 			$this->description = stripslashes($result->getValue("description"));
@@ -130,6 +136,9 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 				."WHERE supply_id = ". $this->supply_id;
 			$result = \rex_sql::factory();
 			$result->setQuery($query);
+
+			// reset priorities
+			$this->setPriority(TRUE);			
 		}
 	}
 	
@@ -148,7 +157,7 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 			$query .= "WHERE online_status = 'online' ";
 		}
 
-		$query .= "ORDER BY name";
+		$query .= "ORDER BY priority";
 
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
@@ -221,11 +230,17 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 		// Save the not language specific part
 		$pre_save_supply = new Supply($this->supply_id, $this->clang_id);
 		
+		// save priority, but only if new or changed
+		if($this->priority != $pre_save_supply->priority || $this->supply_id == 0) {
+			$this->setPriority();
+		}
+		
 		// saving the rest
 		if($this->supply_id == 0 || $pre_save_supply != $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_steel_supply SET "
 					."online_status = '". $this->online_status ."', "
-					."pic = '". $this->pic ."' ";
+					."pic = '". $this->pic ."', "
+					."priority = ". $this->priority ." ";
 			if(\rex_addon::get('d2u_videos')->isAvailable() && $this->video !== FALSE) {
 				$query .= ", video_id = ". $this->video->video_id;
 			}
@@ -266,5 +281,43 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 		}
 		
 		return !$error;
+	}
+	
+	/**
+	 * Reassigns priorities in database.
+	 * @param boolean $delete Reorder priority after deletion
+	 */
+	private function setPriority($delete = FALSE) {
+		// Pull priorities from database
+		$query = "SELECT supply_id, priority FROM ". \rex::getTablePrefix() ."d2u_machinery_steel_supply "
+			."WHERE supply_id <> ". $this->supply_id ." ORDER BY priority";
+		$result = \rex_sql::factory();
+		$result->setQuery($query);
+		
+		// When prio is too small, set at beginning
+		if($this->priority <= 0) {
+			$this->priority = 1;
+		}
+		
+		// When prio is too high or was deleted, simply add at end 
+		if($this->priority > $result->getRows() || $delete) {
+			$this->priority = $result->getRows() + 1;
+		}
+
+		$objects = [];
+		for($i = 0; $i < $result->getRows(); $i++) {
+			$objects[$result->getValue("priority")] = $result->getValue("supply_id");
+			$result->next();
+		}
+		array_splice($objects, ($this->priority - 1), 0, array($this->supply_id));
+
+		// Save all prios
+		foreach($objects as $prio => $object_id) {
+			$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_steel_supply "
+					."SET priority = ". ($prio + 1) ." " // +1 because array_splice recounts at zero
+					."WHERE supply_id = ". $object_id;
+			$result = \rex_sql::factory();
+			$result->setQuery($query);
+		}
 	}
 }

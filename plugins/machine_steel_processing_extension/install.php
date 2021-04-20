@@ -69,6 +69,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machi
 // Create tables: supply chain
 $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_supply (
 	supply_id int(10) unsigned NOT NULL auto_increment,
+	priority int(10) default NULL,
 	online_status varchar(10) collate utf8mb4_unicode_ci default 'online',
 	pic varchar(255) collate utf8mb4_unicode_ci default NULL,
 	video_id int(10) default NULL,

@@ -232,7 +232,7 @@ class Feature implements \D2U_Helper\ITranslationHelper {
 			$query = \rex::getTablePrefix() ."d2u_machinery_features SET "
 					."pic = '". $this->pic ."', "
 					."category_ids = '|". implode("|", $this->category_ids) ."|', "
-					."priority = '". $this->priority ."' ";
+					."priority = ". $this->priority ." ";
 			if(\rex_addon::get('d2u_videos')->isAvailable() && $this->video !== FALSE) {
 				$query .= ", video_id = ". $this->video->video_id;
 			}

@@ -48,7 +48,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.3.5-DEV:</p>
 <ul>
-	<li>...</li>
+	<li>machine_steel_processing_extension Plugin: Priorität der Zu-/Abfuhrseite hinzugefügt.</li>
 </ul>
 <p>1.3.4:</p>
 <ul>
