@@ -144,10 +144,10 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 					}
 				}
 				$automation_supply_ids = isset($form['automation_supply_ids']) ? $form['automation_supply_ids'] : [];
-				$machine->automation_supplys = [];
+				$machine->automation_supply_ids = [];
 				foreach($automation_supply_ids as $automation_supply_id) {
 					if($automation_supply_id > 0) {
-						$machine->automation_supplys[$automation_supply_id] = new Supply($automation_supply_id, rex_config::get("d2u_helper", "default_lang"));
+						$machine->automation_supply_ids[] = $automation_supply_id;
 					}
 				}
 				$machine->workspace = $form['workspace'];
@@ -569,7 +569,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						foreach (Supply::getAll(rex_config::get("d2u_helper", "default_lang")) as $supply) {
 							$options_supply[$supply->supply_id] = $supply->name;
 						}
-						d2u_addon_backend_helper::form_select('d2u_machinery_steel_automation_supplys', 'form[automation_supply_ids][]', $options_supply, array_keys($machine->automation_supplys), 4, TRUE, $readonly);
+						d2u_addon_backend_helper::form_select('d2u_machinery_steel_automation_supplys', 'form[automation_supply_ids][]', $options_supply, $machine->automation_supply_ids, 4, TRUE, $readonly);
 						print '</div>';
 						print '</fieldset>';
 

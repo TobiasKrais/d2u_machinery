@@ -205,6 +205,11 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	var $automation_supplys = [];
 
 	/**
+	 * @var int[] machine_steel_processing_extension: Automation supply ids
+	 */
+	var $automation_supply_ids = [];
+
+	/**
 	 * @var string machine_steel_processing_extension: Workspace (mm x mm or only mm).
 	 */
 	var $workspace = "";	
@@ -810,10 +815,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 				foreach($automation_automationgrade_ids as $automation_automationgrade_id) {
 					$this->automation_automationgrades[$automation_automationgrade_id] = new Automation($automation_automationgrade_id, $this->clang_id);
 				}
-				$automation_supply_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("automation_supply_ids")), PREG_GREP_INVERT);
-				foreach($automation_supply_ids as $automation_supply_id) {
-					$this->automation_supplys[$automation_supply_id] = new Supply($automation_supply_id, $this->clang_id);
-				}
+				$this->automation_supply_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("automation_supply_ids")), PREG_GREP_INVERT);
 				$this->workspace = $result->getValue("workspace");
 				$this->workspace_square = $result->getValue("workspace_square");
 				$this->workspace_flat = $result->getValue("workspace_flat");
@@ -1007,9 +1009,25 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	public function getFeatures() {
 		$features = [];
 		foreach ($this->feature_ids as $feature_id) {
-			$features[] = new Feature($feature_id, $this->clang_id);
+			$feature = new Feature($feature_id, $this->clang_id);
+			$features[$feature->priority] = $feature;
 		}
+		ksort($features);
 		return $features;
+	}
+	
+	/**
+	 * Get supply objects related to this machine.
+	 * @return Supply[] Array with supply objects.
+	 */
+	public function getSupplies() {
+		$supplies = [];
+		foreach ($this->automation_supply_ids as $supply_id) {
+			$supply_id = new Supply($supply_id, $this->clang_id);
+			$supplies[$supply_id->priority] = $supply_id;
+		}
+		ksort($supplies);
+		return $supplies;
 	}
 
 	/**
@@ -2187,7 +2205,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 					.", automation_feedrate_sawblade = '". $this->automation_feedrate_sawblade ."' "
 					.", automation_rush_leader_flyback = '". $this->automation_rush_leader_flyback ."' "
 					.", automation_automationgrade_ids = '|". implode("|", array_keys($this->automation_automationgrades)) ."|' "
-					.", automation_supply_ids = '|". implode("|", array_keys($this->automation_supplys)) ."|' "
+					.", automation_supply_ids = '|". implode("|", $this->automation_supply_ids) ."|' "
 					.", workspace = '". $this->workspace ."' "
 					.", workspace_square = '". $this->workspace_square ."' "
 					.", workspace_flat = '". $this->workspace_flat ."' "
