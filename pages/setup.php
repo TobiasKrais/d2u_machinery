@@ -46,6 +46,10 @@ $d2u_module_manager->showManagerList();
 	</form>
 </fieldset>
 <h2>Changelog</h2>
+<p>1.3.5-DEV:</p>
+<ul>
+	<li>...</li>
+</ul>
 <p>1.3.4:</p>
 <ul>
 	<li>machine_steel_processing_extension Plugin: Schnittbereichskonfigurator entfernt.</li>
