@@ -46,11 +46,11 @@ $d2u_module_manager->showManagerList();
 	</form>
 </fieldset>
 <h2>Changelog</h2>
-<p>1.3.4-DEV:</p>
+<p>1.3.4:</p>
 <ul>
 	<li>machine_steel_processing_extension Plugin: Schnittbereichskonfigurator entfernt.</li>
 	<li>used_machines Plugin Fehler beim Speichern behoben.</li>
-	<li>Die Kategorien in den Features werden nun ausgeschrieben.</li>
+	<li>machine_features_extension Plugin: Die Kategorien in den Features werden nun ausgeschrieben.</li>
 	<li>Untermenü für Smartmenu hinzugefügt.</li>
 	<li>Module 90-1 "D2U Machinery Addon - Hauptausgabe" und 90-4 "D2U Machinery Addon - Gebrauchtmaschinen" verwenden das Addon yform_spam_protection falls installiert.</li>
 	<li>Module 90-1 "D2U Machinery Addon - Hauptausgabe" und 90-4 "D2U Machinery Addon - Gebrauchtmaschinen" CSS Fehler behoben.</li>
