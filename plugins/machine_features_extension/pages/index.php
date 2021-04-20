@@ -241,7 +241,18 @@ if ($func == '') {
     $list->setColumnLabel('name', rex_i18n::msg('d2u_helper_name'));
     $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###feature_id###']);
 
-    $list->setColumnLabel('name', rex_i18n::msg('d2u_helper_categories'));
+	$list->setColumnLabel('category_ids', rex_i18n::msg('d2u_helper_categories'));
+	$list->setColumnFormat('category_ids', 'custom', function ($params) {
+		$list_params = $params['list'];
+		$cat_names = [];
+		foreach(preg_grep('/^\s*$/s', explode("|", $list_params->getValue('category_ids')), PREG_GREP_INVERT) as $category_id) {
+			$category = new Category($category_id, rex_config::get("d2u_helper", "default_lang"));
+			if($category && $category->name != "") {
+				$cat_names[] = $category->name;
+			}
+		}
+		return implode(', ', $cat_names);
+	});
 
 	$list->setColumnLabel('priority', rex_i18n::msg('header_priority'));
 
