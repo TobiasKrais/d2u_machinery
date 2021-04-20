@@ -105,7 +105,7 @@ class d2u_machinery_machine_steel_processing_extension_lang_helper extends d2u_m
 		'd2u_machinery_steel_saw_band' => 'Sägeband',
 		'd2u_machinery_steel_saw_band_tilt' => 'Sägebandneigung',
 		'd2u_machinery_steel_saw_blade' => 'Sägeblatt',
-		'd2u_machinery_steel_saw_cutting_speed' => 'Schnittgeschwindigkeit',
+		'd2u_machinery_steel_saw_cutting_speed' => 'Schnittgeschwindigkeit (wahlweise)',
 		'd2u_machinery_steel_saw_miter' => 'Schwenkbereich für Gehrungsschnitte',
 		'd2u_machinery_steel_shaving_unit_angle_steel_single_cut' => 'Winkelstahl-Schereinheit single cut',
 		'd2u_machinery_steel_sheet_length' => 'Blech-Ausgangsmaterial Blechlänge',
