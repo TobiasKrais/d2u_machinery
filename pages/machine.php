@@ -562,12 +562,12 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						d2u_addon_backend_helper::form_input('d2u_machinery_steel_automation_rush_leader_flyback', 'form[automation_rush_leader_flyback]', $machine->automation_rush_leader_flyback, FALSE, $readonly, "text");
 						$options_automation = [];
 						foreach (Automation::getAll(rex_config::get("d2u_helper", "default_lang")) as $automation) {
-							$options_automation[$automation->automation_id] = $automation->name;
+							$options_automation[$automation->automation_id] = $automation->name ." (ID: ". $automation->automation_id .")";
 						}
 						d2u_addon_backend_helper::form_select('d2u_machinery_steel_automation_automationgrades', 'form[automation_automationgrade_ids][]', $options_automation, array_keys($machine->automation_automationgrades), 4, TRUE, $readonly);
 						$options_supply = [];
 						foreach (Supply::getAll(rex_config::get("d2u_helper", "default_lang")) as $supply) {
-							$options_supply[$supply->supply_id] = $supply->name;
+							$options_supply[$supply->supply_id] = $supply->priority ." - ". $supply->name ." (ID: ". $supply->supply_id .")";
 						}
 						d2u_addon_backend_helper::form_select('d2u_machinery_steel_automation_supplys', 'form[automation_supply_ids][]', $options_supply, $machine->automation_supply_ids, 4, TRUE, $readonly);
 						print '</div>';

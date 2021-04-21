@@ -200,11 +200,6 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	var $automation_automationgrades = [];
 	
 	/**
-	 * @var Supply[] machine_steel_processing_extension: Automation supply objects
-	 */
-	var $automation_supplys = [];
-
-	/**
 	 * @var int[] machine_steel_processing_extension: Automation supply ids
 	 */
 	var $automation_supply_ids = [];
