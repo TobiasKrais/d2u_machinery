@@ -2041,7 +2041,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	 * @return Complete title tag.
 	 */
 	public function getTitleTag() {
-		return '<title>'. $this->name .' / '. $this->category->name .' / '. \rex::getServerName() .'</title>';
+		return '<title>'. $this->name .' / '. ($this->category ? $this->category->name .' / ' : ''). \rex::getServerName() .'</title>';
 	}
 	
 	/**
