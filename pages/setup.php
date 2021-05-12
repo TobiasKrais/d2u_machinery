@@ -51,6 +51,7 @@ $d2u_module_manager->showManagerList();
 	<li>Maschinen: Warnung beim Erstellen der Meta Tags entfernt.</li>
 	<li>machine_steel_processing_extension Plugin: Priorität der Zu-/Abfuhrseite hinzugefügt.</li>
 	<li>machine_features_extension Plugin: Sortierung der Features nun korrekt nach Priorität.</li>
+	<li>used_machines Plugin: PHP Warnung entfernt.</li>
 </ul>
 <p>1.3.4:</p>
 <ul>

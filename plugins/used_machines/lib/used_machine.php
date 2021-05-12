@@ -394,7 +394,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 	 * @return Complete title tag.
 	 */
 	public function getTitleTag() {
-		return '<title>'. $this->name .' / '. $this->category->name .' / '. \rex::getServerName() .'</title>';
+		return '<title>'. $this->name .' / '. ($this->category !== false ? $this->category->name .' / ' : ''). \rex::getServerName() .'</title>';
 	}
 	
 	/**
