@@ -835,11 +835,12 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 			validate|compare_value|mailvalidate||!=|'. $tag_open .'d2u_machinery_form_validate_spam_detected'. $tag_close .'|
 			html|honeypot||</div>';
 	}
-		$form_data .= '
+	$form_data .= '
 			php|validate_timer|Spamprotection|<input name="validate_timer" type="hidden" value="'. microtime(true) .'" />|
 
 			html|honeypot||<div class="hide-validation">
 			text|mailvalidate|'. $tag_open .'d2u_machinery_form_email'. $tag_close .'||no_db
+			html|honeypot||</div>
 
 			html||<br>* '. $tag_open .'d2u_machinery_form_required'. $tag_close .'<br><br>
 
