@@ -301,15 +301,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 		}
 		return $categories;
 	}
-	
-	/**
-	 * Get the <link rel="canonical"> tag for page header.
-	 * @return Complete tag.
-	 */
-	public function getCanonicalTag() {
-		return '<link rel="canonical" href="'. $this->getURL() .'">';
-	}
-	
+
 	/**
 	 * Detects usage of this category as parent category and returns categories.
 	 * @return Category[] Child categories.
@@ -368,14 +360,6 @@ class Category implements \D2U_Helper\ITranslationHelper{
 	}
 	
 	/**
-	 * Get the <title> tag for page header.
-	 * @return Complete title tag.
-	 */
-	public function getTitleTag() {
-		return '<title>'. $this->name .' / '. \rex::getServerName() .'</title>';
-	}
-	
-	/**
 	 * Get UsageArea matrix for this category.
 	 * @return mixed[] Key is the name of the UsageArea. Values are the machine
 	 * ids that use the UsageArea.
@@ -426,34 +410,6 @@ class Category implements \D2U_Helper\ITranslationHelper{
 			$result->next();
 		}
 		return $machines;
-	}
-
-	/**
-	 * Get the <meta rel="alternate" hreflang=""> tags for page header.
-	 * @return Complete tags.
-	 */
-	public function getMetaAlternateHreflangTags() {
-		$hreflang_tags = "";
-		foreach(rex_clang::getAll(TRUE) as $rex_clang) {
-			if($rex_clang->getId() == $this->clang_id && $this->translation_needs_update != "delete") {
-				$hreflang_tags .= '<link rel="alternate" type="text/html" hreflang="'. $rex_clang->getCode() .'" href="'. $this->getURL() .'" title="'. str_replace('"', '', $this->name) .'">';
-			}
-			else {
-				$category = new Category($this->category_id, $rex_clang->getId());
-				if($category->translation_needs_update != "delete") {
-					$hreflang_tags .= '<link rel="alternate" type="text/html" hreflang="'. $rex_clang->getCode() .'" href="'. $category->getURL() .'" title="'. str_replace('"', '', $category->name) .'">';
-				}
-			}
-		}
-		return $hreflang_tags;
-	}
-	
-	/**
-	 * Get the <meta name="description"> tag for page header.
-	 * @return Complete tag.
-	 */
-	public function getMetaDescriptionTag() {
-		return '<meta name="description" content="'. $this->teaser .'">';
 	}
 	
 	/**

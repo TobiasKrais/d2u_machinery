@@ -182,14 +182,6 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 	}
 	
 	/**
-	 * Get the <link rel="canonical"> tag for page header.
-	 * @return Complete tag.
-	 */
-	public function getCanonicalTag() {
-		return '<link rel="canonical" href="'. $this->getURL() .'">';
-	}
-	
-	/**
 	 * Gets the machines referring to this object.
 	 * @param boolean $online_only TRUE if only online machines should be returned.
 	 * @return Machine[] Machines referring to this object.
@@ -209,42 +201,6 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 			$result->next();
 		}
 		return $machines;
-	}
-	
-	/**
-	 * Get the <meta rel="alternate" hreflang=""> tags for page header.
-	 * @return Complete tags.
-	 */
-	public function getMetaAlternateHreflangTags() {
-		$hreflang_tags = "";
-		foreach(rex_clang::getAll(TRUE) as $rex_clang) {
-			if($rex_clang->getId() == $this->clang_id && $this->translation_needs_update != "delete") {
-				$hreflang_tags .= '<link rel="alternate" type="text/html" hreflang="'. $rex_clang->getCode() .'" href="'. $this->getURL() .'" title="'. str_replace('"', '', $this->name) .'">';
-			}
-			else {
-				$industry_sector = new IndustrySector($this->industry_sector_id, $rex_clang->getId());
-				if($industry_sector->translation_needs_update != "delete" && $industry_sector->online_status == "online") {
-					$hreflang_tags .= '<link rel="alternate" type="text/html" hreflang="'. $rex_clang->getCode() .'" href="'. $industry_sector->getURL() .'" title="'. str_replace('"', '', $industry_sector->name) .'">';
-				}
-			}
-		}
-		return $hreflang_tags;
-	}
-	
-	/**
-	 * Get the <meta name="description"> tag for page header.
-	 * @return Complete tag.
-	 */
-	public function getMetaDescriptionTag() {
-		return '<meta name="description" content="'. $this->teaser .'">';
-	}
-	
-	/**
-	 * Get the <title> tag for page header.
-	 * @return Complete title tag.
-	 */
-	public function getTitleTag() {
-		return '<title>'. $this->name .' / '. \rex::getServerName() .'</title>';
 	}
 	
 	/**

@@ -309,14 +309,6 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 	}
 	
 	/**
-	 * Get the <link rel="canonical"> tag for page header.
-	 * @return Complete tag.
-	 */
-	public function getCanonicalTag() {
-		return '<link rel="canonical" href="'. $this->getURL() .'">';
-	}
-	
-	/**
 	 * Get an extended Teaser. This is the teaser combined with year built and
 	 * price.
 	 * @return string Extended Teaser
@@ -344,34 +336,6 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 	}
 	
 	/**
-	 * Get the <meta rel="alternate" hreflang=""> tags for page header.
-	 * @return Complete tags.
-	 */
-	public function getMetaAlternateHreflangTags() {
-		$hreflang_tags = "";
-		foreach(rex_clang::getAll(TRUE) as $rex_clang) {
-			if($rex_clang->getId() == $this->clang_id && $this->translation_needs_update != "delete") {
-				$hreflang_tags .= '<link rel="alternate" type="text/html" hreflang="'. $rex_clang->getCode() .'" href="'. $this->getURL() .'" title="'. str_replace('"', '', $this->category->name .': '. $this->name) .'">';
-			}
-			else {
-				$used_machine = new UsedMachine($this->used_machine_id, $rex_clang->getId());
-				if($used_machine->translation_needs_update != "delete") {
-					$hreflang_tags .= '<link rel="alternate" type="text/html" hreflang="'. $rex_clang->getCode() .'" href="'. $used_machine->getURL() .'" title="'. str_replace('"', '', $used_machine->category->name .': '. $used_machine->name) .'">';
-				}
-			}
-		}
-		return $hreflang_tags;
-	}
-	
-	/**
-	 * Get the <meta name="description"> tag for page header.
-	 * @return Complete tag.
-	 */
-	public function getMetaDescriptionTag() {
-		return '<meta name="description" content="'. $this->teaser .'">';
-	}
-	
-	/**
 	 * Gets the simply the offer type for used machine.
 	 * @param int $used_machine_id Used machine id
 	 * @return string Offer type. Either "rent" or "sale"
@@ -387,14 +351,6 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 		}
 		
 		return "";
-	}
-
-	/**
-	 * Get the <title> tag for page header.
-	 * @return Complete title tag.
-	 */
-	public function getTitleTag() {
-		return '<title>'. $this->name .' / '. ($this->category !== false ? $this->category->name .' / ' : ''). \rex::getServerName() .'</title>';
 	}
 	
 	/**
