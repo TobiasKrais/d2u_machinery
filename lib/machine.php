@@ -1541,7 +1541,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Rush leader flyback
-			if($this->automation_rush_leader_flyback != "") {
+			if($this->automation_rush_leader_flyback != "" && $this->automation_rush_leader_flyback != 0) {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_automation_rush_leader_flyback" . $tag_close,
 					"value" => $this->automation_rush_leader_flyback,
