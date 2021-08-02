@@ -440,6 +440,16 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	var $description = "";
 
 	/**
+	 * @var string Machine benefits (long version)
+	 */
+	var $benefits_long = "";
+
+	/**
+	 * @var string Machine benefits
+	 */
+	var $benefits_short = "";
+
+	/**
 	 * @var string[] File names of PDF files for the machine
 	 */
 	var $pdfs = [];
@@ -710,6 +720,8 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			$this->lang_name = stripslashes($result->getValue("lang_name"));
 			$this->teaser = stripslashes(htmlspecialchars_decode($result->getValue("teaser")));
 			$this->description = stripslashes(htmlspecialchars_decode($result->getValue("description")));
+			$this->benefits_long = stripslashes(htmlspecialchars_decode($result->getValue("benefits_long")));
+			$this->benefits_short = stripslashes(htmlspecialchars_decode($result->getValue("benefits_short")));
 			$pdfs = preg_grep('/^\s*$/s', explode(",", $result->getValue("pdfs")), PREG_GREP_INVERT);
 			$this->pdfs = is_array($pdfs) ? $pdfs : ($pdfs && strlen($pdfs) > 4 ? [$pdfs] : []);
 			$this->priority = $result->getValue("priority");
@@ -2245,6 +2257,8 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 						."lang_name = '". addslashes($this->lang_name) ."', "
 						."teaser = '". addslashes(htmlspecialchars($this->teaser)) ."', "
 						."description = '". addslashes(htmlspecialchars($this->description)) ."', "
+						."benefits_long = '". addslashes(htmlspecialchars($this->benefits_long)) ."', "
+						."benefits_short = '". addslashes(htmlspecialchars($this->benefits_short)) ."', "
 						."pdfs = '". implode(",", $this->pdfs) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = CURRENT_TIMESTAMP, "

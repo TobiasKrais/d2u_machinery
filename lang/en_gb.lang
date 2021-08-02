@@ -41,6 +41,8 @@ d2u_machinery_category_usage_area = Used process name
 
 d2u_machinery_machine = Machine
 d2u_machinery_machine_alternatives = Alternative machines
+d2u_machinery_benefits_long = Benefits at a glance (long)
+d2u_machinery_benefits_short = Benefits at a glance (short)
 d2u_machinery_machine_depth = Depth (mm)
 d2u_machinery_machine_engine_power = Engine power (kW)
 d2u_machinery_machine_engine_power_frequency_controlled = Engine power frequency controlled?

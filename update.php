@@ -55,6 +55,8 @@ if($sql->getRows() > 0) {
 
 \rex_sql_table::get(
     \rex::getTable('d2u_machinery_machines_lang'))
+    ->ensureColumn(new \rex_sql_column('benefits_short', 'TEXT', TRUE))
+    ->ensureColumn(new \rex_sql_column('benefits_long', 'TEXT', TRUE))
     ->ensureColumn(new \rex_sql_column('lang_name', 'VARCHAR(255)', TRUE))
     ->ensureColumn(new \rex_sql_column('pdfs', 'TEXT', TRUE))
     ->alter();

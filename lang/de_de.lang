@@ -40,6 +40,8 @@ d2u_machinery_category_usage_area = Verwendeter Prozess
 
 d2u_machinery_machine = Maschine
 d2u_machinery_machine_alternatives = Alternative Maschinen
+d2u_machinery_benefits_long = Vorteile auf einen Blick (lang)
+d2u_machinery_benefits_short = Vorteile auf einen Blick (kurz)
 d2u_machinery_machine_depth = Tiefe (mm)
 d2u_machinery_machine_engine_power = Motorleistung (kW)
 d2u_machinery_machine_engine_power_frequency_controlled = Motorleistung frequenzgeregelt?

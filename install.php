@@ -32,6 +32,8 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machi
 	lang_name varchar(255) collate utf8mb4_unicode_ci default NULL,
 	teaser varchar(255) collate utf8mb4_unicode_ci default NULL,
 	description text collate utf8mb4_unicode_ci default NULL,
+	benefits_short text collate utf8mb4_unicode_ci default NULL,
+	benefits_long text collate utf8mb4_unicode_ci default NULL,
 	pdfs varchar(255) collate utf8mb4_unicode_ci default NULL,
 	translation_needs_update varchar(7) collate utf8mb4_unicode_ci default NULL,
 	updatedate DATETIME default NULL,

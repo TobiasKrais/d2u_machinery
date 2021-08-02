@@ -51,6 +51,7 @@ $d2u_module_manager->showManagerList();
 	<li>Methode d2u_machinery_frontend_helper::getMetaTags() entfernt, da das URL Addon eine bessere Funktion anbietet.
 		Ebenso die Methoden getMetaAlternateHreflangTags(), getMetaDescriptionTag(), getCanonicalTag und getTitleTag() der aller Klassen, die diese Methoden abgeboten hatten.</li>
 	<li>Maschinen: Warnung beim Erstellen der Meta Tags entfernt.</li>
+	<li>Maschinen: Felder Vorteile auf einen Blick (kurz und lang) hinzugefügt.</li>
 	<li>machine_steel_processing_extension Plugin: Priorität der Zu-/Abfuhrseite hinzugefügt.</li>
 	<li>machine_steel_processing_extension Plugin: Anzeigefehler für Vor-/Rücklauf bei nicht vorhandener Eingabe behoben.</li>
 	<li>machine_features_extension Plugin: Sortierung der Features nun korrekt nach Priorität.</li>
