@@ -1,0 +1,16 @@
+package: d2u_machinery/production_lines
+version: '1.3.5'
+author: Tobias Krais
+supportpage: http://github.com/tobiaskrais/d2u_machinery
+
+page:
+    title: 'translate:d2u_machinery_production_lines'
+    perm: d2u_machinery[]
+    icon: rex-icon fa-arrows-h
+    subpages:
+        production_lines: { title: 'translate:d2u_machinery_production_lines', icon: rex-icon fa-arrows-h }
+        usps: { title: 'translate:d2u_machinery_production_lines_usp', icon: rex-icon fa-shield }
+    
+requires:
+    php:
+        version: '>=7.4'

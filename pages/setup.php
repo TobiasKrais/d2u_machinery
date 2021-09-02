@@ -52,6 +52,7 @@ $d2u_module_manager->showManagerList();
 		Ebenso die Methoden getMetaAlternateHreflangTags(), getMetaDescriptionTag(), getCanonicalTag und getTitleTag() der aller Klassen, die diese Methoden abgeboten hatten.</li>
 	<li>Maschinen: Warnung beim Erstellen der Meta Tags entfernt.</li>
 	<li>Maschinen: Felder Vorteile auf einen Blick (kurz und lang) hinzugefügt.</li>
+	<li>machine_options_extension Plugin hinzugefügt: Dieses Plugin gleicht dem machine_features_extension Plugin. Hier werden zubaubare Optionen für Maschinen verwaltet.</li>
 	<li>machine_steel_processing_extension Plugin: Priorität der Zu-/Abfuhrseite hinzugefügt.</li>
 	<li>machine_steel_processing_extension Plugin: Anzeigefehler für Vor-/Rücklauf bei nicht vorhandener Eingabe behoben.</li>
 	<li>machine_features_extension Plugin: Sortierung der Features nun korrekt nach Priorität.</li>

@@ -50,6 +50,11 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	var $feature_ids = [];
 
 	/**
+	 * @var int[] Machine option ids
+	 */
+	var $option_ids = [];
+
+	/**
 	 * @var string Machine accessory ids.
 	 */
 	var $product_number = "";
@@ -796,6 +801,10 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 				$this->feature_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("feature_ids")), PREG_GREP_INVERT);
 			}
 
+			if(rex_plugin::get("d2u_machinery", "machine_options_extension")->isAvailable()) {
+				$this->option_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("option_ids")), PREG_GREP_INVERT);
+			}
+
 			if(rex_plugin::get("d2u_machinery", "machine_steel_processing_extension")->isAvailable()) {
 				$process_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("process_ids")), PREG_GREP_INVERT);
 				foreach($process_ids as $process_id) {
@@ -1016,6 +1025,20 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	}
 	
 	/**
+	 * Get Option objects related to this machine.
+	 * @return Option[] Array with Option objects.
+	 */
+	public function getOptions() {
+		$options = [];
+		foreach ($this->option_ids as $option_id) {
+			$option = new Option($option_id, $this->clang_id);
+			$options[$option->priority] = $option;
+		}
+		ksort($options);
+		return $options;
+	}
+	
+	/**
 	 * Get supply objects related to this machine.
 	 * @return Supply[] Array with supply objects.
 	 */
@@ -1048,13 +1071,36 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	}
 	
 	/**
+	 * Gets the production lines referring to this machine.
+	 * @return ProductionLine[] Production lines referring to this machine.
+	 */
+	public function getReferringProductionLines() {
+		if(rex_plugin::get("d2u_machinery", "production_lines")->isAvailable()) {
+			$query = "SELECT production_line_id FROM ". \rex::getTablePrefix() ."d2u_machinery_production_lines "
+				."WHERE machine_ids LIKE '%|". $this->machine_id ."|%' OR complementary_machine_ids LIKE '%|". $this->machine_id ."|%'";
+			$result = \rex_sql::factory();
+			$result->setQuery($query);
+
+			$production_lines = [];
+			for($i = 0; $i < $result->getRows(); $i++) {
+				$production_lines[] = new ProductionLine($result->getValue("production_line_id"), $this->clang_id);
+				$result->next();
+			}
+			return $production_lines;
+		}
+		else {
+			return [];
+		}
+	}
+	
+	/**
 	 * Gets the used machines referring to this machine.
 	 * @return UsedMachine[] Used machines referring to this machine.
 	 */
 	public function getReferringUsedMachines() {
 		if(rex_plugin::get("d2u_machinery", "used_machines")->isAvailable()) {
 			$query = "SELECT used_machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_used_machines "
-				."WHERE machine_id =  ". $this->machine_id;
+				."WHERE machine_id = ". $this->machine_id;
 			$result = \rex_sql::factory();
 			$result->setQuery($query);
 
@@ -2156,6 +2202,9 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}			
 			if(rex_plugin::get("d2u_machinery", "machine_features_extension")->isAvailable()) {
 				$query .= ", feature_ids = '|". implode("|", $this->feature_ids) ."|' ";
+			}
+			if(rex_plugin::get("d2u_machinery", "machine_options_extension")->isAvailable()) {
+				$query .= ", option_ids = '|". implode("|", $this->option_ids) ."|' ";
 			}
 			if(rex_plugin::get("d2u_machinery", "machine_steel_processing_extension")->isAvailable()) {
 				$query .= ", process_ids = '|". implode("|", array_keys($this->processes)) ."|' "

@@ -1,0 +1,6 @@
+d2u_machinery_options = Optionen
+
+d2u_machinery_options_categories = Verfügbar in Kategorien
+d2u_machinery_options_delete_unused = Nicht verwendete Optionen löschen
+d2u_machinery_options_delete_unused_success = Optionen gelöscht.
+d2u_machinery_options_no_options_found = Es wurden noch keine Optionen angelegt.

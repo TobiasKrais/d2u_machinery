@@ -102,6 +102,9 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			if(rex_plugin::get("d2u_machinery", "machine_features_extension")->isAvailable()) {
 				$machine->feature_ids = isset($form['feature_ids']) ? $form['feature_ids'] : [];
 			}
+			if(rex_plugin::get("d2u_machinery", "machine_options_extension")->isAvailable()) {
+				$machine->option_ids = isset($form['option_ids']) ? $form['option_ids'] : [];
+			}
 			if(rex_plugin::get("d2u_machinery", "machine_steel_processing_extension")->isAvailable()) {
 				$process_ids = isset($form['process_ids']) ? $form['process_ids'] : [];
 				$machine->processes = [];
@@ -283,6 +286,10 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	if(rex_plugin::get("d2u_machinery", "used_machines")->isAvailable()) {
 		$referring_used_machines = $machine->getReferringUsedMachines();
 	}
+	$referring_production_lines = [];
+	if(rex_plugin::get("d2u_machinery", "production_lines")->isAvailable()) {
+		$referring_production_lines = $machine->getReferringProductionLines();
+	}
 	
 	// If not used, delete
 	if(count($referring_machines) == 0 && count($referring_used_machines) == 0) {
@@ -298,6 +305,11 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		if(count($referring_used_machines) > 0) {
 			foreach($referring_used_machines as $referring_used_machine) {
 				$message .= '<li><a href="index.php?page=d2u_machinery/used_machines&func=edit&entry_id='. $referring_used_machine->used_machine_id .'">'. $referring_used_machine->name.'</a></li>';
+			}
+		}
+		if(count($referring_production_lines) > 0) {
+			foreach($referring_production_lines as $referring_production_line) {
+				$message .= '<li><a href="index.php?page=d2u_machinery/production_line&func=edit&entry_id='. $referring_production_line->production_line_id .'">'. $referring_production_line->name.'</a></li>';
 			}
 		}
 		$message .= '</ul>';
@@ -525,6 +537,18 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 							$options_features[$feature->feature_id] = $feature->priority ." - ". $feature->name ." (ID: ". $feature->feature_id .")";
 						}
 						d2u_addon_backend_helper::form_select('d2u_machinery_features', 'form[feature_ids][]', $options_features, $machine->feature_ids, 10, TRUE, $readonly);
+						print '</div>';
+						print '</fieldset>';
+					}
+					if(rex_plugin::get("d2u_machinery", "machine_options_extension")->isAvailable()) {
+						print '<fieldset>';
+						print '<legend><small><i class="rex-icon fa-plug"></i></small> '. rex_i18n::msg('d2u_machinery_options') .'</legend>';
+						print '<div class="panel-body-wrapper slide">';
+						$options_options = [];
+						foreach (Option::getAll(rex_config::get("d2u_helper", "default_lang"), $machine->category !== FALSE ? $machine->category->category_id : 0) as $option) {
+							$options_options[$feature->feature_id] = $option->priority ." - ". $option->name ." (ID: ". $option->option_id .")";
+						}
+						d2u_addon_backend_helper::form_select('d2u_machinery_options', 'form[option_ids][]', $options_options, $machine->option_ids, 10, TRUE, $readonly);
 						print '</div>';
 						print '</fieldset>';
 					}
