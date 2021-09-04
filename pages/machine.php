@@ -546,7 +546,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						print '<div class="panel-body-wrapper slide">';
 						$options_options = [];
 						foreach (Option::getAll(rex_config::get("d2u_helper", "default_lang"), $machine->category !== FALSE ? $machine->category->category_id : 0) as $option) {
-							$options_options[$feature->feature_id] = $option->priority ." - ". $option->name ." (ID: ". $option->option_id .")";
+							$options_options[$option->option_id] = $option->priority ." - ". $option->name ." (ID: ". $option->option_id .")";
 						}
 						d2u_addon_backend_helper::form_select('d2u_machinery_options', 'form[option_ids][]', $options_options, $machine->option_ids, 10, TRUE, $readonly);
 						print '</div>';
