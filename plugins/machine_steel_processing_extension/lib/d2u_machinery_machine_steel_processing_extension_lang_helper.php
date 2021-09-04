@@ -12,7 +12,7 @@ class d2u_machinery_machine_steel_processing_extension_lang_helper extends d2u_m
 		'd2u_machinery_steel_automation_feedrate' => 'Feedrate',
 		'd2u_machinery_steel_automation_feedrate_sawblade' => 'Sawblade feedrate',
 		'd2u_machinery_steel_automation_rush_leader_flyback' => 'Rapid advance/return movement',
-		'd2u_machinery_steel_automation_supply_ids' => 'In-/Outfeed side',
+		'd2u_machinery_steel_automation_supply_ids' => 'Complementaries',
 		'd2u_machinery_steel_automation_supply_multi_stroke' => 'Multiple stroke length',
 		'd2u_machinery_steel_automation_supply_single_stroke' => 'Single stroke length',
 		'd2u_machinery_steel_beam_color_guns' => 'Number of spray guns',

@@ -5,7 +5,7 @@ d2u_machinery_steel_material_class = Material classes
 d2u_machinery_steel_procedures = Manufacturing processes
 d2u_machinery_steel_processes = Work processes
 d2u_machinery_steel_profiles = Profile areas
-d2u_machinery_steel_supply = In-/Outfeed side
+d2u_machinery_steel_supply = Complementaries
 d2u_machinery_steel_tools = Tools
 d2u_machinery_steel_welding = Welding processes
 
@@ -14,7 +14,7 @@ d2u_machinery_steel_material_no_materials_found = No materials found.
 d2u_machinery_steel_procedure_no_procedures_found = No manufacturing processes found.
 d2u_machinery_steel_process_no_processs_found = No work processes found.
 d2u_machinery_steel_profile_no_profiles_found = No profile areas found.
-d2u_machinery_steel_supply_no_supplys_found = No In-/Outfeed side infos found.
+d2u_machinery_steel_supply_no_supplys_found = No complementaries side infos found.
 d2u_machinery_steel_tool_no_tools_found = No tools found.
 d2u_machinery_steel_welding_no_weldings_found = No welding processes found.
 

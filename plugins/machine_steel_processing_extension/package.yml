@@ -8,11 +8,11 @@ page:
     perm: d2u_machinery[machine]
     icon: rex-icon fa-steam
     subpages:
+        supply: { title: 'translate:d2u_machinery_steel_supply', icon: rex-icon fa-stack-overflow }
         automation: { title: 'translate:d2u_machinery_steel_automation_degrees', icon: rex-icon fa-exchange }
         material: { title: 'translate:d2u_machinery_steel_material_class', icon: rex-icon fa-flask }
         procedure: { title: 'translate:d2u_machinery_steel_procedures', icon: rex-icon fa-tasks }
         process: { title: 'translate:d2u_machinery_steel_processes', icon: rex-icon fa-sort-numeric-asc }
         profile: { title: 'translate:d2u_machinery_steel_profiles', icon: rex-icon fa-i-cursor }
-        supply: { title: 'translate:d2u_machinery_steel_supply', icon: rex-icon fa-stack-overflow }
         tool: { title: 'translate:d2u_machinery_steel_tools', icon: rex-icon fa-magnet }
         welding: { title: 'translate:d2u_machinery_steel_welding', icon: rex-icon fa-magic }
