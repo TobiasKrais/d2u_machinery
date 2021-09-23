@@ -39,8 +39,8 @@ function rex_d2u_machinery_production_lines_media_is_in_use(rex_extension_point 
 	// Production lines
 	$sql = \rex_sql::factory();
 	$sql->setQuery('SELECT lang.production_line_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_production_lines_lang` AS lang '
-		.'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_production_lines` AS lines ON lang.production_line_id = lines.production_line_id '
-		.'WHERE FIND_IN_SET("'. $filename .'", pictures) OR FIND_IN_SET("'. $filename .'", pictures) OR description LIKE "%'. $filename .'%" '
+		.'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_production_lines` AS `lines` ON lang.production_line_id = `lines`.production_line_id '
+		.'WHERE FIND_IN_SET("'. $filename .'", pictures) OR FIND_IN_SET("'. $filename .'", pictures) OR description_long LIKE "%'. $filename .'%" OR description_short LIKE "%'. $filename .'%"'
 		.'GROUP BY production_line_id');
 
 	// Prepare warnings
