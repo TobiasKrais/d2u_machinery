@@ -6,6 +6,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machi
 	industry_sector_id int(10) unsigned NOT NULL auto_increment,
 	online_status varchar(7) collate utf8mb4_unicode_ci default NULL,
 	pic varchar(100) collate utf8mb4_unicode_ci default NULL,
+	icon varchar(100) collate utf8mb4_unicode_ci default NULL,
 	PRIMARY KEY (industry_sector_id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
 $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang (
@@ -13,6 +14,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machi
 	clang_id int(10) NOT NULL,
 	name varchar(255) collate utf8mb4_unicode_ci default NULL,
 	teaser varchar(255) collate utf8mb4_unicode_ci default NULL,
+	description TEXT collate utf8mb4_unicode_ci default NULL,
 	translation_needs_update varchar(7) collate utf8mb4_unicode_ci default NULL,
 	updatedate DATETIME default NULL,
 	updateuser varchar(255) collate utf8mb4_unicode_ci default NULL,
@@ -35,7 +37,7 @@ $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_machinery
 
 if(\rex_addon::get('url')->isAvailable()) {
 	$clang_id = count(rex_clang::getAllIds()) == 1 ? rex_clang::getStartId() : 0;
-	$article_id = rex_config::get('d2u_machinery', 'article_id', 0) > 0 ? rex_config::get('d2u_machinery', 'article_id') : rex_article::getSiteStartArticleId(); 
+	$article_id = rex_config::get('d2u_machinery', 'industry_sectors_article_id', rex_article::getSiteStartArticleId()); 
 	if(rex_version::compare(\rex_addon::get('url')->getVersion(), '1.5', '>=')) {
 		// Insert url schemes Version 2.x
 		$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."url_generator_profile WHERE `namespace` = 'industry_sector_id';");

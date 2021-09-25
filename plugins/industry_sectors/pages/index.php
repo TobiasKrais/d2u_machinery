@@ -23,6 +23,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$industry_sector = new IndustrySector($industry_sector_id, $rex_clang->getId());
 			$industry_sector->industry_sector_id = $industry_sector_id; // Ensure correct ID in case first language has no object
 			$industry_sector->online_status = $form['online_status'] == '' ? 'offline' : $form['online_status'];
+			$industry_sector->icon = $input_media[2];
 			$industry_sector->pic = $input_media[1];
 		}
 		else {
@@ -30,6 +31,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 		}
 		$industry_sector->name = $form['lang'][$rex_clang->getId()]['name'];
 		$industry_sector->teaser = $form['lang'][$rex_clang->getId()]['teaser'];
+		$industry_sector->description = $form['lang'][$rex_clang->getId()]['description'];
 		$industry_sector->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 
 		if($industry_sector->translation_needs_update == "delete") {
@@ -146,6 +148,7 @@ if ($func == 'edit' || $func == 'add') {
 								<?php
 									d2u_addon_backend_helper::form_input('d2u_helper_name', "form[lang][". $rex_clang->getId() ."][name]", $industry_sector->name, $required, $readonly_lang, "text");
 									d2u_addon_backend_helper::form_input('d2u_machinery_machine_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $industry_sector->teaser, FALSE, $readonly_lang, "text");
+									d2u_addon_backend_helper::form_textarea('d2u_helper_description', "form[lang][". $rex_clang->getId() ."][description]", $industry_sector->description, 5, FALSE, $readonly_lang, TRUE);
 								?>
 							</div>
 						</div>
@@ -164,6 +167,7 @@ if ($func == 'edit' || $func == 'add') {
 								$readonly = FALSE;
 							}
 
+							d2u_addon_backend_helper::form_mediafield('d2u_helper_icon', 2, $industry_sector->icon, $readonly);
 							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', 1, $industry_sector->pic, $readonly);
 							d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', $industry_sector->online_status == "online", $readonly);
 						?>

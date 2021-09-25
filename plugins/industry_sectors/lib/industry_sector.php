@@ -30,6 +30,16 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 	var $teaser = "";
 
 	/**
+	 * @var string Description
+	 */
+	var $description = "";
+
+	/**
+	 * @var string Icon file name
+	 */
+	var $icon = "";
+	
+	/**
 	 * @var string Preview picture file name 
 	 */
 	var $pic = "";
@@ -69,6 +79,8 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 			$this->industry_sector_id = $result->getValue("industry_sector_id");
 			$this->name = stripslashes($result->getValue("name"));
 			$this->teaser = stripslashes(htmlspecialchars_decode($result->getValue("teaser")));
+			$this->description = stripslashes(htmlspecialchars_decode($result->getValue("description")));
+			$this->icon = $result->getValue("icon");
 			$this->pic = $result->getValue("pic");
 			$this->online_status = $result->getValue("online_status");
 			if($result->getValue("translation_needs_update") != "") {
@@ -263,6 +275,29 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 	}
 	
 	/**
+	 * Detects if machines for this object exist
+	 * @param boolean $ignore_offlines Ignore offline machines, default is false
+	 * @return boolean TRUE if machines exist, otherwise FALSE
+	 */
+	public function hasMachines($ignore_offlines = false) {
+		$query = "SELECT lang.machine_id "
+			. "FROM ". \rex::getTablePrefix() ."d2u_machinery_machines_lang AS lang "
+			."LEFT JOIN ". \rex::getTablePrefix() ."d2u_machinery_machines AS machines "
+					."ON lang.machine_id = machines.machine_id "
+			."WHERE industry_sector_ids LIKE '%|". $this->industry_sector_id ."|%' AND clang_id = ". $this->clang_id
+			.($ignore_offlines ? ' AND online_status = "online"' : '');
+		$result = \rex_sql::factory();
+		$result->setQuery($query);
+		
+		if($result->getRows() > 0) {
+			return TRUE;
+		}
+		else {
+			return FALSE;
+		}
+	}
+
+	/**
 	 * Returns if object is used and thus online.
 	 * @return boolean TRUE if object is online, otherwise FALSE.
 	 */
@@ -294,6 +329,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 		if($this->industry_sector_id == 0 || $pre_save_object != $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_industry_sectors SET "
 					."online_status = '". $this->online_status ."', "
+					."icon = '". $this->icon ."', "
 					."pic = '". $this->pic ."' ";
 
 			if($this->industry_sector_id == 0) {
@@ -321,6 +357,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 						."clang_id = '". $this->clang_id ."', "
 						."name = '". addslashes($this->name) ."', "
 						."teaser = '". addslashes(htmlspecialchars($this->teaser)) ."', "
+						."description = '". addslashes(htmlspecialchars($this->description)) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = CURRENT_TIMESTAMP, "
 						."updateuser = '". \rex::getUser()->getLogin() ."' ";

@@ -7,9 +7,14 @@ $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_machinery
 	LEFT JOIN '. \rex::getTablePrefix() .'clang AS clang ON lang.clang_id = clang.id
 	WHERE clang.status = 1');
 
+// 1.3.5
+if(!rex_config::has('d2u_machinery', 'industry_sectors_article_id')) {
+	rex_config::set('d2u_machinery', 'industry_sectors_article_id', rex_config::get('d2u_machinery', 'article_id'));
+}
+
 if(\rex_addon::get('url')->isAvailable()) {
 	$clang_id = count(rex_clang::getAllIds()) == 1 ? rex_clang::getStartId() : 0;
-	$article_id = rex_config::get('d2u_machinery', 'article_id', 0) > 0 ? rex_config::get('d2u_machinery', 'article_id') : rex_article::getSiteStartArticleId(); 
+	$article_id = rex_config::get('d2u_machinery', 'industry_sectors_article_id', rex_article::getSiteStartArticleId()); 
 	if(rex_version::compare(\rex_addon::get('url')->getVersion(), '1.5', '>=')) {
 		// Insert url schemes Version 2.x
 		$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."url_generator_profile WHERE `namespace` = 'industry_sector_id'");
@@ -36,14 +41,19 @@ if(\rex_addon::get('url')->isAvailable()) {
 	}
 }
 
-// 1.0.1 Update database
-$sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang LIKE 'updatedate';");
-if($sql->getRows() == 0) {
-	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang "
-		. "ADD updatedate int(11) default NULL AFTER translation_needs_update;");
-	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang "
-		. "ADD updateuser varchar(255) collate utf8mb4_unicode_ci default NULL AFTER updatedate;");
-}
+// Update database
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_industry_sectors'))
+    ->ensureColumn(new \rex_sql_column('icon', 'VARCHAR(100)', TRUE))
+    ->alter();
+
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_industry_sectors_lang'))
+    ->ensureColumn(new \rex_sql_column('description', 'TEXT', TRUE))
+    ->ensureColumn(new \rex_sql_column('updatedate', 'INT(11)', TRUE))
+    ->ensureColumn(new \rex_sql_column('updateuser', 'VARCHAR(255)', TRUE))
+    ->alter();
+
 
 // Update language replacements
 if(!class_exists('d2u_machinery_industry_sectors_lang_helper')) {
