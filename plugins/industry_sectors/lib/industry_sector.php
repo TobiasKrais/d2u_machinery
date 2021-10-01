@@ -219,7 +219,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 	 */
 	public function getProductionLines($online_only = FALSE) {
 		$production_lines = [];
-		if(rex_plugin::get('d2u_machinery', 'production_lines')) {
+		if(rex_plugin::get('d2u_machinery', 'production_lines')->isAvailable()) {
 			$query = "SELECT production_line_id FROM ". \rex::getTablePrefix() ."d2u_machinery_production_lines "
 				."WHERE industry_sector_ids LIKE '%|". $this->industry_sector_id ."|%'";
 			$result = \rex_sql::factory();
