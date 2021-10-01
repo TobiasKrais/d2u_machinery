@@ -172,8 +172,9 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 	 * @return IndustrySector[] Array with IndustrySector objects.
 	 */
 	public static function getAll($clang_id, $online_only = FALSE) {
-		$query = "SELECT industry_sector_id FROM ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang "
-			."WHERE clang_id = ". $clang_id ." ";
+		$query = "SELECT lang.industry_sector_id FROM ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang AS lang "
+			."LEFT JOIN ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors AS sectors ON lang.industry_sector_id = sectors.industry_sector_id "
+			."WHERE clang_id = ". $clang_id ." ". ($online_only ? " AND online_status = 'online' " : "");
 		$query .= "ORDER BY name";
 
 		$result = \rex_sql::factory();
@@ -182,12 +183,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 		$industry_sectors = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$industry_sector = new IndustrySector($result->getValue("industry_sector_id"), $clang_id);
-			if($online_only && $industry_sector->isOnline()) {
-				$industry_sectors[] = $industry_sector;
-			}
-			else if($online_only === FALSE) {
-				$industry_sectors[] = $industry_sector;
-			}
+			$industry_sectors[] = $industry_sector;
 			$result->next();
 		}
 		return $industry_sectors;
@@ -213,6 +209,31 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 			$result->next();
 		}
 		return $machines;
+	}
+	
+	/**
+	 * Gets the production lines referring to this object. Plugin production_lines
+	 * needs to be installed.
+	 * @param boolean $online_only TRUE if only online production lines should be returned.
+	 * @return ProductionLine[] Production lines referring to this object.
+	 */
+	public function getProductionLines($online_only = FALSE) {
+		$production_lines = [];
+		if(rex_plugin::get('d2u_machinery', 'production_lines')) {
+			$query = "SELECT production_line_id FROM ". \rex::getTablePrefix() ."d2u_machinery_production_lines "
+				."WHERE industry_sector_ids LIKE '%|". $this->industry_sector_id ."|%'";
+			$result = \rex_sql::factory();
+			$result->setQuery($query);
+
+			for($i = 0; $i < $result->getRows(); $i++) {
+				$production_line = new ProductionLine($result->getValue("production_line_id"), $this->clang_id);
+				if($online_only === FALSE || ($online_only && $production_line->online_status == "online")) {
+					$production_lines[] = $production_line;
+				}
+				$result->next();
+			}
+		}
+		return $production_lines;
 	}
 	
 	/**
@@ -296,24 +317,6 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 			return FALSE;
 		}
 	}
-
-	/**
-	 * Returns if object is used and thus online.
-	 * @return boolean TRUE if object is online, otherwise FALSE.
-	 */
-	public function isOnline() {
-		$query = "SELECT machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
-			."WHERE industry_sector_ids LIKE '%|". $this->industry_sector_id ."|%'";
-		$result = \rex_sql::factory();
-		$result->setQuery($query);
-		
-		if($result->getRows() > 0) {
-			return TRUE;
-		}
-		else {
-			return FALSE;
-		}
-	}	
 	
 	/**
 	 * Updates or inserts the object into database.

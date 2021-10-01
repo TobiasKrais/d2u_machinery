@@ -35,6 +35,11 @@ class Category implements \D2U_Helper\ITranslationHelper{
 	var $teaser = "";
 
 	/**
+	 * @var string Description
+	 */
+	var $description = "";
+
+	/**
 	 * @var string Name of Usage area
 	 */
 	var $usage_area = "";
@@ -149,6 +154,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 			}
 			$this->name = stripslashes(htmlspecialchars_decode($result->getValue("name")));
 			$this->teaser = stripslashes(htmlspecialchars_decode($result->getValue("teaser")));
+			$this->description = stripslashes(htmlspecialchars_decode($result->getValue("description")));
 			$this->usage_area = stripslashes(htmlspecialchars_decode($result->getValue("usage_area")));
 			$this->pic = $result->getValue("pic");
 			$this->pic_lang = $result->getValue("pic_lang");
@@ -549,14 +555,16 @@ class Category implements \D2U_Helper\ITranslationHelper{
 	
 	/**
 	 * Detects if machines in this category exist
-	 * @return boolean TRUE if child categories exist, otherwise FALSE
+	 * @param boolean $ignore_offlines Ignore offline machines, default is false
+	 * @return boolean TRUE if machines exist, otherwise FALSE
 	 */
-	public function hasMachines() {
+	public function hasMachines($ignore_offlines = false) {
 		$query = "SELECT lang.machine_id "
 			. "FROM ". \rex::getTablePrefix() ."d2u_machinery_machines_lang AS lang "
 			."LEFT JOIN ". \rex::getTablePrefix() ."d2u_machinery_machines AS machines "
 					."ON lang.machine_id = machines.machine_id "
-			."WHERE category_id = ". $this->category_id ." AND clang_id = ". $this->clang_id;
+			."WHERE category_id = ". $this->category_id ." AND clang_id = ". $this->clang_id
+			.($ignore_offlines ? ' AND online_status = "online"' : '');
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
@@ -643,6 +651,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 						."category_id = '". $this->category_id ."', "
 						."clang_id = '". $this->clang_id ."', "
 						."name = '". addslashes(htmlspecialchars($this->name)) ."', "
+						."description = '". addslashes(htmlspecialchars($this->description)) ."', "
 						."teaser = '". addslashes(htmlspecialchars($this->teaser)) ."', "
 						."usage_area = '". addslashes(htmlspecialchars($this->usage_area)) ."', "
 						."pic_lang = '". $this->pic_lang ."', "

@@ -40,9 +40,19 @@ class ProductionLine implements \D2U_Helper\ITranslationHelper {
 	var array $complementary_machine_ids = [];
 	
 	/**
+	 * @var int[] machine_steel_processing_extension: Automation supply ids
+	 */
+	var array $automation_supply_ids = [];
+
+	/**
 	 * @var string[] Picture file names 
 	 */
 	var array $pictures = [];
+
+	/**
+	 * @var string Picture file name with links
+	 */
+	var string $link_picture = "";
 
 	/**
 	 * @var int[] Videomanager video ids
@@ -113,11 +123,15 @@ class ProductionLine implements \D2U_Helper\ITranslationHelper {
 			if(rex_plugin::get('d2u_machinery', 'industry_sectors')->isAvailable()) {
 				$this->industry_sector_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("industry_sector_ids")), PREG_GREP_INVERT);
 			}
+			if(rex_plugin::get("d2u_machinery", "machine_steel_processing_extension")->isAvailable()) {
+				$this->automation_supply_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("automation_supply_ids")), PREG_GREP_INVERT);
+			}
 			$this->line_code = stripslashes($result->getValue("line_code"));
 			$this->machine_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("machine_ids")), PREG_GREP_INVERT);
 			$this->name = stripslashes($result->getValue("name"));
 			$this->online_status = $result->getValue("online_status");
 			$this->pictures = preg_grep('/^\s*$/s', explode(",", $result->getValue("pictures")), PREG_GREP_INVERT);
+			$this->link_picture = $result->getValue("link_picture");
 			$this->teaser = stripslashes($result->getValue("teaser"));
 			if($result->getValue("translation_needs_update") != "") {
 				$this->translation_needs_update = $result->getValue("translation_needs_update");
@@ -330,13 +344,19 @@ class ProductionLine implements \D2U_Helper\ITranslationHelper {
 		if($this->production_line_id == 0 || $pre_save_object != $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_production_lines SET "
 					."complementary_machine_ids = '|". implode("|", $this->complementary_machine_ids) ."|', "
-					."industry_sector_ids = '|". implode("|", $this->industry_sector_ids) ."|', "
 					."line_code = '". $this->line_code ."', "
 					."machine_ids = '|". implode("|", $this->machine_ids) ."|', "
 					."online_status = '". $this->online_status ."', "
 					."pictures = '". implode(",", $this->pictures) ."', "
+					."link_picture = '". $this->link_picture ."', "
 					."usp_ids = '|". implode("|", $this->usp_ids) ."|', "
 					."video_ids = '|". implode("|", $this->video_ids) ."|' ";
+			if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable()) {
+				$query .= ", industry_sector_ids = '|". implode("|", $this->industry_sector_ids) ."|' ";
+			}
+			if(rex_plugin::get("d2u_machinery", "machine_steel_processing_extension")->isAvailable()) {
+				$query .= ", automation_supply_ids = '|". implode("|", $this->automation_supply_ids) ."|' ";
+			}
 
 			if($this->production_line_id == 0) {
 				$query = "INSERT INTO ". $query;

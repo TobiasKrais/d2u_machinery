@@ -233,6 +233,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 		$machine->description = $form['lang'][$rex_clang->getId()]['description'];
 		$machine->benefits_long = $form['lang'][$rex_clang->getId()]['benefits_long'];
 		$machine->benefits_short = $form['lang'][$rex_clang->getId()]['benefits_short'];
+		$machine->leaflet = $input_media['1'. $rex_clang->getId()];
 		$machine->pdfs = preg_grep('/^\s*$/s', explode(",", $input_media_list['1'. $rex_clang->getId()]), PREG_GREP_INVERT);
 		if(rex_plugin::get("d2u_machinery", "machine_construction_equipment_extension")->isAvailable()) {
 			$machine->container_connection_port = $form['lang'][$rex_clang->getId()]['container_connection_port'];
@@ -738,6 +739,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 									d2u_addon_backend_helper::form_textarea('d2u_machinery_benefits_long', "form[lang][". $rex_clang->getId() ."][benefits_long]", $machine_lang->benefits_long, 5, FALSE, $readonly_lang, TRUE);
 									d2u_addon_backend_helper::form_textarea('d2u_machinery_benefits_short', "form[lang][". $rex_clang->getId() ."][benefits_short]", $machine_lang->benefits_short, 5, FALSE, $readonly_lang, TRUE);
 									d2u_addon_backend_helper::form_medialistfield('d2u_machinery_machine_pdfs', '1'. $rex_clang->getId(), $machine_lang->pdfs, $readonly_lang);
+									d2u_addon_backend_helper::form_mediafield('d2u_machinery_machine_leaflet', '1'. $rex_clang->getId(), $machine_lang->leaflet, $readonly_lang);
 									if(rex_plugin::get("d2u_machinery", "machine_construction_equipment_extension")->isAvailable()) {
 										d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_container_connection_port', "form[lang][". $rex_clang->getId() ."][container_connection_port]", $machine_lang->container_connection_port, FALSE, $readonly_lang, "text");
 										d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_container_conveying_wave', "form[lang][". $rex_clang->getId() ."][container_conveying_wave]", $machine_lang->container_conveying_wave, FALSE, $readonly_lang, "text");

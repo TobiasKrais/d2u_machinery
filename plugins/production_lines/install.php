@@ -4,9 +4,11 @@
 	->setPrimaryKey('production_line_id')
 	->ensureColumn(new \rex_sql_column('complementary_machine_ids', 'VARCHAR(255)', true))
     ->ensureColumn(new \rex_sql_column('industry_sector_ids', 'VARCHAR(255)', true))
+    ->ensureColumn(new \rex_sql_column('automation_supply_ids', 'TEXT'))
     ->ensureColumn(new \rex_sql_column('line_code', 'VARCHAR(50)', true))
     ->ensureColumn(new \rex_sql_column('machine_ids', 'VARCHAR(255)', true))
     ->ensureColumn(new \rex_sql_column('pictures', 'TEXT', true))
+    ->ensureColumn(new \rex_sql_column('link_picture', 'TEXT', true))
     ->ensureColumn(new \rex_sql_column('usp_ids', 'VARCHAR(255)', true))
     ->ensureColumn(new \rex_sql_column('video_ids', 'VARCHAR(255)', true))
     ->ensureColumn(new \rex_sql_column('online_status', 'VARCHAR(10)'))
@@ -51,7 +53,7 @@ $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_machinery
 // add url addon stuff
 if(\rex_addon::get('url')->isAvailable()) {
 	$clang_id = count(rex_clang::getAllIds()) == 1 ? rex_clang::getStartId() : 0;
-	$article_id = rex_config::get('d2u_machinery', 'article_id', 0) > 0 ? rex_config::get('d2u_machinery', 'article_id') : rex_article::getSiteStartArticleId(); 
+	$article_id = rex_config::get('d2u_machinery', 'production_lines_article_id', 0) > 0 ? rex_config::get('d2u_machinery', 'production_lines_article_id') : rex_article::getSiteStartArticleId(); 
 	if(rex_version::compare(\rex_addon::get('url')->getVersion(), '1.5', '>=')) {
 		// Insert url schemes Version 2.x
 		$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."url_generator_profile WHERE `namespace` = 'production_line_id';");

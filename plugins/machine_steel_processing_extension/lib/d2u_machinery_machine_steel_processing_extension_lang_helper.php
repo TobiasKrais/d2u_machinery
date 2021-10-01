@@ -74,7 +74,7 @@ class d2u_machinery_machine_steel_processing_extension_lang_helper extends d2u_m
 		'd2u_machinery_steel_automation_feedrate' => 'Vorschub',
 		'd2u_machinery_steel_automation_feedrate_sawblade' => 'Sägeblatt-Vorschub',
 		'd2u_machinery_steel_automation_rush_leader_flyback' => 'Eilvor-/-Rücklauf',
-		'd2u_machinery_steel_automation_supply_ids' => 'Zu-/Abfuhrseite',
+		'd2u_machinery_steel_automation_supply_ids' => 'Ergänzend',
 		'd2u_machinery_steel_automation_supply_multi_stroke' => 'Materialnachschub Mehrfachhub',
 		'd2u_machinery_steel_automation_supply_single_stroke' => 'Materialnachschub Einfachhub',
 		'd2u_machinery_steel_beam_color_guns' => 'Anzahl Farbpistolen',

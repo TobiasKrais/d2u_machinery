@@ -460,6 +460,11 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	var $pdfs = [];
 
 	/**
+	 * @var string Machine leaflet (PDF file)
+	 */
+	var $leaflet = "";
+
+	/**
 	 * @var Video[] Videomanager videos
 	 */
 	var $videos = [];
@@ -728,6 +733,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			$this->benefits_long = stripslashes(htmlspecialchars_decode($result->getValue("benefits_long")));
 			$this->benefits_short = stripslashes(htmlspecialchars_decode($result->getValue("benefits_short")));
 			$pdfs = preg_grep('/^\s*$/s', explode(",", $result->getValue("pdfs")), PREG_GREP_INVERT);
+			$this->leaflet = $result->getValue("leaflet");
 			$this->pdfs = is_array($pdfs) ? $pdfs : ($pdfs && strlen($pdfs) > 4 ? [$pdfs] : []);
 			$this->priority = $result->getValue("priority");
 			if($result->getValue("translation_needs_update") != "") {
@@ -2308,6 +2314,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 						."description = '". addslashes(htmlspecialchars($this->description)) ."', "
 						."benefits_long = '". addslashes(htmlspecialchars($this->benefits_long)) ."', "
 						."benefits_short = '". addslashes(htmlspecialchars($this->benefits_short)) ."', "
+						."leaflet = '". $this->leaflet ."', "
 						."pdfs = '". implode(",", $this->pdfs) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = CURRENT_TIMESTAMP, "

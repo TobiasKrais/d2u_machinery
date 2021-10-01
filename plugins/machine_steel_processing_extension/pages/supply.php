@@ -13,7 +13,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	$form = (array) rex_post('form', 'array', []);
 
 	// Media fields and links need special treatment
-	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', array());
+	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', []);
 
 	$success = TRUE;
 	$supply = FALSE;

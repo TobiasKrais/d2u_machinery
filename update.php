@@ -59,11 +59,17 @@ if($sql->getRows() > 0) {
     ->ensureColumn(new \rex_sql_column('benefits_long', 'TEXT', TRUE))
     ->ensureColumn(new \rex_sql_column('lang_name', 'VARCHAR(255)', TRUE))
     ->ensureColumn(new \rex_sql_column('pdfs', 'TEXT', TRUE))
+    ->ensureColumn(new \rex_sql_column('leaflet', 'VARCHAR(255)', TRUE))
     ->alter();
 
 \rex_sql_table::get(
     \rex::getTable('d2u_machinery_categories'))
     ->ensureColumn(new \rex_sql_column('video_ids', 'TEXT', TRUE))
+    ->alter();
+
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_categories_lang'))
+    ->ensureColumn(new \rex_sql_column('description', 'TEXT', TRUE))
     ->alter();
 
 \rex_sql_table::get(

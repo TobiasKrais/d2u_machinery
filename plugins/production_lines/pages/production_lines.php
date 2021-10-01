@@ -14,6 +14,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 
 	// Media fields and links need special treatment
 	$input_media_list = (array) rex_post('REX_INPUT_MEDIALIST', 'array', []);
+	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', []);
 
 	$success = TRUE;
 	$production_line = FALSE;
@@ -27,9 +28,19 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$production_line->line_code = $form['line_code'];
 			$production_line->machine_ids = isset($form['machine_ids']) ? $form['machine_ids'] : [];
 			$production_line->pictures = preg_grep('/^\s*$/s', explode(",", $input_media_list[1]), PREG_GREP_INVERT);
+			$production_line->link_picture = $input_media[1];
 			$production_line->usp_ids = isset($form['usp_ids']) ? $form['usp_ids'] : [];
 			$production_line->video_ids = isset($form['video_ids']) ? $form['video_ids'] : [];
 			$production_line->online_status = $form['online_status'] == '' ? 'offline' : $form['online_status'];
+			if(rex_plugin::get("d2u_machinery", "machine_steel_processing_extension")->isAvailable()) {
+				$automation_supply_ids = isset($form['automation_supply_ids']) ? $form['automation_supply_ids'] : [];
+				$production_line->automation_supply_ids = [];
+				foreach($automation_supply_ids as $automation_supply_id) {
+					if($automation_supply_id > 0) {
+						$production_line->automation_supply_ids[] = $automation_supply_id;
+					}
+				}				
+			}
 		}
 		else {
 			$production_line->clang_id = $rex_clang->getId();
@@ -111,6 +122,7 @@ if ($func == 'edit' || $func == 'add') {
 
 							d2u_addon_backend_helper::form_input('d2u_machinery_production_lines_line_code', "form[line_code]", $production_line->line_code, FALSE, $readonly, "text");
 							d2u_addon_backend_helper::form_medialistfield('d2u_helper_pictures', 1, $production_line->pictures, $readonly);
+							d2u_addon_backend_helper::form_mediafield('d2u_machinery_production_lines_link_picture', '1', $production_line->link_picture, $readonly);
 							if(\rex_addon::get("d2u_videos")->isAvailable()) {
 								$options = [];
 								foreach(Video::getAll(rex_config::get("d2u_helper", "default_lang")) as $video) {
@@ -124,6 +136,13 @@ if ($func == 'edit' || $func == 'add') {
 							}
 							d2u_addon_backend_helper::form_select('d2u_machinery_meta_machines', 'form[machine_ids][]', $option_machines, $production_line->machine_ids, 10, TRUE, $readonly);
 							d2u_addon_backend_helper::form_select('d2u_machinery_production_lines_complementary_machines', 'form[complementary_machine_ids][]', $option_machines, $production_line->complementary_machine_ids, 10, TRUE, $readonly);
+							if(rex_plugin::get("d2u_machinery", "machine_steel_processing_extension")->isAvailable()) {
+								$options_supply = [];
+								foreach (Supply::getAll(rex_config::get("d2u_helper", "default_lang")) as $supply) {
+									$options_supply[$supply->supply_id] = $supply->priority ." - ". $supply->name ." (ID: ". $supply->supply_id .")";
+								}
+								d2u_addon_backend_helper::form_select('d2u_machinery_steel_automation_supplys', 'form[automation_supply_ids][]', $options_supply, $production_line->automation_supply_ids, 4, TRUE, $readonly);						
+							}
 							if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable()) {
 								$options_industry_sectors = [];
 								foreach (IndustrySector::getAll(rex_config::get("d2u_helper", "default_lang")) as $industry_sector) {
