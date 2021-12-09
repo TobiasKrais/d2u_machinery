@@ -61,6 +61,7 @@ $d2u_module_manager->showManagerList();
 	<li>machine_features_extension Plugin: Sortierung der Features nun korrekt nach Priorität.</li>
 	<li>used_machines Plugin: PHP Warnung entfernt und Produktnummer in Übersichtsliste übernommen.</li>
 	<li>Modul 90-1 "D2U Machinery Addon - Hauptausgabe": Bugfix: Absenden Button des Anfrageformulars war ausgeblendet.</li>
+	<li>Modul 90-4 "D2U Machinery Addon - Gebrauchtmaschinen": verbesserte Darstellung der Checkbox im Backend.</li>
 </ul>
 <p>1.3.4:</p>
 <ul>
