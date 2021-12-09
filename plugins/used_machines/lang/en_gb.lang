@@ -2,7 +2,6 @@ d2u_machinery_used_machines = Used machines
 d2u_machinery_used_machines_article_rent = Used machines (rent) article
 d2u_machinery_used_machines_article_sale = Used machines (sale) article
 d2u_machinery_used_machines_availability = Available from
-d2u_machinery_used_machines_confirm_status_change = Change status?
 d2u_machinery_used_machines_currency_code = Currency code
 d2u_machinery_used_machines_downloads = Downloads
 d2u_machinery_used_machines_external_url = External URL

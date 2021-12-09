@@ -242,7 +242,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 }
 
 if ($func == '') {
-    $list = rex_list::factory('SELECT used_machine_id, manufacturer, machines.name AS machinename, year_built, categories.name AS categoryname, offer_type, online_status '
+    $list = rex_list::factory('SELECT used_machine_id, manufacturer, machines.name AS machinename, year_built, product_number, categories.name AS categoryname, offer_type, online_status '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_machinery_used_machines AS machines '
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_categories_lang AS categories '
 			. 'ON machines.category_id = categories.category_id AND categories.clang_id = '. rex_config::get("d2u_helper", "default_lang") .' '
@@ -263,6 +263,9 @@ if ($func == '') {
     $list->setColumnLabel('manufacturer', rex_i18n::msg('d2u_machinery_used_machines_manufacturer'));
     $list->setColumnParams('manufacturer', ['func' => 'edit', 'entry_id' => '###used_machine_id###']);
 
+	$list->setColumnLabel('product_number', rex_i18n::msg('d2u_machinery_used_machines_product_number'));
+    $list->setColumnParams('product_number', ['func' => 'edit', 'entry_id' => '###used_machine_id###']);
+
     $list->setColumnLabel('machinename', rex_i18n::msg('d2u_helper_name'));
     $list->setColumnParams('machinename', ['func' => 'edit', 'entry_id' => '###used_machine_id###']);
 
@@ -278,11 +281,8 @@ if ($func == '') {
 
 	$list->removeColumn('online_status');
 	if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]')) {
-		$list->addColumn(rex_i18n::msg('status_online'), '<i class="rex-icon rex-icon-###online_status###"></i> ###online_status###');
+		$list->addColumn(rex_i18n::msg('status_online'), '<a class="rex-###online_status###" href="' . rex_url::currentBackendPage(['func' => 'changestatus']) . '&entry_id=###used_machine_id###"><i class="rex-icon rex-icon-###online_status###"></i> ###online_status###</a>');
 		$list->setColumnLayout(rex_i18n::msg('status_online'), ['', '<td class="rex-table-action">###VALUE###</td>']);
-		$list->setColumnParams(rex_i18n::msg('status_online'), ['func' => 'changestatus', 'entry_id' => '###used_machine_id###']);
-		$list->addLinkAttribute(rex_i18n::msg('status_online'), 'class', 'rex-###online_status###');
-		$list->addLinkAttribute(rex_i18n::msg('status_online'), 'data-confirm', rex_i18n::msg('d2u_machinery_used_machines_confirm_status_change'));
 
 		$list->addColumn(rex_i18n::msg('d2u_helper_clone'), '<i class="rex-icon fa-copy"></i> ' . rex_i18n::msg('d2u_helper_clone'));
 		$list->setColumnLayout(rex_i18n::msg('d2u_helper_clone'), ['', '<td class="rex-table-action">###VALUE###</td>']);

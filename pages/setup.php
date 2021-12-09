@@ -59,7 +59,7 @@ $d2u_module_manager->showManagerList();
 	<li>machine_steel_processing_extension Plugin: Priorität der Zu-/Abfuhrseite hinzugefügt.</li>
 	<li>machine_steel_processing_extension Plugin: Anzeigefehler für Vor-/Rücklauf bei nicht vorhandener Eingabe behoben.</li>
 	<li>machine_features_extension Plugin: Sortierung der Features nun korrekt nach Priorität.</li>
-	<li>used_machines Plugin: PHP Warnung entfernt.</li>
+	<li>used_machines Plugin: PHP Warnung entfernt und Produktnummer in Übersichtsliste übernommen.</li>
 	<li>Modul 90-1 "D2U Machinery Addon - Hauptausgabe": Bugfix: Absenden Button des Anfrageformulars war ausgeblendet.</li>
 </ul>
 <p>1.3.4:</p>

@@ -136,7 +136,7 @@ class ProductionLine implements \D2U_Helper\ITranslationHelper {
 			if($result->getValue("translation_needs_update") != "") {
 				$this->translation_needs_update = $result->getValue("translation_needs_update");
 			}
-			$this->usp_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("ups_ids")), PREG_GREP_INVERT);
+			$this->usp_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("usp_ids")), PREG_GREP_INVERT);
 			if(rex_addon::get('d2u_videos')->isAvailable()) {
 				$this->video_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("video_ids")), PREG_GREP_INVERT);
 			}
