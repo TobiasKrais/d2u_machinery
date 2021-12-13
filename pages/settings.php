@@ -134,7 +134,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 						d2u_addon_backend_helper::form_input('d2u_machinery_settings_request_form_email', 'settings[request_form_email]', $this->getConfig('request_form_email'), TRUE, FALSE, 'email');
 						d2u_addon_backend_helper::form_input('d2u_machinery_settings_contact_phone', 'settings[contact_phone]', $this->getConfig('contact_phone'), TRUE, FALSE);
 						$consultation_pics = $this->getConfig('consultation_pics','') != '' ? preg_grep('/^\s*$/s', explode(",", $this->getConfig('consultation_pics')), PREG_GREP_INVERT) : ($this->getConfig('consultation_pic', '') != '' ? [$this->getConfig('consultation_pic')] : []);
-						d2u_addon_backend_helper::form_medialistfield('d2u_machinery_settings_consultation_pics', 1, $consultation_pics, $readonly);
+						d2u_addon_backend_helper::form_medialistfield('d2u_machinery_settings_consultation_pics', 1, $consultation_pics, FALSE);
 						d2u_addon_backend_helper::form_linkfield('d2u_machinery_settings_consultation_article', '2', $this->getConfig('consultation_article_id'), rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId()));
 						if(rex_addon::get("url")->isAvailable() && rex_version::compare(\rex_addon::get('url')->getVersion(), '1.5', '>=')) {
 							d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_short_urls', 'settings[short_urls]', 'true', $this->getConfig('short_urls') == 'true');
