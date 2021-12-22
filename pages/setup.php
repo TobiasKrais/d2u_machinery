@@ -46,7 +46,7 @@ $d2u_module_manager->showManagerList();
 	</form>
 </fieldset>
 <h2>Changelog</h2>
-<p>1.3.5-DEV:</p>
+<p>1.3.5:</p>
 <ul>
 	<li>Methode d2u_machinery_frontend_helper::getMetaTags() entfernt, da das URL Addon eine bessere Funktion anbietet.
 		Ebenso die Methoden getMetaAlternateHreflangTags(), getMetaDescriptionTag(), getCanonicalTag und getTitleTag() der aller Klassen, die diese Methoden abgeboten hatten.</li>
