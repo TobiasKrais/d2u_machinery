@@ -49,11 +49,11 @@ $d2u_module_manager->showManagerList();
 <p>1.3.5:</p>
 <ul>
 	<li>Methode d2u_machinery_frontend_helper::getMetaTags() entfernt, da das URL Addon eine bessere Funktion anbietet.
-		Ebenso die Methoden getMetaAlternateHreflangTags(), getMetaDescriptionTag(), getCanonicalTag und getTitleTag() der aller Klassen, die diese Methoden abgeboten hatten.</li>
+		Ebenso die Methoden getMetaAlternateHreflangTags(), getMetaDescriptionTag(), getCanonicalTag und getTitleTag() der Klassen, die diese Methoden angeboten hatten.</li>
 	<li>Maschinen: Warnung beim Erstellen der Meta Tags entfernt.</li>
 	<li>Maschinen: Felder "Vorteile auf einen Blick" (kurz und lang) und Leaflet (Prospekt) hinzugefügt.</li>
 	<li>Kategorien: Feld Beschreibung hinzugefügt.</li>
-	<li>In den Einstellungen kann nun dem Branchen Addon ein eigener Artikel zugewiesen werden und es könnnen mehrere Beratungsbilder eingestellt werden.</li>
+	<li>In den Einstellungen kann nun dem Branchen Addon ein eigener Artikel zugewiesen werden und es können mehrere Beratungsbilder eingestellt werden.</li>
 	<li>Italienische, polnische und Tschechische Sprog Übersetzungen entfernt.</li>
 	<li>Sprog Übersetzungen der Formulare in den Modulen ins D2U Helper Addon umgezogen.</li>
 	<li>industry_sectors_plugin: Feld Beschreibung und Piktogramm hinzugefügt.</li>
