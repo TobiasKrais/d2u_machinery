@@ -1,4 +1,6 @@
 <?php
+	$text_1 = 'REX_VALUE[id=1 output="html"]';
+
 	print '<div class="col-sm-12 abstand">';
 	print '<h1>REX_VALUE[1]</h1>';
 	print '</div>';
@@ -27,5 +29,5 @@
 	print '</div>';
 	print '</div>';
 ?>
-<div class="col-sm-12 abstand">REX_VALUE[id=2 output=html]</div>
+<div class="col-sm-12 abstand"><?php d2u_addon_frontend_helper::prepareEditorField($text_1); ?></div>
 <div class="col-sm-12 abstand"></div>
