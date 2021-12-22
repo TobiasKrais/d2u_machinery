@@ -46,6 +46,10 @@ $d2u_module_manager->showManagerList();
 	</form>
 </fieldset>
 <h2>Changelog</h2>
+<p>1.3.6-DEV:</p>
+<ul>
+	<li>...</li>
+</ul>
 <p>1.3.5:</p>
 <ul>
 	<li>Methode d2u_machinery_frontend_helper::getMetaTags() entfernt, da das URL Addon eine bessere Funktion anbietet.
