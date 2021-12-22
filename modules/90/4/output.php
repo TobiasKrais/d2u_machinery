@@ -386,7 +386,7 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 			text|company|'. $tag_open .'d2u_machinery_form_company'. $tag_close .'
 			text|address|'. $tag_open .'d2u_helper_module_form_street'. $tag_close .'
 			text|zip|'. $tag_open .'d2u_helper_module_form_zip'. $tag_close .'
-			text|city|'. $tag_open .''. $tag_close .'
+			text|city|'. $tag_open .'d2u_helper_module_form_city'. $tag_close .'
 			text|country|'. $tag_open .'d2u_helper_module_form_country'. $tag_close .'
 			text|phone|'. $tag_open .'d2u_helper_module_form_phone'. $tag_close .' *|||{"required":"required"}
 			text|email|'. $tag_open .'d2u_helper_module_form_email'. $tag_close .' *|||{"required":"required"}
