@@ -54,6 +54,8 @@ $d2u_module_manager->showManagerList();
 	<li>Maschinen: Felder "Vorteile auf einen Blick" (kurz und lang) und Leaflet (Prospekt) hinzugefügt.</li>
 	<li>Kategorien: Feld Beschreibung hinzugefügt.</li>
 	<li>In den Einstellungen kann nun dem Branchen Addon ein eigener Artikel zugewiesen werden und es könnnen mehrere Beratungsbilder eingestellt werden.</li>
+	<li>Italienische, polnische und Tschechische Sprog Übersetzungen entfernt.</li>
+	<li>Sprog Übersetzungen der Formulare in den Modulen ins D2U Helper Addon umgezogen.</li>
 	<li>industry_sectors_plugin: Feld Beschreibung und Piktogramm hinzugefügt.</li>
 	<li>machine_options_extension Plugin hinzugefügt: Dieses Plugin gleicht dem machine_features_extension Plugin. Hier werden zubaubare Optionen für Maschinen verwaltet.</li>
 	<li>machine_steel_processing_extension Plugin: Priorität der Zu-/Abfuhrseite hinzugefügt.</li>

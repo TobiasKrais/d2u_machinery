@@ -22,7 +22,7 @@ if(!function_exists('print_consulation_hint')) {
 		print '<div class="col-12 col-md-8 col-lg-9">';
 		print '<p>'. $sprog->getConfig('wildcard_open_tag') .'d2u_machinery_consultation_hint'. $sprog->getConfig('wildcard_close_tag') .'</p>';
 		if($d2u_machinery->hasConfig("contact_phone") && $d2u_machinery->getConfig("contact_phone") != "") {
-			print '<h3>'. $sprog->getConfig('wildcard_open_tag') .'d2u_machinery_form_phone'. $sprog->getConfig('wildcard_close_tag') .' '. $d2u_machinery->getConfig("contact_phone") .'</h3>';
+			print '<h3>'. $sprog->getConfig('wildcard_open_tag') .'d2u_helper_module_form_phone'. $sprog->getConfig('wildcard_close_tag') .' '. $d2u_machinery->getConfig("contact_phone") .'</h3>';
 		}
 		print '</div>';
 

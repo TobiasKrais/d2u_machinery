@@ -206,5 +206,31 @@ if($this->getConfig('show_usage_areas', 'hide') == 'show') {
 }
 
 // Remove not needed sprog translations
-$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE `wildcard` = 'd2u_machinery_form_captcha';");
-$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE `wildcard` = 'd2u_machinery_form_validate_captcha';");
+if (rex_version::compare($this->getVersion(), '1.3.5', '<')) {
+	$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE `wildcard` = 'd2u_machinery_form_captcha';");
+	$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE `wildcard` = 'd2u_machinery_form_validate_captcha';");
+	$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE `wildcard` = 'd2u_machinery_form_city';");
+	$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE `wildcard` = 'd2u_machinery_form_address';");
+	$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE `wildcard` = 'd2u_machinery_form_country';");
+	$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE `wildcard` = 'd2u_machinery_form_email';");
+	$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE `wildcard` = 'd2u_machinery_form_message';");
+	$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE `wildcard` = 'd2u_machinery_form_name';");
+	$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE `wildcard` = 'd2u_machinery_form_phone';");
+	$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE `wildcard` = 'd2u_machinery_form_please_call';");
+	$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE `wildcard` = 'd2u_machinery_form_privacy_policy';");
+	$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE `wildcard` = 'd2u_machinery_form_required';");
+	$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE `wildcard` = 'd2u_machinery_form_send';");
+	$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE `wildcard` = 'd2u_machinery_form_thanks';");
+	$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE `wildcard` = 'd2u_machinery_form_validate_address';");
+	$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE `wildcard` = 'd2u_machinery_form_validate_city';");
+	$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE `wildcard` = 'd2u_machinery_form_validate_email';");
+	$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE `wildcard` = 'd2u_machinery_form_validate_name';");
+	$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE `wildcard` = 'd2u_machinery_form_validate_phone';");
+	$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE `wildcard` = 'd2u_machinery_form_validate_privacy_policy';");
+	$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE `wildcard` = 'd2u_machinery_form_validate_spambots';");
+	$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE `wildcard` = 'd2u_machinery_form_validate_spam_detected';");
+	$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE `wildcard` = 'd2u_machinery_form_validate_title';");
+	$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE `wildcard` = 'd2u_machinery_form_validate_zip';");
+	$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE `wildcard` = 'd2u_machinery_form_vorname';");
+	$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."sprog_wildcard WHERE `wildcard` = 'd2u_machinery_form_zip';");
+}

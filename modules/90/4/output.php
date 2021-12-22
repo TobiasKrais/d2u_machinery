@@ -381,43 +381,43 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 	$form_data = 'hidden|machine_name|'. $used_machine->manufacturer .' '. $used_machine->name .' (Gebrauchtmaschine)|REQUEST
 
 			html||<h3> '. $tag_open .'d2u_machinery_request'. $tag_close .': '. $machine->name .'</h3><br>
-			text|vorname|'. $tag_open .'d2u_machinery_form_vorname'. $tag_close .'
-			text|name|'. $tag_open .'d2u_machinery_form_name'. $tag_close .' *|||{"required":"required"}
+			text|vorname|'. $tag_open .'d2u_helper_module_form_first_name'. $tag_close .'
+			text|name|'. $tag_open .'d2u_helper_module_form_last_name'. $tag_close .' *|||{"required":"required"}
 			text|company|'. $tag_open .'d2u_machinery_form_company'. $tag_close .'
-			text|address|'. $tag_open .'d2u_machinery_form_address'. $tag_close .'
-			text|zip|'. $tag_open .'d2u_machinery_form_zip'. $tag_close .'
-			text|city|'. $tag_open .'d2u_machinery_form_city'. $tag_close .'
-			text|country|'. $tag_open .'d2u_machinery_form_country'. $tag_close .'
-			text|phone|'. $tag_open .'d2u_machinery_form_phone'. $tag_close .' *|||{"required":"required"}
-			text|email|'. $tag_open .'d2u_machinery_form_email'. $tag_close .' *|||{"required":"required"}
-			textarea|message|'. $tag_open .'d2u_machinery_form_message'. $tag_close .' *|||{"required":"required"}
-			checkbox|please_call|'. $tag_open .'d2u_machinery_form_please_call'. $tag_close .'|0,1|0
-			checkbox|privacy_policy_accepted|'. $tag_open .'d2u_machinery_form_privacy_policy'. $tag_close .' *|0,1|0';
+			text|address|'. $tag_open .'d2u_helper_module_form_street'. $tag_close .'
+			text|zip|'. $tag_open .'d2u_helper_module_form_zip'. $tag_close .'
+			text|city|'. $tag_open .''. $tag_close .'
+			text|country|'. $tag_open .'d2u_helper_module_form_country'. $tag_close .'
+			text|phone|'. $tag_open .'d2u_helper_module_form_phone'. $tag_close .' *|||{"required":"required"}
+			text|email|'. $tag_open .'d2u_helper_module_form_email'. $tag_close .' *|||{"required":"required"}
+			textarea|message|'. $tag_open .'d2u_helper_module_form_message'. $tag_close .' *|||{"required":"required"}
+			checkbox|please_call|'. $tag_open .'d2u_helper_module_form_please_call'. $tag_close .'|0,1|0
+			checkbox|privacy_policy_accepted|'. $tag_open .'d2u_helper_module_form_privacy_policy'. $tag_close .' *|0,1|0';
 	if(rex_addon::get('yform_spam_protection')->isAvailable()) {
 		$form_data .= '
-			spam_protection|honeypot|Bitte nicht ausfüllen|'. $tag_open .'d2u_machinery_form_validate_spam_detected'. $tag_close .'|0';					
+			spam_protection|honeypot|Bitte nicht ausfüllen|'. $tag_open .'d2u_helper_module_form_validate_spam_detected'. $tag_close .'|0';					
 	}
 	else {
 		$form_data .= '
 			php|validate_timer|Spamprotection|<input name="validate_timer" type="hidden" value="'. microtime(true) .'" />|
-			validate|customfunction|validate_timer|d2u_addon_frontend_helper::yform_validate_timer|5|'. $tag_open .'d2u_machinery_form_validate_spambots'. $tag_close .'|
+			validate|customfunction|validate_timer|d2u_addon_frontend_helper::yform_validate_timer|5|'. $tag_open .'d2u_helper_module_form_validate_spambots'. $tag_close .'|
 
 			html|honeypot||<div class="mail-validate hide">
-			text|mailvalidate|'. $tag_open .'d2u_machinery_form_email'. $tag_close .'||no_db
-			validate|compare_value|mailvalidate||!=|'. $tag_open .'d2u_machinery_form_validate_spam_detected'. $tag_close .'|
+			text|mailvalidate|'. $tag_open .'d2u_helper_module_form_email'. $tag_close .'||no_db
+			validate|compare_value|mailvalidate||!=|'. $tag_open .'d2u_helper_module_form_validate_spam_detected'. $tag_close .'|
 			html|honeypot||</div>';
 	}
 	$form_data .= '
-			html||<br>* '. $tag_open .'d2u_machinery_form_required'. $tag_close .'<br><br>
+			html||<br>* '. $tag_open .'d2u_helper_module_form_required'. $tag_close .'<br><br>
 
-			submit|submit|'. $tag_open .'d2u_machinery_form_send'. $tag_close .'|no_db
+			submit|submit|'. $tag_open .'d2u_helper_module_form_send'. $tag_close .'|no_db
 
-			validate|empty|name|'. $tag_open .'d2u_machinery_form_validate_name'. $tag_close .'
-			validate|empty|phone|'. $tag_open .'d2u_machinery_form_validate_phone'. $tag_close .'
-			validate|empty|email|'. $tag_open .'d2u_machinery_form_validate_email'. $tag_close .'
-			validate|type|email|email|'. $tag_open .'d2u_machinery_form_validate_email'. $tag_close .'
-			validate|empty|message|'. $tag_open .'d2u_machinery_form_validate_email'. $tag_close .'
-			validate|empty|privacy_policy_accepted|'. $tag_open .'d2u_machinery_form_validate_privacy_policy'. $tag_close .'
+			validate|empty|name|'. $tag_open .'d2u_helper_module_form_validate_name'. $tag_close .'
+			validate|empty|phone|'. $tag_open .'d2u_helper_module_form_validate_phone'. $tag_close .'
+			validate|empty|email|'. $tag_open .'d2u_helper_module_form_validate_email'. $tag_close .'
+			validate|type|email|email|'. $tag_open .'d2u_helper_module_form_validate_email'. $tag_close .'
+			validate|empty|message|'. $tag_open .'d2u_helper_module_form_validate_message'. $tag_close .'
+			validate|empty|privacy_policy_accepted|'. $tag_open .'d2u_helper_module_form_validate_privacy_policy'. $tag_close .'
 
 			action|tpl2email|d2u_machinery_machine_request|'. $d2u_machinery->getConfig('request_form_email');
 
@@ -425,11 +425,11 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 	$yform->setFormData(trim($form_data));
 	$yform->setObjectparams("form_action", $used_machine->getUrl());
 	$yform->setObjectparams("form_anchor", "tab_request");
-	$yform->setObjectparams("Error-occured", $tag_open .'d2u_machinery_form_validate_title'. $tag_close);
+	$yform->setObjectparams("Error-occured", $tag_open .'d2u_helper_module_form_validate_title'. $tag_close);
 	$yform->setObjectparams("real_field_names", TRUE);
 
 	// action - showtext
-	$yform->setActionField("showtext", [$tag_open .'d2u_machinery_form_thanks'. $tag_close]);
+	$yform->setActionField("showtext", [$tag_open .'d2u_helper_module_form_thanks'. $tag_close]);
 
 	echo $yform->getForm();
 	

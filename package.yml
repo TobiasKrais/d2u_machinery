@@ -16,7 +16,7 @@ page:
 requires:
     redaxo: '>=5.10.0'
     packages:
-        d2u_helper: '>=1.8.6'
+        d2u_helper: '>=1.8.8'
         media_manager: '>=2.3'
         sprog: '>=1.0.0'
         url: '>=1.0.1'

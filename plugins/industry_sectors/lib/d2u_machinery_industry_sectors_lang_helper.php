@@ -34,35 +34,11 @@ class d2u_machinery_industry_sectors_lang_helper extends d2u_machinery_lang_help
 	];
 
 	/**
-	 * @var string[] Array with italian replacements. Key is the wildcard,
-	 * value the replacement. 
-	 */
-	protected $replacements_italian = [
-		'd2u_machinery_industry_sectors' => 'Settori'
-	];
-
-	/**
-	 * @var string[] Array with polish replacements. Key is the wildcard,
-	 * value the replacement. 
-	 */
-	protected $replacements_polish = [
-		'd2u_machinery_industry_sectors' => 'Sektory'
-	];
-	
-	/**
 	 * @var string[] Array with dutch replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
 	protected $replacements_dutch = [
 		'd2u_machinery_industry_sectors' => 'Sectoren'
-	];
-
-	/**
-	 * @var string[] Array with czech replacements. Key is the wildcard,
-	 * value the replacement. 
-	 */
-	protected $replacements_czech = [
-		'd2u_machinery_industry_sectors' => 'Odvětví'
 	];
 
 	/**

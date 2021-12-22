@@ -102,56 +102,6 @@ class d2u_machinery_used_machines_lang_helper extends d2u_machinery_lang_helper 
 		'd2u_machinery_used_machines_vat_included' => 'IVA incluido',
 		'd2u_machinery_used_machines_year_built' => 'Año de construcción',
 	];
-
-	/**
-	 * @var string[] Array with italian replacements. Key is the wildcard,
-	 * value the replacement. 
-	 */
-	protected $replacements_italian = [
-		'd2u_machinery_used_machines' => 'translation missing: d2u_machinery_used_machines',
-		'd2u_machinery_used_machines_availability' => 'Disponibile ora',
-		'd2u_machinery_used_machines_availible_from' => 'Disponibile da',
-		'd2u_machinery_used_machines_config_error' => 'translation missing: d2u_machinery_used_machines_config_error',
-		'd2u_machinery_used_machines_details' => 'Dettagli',
-		'd2u_machinery_used_machines_external_url' => 'Dettagli',
-		'd2u_machinery_used_machines_infos' => 'Per ulteriori informazioni',
-		'd2u_machinery_used_machines_link_machine' => 'translation missing: d2u_machinery_used_machines_link_machine',
-		'd2u_machinery_used_machines_location' => 'translation missing: d2u_machinery_used_machines_location',
-		'd2u_machinery_used_machines_no_machines' => 'translation missing: d2u_machinery_used_machines_no_machines',
-		'd2u_machinery_used_machines_offer_rent' => 'translation missing: d2u_machinery_used_machines_offer_rent',
-		'd2u_machinery_used_machines_offers_rent' => 'translation missing: d2u_machinery_used_machines_offers_rent',
-		'd2u_machinery_used_machines_offers_sale' => 'translation missing: d2u_machinery_used_machines_offers_sale',
-		'd2u_machinery_used_machines_price' => 'translation missing: d2u_machinery_used_machines_price',
-		'd2u_machinery_used_machines_price_on_request' => 'translation missing: d2u_machinery_used_machines_price_on_request',
-		'd2u_machinery_used_machines_vat_excluded' => 'translation missing: d2u_machinery_used_machines_vat_excluded',
-		'd2u_machinery_used_machines_vat_included' => 'translation missing: d2u_machinery_used_machines_vat_included',
-		'd2u_machinery_used_machines_year_built' => 'Anno costruzione',
-	];
-
-	/**
-	 * @var string[] Array with polish replacements. Key is the wildcard,
-	 * value the replacement. 
-	 */
-	protected $replacements_polish = [
-		'd2u_machinery_used_machines' => 'translation missing: d2u_machinery_used_machines',
-		'd2u_machinery_used_machines_availability' => 'Już dostępny',
-		'd2u_machinery_used_machines_availible_from' => 'Dostępne od',
-		'd2u_machinery_used_machines_config_error' => 'translation missing: d2u_machinery_used_machines_config_error',
-		'd2u_machinery_used_machines_details' => 'Detale',
-		'd2u_machinery_used_machines_external_url' => 'Detale',
-		'd2u_machinery_used_machines_infos' => 'Aby uzyskać więcej informacji',
-		'd2u_machinery_used_machines_link_machine' => 'translation missing: d2u_machinery_used_machines_link_machine',
-		'd2u_machinery_used_machines_location' => 'translation missing: d2u_machinery_used_machines_location',
-		'd2u_machinery_used_machines_no_machines' => 'translation missing: d2u_machinery_used_machines_no_machines',
-		'd2u_machinery_used_machines_offer_rent' => 'translation missing: d2u_machinery_used_machines_offer_rent',
-		'd2u_machinery_used_machines_offers_rent' => 'translation missing: d2u_machinery_used_machines_offers_rent',
-		'd2u_machinery_used_machines_offers_sale' => 'translation missing: d2u_machinery_used_machines_offers_sale',
-		'd2u_machinery_used_machines_price' => 'translation missing: d2u_machinery_used_machines_price',
-		'd2u_machinery_used_machines_price_on_request' => 'translation missing: d2u_machinery_used_machines_price_on_request',
-		'd2u_machinery_used_machines_vat_excluded' => 'translation missing: d2u_machinery_used_machines_vat_excluded',
-		'd2u_machinery_used_machines_vat_included' => 'translation missing: d2u_machinery_used_machines_vat_included',
-		'd2u_machinery_used_machines_year_built' => 'Rok budowy',
-	];
 	
 	/**
 	 * @var string[] Array with dutch replacements. Key is the wildcard,
@@ -176,31 +126,6 @@ class d2u_machinery_used_machines_lang_helper extends d2u_machinery_lang_helper 
 		'd2u_machinery_used_machines_vat_excluded' => 'translation missing: d2u_machinery_used_machines_vat_excluded',
 		'd2u_machinery_used_machines_vat_included' => 'translation missing: d2u_machinery_used_machines_vat_included',
 		'd2u_machinery_used_machines_year_built' => 'Bouwjaar',
-	];
-
-	/**
-	 * @var string[] Array with czech replacements. Key is the wildcard,
-	 * value the replacement. 
-	 */
-	protected $replacements_czech = [
-		'd2u_machinery_used_machines' => 'Použité stroje',
-		'd2u_machinery_used_machines_availability' => 'nyní k dispozici',
-		'd2u_machinery_used_machines_availible_from' => 'Dostupný od',
-		'd2u_machinery_used_machines_config_error' => 'translation missing: d2u_machinery_used_machines_config_error',
-		'd2u_machinery_used_machines_details' => 'Podrobnosti',
-		'd2u_machinery_used_machines_external_url' => 'Podrobnosti',
-		'd2u_machinery_used_machines_infos' => 'Pro více informací',
-		'd2u_machinery_used_machines_link_machine' => 'Více informací o typu stroje',
-		'd2u_machinery_used_machines_location' => 'translation missing: d2u_machinery_used_machines_location',
-		'd2u_machinery_used_machines_no_machines' => 'V současné době nejsou k dispozici žádné  použité stroje.',
-		'd2u_machinery_used_machines_offer_rent' => 'translation missing: d2u_machinery_used_machines_offer_rent',
-		'd2u_machinery_used_machines_offers_rent' => 'translation missing: d2u_machinery_used_machines_offers_rent',
-		'd2u_machinery_used_machines_offers_sale' => 'translation missing: d2u_machinery_used_machines_offers_sale',
-		'd2u_machinery_used_machines_price' => 'translation missing: d2u_machinery_used_machines_price',
-		'd2u_machinery_used_machines_price_on_request' => 'translation missing: d2u_machinery_used_machines_price_on_request',
-		'd2u_machinery_used_machines_vat_excluded' => 'translation missing: d2u_machinery_used_machines_vat_excluded',
-		'd2u_machinery_used_machines_vat_included' => 'translation missing: d2u_machinery_used_machines_vat_included',
-		'd2u_machinery_used_machines_year_built' => 'translation missing: d2u_machinery_used_machines_year_built',
 	];
 
 	/**

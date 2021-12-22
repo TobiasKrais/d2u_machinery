@@ -36,35 +36,11 @@ class d2u_machinery_machine_features_extension_lang_helper extends d2u_machinery
 	];
 
 	/**
-	 * @var string[] Array with italian replacements. Key is the wildcard,
-	 * value the replacement. 
-	 */
-	protected $replacements_italian = [
-		'd2u_machinery_features' => 'Caratteristiche',
-	];
-
-	/**
-	 * @var string[] Array with polish replacements. Key is the wildcard,
-	 * value the replacement. 
-	 */
-	protected $replacements_polish = [
-		'd2u_machinery_features' => 'Cechy',
-	];
-	
-	/**
 	 * @var string[] Array with dutch replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
 	protected $replacements_dutch = [
 		'd2u_machinery_features' => 'Kenmerken',
-	];
-
-	/**
-	 * @var string[] Array with czech replacements. Key is the wildcard,
-	 * value the replacement. 
-	 */
-	protected $replacements_czech = [
-		'd2u_machinery_features' => 'Vlastnosti',
 	];
 
 	/**
