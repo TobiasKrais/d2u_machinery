@@ -48,8 +48,11 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.3.6-DEV:</p>
 <ul>
+	<li>Plugin contacts hinzugefügt: Maschinen und Gebrauchtmaschinen können Kontakte zugewiesen werden.</li>
 	<li>Bugfix machine_features_extension Plugin: wurden keine Kategorien ausgewählt, konnte nicht gespeichert werden.</li>
+	<li>Modul "90-1 D2U Machinery Addon - Hauptausgabe": Zugewiesener Kontakt aus contacts Plugin erhält Maschinenanfragen.</li>
 	<li>Modul "90-3 D2U Machinery Addon - Kategorien" Editor Feld auf D2U Helper Lieblingseditor umgestellt.</li>
+	<li>Modul "90-4 D2U Machinery Addon - Gebrauchtmaschinen": Zugewiesener Kontakt aus contacts Plugin erhält Maschinenanfragen.</li>
 </ul>
 <p>1.3.5:</p>
 <ul>

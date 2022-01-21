@@ -48,6 +48,9 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$machine->operating_voltage_hz = $form['operating_voltage_hz'];
 			$machine->operating_voltage_a = $form['operating_voltage_a'];
 		
+			if(rex_plugin::get("d2u_machinery", "contacts")->isAvailable()) {
+				$machine->contact = $form['contact_id'] ? new \D2U_Machinery\Contact($form['contact_id']): false;
+			}
 			if(rex_plugin::get("d2u_machinery", "equipment")->isAvailable()) {
 				$machine->equipment_ids = isset($form['equipment_ids']) ? $form['equipment_ids'] : [];
 			}
@@ -359,6 +362,15 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 								}
 							}
 							d2u_addon_backend_helper::form_select('d2u_helper_category', 'form[category_id]', $options, isset($machine->category->category_id) ? [$machine->category->category_id] : [], 1, FALSE, $readonly);
+							if(rex_plugin::get("d2u_machinery", "contacts")->isAvailable()) {
+								$options_contacts = [0 => rex_i18n::msg('d2u_machinery_contacts_settings_contact')];
+								foreach(\D2U_Machinery\Contact::getAll() as $contact) {
+									if($contact->name) {
+										$options_contacts[$contact->contact_id] = $contact->name;
+									}
+								}
+								d2u_addon_backend_helper::form_select('d2u_machinery_contacts_contact', 'form[contact_id]', $options_contacts, [$machine->contact ? $machine->contact->contact_id : 0], 1, FALSE, $readonly);
+							}
 							$options_alt_machines = [];
 							foreach(Machine::getAll(rex_config::get("d2u_helper", "default_lang")) as $alt_machine) {
 								if($alt_machine->machine_id != $machine->machine_id) {

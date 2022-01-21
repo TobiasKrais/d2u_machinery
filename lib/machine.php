@@ -35,6 +35,11 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	var $category = FALSE;
 
 	/**
+	 * @var \D2U_Machinery\Contact Machine contact
+	 */
+	var $contact = FALSE;
+
+	/**
 	 * @var int[] Usage area IDs
 	 */
 	var $usage_area_ids = [];
@@ -738,6 +743,12 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			$this->priority = $result->getValue("priority");
 			if($result->getValue("translation_needs_update") != "") {
 				$this->translation_needs_update = $result->getValue("translation_needs_update");
+			}
+
+			if(rex_plugin::get("d2u_machinery", "contacts")->isAvailable()) {
+				if($result->getValue("contact_id") > 0) {
+					$this->contact = new D2U_Machinery\Contact($result->getValue("contact_id"));
+				}
 			}
 
 			if(rex_plugin::get("d2u_machinery", "equipment")->isAvailable()) {
@@ -2155,6 +2166,9 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 					."operating_voltage_v = '". $this->operating_voltage_v ."', "
 					."operating_voltage_hz = '". $this->operating_voltage_hz ."', "
 					."operating_voltage_a = '". $this->operating_voltage_a ."' ";
+			if(rex_plugin::get("d2u_machinery", "contacts")->isAvailable()) {
+				$query .= ", contact_id = ". ($this->contact ? $this->contact->contact_id : 0) ." ";
+			}
 			if(rex_plugin::get("d2u_machinery", "equipment")->isAvailable()) {
 				$query .= ", equipment_ids = '|". implode("|", $this->equipment_ids) ."|' ";
 			}

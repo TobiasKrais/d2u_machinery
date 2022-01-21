@@ -847,7 +847,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 			validate|empty|message|'. $tag_open .'d2u_helper_module_form_validate_message'. $tag_close .'
 			validate|empty|privacy_policy_accepted|'. $tag_open .'d2u_helper_module_form_validate_privacy_policy'. $tag_close .'
 
-			action|tpl2email|d2u_machinery_machine_request|'. $d2u_machinery->getConfig('request_form_email');
+			action|tpl2email|d2u_machinery_machine_request|'. ($machine->contact ? $machine->contact->email : $d2u_machinery->getConfig('request_form_email'));
 
 	$yform = new rex_yform;
 	$yform->setFormData(trim($form_data));

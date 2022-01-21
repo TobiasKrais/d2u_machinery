@@ -8,40 +8,42 @@ if(!$d2u_machinery->hasConfig('used_machine_article_id_sale')) {
 	$d2u_machinery->setConfig('used_machine_article_id_sale', rex_article::getSiteStartArticleId());
 }
 
-$sql = \rex_sql::factory();
-
 // Create database
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_used_machines (
-	used_machine_id int(10) unsigned NOT NULL auto_increment,
-	manufacturer varchar(191) collate utf8mb4_unicode_ci default NULL,
-	name varchar(191) collate utf8mb4_unicode_ci default NULL,
-	category_id int(10) UNSIGNED NOT NULL,
-	availability varchar(10) collate utf8mb4_unicode_ci default NULL,
-	product_number varchar(191) collate utf8mb4_unicode_ci default NULL,
-	offer_type varchar(10) collate utf8mb4_unicode_ci default NULL,
-	year_built int(4) default NULL,
-	price decimal(10,2) default NULL,
-	currency_code varchar(3) collate utf8mb4_unicode_ci default NULL,
-	vat int(2) default NULL,
-	online_status varchar(10) collate utf8mb4_unicode_ci default 'online',
-	pics text collate utf8mb4_unicode_ci default NULL,
-	machine_id int(10) default NULL,
-	location varchar(191) collate utf8mb4_unicode_ci default NULL,
-	external_url varchar(191) collate utf8mb4_unicode_ci default NULL,
-	video_ids varchar(191) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (used_machine_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_used_machines_lang (
-	used_machine_id int(10) NOT NULL,
-	clang_id int(10) NOT NULL,
-	teaser text collate utf8mb4_unicode_ci default NULL,
-	description text collate utf8mb4_unicode_ci default NULL,
-	downloads text collate utf8mb4_unicode_ci default NULL,
-	translation_needs_update varchar(7) collate utf8mb4_unicode_ci default NULL,
-	updatedate DATETIME default NULL,
-	updateuser varchar(50) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (used_machine_id, clang_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
+\rex_sql_table::get(\rex::getTable('d2u_machinery_used_machines'))
+	->ensureColumn(new rex_sql_column('used_machine_id', 'INT(10) unsigned', false, null, 'auto_increment'))
+	->setPrimaryKey('used_machine_id')
+	->ensureColumn(new \rex_sql_column('manufacturer', 'VARCHAR(191)', true))
+    ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(191)', true))
+    ->ensureColumn(new \rex_sql_column('category_id', 'INT(10)', true))
+    ->ensureColumn(new \rex_sql_column('contact_id', 'INT(10)', true))
+    ->ensureColumn(new \rex_sql_column('availability', 'VARCHAR(10)', true))
+    ->ensureColumn(new \rex_sql_column('product_number', 'VARCHAR(191)', true))
+    ->ensureColumn(new \rex_sql_column('offer_type', 'VARCHAR(10)', true))
+    ->ensureColumn(new \rex_sql_column('year_built', 'INT(4)', true))
+    ->ensureColumn(new \rex_sql_column('price', 'DECIMAL(10,2)', true))
+    ->ensureColumn(new \rex_sql_column('currency_code', 'VARCHAR(3)', true))
+    ->ensureColumn(new \rex_sql_column('vat', 'INT(2)', true))
+    ->ensureColumn(new \rex_sql_column('online_status', 'VARCHAR(10)', true))
+    ->ensureColumn(new \rex_sql_column('pics', 'TEXT', true))
+    ->ensureColumn(new \rex_sql_column('machine_id', 'INT(10)', true))
+    ->ensureColumn(new \rex_sql_column('location', 'VARCHAR(191)', true))
+    ->ensureColumn(new \rex_sql_column('external_url', 'VARCHAR(191)', true))
+    ->ensureColumn(new \rex_sql_column('video_ids', 'VARCHAR(191)', true))
+    ->ensure();
+
+\rex_sql_table::get(\rex::getTable('d2u_machinery_used_machines_lang'))
+	->ensureColumn(new rex_sql_column('used_machine_id', 'INT(10) unsigned', false, null, 'auto_increment'))
+    ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false, 1))
+	->setPrimaryKey(['used_machine_id', 'clang_id'])
+	->ensureColumn(new \rex_sql_column('teaser', 'TEXT', true))
+    ->ensureColumn(new \rex_sql_column('description', 'TEXT', true))
+    ->ensureColumn(new \rex_sql_column('downloads', 'TEXT', true))
+    ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)', true))
+    ->ensureColumn(new \rex_sql_column('updatedate', 'DATETIME', true))
+    ->ensureColumn(new \rex_sql_column('updateuser', 'VARCHAR(50)', true))
+    ->ensure();
+
+$sql = \rex_sql::factory();
 
 // Create views for url addon
 $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_machinery_url_used_machines_rent AS
@@ -168,6 +170,10 @@ if(\rex_addon::get('url')->isAvailable()) {
 }
 
 // Insert frontend translations
+if(!class_exists('d2u_machinery_used_machines_lang_helper')) {
+	// Load class in case addon is deactivated
+	require_once 'lib/d2u_machinery_used_machines_lang_helper.php';
+}
 if(class_exists('d2u_machinery_used_machines_lang_helper')) {
 	d2u_machinery_used_machines_lang_helper::factory()->install();
 }

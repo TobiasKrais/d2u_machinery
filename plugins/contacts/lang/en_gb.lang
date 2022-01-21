@@ -1,0 +1,7 @@
+d2u_machinery_contacts = Contacts
+d2u_machinery_contacts_contact = Contact
+d2u_machinery_contacts_contacts = Contactperson
+d2u_machinery_contacts_email = E-mail address
+d2u_machinery_contacts_no_contacts_found = No contacts found.
+d2u_machinery_contacts_phone = Phone number
+d2u_machinery_contacts_settings_contact = Take default contact settings from addon settings

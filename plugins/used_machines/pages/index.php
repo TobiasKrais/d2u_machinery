@@ -39,6 +39,10 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$used_machine->location = $form['location'];
 			$used_machine->external_url = $form['external_url'];
 
+			if(rex_plugin::get("d2u_machinery", "contacts")->isAvailable()) {
+				$used_machine->contact = $form['contact_id'] ? new \D2U_Machinery\Contact($form['contact_id']): false;
+			}
+
 			if(\rex_addon::get("d2u_videos")->isAvailable()) {
 				$video_ids = isset($form['video_ids']) ? $form['video_ids'] : [];
 				$used_machine->videos = []; // Clear video array
@@ -142,6 +146,15 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 								}
 							}
 							d2u_addon_backend_helper::form_select('d2u_helper_category', 'form[category_id]', $options, [$used_machine->category->category_id], 1, FALSE, $readonly);
+							if(rex_plugin::get("d2u_machinery", "contacts")->isAvailable()) {
+								$options_contacts = [0 => rex_i18n::msg('d2u_machinery_contacts_settings_contact')];
+								foreach(\D2U_Machinery\Contact::getAll() as $contact) {
+									if($contact->name) {
+										$options_contacts[$contact->contact_id] = $contact->name;
+									}
+								}
+								d2u_addon_backend_helper::form_select('d2u_machinery_contacts_contact', 'form[contact_id]', $options_contacts, [$used_machine->contact ? $used_machine->contact->contact_id : 0], 1, FALSE, $readonly);
+							}
 							$options_offer_type = ["sale" => rex_i18n::msg('d2u_machinery_used_machines_offer_type_sale'),
 								"rent" => rex_i18n::msg('d2u_machinery_used_machines_offer_type_rent')];
 							d2u_addon_backend_helper::form_select('d2u_machinery_used_machines_offer_type', 'form[offer_type]', $options_offer_type, [$used_machine->offer_type], 1, FALSE, $readonly);

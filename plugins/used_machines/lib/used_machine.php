@@ -35,6 +35,11 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 	var $category = false;
 
 	/**
+	 * @var \D2U_Machinery\Contact Machine contact
+	 */
+	var $contact = FALSE;
+
+	/**
 	 * @var string Offer type. This could be "sale" or "rent"
 	 */
 	var $offer_type = "sale";
@@ -174,6 +179,12 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 				$this->external_url = "http://". $this->external_url;
 			}
 			
+			if(rex_plugin::get("d2u_machinery", "contacts")->isAvailable()) {
+				if($result->getValue("contact_id") > 0) {
+					$this->contact = new D2U_Machinery\Contact($result->getValue("contact_id"));
+				}
+			}
+
 			// Videos
 			if(\rex_addon::get('d2u_videos')->isAvailable() && $result->getValue("video_ids") != "") {
 				$video_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("video_ids")), PREG_GREP_INVERT);
@@ -502,6 +513,9 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 					."machine_id = ". ($this->machine === FALSE ? 0 : $this->machine->machine_id) .", "
 					."location = '". $this->location ."', "
 					."external_url = '". $this->external_url ."' ";
+			if(rex_plugin::get("d2u_machinery", "contacts")->isAvailable()) {
+				$query .= ", contact_id = ". ($this->contact ? $this->contact->contact_id : 0) ." ";
+			}
 			if(\rex_addon::get('d2u_videos')->isAvailable() && count($this->videos) > 0) {
 				$query .= ", video_ids = '|". implode("|", array_keys($this->videos)) ."|' ";
 			}
