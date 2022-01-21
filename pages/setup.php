@@ -48,6 +48,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.3.6-DEV:</p>
 <ul>
+	<li>Bugfix machine_features_extension Plugin: wurden keine Kategorien ausgewählt, konnte nicht gespeichert werden.</li>
 	<li>Modul "90-3 D2U Machinery Addon - Kategorien" Editor Feld auf D2U Helper Lieblingseditor umgestellt.</li>
 </ul>
 <p>1.3.5:</p>
