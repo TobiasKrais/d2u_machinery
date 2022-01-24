@@ -27,6 +27,7 @@ function rex_d2u_machinery_contacts_media_is_in_use(rex_extension_point $ep) {
 		if(!in_array($message, $warning)) {
 			$warning[] = $message;
 		}
+		$sql_contacts->next();
     }
 	
 	return $warning;

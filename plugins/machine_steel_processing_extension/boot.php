@@ -79,6 +79,7 @@ function rex_d2u_machinery_steel_processing_media_is_in_use(rex_extension_point 
 		if(!in_array($message, $warning)) {
 			$warning[] = $message;
 		}
+		$sql_machine->next();
     }
 
 	return $warning;

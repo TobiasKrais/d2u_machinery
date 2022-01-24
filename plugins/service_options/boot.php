@@ -50,6 +50,7 @@ function rex_d2u_machinery_service_options_media_is_in_use(rex_extension_point $
   		if(!in_array($message, $warning)) {
 			$warning[] = $message;
 		}
+		$sql->next();
     }
 
 	return $warning;
