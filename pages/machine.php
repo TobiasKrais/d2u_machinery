@@ -214,7 +214,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 				$machine->beam_color_guns = $form['beam_color_guns'];
 			}
 			if(rex_plugin::get("d2u_machinery", "machine_usage_area_extension")->isAvailable()) {
-				$machine->usage_area_ids = $form['usage_area_ids'];
+				$machine->usage_area_ids = isset($form['usage_area_ids']) ? $form['usage_area_ids'] : [];
 			}
 			
 			if(\rex_addon::get("d2u_videos")->isAvailable()) {
