@@ -19,7 +19,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 		if($usage_area === FALSE) {
 			$usage_area = new UsageArea($usage_area_id, $rex_clang->getId());
 			$usage_area->usage_area_id = $usage_area_id; // Ensure correct ID in case first language has no object
-			$usage_area->category_ids = $form['category_ids'];
+			$usage_area->category_ids = isset($form['category_ids']) ? $form['category_ids'] : [];
 			$usage_area->priority = $form['priority'];
 		}
 		else {
@@ -48,10 +48,10 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	
 	// Redirect to make reload and thus double save impossible
 	if(filter_input(INPUT_POST, "btn_apply") == 1 && $usage_area !== FALSE) {
-		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$usage_area->usage_area_id, "func"=>'edit', "message"=>$message), FALSE));
+		header("Location: ". rex_url::currentBackendPage(["entry_id"=>$usage_area->usage_area_id, "func"=>'edit', "message"=>$message], FALSE));
 	}
 	else {
-		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), FALSE));
+		header("Location: ". rex_url::currentBackendPage(["message"=>$message], FALSE));
 	}
 	exit;
 }
