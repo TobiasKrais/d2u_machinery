@@ -5,5 +5,5 @@ supportpage: http://github.com/tobiaskrais/d2u_machinery
 
 page:
     title: 'translate:d2u_machinery_industry_sectors'
-    perm: d2u_machinery[category]
+    perm: 'd2u_machinery[category]'
     icon: rex-icon fa-industry

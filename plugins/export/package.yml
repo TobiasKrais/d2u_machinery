@@ -5,11 +5,11 @@ supportpage: http://github.com/tobiaskrais/d2u_machinery
 
 page:
     title: 'translate:d2u_machinery_export'
-    perm: d2u_machinery[export]
+    perm: 'd2u_machinery[export]'
     icon: rex-icon fa-cloud-upload
     subpages:
-        export: { title: 'translate:d2u_machinery_export', icon: rex-icon fa-cloud-upload, perm: d2u_machinery[export] }
-        provider: { title: 'translate:d2u_machinery_export_provider', icon: rex-icon fa-cloud, perm: d2u_machinery[export_provider] }
+        export: { title: 'translate:d2u_machinery_export', icon: rex-icon fa-cloud-upload, perm: 'd2u_machinery[export]' }
+        provider: { title: 'translate:d2u_machinery_export_provider', icon: rex-icon fa-cloud, perm: 'd2u_machinery[export_provider]' }
 
 requires:
     php:

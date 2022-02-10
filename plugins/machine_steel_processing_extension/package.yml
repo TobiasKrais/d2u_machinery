@@ -5,7 +5,7 @@ supportpage: http://github.com/tobiaskrais/d2u_machinery
 
 page:
     title: 'translate:d2u_machinery_machine_steel_extension'
-    perm: d2u_machinery[machine]
+    perm: 'd2u_machinery[machine]'
     icon: rex-icon fa-steam
     subpages:
         supply: { title: 'translate:d2u_machinery_steel_supply', icon: rex-icon fa-stack-overflow }
