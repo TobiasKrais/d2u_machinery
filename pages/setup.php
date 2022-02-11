@@ -46,6 +46,10 @@ $d2u_module_manager->showManagerList();
 	</form>
 </fieldset>
 <h2>Changelog</h2>
+<p>1.3.7-DEV:</p>
+<ul>
+	<li>...</li>
+</ul>
 <p>1.3.6:</p>
 <ul>
 	<li>Anpassungen an Publish Github Release to Redaxo.</li>
