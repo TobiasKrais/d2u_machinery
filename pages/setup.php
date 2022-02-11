@@ -50,6 +50,7 @@ $d2u_module_manager->showManagerList();
 <ul>
 	<li>Anpassungen an Publish Github Release to Redaxo.</li>
 	<li>Plugin contacts hinzugefügt: Maschinen und Gebrauchtmaschinen können Kontakte zugewiesen werden.</li>
+	<li>Unterstützt nur noch URL Addon >= 2.0.</li>
 	<li>Bugfix machine_features_extension Plugin: wurden keine Kategorien ausgewählt, konnte nicht gespeichert werden.</li>
 	<li>Bugfix: Beim Löschen von Artikeln und Medien die vom Addon verlinkt werden wurde der Name der verlinkenden Quelle in der Warnmeldung nicht immer korrekt angegeben.</li>
 	<li>Bugfix: Beim Speichern von Anwendungsgebieten konnte ein Fatal Error auftreten.</li>

@@ -39,7 +39,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 	if(rex_plugin::get('d2u_machinery', 'export')->isAvailable()) {
 		$settings['export_autoexport'] = array_key_exists('export_autoexport', $settings) ? "active" : "inactive";
 	}
-	if(rex_addon::get("url")->isAvailable() && rex_version::compare(\rex_addon::get('url')->getVersion(), '1.5', '>=')) {
+	if(rex_addon::get("url")->isAvailable()) {
 		$settings['short_urls'] = array_key_exists('short_urls', $settings) ? "true" : "false";
 		$settings['short_urls_forward'] = array_key_exists('short_urls_forward', $settings) && $settings['short_urls'] == "true" ? "true" : "false";
 	}
@@ -136,7 +136,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 						$consultation_pics = $this->getConfig('consultation_pics','') != '' ? preg_grep('/^\s*$/s', explode(",", $this->getConfig('consultation_pics')), PREG_GREP_INVERT) : ($this->getConfig('consultation_pic', '') != '' ? [$this->getConfig('consultation_pic')] : []);
 						d2u_addon_backend_helper::form_medialistfield('d2u_machinery_settings_consultation_pics', 1, $consultation_pics, FALSE);
 						d2u_addon_backend_helper::form_linkfield('d2u_machinery_settings_consultation_article', '2', $this->getConfig('consultation_article_id'), rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId()));
-						if(rex_addon::get("url")->isAvailable() && rex_version::compare(\rex_addon::get('url')->getVersion(), '1.5', '>=')) {
+						if(rex_addon::get("url")->isAvailable()) {
 							d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_short_urls', 'settings[short_urls]', 'true', $this->getConfig('short_urls') == 'true');
 							d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_short_urls_forward', 'settings[short_urls_forward]', 'true', $this->getConfig('short_urls_forward') == 'true');
 							?>
