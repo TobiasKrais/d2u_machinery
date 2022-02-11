@@ -193,6 +193,16 @@ class d2u_machinery_frontend_helper {
 			$breadcrumbs[] = '<a href="' . $industry_sector->getUrl() . '">' . $industry_sector->name . '</a>';
 		}
 		
+		// Production lines
+		if(rex_plugin::get("d2u_machinery", "production_lines")->isAvailable() && (filter_input(INPUT_GET, 'production_line_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || $url_namespace === "production_line_id")) {
+			$production_line_id = filter_input(INPUT_GET, 'production_line_id', FILTER_VALIDATE_INT);
+			if(\rex_addon::get("url")->isAvailable() && $url_id > 0) {
+				$production_line_id = $url_id;
+			}
+			$production_line = new ProductionLine($production_line_id, rex_clang::getCurrentId());
+			$breadcrumbs[] = '<a href="' . $production_line->getUrl() . '">' . $production_line->name . '</a>';
+		}
+
 		return $breadcrumbs;
 	}
 	

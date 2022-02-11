@@ -48,7 +48,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.3.7-DEV:</p>
 <ul>
-	<li>...</li>
+	<li>Bugfix production_lines Plugin: Breadcrumbs werden nun korrekt ausgegeben.</li>
 </ul>
 <p>1.3.6:</p>
 <ul>
