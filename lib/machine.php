@@ -1455,7 +1455,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_construction_equipment_floor_working_pressure" . $tag_close,
 					"value" => $this->floor_working_pressure,
-					"unit" => $tag_open . "d2u_machinery_unit_kg" . $tag_close
+					"unit" => $tag_open . "d2u_machinery_unit_kg" . $tag_close ."/". $tag_open . "d2u_machinery_unit_cm2" . $tag_close
 				];
 			}
 			
