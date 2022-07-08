@@ -21,7 +21,7 @@ if(rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
 	<div class="col-xs-8">
 		<select name="REX_INPUT_VALUE[3]" class="form-control">
 		<?php
-		$values = ['machines'=>'Maschinen', 'used_machines'=>'Gebrauchtmaschinen'];
+		$values = ['machines'=>'Maschinen', 'used_machines_sale'=>'Gebrauchtmaschinen Verkaufsangebote', 'used_machines_rent'=>'Gebrauchtmaschinen Mietangebote'];
 		foreach($values as $key => $value) {
 			echo '<option value="'. $key .'" ';
 	

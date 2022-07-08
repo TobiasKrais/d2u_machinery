@@ -14,9 +14,19 @@ print '<div class="col-12 abstand">';
 print '<div class="row">';
 foreach (Category::getAll(rex_clang::getCurrentId()) as $category) {
 	// Only use used or parent categories
-	if(!$category->isChild() && (($type == 'machines' && count($category->getMachines(true)) > 0) || ($type == 'used_machines' && rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable() && count($category->getUsedMachines(true)) > 0))) {
+	if(!$category->isChild() && (($type == 'machines' && count($category->getMachines(true)) > 0) ||
+			(($type == 'used_machines_sale' || $type == 'used_machines_rent') && rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable() && count($category->getUsedMachines(true)) > 0))) {
+		$article_id_link = rex_config::get('d2u_machinery', 'article_id');
+		if($type == 'used_machines_sale' && rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
+			$category->setOfferType('sale');
+			$article_id_link = rex_config::get('d2u_machinery', 'used_machine_article_id_sale');
+		}
+		else if($type == 'used_machines_rent' && rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
+			$category->setOfferType('rent');
+			$article_id_link = rex_config::get('d2u_machinery', 'used_machine_article_id_rent');
+		}
 		print '<div class="col-6 col-md-4 col-md-4 col-lg-'. ($box_per_line == 4 ? '3' : '4') .' abstand">';
-		print '<a href="'. $category->getURL() .'" class="bluebox">';
+		print '<a href="'. $category->getURL(false, $article_id_link) .'" class="bluebox">';
 		print '<div class="box same-height">';
 		if($category->pic != "" || $category->pic_lang != "") {
 			print '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', ($category->pic_lang != "" ? $category->pic_lang : $category->pic)) .'" alt="'. $category->name .'">';

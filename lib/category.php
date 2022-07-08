@@ -503,6 +503,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 			if($current_article_id == 0) {
 				$current_article_id = rex_article::getCurrentId();
 			}
+
 			if(rex_plugin::get("d2u_machinery", "used_machines")->isAvailable() && ($current_article_id == $d2u_machinery->getConfig('used_machine_article_id_rent') || $current_article_id == $d2u_machinery->getConfig('used_machine_article_id_sale'))) {
 				if($this->offer_type == "sale") {
 					$article_id = $d2u_machinery->getConfig('used_machine_article_id_sale');
