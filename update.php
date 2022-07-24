@@ -23,7 +23,7 @@ if(class_exists("D2UModuleManager")) {
 	if(rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
 		$modules[] = new D2UModule("90-4",
 			"D2U Machinery Addon - Gebrauchtmaschinen",
-			17);
+			18);
 	}
 	$modules[] = new D2UModule("90-5",
 		"D2U Machinery Addon - Box Beratungshinweis",

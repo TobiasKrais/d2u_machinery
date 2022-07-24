@@ -20,11 +20,8 @@ if(!function_exists('print_used_machine_categories')) {
 				print '<a href="'. $category->getURL() .'">';
 				print '<div class="box" data-height-watch>';
 				if($category->pic != "" || $category->pic_lang != "") {
-					print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
-						($category->pic_lang != "" ? $category->pic_lang : $category->pic) .'" alt="'. $category->name .'">';
-				}
-				else {
-					print '<img src="'.	rex_addon::get("d2u_machinery")->getAssetsUrl("white_tile.gif") .'" alt="Placeholder">';
+					print '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $category->pic_lang != "" ? $category->pic_lang : $category->pic)
+						.'" alt="'. $category->name .'">';
 				}
 				print '<div>'. $category->name .'</div>';
 				print '</div>';
@@ -84,11 +81,7 @@ if(!function_exists('print_used_machines')) {
 			print '<a href="'. $used_machine->getURL(FALSE) .'">';
 			print '<div class="box" data-height-watch>';
 			if(count($used_machine->pics) > 0 && $used_machine->pics[0] != "") {
-				print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
-					$used_machine->pics[0] .'" alt="'. $used_machine->name .'">';
-			}
-			else {
-				print '<img src="'.	rex_addon::get("d2u_machinery")->getAssetsUrl("white_tile.gif") .'" alt="Placeholder">';
+				print '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $used_machine->pics[0])	 .'" alt="'. $used_machine->name .'">';
 			}
 			print '<div><b>'. $used_machine->manufacturer .' '. $used_machine->name .'</b></div>';
 			if($d2u_machinery->getConfig('show_teaser', 'hide') == 'show') {
