@@ -1,0 +1,98 @@
+@font-face{
+	font-family:'FontAwesome';
+	font-display: auto;
+	src:url("./assets/addons/be_style/fonts/fontawesome-webfont.eot?v=4.7.0");
+	src:url("./assets/addons/be_style/fonts/fontawesome-webfont.eot?#iefix&v=4.7.0") format('embedded-opentype'),
+		url("./assets/addons/be_style/fonts/fontawesome-webfont.woff2?v=4.7.0") format('woff2'),
+		url("./assets/addons/be_style/fonts/fontawesome-webfont.woff?v=4.7.0") format('woff'),
+		url("./assets/addons/be_style/fonts/fontawesome-webfont.ttf?v=4.7.0") format('truetype'),
+		url("./assets/addons/be_style/fonts/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular") format('svg');
+}
+.subhead-nav .nav-item {
+    padding: 0 15px;
+}
+
+.download-list {
+	padding: 0;
+}
+.download-list li {
+	background: article_color_box;
+	list-style: none;
+	margin-bottom: 1em;
+	padding: 0.5em 1em;
+}
+
+.fa-icon, .icon {
+	font-family: FontAwesome;
+}
+.icon {
+	font-weight: normal;
+	line-height: 1em;
+}
+.file:before {
+	color: darkred;
+	content: "\f1c1";
+}
+.pdf:before {
+	color: darkred;
+	content: "f016";
+}
+.fa-back:before {
+	content: "\f190";
+}
+.fa-codepen:before {
+	content: "\f1cb";
+}
+.fa-dropbox:before {
+	content: "\f16b";
+}
+.fa-envelope-o:before {
+	content: "\f003";
+}
+.fa-file-pdf-o:before {
+	color: #c60000;
+	content: "\f1c1";
+}
+.fa-file-pdf-o {
+	padding-right: 0.25em;
+}
+.fa-home:before {
+	content: "\f015";
+}
+.fa-list-ul:before {
+	content: "\f0ca";
+}
+.fa-plus:before {
+	content: "\f067";
+}
+
+.carousel-item {
+	transition-duration: 3s !important
+}
+.input-group-btn:last-child > .btn {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+}
+.btn-primary {
+	background-color: article_color_h !important;
+	border: none !important;
+}
+.btn-default {
+	background-color: article_color_h;
+	border: 1px solid article_color_h;
+	color: article_color_bg;
+}
+/* Form */
+input:invalid, textarea:invalid {
+    background-color: #fff2f4;
+}
+input:focus, textarea:focus {
+    border-left: 5px solid solid article_color_h;
+}
+input[type="checkbox"] {
+	width: auto;
+	margin-right: 5px;
+}
+.hide-validation {
+	display: none;
+}
