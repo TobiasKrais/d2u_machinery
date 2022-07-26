@@ -30,6 +30,11 @@ class D2UMachineryModules {
 		$modules[] = new D2UModule("90-5",
 			"D2U Machinery Addon - Box Beratungshinweis",
 			1);
+		if(rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
+			$modules[] = new D2UModule("90-6",
+				"D2U Machinery Addon - Gebrauchtmaschinen Topangebote",
+				11);
+		}
 		return $modules;
 	}
 }
