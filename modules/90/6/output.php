@@ -49,4 +49,8 @@ $url_id = d2u_addon_frontend_helper::getUrlId();
 $used_machines = UsedMachine::getAll(rex_clang::getCurrentId(), true);
 shuffle($used_machines);
 
+print '<div class="col-12">';
+print '<div class="row" data-match-height>';
 print_used_machines_top_offers($used_machines);
+print '</div>';
+print '</div>';
