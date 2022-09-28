@@ -259,7 +259,7 @@ if ($func == '') {
 		. 'FROM '. \rex::getTablePrefix() .'d2u_machinery_used_machines AS machines '
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_categories_lang AS categories '
 			. 'ON machines.category_id = categories.category_id AND categories.clang_id = '. rex_config::get("d2u_helper", "default_lang") .' '
-		. 'ORDER BY machines.name ASC');
+		. 'ORDER BY machines.name ASC', 100);
     $list->addTableAttribute('class', 'table-striped table-hover');
 
     $tdIcon = '<i class="rex-icon fa-truck"></i>';
