@@ -578,6 +578,34 @@ class Category implements \D2U_Helper\ITranslationHelper{
 	}
 	
 	/**
+	 * Detects if used machines in this category exist
+	 * @param boolean $ignore_offlines Ignore offline used machines, default is false
+	 * @return boolean TRUE if used machines exist, otherwise FALSE
+	 */
+	public function hasUsedMachines($ignore_offlines = false) {
+		if(rex_plugin::get("d2u_machinery", "used_machines")->isAvailable()) {
+			$query = "SELECT lang.used_machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_used_machines_lang AS lang "
+				."LEFT JOIN ". \rex::getTablePrefix() ."d2u_machinery_used_machines AS used_machines "
+					."ON lang.used_machine_id = used_machines.used_machine_id "
+				."WHERE category_id = ". $this->category_id ." AND clang_id = ". $this->clang_id ." ";
+			if($ignore_offlines) {
+				$query .= "AND online_status = 'online' ";
+			}
+			if($this->offer_type != "") {
+				$query .= "AND offer_type = '". $this->offer_type ."' ";
+			}
+
+			$result = \rex_sql::factory();
+			$result->setQuery($query);
+
+			if($result->getRows() > 0) {
+				return TRUE;
+			}
+		}
+		return false;
+	}
+	
+	/**
 	 * Detects whether category is child or not.
 	 * @return boolean TRUE if category has father.
 	 */
@@ -589,7 +617,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 			return TRUE;
 		}
 	}
-
+	
 	/**
 	 * Updates or inserts the object into database.
 	 * @return boolean TRUE if successful
