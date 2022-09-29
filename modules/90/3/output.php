@@ -36,7 +36,7 @@ foreach (Category::getAll(rex_clang::getCurrentId()) as $category) {
 		$article_id_link = rex_config::get('d2u_machinery', $type == 'used_machines_rent' ? 'used_machine_article_id_rent' : 'used_machine_article_id_sale');			
 	}
 
-	print '<div class="col-6 col-md-4 col-md-4 col-lg-'. ($box_per_line == 4 ? '3' : '4') .' abstand">';
+	print '<div class="col-6 col-md-4 col-md-4 col-lg-'. ($box_per_line == 4 ? '3' : '4') .' mr-auto ml-auto abstand">';
 	print '<a href="'. $category->getURL(false, $article_id_link) .'" class="bluebox">';
 	print '<div class="box same-height">';
 	if($category->pic != "" || $category->pic_lang != "") {
