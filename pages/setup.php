@@ -49,6 +49,7 @@ $d2u_module_manager->showManagerList();
 <p>1.3.7-DEV:</p>
 <ul>
 	<li>.github Verzeichnis aus Installer Action ausgeschlossen.</li>
+	<li>Bugfix used_achines Plugin: Wenn in den Einstellungen der gleiche Artikel für Maschinen, Gebrauchtmaschinen (Verkauf oder Miete) eingestellt wird, erfolg ein Warnhinweis.</li>
 	<li>Bugfix machine_construction_equipment_extension Plugin: Einheit für Arbeitsdruck von Bodenschleifmaschinen auf kg/cm² korrigiert.</li>
 	<li>Bugfix production_lines Plugin: Breadcrumbs werden nun korrekt ausgegeben.</li>
 	<li>Modul "90-3 D2U Machinery Addon - Kategorien" kann nun auch Gebrauchtmaschinenkategorien ausgeben und lässt die Wahl zwischen 3 oder 4 Blöcken je Zeile.</li>

@@ -122,6 +122,12 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 		echo rex_view::error(rex_i18n::msg('form_save_error'));
 	}
 }
+
+if(rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable() && ($this->getConfig('article_id') == $this->getConfig('used_machine_article_id_rent')
+		|| $this->getConfig('article_id') == $this->getConfig('used_machine_article_id_rent')
+		|| $this->getConfig('used_machine_article_id_rent') == $this->getConfig('used_machine_article_id_rent'))) {
+	echo rex_view::warning(rex_i18n::msg('d2u_machinery_used_machines_settings_duplicate_article_id'));
+}
 ?>
 <form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 	<div class="panel panel-edit">

@@ -18,6 +18,7 @@ d2u_machinery_used_machines_pic_type_lightbox = Lightbox (pictures tab)
 d2u_machinery_used_machines_pic_type_slider = Slider (overview tab)
 d2u_machinery_used_machines_price = Price
 d2u_machinery_used_machines_product_number = Product number
+d2u_machinery_used_machines_settings_duplicate_article_id = WARNING: Same article ID for machines, used machines for sale or rent used. This can cause trouble generating category URLs. This can be avoided: 1. Choose different article ids for machines, used machines for sale and rent. This will remove this warning. 2. Use a machine category either for machines, used machines for rent or sale, but never for more.
 d2u_machinery_used_machines_technical_data = Technical data
 d2u_machinery_used_machines_vat = % included VAT
 d2u_machinery_used_machines_year_built = Year of construction
