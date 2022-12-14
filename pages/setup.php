@@ -56,6 +56,7 @@ $d2u_module_manager->showManagerList();
 	<li>Modul "90-1 D2U Machinery Addon - Hauptausgabe": Unterstützt bei installiertem D2U Videomanager nun die Ausgabe der Videos mit Plyr.</li>
 	<li>Modul "90-3 D2U Machinery Addon - Kategorien" kann nun auch Gebrauchtmaschinenkategorien ausgeben und lässt die Wahl zwischen 3 oder 4 Blöcken je Zeile.</li>
 	<li>Modul "90-4 D2U Machinery Addon - Gebrauchtmaschinen": Leere Standardkachel entfernt und Paginierung auf 100 Maschinen erweitert. Unterstützt bei installiertem D2U Videomanager nun die Ausgabe der Videos mit Plyr.</li>
+	<li>Modul "90-6 D2U Machinery Addon - Gebrauchtmaschinen Topangebote" hinzugefügt.</li>
 </ul>
 <p>1.3.6:</p>
 <ul>
