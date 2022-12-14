@@ -13,6 +13,12 @@ if(\rex::isBackend()) {
 	rex_extension::register('CLANG_DELETED', 'rex_d2u_machinery_clang_deleted');
 	rex_extension::register('MEDIA_IS_IN_USE', 'rex_d2u_machinery_media_is_in_use');
 }
+else {
+	$d2u_video = rex_addon::get('d2u_videos');
+	if($d2u_video->isAvailable() && rex_version::compare($d2u_video->getVersion(), '1.1', '>=')) {
+		rex_extension::register('YREWRITE_SITEMAP', 'rex_d2u_machinery_video_sitemap');	
+	}
+}
 // Call this extension point also in frontend
 rex_extension::register('URL_PRE_SAVE', 'rex_d2u_machinery_url_shortener');
 
@@ -233,4 +239,49 @@ function rex_d2u_machinery_url_shortener(rex_extension_point $ep) {
 	}
 	
 	return $url;
+}
+
+/**
+ * Adds videos to sitemap
+ * @param rex_extension_point<string> $ep Redaxo extension point
+ * @return string[] Warning message as array
+ */
+function rex_d2u_machinery_video_sitemap(rex_extension_point $ep) {
+	$sitemap_entries = $ep->getSubject();
+
+	foreach(rex_clang::getAllIds(true) as $clang_id) {
+		$machines = Machine::getAll($clang_id, true);
+
+		foreach($machines as $machine) {
+			$video_entry = '';
+			// Get sitemap entry for videos
+			foreach($machine->videos as $video) {
+				$video_entry .= $video->getSitemapEntry();
+			}
+			// insert into sitemap
+			foreach($sitemap_entries as $sitemap_key => $sitemap_entry) {
+				if(str_contains($sitemap_entry, $machine->getURL() .'</loc>')) {
+					$sitemap_entries[$sitemap_key] = str_replace('</url>', $video_entry .'</url>', $sitemap_entry);
+				}
+			}
+		}
+
+		$categories = Category::getAll($clang_id);
+
+		foreach($categories as $category) {
+			$video_entry = '';
+			// Get sitemap entry for videos
+			foreach($category->videos as $video) {
+				$video_entry .= $video->getSitemapEntry();
+			}
+			// insert into sitemap
+			foreach($sitemap_entries as $sitemap_key => $sitemap_entry) {
+				if(str_contains($sitemap_entry, $category->getURL() .'</loc>')) {
+					$sitemap_entries[$sitemap_key] = str_replace('</url>', $video_entry .'</url>', $sitemap_entry);
+				}
+			}
+		}
+	}	
+	
+	return $sitemap_entries;
 }

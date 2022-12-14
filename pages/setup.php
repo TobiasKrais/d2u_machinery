@@ -49,11 +49,13 @@ $d2u_module_manager->showManagerList();
 <p>1.3.7-DEV:</p>
 <ul>
 	<li>.github Verzeichnis aus Installer Action ausgeschlossen.</li>
+	<li>Wenn D2U Videomanager installiert ist, werden Videos von Maschinen und Kategorien in der Sitemap hinzugefügt.</li>
 	<li>Bugfix used_achines Plugin: Wenn in den Einstellungen der gleiche Artikel für Maschinen, Gebrauchtmaschinen (Verkauf oder Miete) eingestellt wird, erfolg ein Warnhinweis.</li>
 	<li>Bugfix machine_construction_equipment_extension Plugin: Einheit für Arbeitsdruck von Bodenschleifmaschinen auf kg/cm² korrigiert.</li>
 	<li>Bugfix production_lines Plugin: Breadcrumbs werden nun korrekt ausgegeben.</li>
+	<li>Modul "90-1 D2U Machinery Addon - Hauptausgabe": Unterstützt bei installiertem D2U Videomanager nun die Ausgabe der Videos mit Plyr.</li>
 	<li>Modul "90-3 D2U Machinery Addon - Kategorien" kann nun auch Gebrauchtmaschinenkategorien ausgeben und lässt die Wahl zwischen 3 oder 4 Blöcken je Zeile.</li>
-	<li>Modul "90-4 D2U Machinery Addon - Gebrauchtmaschinen": Leere Standardkachel entfernt und Paginierung auf 100 Maschinen erweitert.</li>
+	<li>Modul "90-4 D2U Machinery Addon - Gebrauchtmaschinen": Leere Standardkachel entfernt und Paginierung auf 100 Maschinen erweitert. Unterstützt bei installiertem D2U Videomanager nun die Ausgabe der Videos mit Plyr.</li>
 </ul>
 <p>1.3.6:</p>
 <ul>

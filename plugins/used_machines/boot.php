@@ -10,6 +10,10 @@ if(\rex::isBackend()) {
 }
 else {
 	rex_extension::register('PACKAGES_INCLUDED', 'd2u_machinery_used_machines_add_open_graph_call', rex_extension::LATE);
+	$d2u_video = rex_addon::get('d2u_videos');
+	if($d2u_video->isAvailable() && rex_version::compare($d2u_video->getVersion(), '1.1', '>=')) {
+		rex_extension::register('YREWRITE_SITEMAP', 'rex_d2u_machinery_used_machines_video_sitemap');	
+	}
 }
 
 /**
@@ -128,4 +132,33 @@ function d2u_machinery_used_machines_add_open_graph(rex_extension_point $ep) {
 			$ep->setSubject(str_replace('</head>', $og_head .'</head>', $ep->getSubject()));
 		}
 	}
+}
+
+/**
+ * Adds videos to sitemap
+ * @param rex_extension_point<string> $ep Redaxo extension point
+ * @return string[] Warning message as array
+ */
+function rex_d2u_machinery_used_machines_video_sitemap(rex_extension_point $ep) {
+	$sitemap_entries = $ep->getSubject();
+
+	foreach(rex_clang::getAllIds(true) as $clang_id) {		
+		$used_machines = UsedMachine::getAll($clang_id, true);
+
+		foreach($used_machines as $used_machine) {
+			$video_entry = '';
+			// Get sitemap entry for videos
+			foreach($used_machine->videos as $video) {
+				$video_entry .= $video->getSitemapEntry();
+			}
+			// insert into sitemap
+			foreach($sitemap_entries as $sitemap_key => $sitemap_entry) {
+				if(str_contains($sitemap_entry, $used_machine->getURL() .'</loc>')) {
+					$sitemap_entries[$sitemap_key] = str_replace('</url>', $video_entry .'</url>', $sitemap_entry);
+				}
+			}
+		}
+	}	
+	
+	return $sitemap_entries;
 }
