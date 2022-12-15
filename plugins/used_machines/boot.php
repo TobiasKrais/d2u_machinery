@@ -137,7 +137,7 @@ function d2u_machinery_used_machines_add_open_graph(rex_extension_point $ep) {
 /**
  * Adds videos to sitemap
  * @param rex_extension_point<string> $ep Redaxo extension point
- * @return string[] Warning message as array
+ * @return string[] updated sitemap entries
  */
 function rex_d2u_machinery_used_machines_video_sitemap(rex_extension_point $ep) {
 	$sitemap_entries = $ep->getSubject();
