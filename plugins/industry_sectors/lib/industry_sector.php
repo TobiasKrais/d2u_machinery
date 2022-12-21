@@ -83,7 +83,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 			$this->icon = $result->getValue("icon");
 			$this->pic = $result->getValue("pic");
 			$this->online_status = $result->getValue("online_status");
-			if($result->getValue("translation_needs_update") != "") {
+			if($result->getValue("translation_needs_update") !== "") {
 				$this->translation_needs_update = $result->getValue("translation_needs_update");
 			}
 		}
@@ -135,7 +135,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 			."WHERE industry_sector_id = ". $this->industry_sector_id;
 		$result_main = \rex_sql::factory();
 		$result_main->setQuery($query_main);
-		if($result_main->getRows() == 0) {
+		if(intval($result_main->getRows()) === 0) {
 			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors "
 				."WHERE industry_sector_id = ". $this->industry_sector_id;
 			$result = \rex_sql::factory();
@@ -329,7 +329,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 		$pre_save_object = new IndustrySector($this->industry_sector_id, $this->clang_id);
 		
 		// saving the rest
-		if($this->industry_sector_id == 0 || $pre_save_object != $this) {
+		if($this->industry_sector_id == 0 || $pre_save_object !== $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_industry_sectors SET "
 					."online_status = '". $this->online_status ."', "
 					."icon = '". $this->icon ."', "
@@ -354,7 +354,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 		if($error === FALSE) {
 			// Save the language specific part
 			$pre_save_object = new IndustrySector($this->industry_sector_id, $this->clang_id);
-			if($pre_save_object != $this) {
+			if($pre_save_object !== $this) {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang SET "
 						."industry_sector_id = '". $this->industry_sector_id ."', "
 						."clang_id = '". $this->clang_id ."', "
@@ -369,7 +369,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 				$result->setQuery($query);
 				$error = $result->hasError();
 				
-				if(!$error && $pre_save_object->name != $this->name) {
+				if(!$error && $pre_save_object->name !== $this->name) {
 					$regenerate_urls = true;
 				}
 			}

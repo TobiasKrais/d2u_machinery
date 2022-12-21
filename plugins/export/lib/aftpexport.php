@@ -46,7 +46,7 @@ abstract class AFTPExport extends AExport {
 	 * @return string zip filename
 	 */
 	protected function getZipFileName() {
-		if($this->provider->ftp_filename != "") {
+		if($this->provider->ftp_filename !== "") {
 			$this->zip_filename = $this->provider->ftp_filename;
 		}
 		else if($this->zip_filename == "") {

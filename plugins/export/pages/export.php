@@ -29,7 +29,7 @@ else if ($func == 'export') {
 	// Export
 	$provider = new Provider($provider_id);
 	$error = $provider->export();
-	if($error != "") {
+	if($error !== "") {
 		print rex_view::error($provider->name .": ". $error);
 	}
 	else {
@@ -65,7 +65,7 @@ if(count($providers) > 0) {
 	print "<td><b>". rex_i18n::msg('d2u_machinery_export_last_export_date') ."</b></td>";
 	foreach ($providers as $provider) {
 		print "<td>";
-		if($provider->getLastExportTimestamp() != "") {
+		if($provider->getLastExportTimestamp() !== "") {
 			print date("d.m.Y H:i", strtotime($provider->getLastExportTimestamp())) ." ". rex_i18n::msg('d2u_machinery_export_uhr');
 		}
 		print "</td>";

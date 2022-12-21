@@ -12,79 +12,79 @@ class Category implements \D2U_Helper\ITranslationHelper{
 	/**
 	 * @var int Database ID
 	 */
-	var $category_id = 0;
+	public int $category_id = 0;
 	
 	/**
 	 * @var int Redaxo clang id
 	 */
-	var $clang_id = 0;
+	public int $clang_id = 0;
 	
 	/**
-	 * @var Category Father category object
+	 * @var Category|boolean Father category object
 	 */
-	var $parent_category = FALSE;
+	var $parent_category = false;
 	
 	/**
 	 * @var string Name
 	 */
-	var $name = "";
+	public string $name = "";
 	
 	/**
 	 * @var string Teaser
 	 */
-	var $teaser = "";
+	public string $teaser = "";
 
 	/**
 	 * @var string Description
 	 */
-	var $description = "";
+	public string $description = "";
 
 	/**
 	 * @var string Name of Usage area
 	 */
-	var $usage_area = "";
+	public string $usage_area = "";
 	
 	/**
 	 * @var string Preview picture file name 
 	 */
-	var $pic = "";
+	public string $pic = "";
 	
 	/**
 	 * @var string Language specific preview picture file name 
 	 */
-	var $pic_lang = "";
+	public string $pic_lang = "";
 	
 	/**
 	 * @var string Usage area picture file name
 	 */
-	var $pic_usage = "";
+	public string $pic_usage = "";
 	
 	/**
 	 * @var int ID of the corresponding machinerypark category
 	 */
-	var $export_machinerypark_category_id = 0;
+	public int $export_machinerypark_category_id = 0;
 	
 	/**
 	 * @var int ID of the corresponding Europe Machinery category,
 	 * @link http://www.agriaffaires.com/html/rubtableauliste_compact_de.html Full List
 	 */
-	var $export_europemachinery_category_id = 0;
+	public int $export_europemachinery_category_id = 0;
 	
 	/**
 	 * @var string Name of the corresponding Europe Machinery category
 	 * @link http://www.agriaffaires.com/html/rubtableauliste_compact_de.html Full List
 	 */
-	var $export_europemachinery_category_name = "";
+	public string $export_europemachinery_category_name = "";
 	
 	/**
 	 * @var string Name of the corresponding Mascus category
 	 */
-	var $export_mascus_category_name = "";
+	public string $export_mascus_category_name = "";
 	
 	/**
 	 * @var string Show agitators in machines of this category. Values are "hide" or "show"
 	 */
-	var $show_agitators = "hide";
+	public string $show_agitators = "hide";
 
 	/**
 	 * @var string[] Array with PDF file names.
@@ -99,37 +99,22 @@ class Category implements \D2U_Helper\ITranslationHelper{
 	/**
 	 * @var int Sort Priority
 	 */
-	var $priority = 0;
+	public int $priority = 0;
 	
 	/**
 	 * @var string For used machines: offer type. Either "rent" or "sale".
 	 */
-	private $offer_type;
+	private string $offer_type;
 	
 	/**
 	 * @var string "yes" if translation needs update
 	 */
-	var $translation_needs_update = "delete";
-
-	/**
-	 * @var string Unix timestamp containing the last update date
-	 */
-	var $updatedate = "";
-	
-	/**
-	 * @var string Redaxo update user name
-	 */
-	var $updateuser = "";
+	public string $translation_needs_update = "delete";
 	
 	/**
 	 * @var string URL
 	 */
-	var $url = "";
-
-	/**
-	 * @var string URL of cutting range configurator
-	 */
-	var $cutting_range_url = "";
+	private string $url = "";
 
 	/**
 	 * Constructor. Reads a category stored in database.
@@ -148,47 +133,47 @@ class Category implements \D2U_Helper\ITranslationHelper{
 		$num_rows = $result->getRows();
 
 		if ($num_rows > 0) {
-			$this->category_id = $result->getValue("category_id");
+			$this->category_id = (int) $result->getValue("category_id");
 			if($result->getValue("parent_category_id") > 0) {
-				$this->parent_category = new Category($result->getValue("parent_category_id"), $clang_id);
+				$this->parent_category = new Category((int) $result->getValue("parent_category_id"), $clang_id);
 			}
-			$this->name = stripslashes(htmlspecialchars_decode($result->getValue("name")));
-			$this->teaser = stripslashes(htmlspecialchars_decode($result->getValue("teaser")));
-			$this->description = stripslashes(htmlspecialchars_decode($result->getValue("description")));
-			$this->usage_area = stripslashes(htmlspecialchars_decode($result->getValue("usage_area")));
-			$this->pic = $result->getValue("pic");
-			$this->pic_lang = $result->getValue("pic_lang");
-			$this->pic_usage = $result->getValue("pic_usage");
-			$pdfs = preg_grep('/^\s*$/s', explode(",", $result->getValue("pdfs")), PREG_GREP_INVERT);
-			$this->pdfs = is_array($pdfs) ? $pdfs : ($pdfs && strlen($pdfs) > 4 ? [$pdfs] : []);
-			$this->priority = $result->getValue("priority");
-			if($result->getValue("translation_needs_update") != "") {
-				$this->translation_needs_update = $result->getValue("translation_needs_update");
+			$this->name = stripslashes(htmlspecialchars_decode((string) $result->getValue("name")));
+			$this->teaser = stripslashes(htmlspecialchars_decode((string) $result->getValue("teaser")));
+			$this->description = stripslashes(htmlspecialchars_decode((string) $result->getValue("description")));
+			$this->usage_area = stripslashes(htmlspecialchars_decode((string) $result->getValue("usage_area")));
+			$this->pic = (string) $result->getValue("pic");
+			$this->pic_lang = (string) $result->getValue("pic_lang");
+			$this->pic_usage = (string) $result->getValue("pic_usage");
+			$pdfs = preg_grep('/^\s*$/s', explode(",", (string) $result->getValue("pdfs")), PREG_GREP_INVERT);
+			$this->pdfs = is_array($pdfs) ? $pdfs : [];
+			$this->priority = (int) $result->getValue("priority");
+			if($result->getValue("translation_needs_update") !== "") {
+				$this->translation_needs_update = (string) $result->getValue("translation_needs_update");
 			}
-			$this->updatedate = $result->getValue("updatedate");
-			$this->updateuser = $result->getValue("updateuser");
 
 			// Export plugin fields
 			if(rex_plugin::get("d2u_machinery", "export")->isAvailable()) {
-				$this->export_europemachinery_category_id = $result->getValue("export_europemachinery_category_id");
-				$this->export_europemachinery_category_name = $result->getValue("export_europemachinery_category_name");
-				$this->export_machinerypark_category_id = $result->getValue("export_machinerypark_category_id");
-				$this->export_mascus_category_name = $result->getValue("export_mascus_category_name");
+				$this->export_europemachinery_category_id = (int) $result->getValue("export_europemachinery_category_id");
+				$this->export_europemachinery_category_name = (string) $result->getValue("export_europemachinery_category_name");
+				$this->export_machinerypark_category_id = (int) $result->getValue("export_machinerypark_category_id");
+				$this->export_mascus_category_name = (string) $result->getValue("export_mascus_category_name");
 			}
 			
 			// Agitator fields
 			if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable()) {
-				$this->show_agitators = $result->getValue("show_agitators");
+				$this->show_agitators = (string) $result->getValue("show_agitators");
 			}
 
 			// Videos
-			if(\rex_addon::get('d2u_videos')->isAvailable() && $result->getValue("video_ids") != "") {
-				$video_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("video_ids")), PREG_GREP_INVERT);
-				foreach ($video_ids as $video_id) {
-					if($video_id > 0) {
-						$video = new Video($video_id, $clang_id);
-						if($video->getVideoURL() != "") {
-							$this->videos[$video_id] = $video;
+			if(\rex_addon::get('d2u_videos')->isAvailable() && $result->getValue("video_ids") !== "") {
+				$video_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("video_ids")), PREG_GREP_INVERT);
+				if(is_array($video_ids)) {
+					foreach ($video_ids as $video_id) {
+						if($video_id > 0) {
+							$video = new Video($video_id, $clang_id);
+							if($video->getVideoURL() !== "") {
+								$this->videos[$video_id] = $video;
+							}
 						}
 					}
 				}
@@ -198,10 +183,10 @@ class Category implements \D2U_Helper\ITranslationHelper{
 		// For used machines: set offer type
 		if(rex_plugin::get("d2u_machinery", "used_machines")->isAvailable()) {
 			$d2u_machinery = rex_addon::get("d2u_machinery");
-			$current_article_id = \rex::isBackend() ? 0 : rex_article::getCurrent()->getId();
-			if($d2u_machinery->getConfig('used_machine_article_id_rent') == $d2u_machinery->getConfig('used_machine_article_id_sale')
-					&& ($current_article_id == $d2u_machinery->getConfig('used_machine_article_id_rent') || $current_article_id == $d2u_machinery->getConfig('used_machine_article_id_sale'))) {
-				if(filter_input(INPUT_GET, 'offer_type') == "rent" || filter_input(INPUT_GET, 'offer_type') == "sale") {
+			$current_article_id = \rex::isBackend() || rex_article::getCurrent() === null ? 0 : rex_article::getCurrent()->getId();
+			if(intval($d2u_machinery->getConfig('used_machine_article_id_rent')) === intval($d2u_machinery->getConfig('used_machine_article_id_sale'))
+					&& ($current_article_id === intval($d2u_machinery->getConfig('used_machine_article_id_rent')) || $current_article_id === intval($d2u_machinery->getConfig('used_machine_article_id_sale')))) {
+				if(filter_input(INPUT_GET, 'offer_type') === "rent" || filter_input(INPUT_GET, 'offer_type') === "sale") {
 					$this->offer_type = filter_input(INPUT_GET, 'offer_type');
 				}
 				else {
@@ -214,14 +199,14 @@ class Category implements \D2U_Helper\ITranslationHelper{
 						}
 					}
 					else if(filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || filter_input(INPUT_GET, 'used_sale_category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0) {
-						$used_category_id = filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 ? filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT) : filter_input(INPUT_GET, 'used_sale_category_id', FILTER_VALIDATE_INT);
+						$used_category_id = intval(filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 ? filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT) : filter_input(INPUT_GET, 'used_sale_category_id', FILTER_VALIDATE_INT));
 					}
 					if($used_category_id > 0) {
 						$this->offer_type = UsedMachine::getOfferTypeForUsedMachineId($used_category_id);
 					}
 				}
 			}
-			else if($current_article_id == $d2u_machinery->getConfig('used_machine_article_id_rent')) {
+			else if($current_article_id === $d2u_machinery->getConfig('used_machine_article_id_rent')) {
 				$this->offer_type = "rent";
 			}
 			else {
@@ -232,10 +217,10 @@ class Category implements \D2U_Helper\ITranslationHelper{
 	
 	/**
 	 * Deletes the object in all languages.
-	 * @param int $delete_all If TRUE, all translations and main object are deleted. If 
+	 * @param boolean $delete_all If TRUE, all translations and main object are deleted. If 
 	 * FALSE, only this translation will be deleted.
 	 */
-	public function delete($delete_all = TRUE) {
+	public function delete($delete_all = true):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_categories_lang "
 			."WHERE category_id = ". $this->category_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
@@ -247,7 +232,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 			."WHERE category_id = ". $this->category_id;
 		$result_main = \rex_sql::factory();
 		$result_main->setQuery($query_main);
-		if($result_main->getRows() == 0) {
+		if($result_main->getRows() === 0) {
 			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_categories "
 				."WHERE category_id = ". $this->category_id;
 			$result = \rex_sql::factory();
@@ -290,7 +275,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 			."LEFT JOIN ". \rex::getTablePrefix() ."d2u_machinery_categories AS categories "
 				."ON lang.category_id = categories.category_id "
 			."WHERE clang_id = ". $clang_id ." ";
-		if(\rex_addon::get('d2u_machinery')->getConfig('default_category_sort') == 'priority') {
+		if(\rex_addon::get('d2u_machinery')->getConfig('default_category_sort') === 'priority') {
 			$query .= 'ORDER BY categories.priority';
 		}
 		else {
@@ -301,7 +286,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 		
 		$categories = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$category = new Category($result->getValue("category_id"), $clang_id);
+			$category = new Category((int) $result->getValue("category_id"), $clang_id);
 			$categories[] = $category;
 			$result->next();
 		}
@@ -320,7 +305,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 		
 		$children =  [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$children[] = new Category($result->getValue("category_id"), $this->clang_id);
+			$children[] = new Category((int) $result->getValue("category_id"), $this->clang_id);
 			$result->next();
 		}
 		return $children;
@@ -344,6 +329,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 		// Get wildcards
 		foreach($tech_data_arrays as $tech_data_array) {
 			foreach($tech_data_array as $tech_data) {
+				/** @var string[] $tech_data */
 				$tech_data_wildcards[$tech_data['description']] = $tech_data['unit'];
 			}
 		}
@@ -355,7 +341,8 @@ class Category implements \D2U_Helper\ITranslationHelper{
 				$tech_data_array = $tech_data_arrays[$machine->machine_id];
 				$matrix[$wildcard]['machine_ids'][$machine->machine_id] = "";
 				foreach($tech_data_array as $techdata) {
-					if($techdata['description'] == $wildcard) {
+					/** @var string[] $techdata */
+					if($techdata['description'] === $wildcard) {
 						$matrix[$wildcard]['machine_ids'][$machine->machine_id] = $techdata['value'];
 						break;
 					}
@@ -378,7 +365,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 		foreach($usage_areas as $usage_area) {
 			$values = [];
 			foreach($machines as $machine) {
-				if(in_array($usage_area->usage_area_id, $machine->usage_area_ids)) {
+				if(in_array($usage_area->usage_area_id, $machine->usage_area_ids, true)) {
 					$values[] = $machine->machine_id;
 				}
 			}
@@ -401,7 +388,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 		if($online_only) {
 			$query .= "AND online_status = 'online' ";
 		}
-		if(rex_config::get('d2u_machinery', 'default_machine_sort', '') == 'priority') {
+		if(rex_config::get('d2u_machinery', 'default_machine_sort', '') === 'priority') {
 			$query .= 'ORDER BY priority ASC';
 		}
 		else {
@@ -412,7 +399,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 		
 		$machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$machines[$result->getValue("machine_id")] = new Machine($result->getValue("machine_id"), $this->clang_id);
+			$machines[(int)$result->getValue("machine_id")] = new Machine((int) $result->getValue("machine_id"), $this->clang_id);
 			$result->next();
 		}
 		return $machines;
@@ -433,7 +420,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 			if($online_only) {
 				$query .= "AND online_status = 'online' ";
 			}
-			if($this->offer_type != "") {
+			if($this->offer_type !== "") {
 				$query .= "AND offer_type = '". $this->offer_type ."' ";
 			}
 			$query .= "ORDER BY manufacturer, name";
@@ -441,7 +428,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 			$result->setQuery($query);
 
 			for($i = 0; $i < $result->getRows(); $i++) {
-				$usedMachines[] = new UsedMachine($result->getValue("used_machine_id"), $this->clang_id);
+				$usedMachines[] = new UsedMachine((int) $result->getValue("used_machine_id"), $this->clang_id);
 				$result->next();
 			}
 		}
@@ -458,7 +445,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 		$query = 'SELECT category_id FROM '. \rex::getTablePrefix() .'d2u_machinery_categories_lang '
 				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
 				.'ORDER BY name';
-		if($type == 'missing') {
+		if($type === 'missing') {
 			$query = 'SELECT main.category_id FROM '. \rex::getTablePrefix() .'d2u_machinery_categories AS main '
 					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_categories_lang AS target_lang '
 						.'ON main.category_id = target_lang.category_id AND target_lang.clang_id = '. $clang_id .' '
@@ -466,23 +453,23 @@ class Category implements \D2U_Helper\ITranslationHelper{
 						.'ON main.category_id = default_lang.category_id AND default_lang.clang_id = '. \rex_config::get('d2u_helper', 'default_lang') .' '
 					."WHERE target_lang.category_id IS NULL "
 					.'ORDER BY default_lang.name';
-			$clang_id = \rex_config::get('d2u_helper', 'default_lang');
+			$clang_id = intval(\rex_config::get('d2u_helper', 'default_lang'));
 		}
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
 
 		$objects = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$objects[] = new Category($result->getValue("category_id"), $clang_id);
+			$objects[] = new Category((int) $result->getValue("category_id"), $clang_id);
 			$result->next();
 		}
 		
 		return $objects;
     }
 
-	/*
+	/**
 	 * Returns the URL of this object.
-	 * @param string $including_domain TRUE if Domain name should be included
+	 * @param boolean $including_domain TRUE if Domain name should be included
 	 * @param int $current_article_id Redaxo article id. Category can be used for different
 	 * articles, e.g. machines or used machines. When passing article id, 
 	 * category URL can be securely determined, otherwise there might be some
@@ -491,27 +478,27 @@ class Category implements \D2U_Helper\ITranslationHelper{
 	 * backward compatible.
 	 * @return string URL
 	 */
-	public function getURL($including_domain = FALSE, $current_article_id = 0) {
-		if($this->url == "") {
+	public function getURL($including_domain = false, $current_article_id = 0) {
+		if($this->url === "") {
 			$d2u_machinery = rex_addon::get("d2u_machinery");
 				
 			$parameterArray = [];
 
-			$article_id = $d2u_machinery->getConfig('article_id');
+			$article_id = intval($d2u_machinery->getConfig('article_id'));
 			
 			// In case of used machines
-			if($current_article_id == 0) {
+			if($current_article_id === 0) {
 				$current_article_id = rex_article::getCurrentId();
 			}
 
-			if(rex_plugin::get("d2u_machinery", "used_machines")->isAvailable() && ($current_article_id == $d2u_machinery->getConfig('used_machine_article_id_rent') || $current_article_id == $d2u_machinery->getConfig('used_machine_article_id_sale'))) {
-				if($this->offer_type == "sale") {
-					$article_id = $d2u_machinery->getConfig('used_machine_article_id_sale');
+			if(rex_plugin::get("d2u_machinery", "used_machines")->isAvailable() && ($current_article_id === intval($d2u_machinery->getConfig('used_machine_article_id_rent')) || $current_article_id === intval($d2u_machinery->getConfig('used_machine_article_id_sale')))) {
+				if($this->offer_type === "sale") {
+					$article_id = intval($d2u_machinery->getConfig('used_machine_article_id_sale'));
 					// Set parameter key
 					$parameterArray['used_sale_category_id'] = $this->category_id;			
 				}
-				elseif($this->offer_type == "rent") {
-					$article_id = $d2u_machinery->getConfig('used_machine_article_id_rent');
+				elseif($this->offer_type === "rent") {
+					$article_id = intval($d2u_machinery->getConfig('used_machine_article_id_rent'));
 					// Set parameter key
 					$parameterArray['used_rent_category_id'] = $this->category_id;			
 				}
@@ -524,7 +511,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 		}
 
 		if($including_domain) {
-			if(\rex_addon::get('yrewrite') && \rex_addon::get('yrewrite')->isAvailable())  {
+			if(\rex_addon::get('yrewrite') instanceof rex_addon && \rex_addon::get('yrewrite')->isAvailable())  {
 				return str_replace(\rex_yrewrite::getCurrentDomain()->getUrl() .'/', \rex_yrewrite::getCurrentDomain()->getUrl(), \rex_yrewrite::getCurrentDomain()->getUrl() . $this->url);
 			}
 			else {
@@ -591,7 +578,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 			if($ignore_offlines) {
 				$query .= "AND online_status = 'online' ";
 			}
-			if($this->offer_type != "") {
+			if($this->offer_type !== "") {
 				$query .= "AND offer_type = '". $this->offer_type ."' ";
 			}
 
@@ -629,13 +616,13 @@ class Category implements \D2U_Helper\ITranslationHelper{
 		$pre_save_object = new Category($this->category_id, $this->clang_id);
 	
 		// save priority, but only if new or changed
-		if($this->priority != $pre_save_object->priority || $this->category_id == 0) {
+		if($this->priority !== $pre_save_object->priority || $this->category_id === 0) {
 			$this->setPriority();
 		}
 
-		if($this->category_id == 0 || $pre_save_object != $this) {
+		if($this->category_id === 0 || $pre_save_object !== $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_categories SET "
-					."parent_category_id = '". $this->parent_category->category_id ."', "
+					."parent_category_id = '". ($this->parent_category instanceof Category ? $this->parent_category->category_id : 0) ."', "
 					."priority = '". $this->priority ."', "
 					."pic = '". $this->pic ."', "
 					."pic_usage = '". $this->pic_usage ."' ";
@@ -656,7 +643,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 				$query .= ", video_ids = '' ";
 			}
 
-			if($this->category_id == 0) {
+			if($this->category_id === 0) {
 				$query = "INSERT INTO ". $query;
 			}
 			else {
@@ -665,8 +652,8 @@ class Category implements \D2U_Helper\ITranslationHelper{
 
 			$result = \rex_sql::factory();
 			$result->setQuery($query);
-			if($this->category_id == 0) {
-				$this->category_id = $result->getLastId();
+			if($this->category_id === 0) {
+				$this->category_id = (int) $result->getLastId();
 				$error = $result->hasError();
 			}
 		}
@@ -675,7 +662,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 		if($error === FALSE) {
 			// Save the language specific part
 			$pre_save_object = new Category($this->category_id, $this->clang_id);
-			if($pre_save_object != $this) {
+			if($pre_save_object !== $this) {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_categories_lang SET "
 						."category_id = '". $this->category_id ."', "
 						."clang_id = '". $this->clang_id ."', "
@@ -687,13 +674,13 @@ class Category implements \D2U_Helper\ITranslationHelper{
 						."pdfs = '". implode(",", $this->pdfs) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = CURRENT_TIMESTAMP, "
-						."updateuser = '". \rex::getUser()->getLogin() ."' ";
+						."updateuser = '". (\rex::getUser() instanceof rex_user ? \rex::getUser()->getLogin() : '') ."' ";
 
 				$result = \rex_sql::factory();
 				$result->setQuery($query);
 				$error = $result->hasError();
 				
-				if(!$error && $pre_save_object->name != $this->name) {
+				if(!$error && $pre_save_object->name !== $this->name) {
 					$regenerate_urls = true;
 				}
 			}
@@ -719,7 +706,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 	 * is installed.
 	 * @param string $offer_type Offer type. Either "sale" or "rent"
 	 */
-	public function setOfferType($offer_type) {
+	public function setOfferType($offer_type):void {
 		if(rex_plugin::get("d2u_machinery", "used_machines")->isAvailable()) {
 			$this->offer_type = $offer_type;
 		}
@@ -729,7 +716,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 	 * Reassigns priorities in database.
 	 * @param boolean $delete Reorder priority after deletion
 	 */
-	private function setPriority($delete = FALSE) {
+	private function setPriority($delete = FALSE):void {
 		// Pull prios from database
 		$query = "SELECT category_id, priority FROM ". \rex::getTablePrefix() ."d2u_machinery_categories "
 			."WHERE category_id <> ". $this->category_id ." ORDER BY priority";
@@ -743,7 +730,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 		
 		// When prio is too high or was deleted, simply add at end 
 		if($this->priority > $result->getRows() || $delete) {
-			$this->priority = $result->getRows() + 1;
+			$this->priority = (int) $result->getRows() + 1;
 		}
 
 		$categories = [];
@@ -756,7 +743,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 		// Save all prios
 		foreach($categories as $prio => $category_id) {
 			$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_categories "
-					."SET priority = ". ($prio + 1) ." " // +1 because array_splice recounts at zero
+					."SET priority = ". ((int) $prio + 1) ." " // +1 because array_splice recounts at zero
 					."WHERE category_id = ". $category_id;
 			$result = \rex_sql::factory();
 			$result->setQuery($query);

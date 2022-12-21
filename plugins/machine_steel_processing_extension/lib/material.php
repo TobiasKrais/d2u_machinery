@@ -54,7 +54,7 @@ class Material implements \D2U_Helper\ITranslationHelper {
 			$this->material_id = $result->getValue("material_id");
 			$this->internal_name = $result->getValue("internal_name");
 			$this->name = stripslashes($result->getValue("name"));
-			if($result->getValue("translation_needs_update") != "") {
+			if($result->getValue("translation_needs_update") !== "") {
 				$this->translation_needs_update = $result->getValue("translation_needs_update");
 			}
 		}
@@ -77,7 +77,7 @@ class Material implements \D2U_Helper\ITranslationHelper {
 			."WHERE material_id = ". $this->material_id;
 		$result_main = \rex_sql::factory();
 		$result_main->setQuery($query_main);
-		if($result_main->getRows() == 0) {
+		if(intval($result_main->getRows()) === 0) {
 			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_steel_material "
 				."WHERE material_id = ". $this->material_id;
 			$result = \rex_sql::factory();
@@ -167,7 +167,7 @@ class Material implements \D2U_Helper\ITranslationHelper {
 		$pre_save_material = new Material($this->material_id, $this->clang_id);
 		
 		// saving the rest
-		if($this->material_id == 0 || $pre_save_material != $this) {
+		if($this->material_id == 0 || $pre_save_material !== $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_steel_material SET "
 					."internal_name = '". $this->internal_name ."' ";
 			if($this->material_id == 0) {
@@ -188,7 +188,7 @@ class Material implements \D2U_Helper\ITranslationHelper {
 		if($error === FALSE) {
 			// Save the language specific part
 			$pre_save_material = new Material($this->material_id, $this->clang_id);
-			if($pre_save_material != $this) {
+			if($pre_save_material !== $this) {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_steel_material_lang SET "
 						."material_id = '". $this->material_id ."', "
 						."clang_id = '". $this->clang_id ."', "

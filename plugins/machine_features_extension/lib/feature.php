@@ -77,7 +77,7 @@ class Feature implements \D2U_Helper\ITranslationHelper {
 			$this->pic = $result->getValue("pic");
 			$this->category_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("category_ids")), PREG_GREP_INVERT);
 			$this->description = htmlspecialchars_decode(stripslashes($result->getValue("description")));
-			if($result->getValue("translation_needs_update") != "") {
+			if($result->getValue("translation_needs_update") !== "") {
 				$this->translation_needs_update = $result->getValue("translation_needs_update");
 			}
 			
@@ -104,7 +104,7 @@ class Feature implements \D2U_Helper\ITranslationHelper {
 			."WHERE feature_id = ". $this->feature_id;
 		$result_main = \rex_sql::factory();
 		$result_main->setQuery($query_main);
-		if($result_main->getRows() == 0) {
+		if(intval($result_main->getRows()) === 0) {
 			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_features "
 				."WHERE feature_id = ". $this->feature_id;
 			$result = \rex_sql::factory();
@@ -223,12 +223,12 @@ class Feature implements \D2U_Helper\ITranslationHelper {
 		$pre_save_feature = new Feature($this->feature_id, $this->clang_id);
 		
 		// save priority, but only if new or changed
-		if($this->priority != $pre_save_feature->priority || $this->feature_id == 0) {
+		if($this->priority !== $pre_save_feature->priority || $this->feature_id == 0) {
 			$this->setPriority();
 		}
 		
 		// saving the rest
-		if($this->feature_id == 0 || $pre_save_feature != $this) {
+		if($this->feature_id == 0 || $pre_save_feature !== $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_features SET "
 					."pic = '". $this->pic ."', "
 					."category_ids = '|". implode("|", $this->category_ids) ."|', "
@@ -258,7 +258,7 @@ class Feature implements \D2U_Helper\ITranslationHelper {
 		if($error === FALSE) {
 			// Save the language specific part
 			$pre_save_feature = new Feature($this->feature_id, $this->clang_id);
-			if($pre_save_feature != $this) {
+			if($pre_save_feature !== $this) {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_features_lang SET "
 						."feature_id = '". $this->feature_id ."', "
 						."clang_id = '". $this->clang_id ."', "

@@ -6,10 +6,11 @@ if(\rex::isBackend()) {
 
 /**
  * Deletes language specific configurations and objects
- * @param rex_extension_point $ep Redaxo extension point
+ * @param rex_extension_point<string> $ep Redaxo extension point
  * @return string[] Warning message as array
  */
 function rex_d2u_machinery_production_lines_clang_deleted(rex_extension_point $ep) {
+	/** @var string[] $warning */
 	$warning = $ep->getSubject();
 	$params = $ep->getParams();
 	$clang_id = $params['id'];
@@ -28,10 +29,11 @@ function rex_d2u_machinery_production_lines_clang_deleted(rex_extension_point $e
 
 /**
  * Checks if media is used by this plugin
- * @param rex_extension_point $ep Redaxo extension point
+ * @param rex_extension_point<string> $ep Redaxo extension point
  * @return string[] Warning message as array
  */
 function rex_d2u_machinery_production_lines_media_is_in_use(rex_extension_point $ep) {
+	/** @var string[] $warning */
 	$warning = $ep->getSubject();
 	$params = $ep->getParams();
 	$filename = addslashes($params['filename']);
@@ -48,7 +50,7 @@ function rex_d2u_machinery_production_lines_media_is_in_use(rex_extension_point 
 	for($i = 0; $i < $sql->getRows(); $i++) {
 		$message =  '<a href="javascript:openPage(\'index.php?page=d2u_machinery/production_lines&func=edit&entry_id='.
 			$sql->getValue('production_line_id') .'\')">'. rex_i18n::msg('d2u_machinery_rights_all') ." - ". rex_i18n::msg('d2u_machinery_production_lines') .': '. $sql->getValue('name') .'</a>';
- 		if(!in_array($message, $warning)) {
+ 		if(!in_array($message, $warning, true)) {
 			$warning[] = $message;
 		}
 		$sql->next();

@@ -18,7 +18,7 @@ else {
 
 /**
  * Checks if article is used by this addon
- * @param rex_extension_point $ep Redaxo extension point
+ * @param rex_extension_point<string> $ep Redaxo extension point
  * @return string[] Warning message as array
  * @throws rex_api_exception If article is used
 */
@@ -47,10 +47,11 @@ function rex_d2u_machinery_used_machines_article_is_in_use(rex_extension_point $
 
 /**
  * Deletes language specific configurations and objects
- * @param rex_extension_point $ep Redaxo extension point
+ * @param rex_extension_point<string> $ep Redaxo extension point
  * @return string[] Warning message as array
  */
 function rex_d2u_machinery_used_machines_clang_deleted(rex_extension_point $ep) {
+	/** @var string[] $warning */
 	$warning = $ep->getSubject();
 	$params = $ep->getParams();
 	$clang_id = $params['id'];
@@ -69,10 +70,11 @@ function rex_d2u_machinery_used_machines_clang_deleted(rex_extension_point $ep) 
 
 /**
  * Checks if media is used by this addon
- * @param rex_extension_point $ep Redaxo extension point
+ * @param rex_extension_point<string> $ep Redaxo extension point
  * @return string[] Warning message as array
  */
 function rex_d2u_machinery_used_machines_media_is_in_use(rex_extension_point $ep) {
+	/** @var string[] $warning */
 	$warning = $ep->getSubject();
 	$params = $ep->getParams();
 	$filename = addslashes($params['filename']);
@@ -88,7 +90,7 @@ function rex_d2u_machinery_used_machines_media_is_in_use(rex_extension_point $ep
 	for($i = 0; $i < $sql->getRows(); $i++) {
 		$message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/used_machines&func=edit&entry_id='.
 			$sql->getValue('used_machine_id') .'\')">'. rex_i18n::msg('d2u_machinery_used_machines') ." - ". rex_i18n::msg('d2u_machinery_used_machines') .': '. $sql->getValue('manufacturer') .' '. $sql->getValue('name') .'</a>';
-		if(!in_array($message, $warning)) {
+		if(!in_array($message, $warning, true)) {
 			$warning[] = $message;
 		}
 		$sql->next();
@@ -106,7 +108,7 @@ function d2u_machinery_used_machines_add_open_graph_call() {
 
 /**
  * Add Open Graph to used machine sites
- * @param rex_extension_point $ep Redaxo extension point
+ * @param rex_extension_point<string> $ep Redaxo extension point
  */
 function d2u_machinery_used_machines_add_open_graph(rex_extension_point $ep) {
 	$url_namespace = d2u_addon_frontend_helper::getUrlNamespace();

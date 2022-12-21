@@ -22,7 +22,7 @@ class Mascus extends AFTPExport {
 
 		// Create XML file
 		$error = $this->createXML();
-		if($error != "") {
+		if($error !== "") {
 			return $error;
 		}
 		
@@ -34,7 +34,7 @@ class Mascus extends AFTPExport {
 		
 		// Upload
 		$error = $this->upload();
-		if($error != "") {
+		if($error !== "") {
 			return $error;
 		}
 		
@@ -61,7 +61,7 @@ class Mascus extends AFTPExport {
 			// deleted machines are not included
 			if($exported_used_machine->export_action == "add" || $exported_used_machine->export_action == "update") {
 				// Only take used machines with a mascus category
-				if($used_machine->category->export_mascus_category_name != "") {
+				if($used_machine->category->export_mascus_category_name !== "") {
 					// <product>
 					$product = $xml->createElement("product");
 

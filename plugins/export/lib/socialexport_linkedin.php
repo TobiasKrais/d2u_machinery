@@ -93,7 +93,7 @@ class SocialExportLinkedIn extends AExport {
 	 * @return boolean TRUE if yes, otherwise FALSE
 	 */
 	public function hasAccessToken() {
-		if($this->provider->social_oauth_token != "" && $this->provider->social_oauth_token_secret != "") {
+		if($this->provider->social_oauth_token !== "" && $this->provider->social_oauth_token_secret !== "") {
 			if($this->provider->social_oauth_token_valid_until > time()) {
 				return TRUE;
 			}
@@ -129,7 +129,7 @@ class SocialExportLinkedIn extends AExport {
 			if($linkedin_email == "") {
 				return rex_i18n::msg('d2u_machinery_export_linkedin_mail_failed');
 			}
-			if(strtolower($linkedin_email) != strtolower($this->provider->linkedin_email)) {
+			if(strtolower($linkedin_email) !== strtolower($this->provider->linkedin_email)) {
 				unset($_SESSION['linkedin']);
 				return rex_i18n::msg('d2u_machinery_export_linkedin_login_again');
 			}
@@ -156,7 +156,7 @@ class SocialExportLinkedIn extends AExport {
 			if($exported_used_machine->export_action == "delete" || $exported_used_machine->export_action == "update") {
 				// State April 2015: deleting is not supported
 				/*
-				if($exported_used_machine->provider_import_id != "") {
+				if($exported_used_machine->provider_import_id !== "") {
 					try {
 						$this->oauth->fetch($exported_used_machine->provider_import_id, false, OAUTH_HTTP_METHOD_DELETE);
 					} catch (OAuthException $e) {
@@ -261,7 +261,7 @@ class SocialExportLinkedIn extends AExport {
 				// Let's post it
 				try {
 					$api_url = "https://api.linkedin.com/v1/people/~/shares";
-					if($this->provider->linkedin_groupid != "") {
+					if($this->provider->linkedin_groupid !== "") {
 						$api_url = "https://api.linkedin.com/v1/groups/". $this->provider->linkedin_groupid ."/posts";
 					}
 

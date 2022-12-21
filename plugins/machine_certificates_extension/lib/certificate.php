@@ -60,7 +60,7 @@ class Certificate implements \D2U_Helper\ITranslationHelper {
 			$this->name = stripslashes($result->getValue("name"));
 			$this->description = $result->getValue("description");
 			$this->pic = $result->getValue("pic");
-			if($result->getValue("translation_needs_update") != "") {
+			if($result->getValue("translation_needs_update") !== "") {
 				$this->translation_needs_update = $result->getValue("translation_needs_update");
 			}
 		}
@@ -83,7 +83,7 @@ class Certificate implements \D2U_Helper\ITranslationHelper {
 			."WHERE certificate_id = ". $this->certificate_id;
 		$result_main = \rex_sql::factory();
 		$result_main->setQuery($query_main);
-		if($result_main->getRows() == 0) {
+		if(intval($result_main->getRows()) === 0) {
 			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_certificates "
 				."WHERE certificate_id = ". $this->certificate_id;
 			$result = \rex_sql::factory();
@@ -173,7 +173,7 @@ class Certificate implements \D2U_Helper\ITranslationHelper {
 		$pre_save_certificate = new Certificate($this->certificate_id, $this->clang_id);
 		
 		// saving the rest
-		if($this->certificate_id == 0 || $pre_save_certificate != $this) {
+		if($this->certificate_id == 0 || $pre_save_certificate !== $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_certificates SET "
 					."pic = '". $this->pic ."' ";
 
@@ -195,7 +195,7 @@ class Certificate implements \D2U_Helper\ITranslationHelper {
 		if($error === FALSE) {
 			// Save the language specific part
 			$pre_save_certificate = new Certificate($this->certificate_id, $this->clang_id);
-			if($pre_save_certificate != $this) {
+			if($pre_save_certificate !== $this) {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_certificates_lang SET "
 						."certificate_id = '". $this->certificate_id ."', "
 						."clang_id = '". $this->clang_id ."', "

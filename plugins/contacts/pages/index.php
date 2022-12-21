@@ -4,12 +4,12 @@ $entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
 
 // Print comments
-if($message != "") {
+if($message !== "") {
 	print rex_view::success(rex_i18n::msg($message));
 }
 
 // save settings
-if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_apply") == 1) {
+if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(INPUT_POST, "btn_apply")) === 1) {
 	$form = (array) rex_post('form', 'array', []);
 
 	// Media fields and links need special treatment

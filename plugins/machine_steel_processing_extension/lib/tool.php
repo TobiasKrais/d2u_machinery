@@ -54,7 +54,7 @@ class Tool implements \D2U_Helper\ITranslationHelper {
 			$this->tool_id = $result->getValue("tool_id");
 			$this->internal_name = $result->getValue("internal_name");
 			$this->name = stripslashes($result->getValue("name"));
-			if($result->getValue("translation_needs_update") != "") {
+			if($result->getValue("translation_needs_update") !== "") {
 				$this->translation_needs_update = $result->getValue("translation_needs_update");
 			}
 		}
@@ -77,7 +77,7 @@ class Tool implements \D2U_Helper\ITranslationHelper {
 			."WHERE tool_id = ". $this->tool_id;
 		$result_main = \rex_sql::factory();
 		$result_main->setQuery($query_main);
-		if($result_main->getRows() == 0) {
+		if(intval($result_main->getRows()) === 0) {
 			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_steel_tool "
 				."WHERE tool_id = ". $this->tool_id;
 			$result = \rex_sql::factory();
@@ -167,7 +167,7 @@ class Tool implements \D2U_Helper\ITranslationHelper {
 		$pre_save_tool = new Tool($this->tool_id, $this->clang_id);
 		
 		// saving the rest
-		if($this->tool_id == 0 || $pre_save_tool != $this) {
+		if($this->tool_id == 0 || $pre_save_tool !== $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_steel_tool SET "
 					."internal_name = '". $this->internal_name ."' ";
 			if($this->tool_id == 0) {
@@ -188,7 +188,7 @@ class Tool implements \D2U_Helper\ITranslationHelper {
 		if($error === FALSE) {
 			// Save the language specific part
 			$pre_save_tool = new Tool($this->tool_id, $this->clang_id);
-			if($pre_save_tool != $this) {
+			if($pre_save_tool !== $this) {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_steel_tool_lang SET "
 						."tool_id = '". $this->tool_id ."', "
 						."clang_id = '". $this->clang_id ."', "

@@ -27,7 +27,7 @@ class EuropeMachinery extends AFTPExport {
 
 		// Create XML file
 		$error = $this->createXML();
-		if($error != "") {
+		if($error !== "") {
 			return $error;
 		}
 		
@@ -39,7 +39,7 @@ class EuropeMachinery extends AFTPExport {
 		
 		// Upload
 		$error = $this->upload();
-		if($error != "") {
+		if($error !== "") {
 			return $error;
 		}
 		

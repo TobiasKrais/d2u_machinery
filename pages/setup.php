@@ -8,7 +8,7 @@ $d2u_module_manager = new D2UModuleManager(D2UMachineryModules::getModules(), "m
 $d2u_module_id = rex_request('d2u_module_id', 'string');
 $paired_module = rex_request('pair_'. $d2u_module_id, 'int');
 $function = rex_request('function', 'string');
-if($d2u_module_id != "") {
+if($d2u_module_id !== "") {
 	$d2u_module_manager->doActions($d2u_module_id, $function, $paired_module);
 }
 
@@ -54,7 +54,7 @@ $d2u_module_manager->showManagerList();
 	<li>Bugfix machine_construction_equipment_extension Plugin: Einheit für Arbeitsdruck von Bodenschleifmaschinen auf kg/cm² korrigiert.</li>
 	<li>Bugfix production_lines Plugin: Breadcrumbs werden nun korrekt ausgegeben.</li>
 	<li>Modul "90-1 D2U Machinery Addon - Hauptausgabe": Unterstützt bei installiertem D2U Videomanager nun die Ausgabe der Videos mit Plyr.</li>
-	<li>Modul "90-3 D2U Machinery Addon - Kategorien" kann nun auch Gebrauchtmaschinenkategorien ausgeben und lässt die Wahl zwischen 3 oder 4 Blöcken je Zeile.</li>
+	<li>Modul "90-3 D2U Machinery Addon - Kategorien" kann nun auch Gebrauchtmaschinenkategorien ausgeben und lässt die Wahl zwischen 3 oder 4 Blöcken je Zeile. Auch Bugfix bei der Ausgabe der Kategorien.</li>
 	<li>Modul "90-4 D2U Machinery Addon - Gebrauchtmaschinen": Leere Standardkachel entfernt und Paginierung auf 100 Maschinen erweitert. Unterstützt bei installiertem D2U Videomanager nun die Ausgabe der Videos mit Plyr.</li>
 	<li>Modul "90-6 D2U Machinery Addon - Gebrauchtmaschinen Topangebote" hinzugefügt.</li>
 </ul>

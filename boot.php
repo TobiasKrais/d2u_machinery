@@ -24,14 +24,14 @@ rex_extension::register('URL_PRE_SAVE', 'rex_d2u_machinery_url_shortener');
 
 /**
  * Checks if article is used by this addon
- * @param rex_extension_point $ep Redaxo extension point
+ * @param rex_extension_point<string> $ep Redaxo extension point
  * @return string Warning message as array
  * @throws rex_api_exception If article is used
  */
 function rex_d2u_machinery_article_is_in_use(rex_extension_point $ep) {
 	$warning = [];
 	$params = $ep->getParams();
-	$article_id = $params['id'];
+	$article_id = (int) $params['id'];
 
 	// Machines
 	$sql_machine = \rex_sql::factory();
@@ -47,7 +47,7 @@ function rex_d2u_machinery_article_is_in_use(rex_extension_point $ep) {
 	for($i = 0; $i < $sql_machine->getRows(); $i++) {
 		$message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/machine&func=edit&entry_id='.
 			$sql_machine->getValue('machine_id') .'\')">'. rex_i18n::msg('d2u_machinery_rights_all') ." - ". rex_i18n::msg('d2u_machinery_meta_machines') .': '. $sql_machine->getValue('name') .'</a>';
-		if(!in_array($message, $warning)) {
+		if(!in_array($message, $warning, true)) {
 			$warning[] = $message;
 		}
 		$sql_machine->next();
@@ -55,10 +55,10 @@ function rex_d2u_machinery_article_is_in_use(rex_extension_point $ep) {
 	
 	// Settings
 	$addon = rex_addon::get("d2u_machinery");
-	if($addon->hasConfig("article_id") && $addon->getConfig("article_id") == $article_id) {
+	if($addon->hasConfig("article_id") && $addon->getConfig("article_id") === $article_id) {
 		$message = '<a href="index.php?page=d2u_machinery/settings">'.
 			 rex_i18n::msg('d2u_machinery_rights_all') ." - ". rex_i18n::msg('d2u_helper_settings') . '</a>';
-		if(!in_array($message, $warning)) {
+		if(!in_array($message, $warning, true)) {
 			$warning[] = $message;
 		}
 	}
@@ -73,10 +73,11 @@ function rex_d2u_machinery_article_is_in_use(rex_extension_point $ep) {
 
 /**
  * Deletes language specific configurations and objects
- * @param rex_extension_point $ep Redaxo extension point
+ * @param rex_extension_point<string> $ep Redaxo extension point
  * @return string[] Warning message as array
  */
 function rex_d2u_machinery_clang_deleted(rex_extension_point $ep) {
+	/** @var string[] $warning */
 	$warning = $ep->getSubject();
 	$params = $ep->getParams();
 	$clang_id = $params['id'];
@@ -103,10 +104,11 @@ function rex_d2u_machinery_clang_deleted(rex_extension_point $ep) {
 
 /**
  * Checks if media is used by this addon
- * @param rex_extension_point $ep Redaxo extension point
+ * @param rex_extension_point<string> $ep Redaxo extension point
  * @return string[] Warning message as array
  */
 function rex_d2u_machinery_media_is_in_use(rex_extension_point $ep) {
+	/** @var string[] $warning */
 	$warning = $ep->getSubject();
 	$params = $ep->getParams();
 	$filename = addslashes($params['filename']);
@@ -130,7 +132,7 @@ function rex_d2u_machinery_media_is_in_use(rex_extension_point $ep) {
 	for($i = 0; $i < $sql_machine->getRows(); $i++) {
 		$message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/machine&func=edit&entry_id='.
 			$sql_machine->getValue('machine_id') .'\')">'. rex_i18n::msg('d2u_machinery_rights_all') ." - ". rex_i18n::msg('d2u_machinery_meta_machines') .': '. $sql_machine->getValue('name') .'</a>';
-		if(!in_array($message, $warning)) {
+		if(!in_array($message, $warning, true)) {
 			$warning[] = $message;
 		}
 		$sql_machine->next();
@@ -140,7 +142,7 @@ function rex_d2u_machinery_media_is_in_use(rex_extension_point $ep) {
 	for($i = 0; $i < $sql_categories->getRows(); $i++) {
 		$message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/category&func=edit&entry_id='. $sql_categories->getValue('category_id') .'\')">'.
 			 rex_i18n::msg('d2u_machinery_rights_all') ." - ". rex_i18n::msg('d2u_helper_categories') .': '. $sql_categories->getValue('name') . '</a>';
-		if(!in_array($message, $warning)) {
+		if(!in_array($message, $warning, true)) {
 			$warning[] = $message;
 		}
 		$sql_categories->next();
@@ -148,11 +150,11 @@ function rex_d2u_machinery_media_is_in_use(rex_extension_point $ep) {
 	
 	// Settings
 	$addon = rex_addon::get("d2u_machinery");
-	if(($addon->hasConfig("consultation_pic") && $addon->getConfig("consultation_pic") == $filename)
-		|| ($addon->hasConfig("consultation_pics") && str_contains($addon->getConfig("consultation_pics"), $filename))) {
+	if(($addon->hasConfig("consultation_pic") && $addon->getConfig("consultation_pic") === $filename)
+		|| ($addon->hasConfig("consultation_pics") && str_contains(strval($addon->getConfig("consultation_pics")), $filename))) {
 		$message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/settings\')">'.
 			 rex_i18n::msg('d2u_machinery_rights_all') ." - ". rex_i18n::msg('d2u_helper_settings') . '</a>';
-		if(!in_array($message, $warning)) {
+		if(!in_array($message, $warning, true)) {
 			$warning[] = $message;
 		}
 	}
@@ -162,18 +164,18 @@ function rex_d2u_machinery_media_is_in_use(rex_extension_point $ep) {
 
 /**
  * Shortens URL by removing article or category name 
- * @param rex_extension_point $ep Redaxo extension point
- * @return Url New URL
+ * @param rex_extension_point<string> $ep Redaxo extension point
+ * @return \Url\Url New URL
  */
 function rex_d2u_machinery_url_shortener(rex_extension_point $ep) {
 	$params = $ep->getParams();
 	$url = $params['object'];
-	$article_id = $params['article_id'];
-	$clang_id = $params['clang_id'];
+	$article_id = intval($params['article_id']);
+	$clang_id = intval($params['clang_id']);
 	
 	// Only shorten URLs that are not start article and articles of this addon
-	if($article_id != rex_yrewrite::getDomainByArticleId($article_id, $clang_id)->getStartId() &&
-			($article_id == rex_config::get('d2u_machinery', 'article_id'))
+	if($article_id !== rex_yrewrite::getDomainByArticleId($article_id, $clang_id)->getStartId() &&
+			($article_id === rex_config::get('d2u_machinery', 'article_id'))
 		) {
 		$domain = rex_yrewrite::getDomainByArticleId($article_id);
 
@@ -195,7 +197,7 @@ function rex_d2u_machinery_url_shortener(rex_extension_point $ep) {
 			$article_url = rex_getUrl($article_id, $clang_id);
 			$start_article_url = rex_getUrl(rex_yrewrite::getDomainByArticleId($article_id, $clang_id)->getStartId(), $clang_id);
 			$article_url_without_lang_slug = '';
-			if(strlen($start_article_url) <= 1) {
+			if(strlen($start_article_url) <= 1 && rex_clang::get($clang_id) !== null) {
 				$article_url_without_lang_slug = str_replace('/'. strtolower(rex_clang::get($clang_id)->getCode()) .'/', '/', $article_url);
 			}
 			else {
@@ -215,15 +217,15 @@ function rex_d2u_machinery_url_shortener(rex_extension_point $ep) {
 			// Add forwarders
 			if(rex_config::get('d2u_machinery', 'short_urls_forward', "false") === "true") {
 				$query = "SELECT id FROM ". \rex::getTablePrefix() ."yrewrite_forward "
-					."WHERE extern = '". str_replace("///", "", $domain->getUrl() . str_replace($domain->getName(), '', urldecode($new_url->__toString()))) ."' "
+					."WHERE extern = '". str_replace("///", "", $domain->getUrl() . str_replace($domain->getName(), '', urldecode($new_url->__toString()))) ."' " /** @phpstan-ignore-line */
 					. "OR url = '". trim(str_replace($domain->getName(), "/", urldecode($url->__toString())), "/") ."'";
 				$result = \rex_sql::factory();
 				$result->setQuery($query);
 
 				// Add only if not already existing
-				if($result->getRows() == 0 && $domain->getId() > 0) {
+				if($result->getRows() === 0 && $domain->getId() > 0) {
 					$query_forward = "INSERT INTO `". \rex::getTablePrefix() ."yrewrite_forward` (`domain_id`, `status`, `url`, `type`, `article_id`, `clang`, `extern`, `movetype`, `expiry_date`) "
-						."VALUES (". $domain->getId() .", 1, '". trim(str_replace($domain->getName(), "/", urldecode($url->__toString())), "/") ."', 'extern', ". $article_id .", ". $clang_id .", '". str_replace("///", "", $domain->getUrl() . str_replace($domain->getName(), '', urldecode($new_url->__toString()))) ."', '301', '0000-00-00');";
+						."VALUES (". $domain->getId() .", 1, '". trim(str_replace($domain->getName(), "/", urldecode($url->__toString())), "/") ."', 'extern', ". $article_id .", ". $clang_id .", '". str_replace("///", "", $domain->getUrl() . str_replace($domain->getName(), '', urldecode($new_url->__toString()))) ."', '301', '0000-00-00');"; /** @phpstan-ignore-line */
 					$result_forward = \rex_sql::factory();
 					$result_forward->setQuery($query_forward);
 
@@ -247,6 +249,7 @@ function rex_d2u_machinery_url_shortener(rex_extension_point $ep) {
  * @return string[] updated sitemap entries
  */
 function rex_d2u_machinery_video_sitemap(rex_extension_point $ep) {
+	/** @var string[] $sitemap_entries */
 	$sitemap_entries = $ep->getSubject();
 
 	foreach(rex_clang::getAllIds(true) as $clang_id) {

@@ -12,37 +12,37 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var int Database ID
 	 */
-	var $group_id = 0;
+	public int $group_id = 0;
 	
 	/**
 	 * @var int Redaxo clang id
 	 */
-	var $clang_id = 0;
+	public int $clang_id = 0;
 	
 	/**
 	 * @var string Preview picture file name 
 	 */
-	var $picture = "";
+	public string $picture = "";
 	
 	/**
 	 * @var int Sort Priority
 	 */
-	var $priority = 0;
+	public int $priority = 0;
 	
 	/**
 	 * @var string Name
 	 */
-	var $name = "";
+	public string $name = "";
 	
 	/**
 	 * @var string Detailed description
 	 */
-	var $description = "";
+	public string $description = "";
 	
 	/**
 	 * @var string "yes" if translation needs update
 	 */
-	var $translation_needs_update = "delete";
+	public string $translation_needs_update = "delete";
 
 	/**
 	 * Constructor. Reads a object stored in database.
@@ -61,13 +61,13 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 		$num_rows = $result->getRows();
 
 		if ($num_rows > 0) {
-			$this->group_id = $result->getValue("group_id");
-			$this->priority = $result->getValue("priority");
-			$this->picture = $result->getValue("picture");
-			$this->name = stripslashes($result->getValue("name"));
-			$this->description = stripslashes(htmlspecialchars_decode($result->getValue("description")));
-			if($result->getValue("translation_needs_update") != "") {
-				$this->translation_needs_update = $result->getValue("translation_needs_update");
+			$this->group_id = (int) $result->getValue("group_id");
+			$this->priority = (int) $result->getValue("priority");
+			$this->picture = (string) $result->getValue("picture");
+			$this->name = stripslashes((string) $result->getValue("name"));
+			$this->description = stripslashes(htmlspecialchars_decode((string) $result->getValue("description")));
+			if((string) $result->getValue("translation_needs_update") !== "") {
+				$this->translation_needs_update = (string) $result->getValue("translation_needs_update");
 			}
 		}
 	}
@@ -89,7 +89,7 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 			."WHERE group_id = ". $this->group_id;
 		$result_main = \rex_sql::factory();
 		$result_main->setQuery($query_main);
-		if($result_main->getRows() == 0) {
+		if(intval($result_main->getRows()) === 0) {
 			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_equipment_groups "
 				."WHERE group_id = ". $this->group_id;
 			$result = \rex_sql::factory();
@@ -183,12 +183,12 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 		$pre_save_object = new EquipmentGroup($this->group_id, $this->clang_id);
 		
 		// save priority, but only if new or changed
-		if($this->priority != $pre_save_object->priority || $this->group_id == 0) {
+		if($this->priority !== $pre_save_object->priority || $this->group_id == 0) {
 			$this->setPriority();
 		}
 		
 		// saving the rest
-		if($this->group_id == 0 || $pre_save_object != $this) {
+		if($this->group_id == 0 || $pre_save_object !== $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_equipment_groups SET "
 					."picture = '". $this->picture ."', "
 					."priority = '". $this->priority ."' ";
@@ -211,7 +211,7 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 		if($error === FALSE) {
 			// Save the language specific part
 			$pre_save_object = new EquipmentGroup($this->group_id, $this->clang_id);
-			if($pre_save_object != $this) {
+			if($pre_save_object !== $this) {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_equipment_groups_lang SET "
 						."group_id = '". $this->group_id ."', "
 						."clang_id = '". $this->clang_id ."', "

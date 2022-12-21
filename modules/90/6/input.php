@@ -10,7 +10,7 @@
 		foreach($values as $key => $value) {
 			echo '<option value="'. $key .'" ';
 	
-			if ("REX_VALUE[1]" == $key) {
+			if (intval("REX_VALUE[1]") === $key) { /** @phpstan-ignore-line */
 				echo 'selected="selected" ';
 			}
 			echo '>'. $value .'</option>';

@@ -4,19 +4,19 @@ if(!function_exists('print_categories')) {
 	 * Prints category list.
 	 * @param Category[] $categories Array with category objects.
 	 */
-	function print_categories($categories) {
+	function print_categories($categories):void {
 		// Get placeholder wildcard tags
 		$sprog = rex_addon::get("sprog");
 		$counter = 0;
 		foreach($categories as $category) {
 			// Only use used categories
 			if(count($category->getMachines()) > 0) {
-				print '<div class="col-sm-6 col-md-4 col-lg-3 abstand">';
+				print '<div class="col-6 col-md-4'. (intval("REX_VALUE[1]") === 3 ? '' : ' col-lg-3') .' mr-auto ml-auto abstand">'; /** @phpstan-ignore-line */
 				print '<a href="'. $category->getURL() .'" class="bluebox">';
 				print '<div class="box" data-height-watch>';
-				if($category->pic != "" || $category->pic_lang != "") {
+				if($category->pic !== "" || $category->pic_lang !== "") {
 					print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
-						($category->pic_lang != "" ? $category->pic_lang : $category->pic) .'" alt="'. $category->name .'">';
+						($category->pic_lang !== "" ? $category->pic_lang : $category->pic) .'" alt="'. $category->name .'">';
 				}
 				else {
 					print '<img src="'.	rex_addon::get("d2u_machinery")->getAssetsUrl("white_tile.gif") .'" alt="Placeholder">';
@@ -30,7 +30,7 @@ if(!function_exists('print_categories')) {
 		}
 		
 		// If no categories are used
-		if($counter == 0) {
+		if($counter === 0) {
 			print '<div class="col-12 abstand">';
 			print '<p>'. $sprog->getConfig('wildcard_open_tag') .'d2u_machinery_no_machines'. $sprog->getConfig('wildcard_close_tag') .'</p>';
 			print '</div>';
@@ -42,25 +42,25 @@ if(!function_exists('print_consulation_hint')) {
 	/**
 	 * Prints consulation hint.
 	 */
-	function print_consulation_hint() {
+	function print_consulation_hint():void {
 		$d2u_machinery = rex_addon::get("d2u_machinery");
 		// Get placeholder wildcard tags
 		$sprog = rex_addon::get("sprog");
 
 		print '<div class="col-12">';
 		print '<div class="consultation">';
-		print '<a href="'. rex_getUrl($d2u_machinery->getConfig('consultation_article_id')) .'">';
+		print '<a href="'. rex_getUrl(intval($d2u_machinery->getConfig('consultation_article_id'))) .'">';
 		print '<div class="row abstand">';
 
 		print '<div class="col-12 col-md-4 col-lg-3">';
-		if($d2u_machinery->getConfig('consultation_pic') != "") {
-			print '<img src="'. rex_url::media($d2u_machinery->getConfig('consultation_pic')) .'" alt="">';
+		if($d2u_machinery->getConfig('consultation_pic') !== "") {
+			print '<img src="'. rex_url::media(strval($d2u_machinery->getConfig('consultation_pic'))) .'" alt="">';
 		}
 		print '</div>';
 
 		print '<div class="col-12 col-md-8 col-lg-9">';
 		print '<p>'. $sprog->getConfig('wildcard_open_tag') .'d2u_machinery_consultation_hint'. $sprog->getConfig('wildcard_close_tag') .'</p>';
-		if($d2u_machinery->hasConfig("contact_phone") && $d2u_machinery->getConfig("contact_phone") != "") {
+		if($d2u_machinery->hasConfig("contact_phone") && $d2u_machinery->getConfig("contact_phone") !== "") {
 			print '<h3>'. $sprog->getConfig('wildcard_open_tag') .'d2u_helper_module_form_phone'. $sprog->getConfig('wildcard_close_tag') .' '. $d2u_machinery->getConfig("contact_phone") .'</h3>';
 		}
 		print '</div>';
@@ -76,7 +76,7 @@ if(!function_exists('print_industry_sectors')) {
 	/**
 	 * Prints industry sector list.
 	 */
-	function print_industry_sectors() {
+	function print_industry_sectors():void {
 		// Get placeholder wildcard tags
 		$sprog = rex_addon::get("sprog");
 
@@ -85,11 +85,11 @@ if(!function_exists('print_industry_sectors')) {
 		print '</div>';
 
 		foreach (IndustrySector::getAll(rex_clang::getCurrentId()) as $industry_sector) {
-			if($industry_sector->online_status == "online" && count($industry_sector->getMachines()) > 0) {
-				print '<div class="col-sm-6 col-md-4 col-lg-3 abstand">';
+			if($industry_sector->online_status === "online" && count($industry_sector->getMachines()) > 0) {
+				print '<div class="col-sm-6 col-md-4'. (intval("REX_VALUE[1]") === 3 ? '' : ' col-lg-3') .' mr-auto ml-auto abstand">'; /** @phpstan-ignore-line */
 				print '<a href="'. $industry_sector->getURL() .'" class="bluebox">';
 				print '<div class="box" data-height-watch>';
-				if($industry_sector->pic != "") {
+				if($industry_sector->pic !== "") {
 					print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
 						$industry_sector->pic .'" alt="'. $industry_sector->name .'">';
 				}
@@ -111,9 +111,9 @@ if(!function_exists('print_machines')) {
 	 * @param Machine[] $machines Machines.
 	 * @param string $title Title for the list
 	 */
-	function print_machines($machines, $title) {
+	function print_machines($machines, $title):void {
 		$d2u_machinery = rex_addon::get("d2u_machinery");
-		if($title != "") {
+		if($title !== "") {
 			print '<div class="col-12 abstand">';
 			print '<h1>'. $title.'</h1>';
 			print '</div>';
@@ -121,24 +121,24 @@ if(!function_exists('print_machines')) {
 
 		$counter = 0;
 		foreach($machines as $machine) {
-			if($machine->online_status == 'online') {
-				if($d2u_machinery->hasConfig('show_teaser') && $d2u_machinery->getConfig('show_teaser') == 'show') {
-					print '<div class="col-12 col-md-6 col-lg-4 abstand" data-height-watch>';
+			if($machine->online_status === 'online') {
+				if($d2u_machinery->hasConfig('show_teaser') && $d2u_machinery->getConfig('show_teaser') === 'show') {
+					print '<div class="col-12 col-md-6 col-lg-4 mr-auto ml-auto abstand" data-height-watch>';
 				}
 				else {
-					print '<div class="col-sm-6 col-md-4 col-lg-3 abstand" data-height-watch>';
+					print '<div class="col-sm-6 col-md-4'. (intval("REX_VALUE[1]") === 3 ? '' : ' col-lg-3') .' mr-auto ml-auto abstand" data-height-watch>'; /** @phpstan-ignore-line */
 				}
 				print '<a href="'. $machine->getURL() .'" class="bluebox">';
 				print '<div class="box" data-height-watch>';
-				if(count($machine->pics) > 0 && $machine->pics[0] != "") {
+				if(count($machine->pics) > 0 && $machine->pics[0] !== "") {
 					print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
-						$machine->pics[0] .'" alt="'. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .'">';
+						$machine->pics[0] .'" alt="'. ($machine->lang_name === "" ? $machine->name : $machine->lang_name) .'">';
 				}
 				else {
 					print '<img src="'.	rex_addon::get("d2u_machinery")->getAssetsUrl("white_tile.gif") .'" alt="Placeholder">';
 				}
-				print '<div><b>'. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .'</b></div>';
-				if($d2u_machinery->hasConfig('show_teaser') && $d2u_machinery->getConfig('show_teaser') == 'show') {
+				print '<div><b>'. ($machine->lang_name === "" ? $machine->name : $machine->lang_name) .'</b></div>';
+				if($d2u_machinery->hasConfig('show_teaser') && strval($d2u_machinery->getConfig('show_teaser')) === 'show') {
 					print '<div class="teaser">'. nl2br($machine->teaser) .'</div>';
 				}
 				print '</div>';
@@ -149,9 +149,9 @@ if(!function_exists('print_machines')) {
 		}
 		
 		// Directly forward if only one machine is available
-		if($counter == 1) {
+		if($counter === 1) {
 			foreach($machines as $machine) {
-				if($machine->online_status == 'online') {
+				if($machine->online_status === 'online') {
 					header("Location: ". $machine->getURL(FALSE));
 					exit;
 				}
@@ -170,7 +170,7 @@ $url_namespace = d2u_addon_frontend_helper::getUrlNamespace();
 $url_id = d2u_addon_frontend_helper::getUrlId();
 
 if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || $url_namespace === "category_id" && $url_id > 0) {
-	$category_id = filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT);
+	$category_id = intval(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT));
 	if(\rex_addon::get("url")->isAvailable() && $url_id > 0) {
 		$category_id = $url_id;
 	}
@@ -196,11 +196,11 @@ if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['d
 		print '</div>';
 
 		// Usage Areas
-		if(rex_plugin::get('d2u_machinery', 'machine_usage_area_extension')->isAvailable() && $d2u_machinery->getConfig("show_categories_usage_areas", "hide") == "show") {
+		if(rex_plugin::get('d2u_machinery', 'machine_usage_area_extension')->isAvailable() && strval($d2u_machinery->getConfig("show_categories_usage_areas", "hide")) === "show") {
 			print '<div id="tab_usage_areas" class="tab-pane fade machine-tab">';
 			print '<div class="row">';
 			print '<div class="col-12">';
-			if($d2u_machinery->hasConfig("usage_area_header") && $d2u_machinery->getConfig("usage_area_header") == "usage") {
+			if($d2u_machinery->hasConfig("usage_area_header") && strval($d2u_machinery->getConfig("usage_area_header")) === "usage") {
 				$usage_areas = UsageArea::getAll(rex_clang::getCurrentId(), $category_id);
 				print '<table class="matrix">';
 				print '<thead><tr><td></td>';
@@ -213,15 +213,15 @@ if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['d
 				foreach($machines as $machine) {
 					print '<tr><td>';
 					print '<a href="'. $machine->getURL() .'"><div class="comparison-header">';
-					if(count($machine->pics) > 0 && $machine->pics[0] != "") {
-						print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.	$machine->pics[0] .'" alt='. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .'>';
+					if(count($machine->pics) > 0 && $machine->pics[0] !== "") {
+						print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.	$machine->pics[0] .'" alt='. ($machine->lang_name === "" ? $machine->name : $machine->lang_name) .'>';
 					}
 					else {
 						print '<img src="'.	rex_addon::get("d2u_machinery")->getAssetsUrl("white_tile.gif") .'" alt="Placeholder">';
 					}
-					print '<br><b>'. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .'</b></div></a></td>';
+					print '<br><b>'. ($machine->lang_name === "" ? $machine->name : $machine->lang_name) .'</b></div></a></td>';
 					foreach($usage_areas as $usage_area) {
-						if(in_array($usage_area->usage_area_id, $machine->usage_area_ids)) {
+						if(in_array($usage_area->usage_area_id, $machine->usage_area_ids, true)) {
 							print '<td class="active-cell"></td>';
 						}
 						else {
@@ -240,20 +240,21 @@ if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['d
 				foreach($machines as $machine) {
 					print '<td valign="bottom" align="center">';
 					print '<a href="'. $machine->getURL() .'"><div class="comparison-header">';
-					if(count($machine->pics) > 0 && $machine->pics[0] != "") {
-						print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.	$machine->pics[0] .'" alt='. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .'>';
+					if(count($machine->pics) > 0 && $machine->pics[0] !== "") {
+						print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.	$machine->pics[0] .'" alt='. ($machine->lang_name === "" ? $machine->name : $machine->lang_name) .'>';
 					}
 					else {
 						print '<img src="'.	rex_addon::get("d2u_machinery")->getAssetsUrl("white_tile.gif") .'" alt="Placeholder">';
 					}
-					print '<br><b>'. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .'</b></div></a></td>';
+					print '<br><b>'. ($machine->lang_name === "" ? $machine->name : $machine->lang_name) .'</b></div></a></td>';
 				}
 				print '</tr></thead>';
 				print '<tbody>';
-				foreach($usage_area_matrix as $key => $values) {
+				foreach($usage_area_matrix as $key => $machine_ids) {
+					/** @var int[] $machine_ids */
 					print '<tr><td class="inactive-cell usage-area-name">'. $key .'</td>';
 					foreach($machines as $machine) {
-						if(in_array($machine->machine_id, $values)) {
+						if(in_array($machine->machine_id, $machine_ids, true)) {
 							print '<td class="active-cell"></td>';
 						}
 						else {
@@ -280,17 +281,18 @@ if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['d
 		foreach($machines as $machine) {
 			print '<td valign="bottom" align="center">';
 			print '<a href="'. $machine->getURL() .'"><div class="comparison-header">';
-			if(count($machine->pics) > 0 && $machine->pics[0] != "") {
-				print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.	$machine->pics[0] .'" alt='. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .'>';
+			if(count($machine->pics) > 0 && $machine->pics[0] !== "") {
+				print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.	$machine->pics[0] .'" alt='. ($machine->lang_name === "" ? $machine->name : $machine->lang_name) .'>';
 			}
 			else {
 				print '<img src="'.	rex_addon::get("d2u_machinery")->getAssetsUrl("white_tile.gif") .'" alt="Placeholder">';
 			}
-			print '<br><b>'. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .'</b></div></a></td>';
+			print '<br><b>'. ($machine->lang_name === "" ? $machine->name : $machine->lang_name) .'</b></div></a></td>';
 		}
 		print '</tr></thead>';
 		print '<tbody>';
 		foreach($tech_data_matrix as $wildcard => $values) {
+			/** @var string[] $values */
 			print '<tr>';
 			print '<td class="inactive-cell"><b>'. $wildcard .'</b></td>';
 			print '<td class="inactive-cell unit"><b>'. $values['unit'] .'</b></td>';
@@ -311,13 +313,13 @@ if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['d
 }
 else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || ($url_namespace === "machine_id" && $url_id > 0)) {
 	// Print machine
-	$machine_id = filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT);
+	$machine_id = intval(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT));
 	if(\rex_addon::get("url")->isAvailable() && $url_id > 0) {
 		$machine_id = $url_id;
 	}
 	$machine = new Machine($machine_id, rex_clang::getCurrentId());
 	// Redirect if machine is not online
-	if($machine->online_status != "online") {
+	if($machine->online_status !== "online") {
 		\rex_redirect(rex_article::getNotfoundArticleId(), rex_clang::getCurrentId());
 	}
 
@@ -337,9 +339,9 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 	if(count($machine->pics) > 0) {
 		// Picture(s)
 		print '<div class="col-12 col-md-6">';
-		if(count($machine->pics) == 1) {
+		if(count($machine->pics) === 1) {
 			print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
-				$machine->pics[0] .'" alt="'. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .'" style="max-width:100%;">';
+				$machine->pics[0] .'" alt="'. ($machine->lang_name === "" ? $machine->name : $machine->lang_name) .'" style="max-width:100%;">';
 		}
 		else {
 			// Slider
@@ -349,7 +351,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 			print '<ol class="carousel-indicators">';
 			for($i = 0; $i < count($machine->pics); $i++) {
 				print '<li data-target="#machineCarousel" data-slide-to="'. $i .'"';
-				if($i == 0) {
+				if($i === 0) {
 					print 'class="active"';
 				}
 				print '></li>';
@@ -360,12 +362,12 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 			print '<div class="carousel-inner">';
 			for($i = 0; $i < count($machine->pics); $i++) {
 				print '<div class="carousel-item';
-				if($i == 0) {
+				if($i === 0) {
 					print ' active';
 				}
 				print '">';
 				print '<img class="d-block w-100" src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
-				$machine->pics[$i] .'" alt="'. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .'">';
+				$machine->pics[$i] .'" alt="'. ($machine->lang_name === "" ? $machine->name : $machine->lang_name) .'">';
 				print '</div>';
 			}
 			print '</div>';
@@ -387,12 +389,12 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 
 	// Video
 	if(\rex_addon::get('d2u_videos')->isAvailable()) {
-		$videos = array_merge($machine->videos, $machine->category->videos);
+		$videos = array_merge($machine->videos, $machine->category instanceof Category ? $machine->category->videos : []);
 		if(count($videos) > 0) {
 			print '<div class="col-12'. (count($videos) > 1 ? '' : ' col-lg-6') .'" id="videoplayer">';
 			print '<h3>'. $tag_open .'d2u_machinery_video'. $tag_close .'</h3>';
 
-			if(strval(rex_config::get('d2u_videos', 'player', 'ultimate')) == 'plyr' && rex_addon::get('plyr')->isAvailable()) {
+			if(strval(rex_config::get('d2u_videos', 'player', 'ultimate')) === 'plyr' && rex_addon::get('plyr')->isAvailable()) {
 				if(!function_exists('loadJsPlyr')) {
 					function loadJsPlyr():void {
 						print '<script src="'. rex_url::base('assets/addons/plyr/vendor/plyr/dist/plyr.min.js') .'"></script>';
@@ -403,7 +405,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 
 			if(count($videos) > 1) {
 				// Multiple Videos
-				if(rex_config::get('d2u_videos', 'player', 'ultimate') == strval('plyr') && rex_addon::get('plyr')->isAvailable()) {
+				if(strval(rex_config::get('d2u_videos', 'player', 'ultimate')) === strval('plyr') && rex_addon::get('plyr')->isAvailable()) {
 					$media_filenames = [];
 					$ld_json = '';
 					foreach($videos as $video) {
@@ -422,7 +424,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 			else {
 				// Only one video
 				$video = $videos[0];
-				if(strval(rex_config::get('d2u_videos', 'player', 'ultimate')) == 'plyr' && rex_addon::get('plyr')->isAvailable()) {
+				if(strval(rex_config::get('d2u_videos', 'player', 'ultimate')) === 'plyr' && rex_addon::get('plyr')->isAvailable()) {
 					$video_filename = $video->redaxo_file_lang !== '' ? $video->redaxo_file_lang : $video->redaxo_file;
 					print '<div class="row"><div class="col-12">';
 					print rex_plyr::outputMedia($video_filename, 'play-large,play,progress,current-time,duration,restart,volume,mute,pip,fullscreen', rex_url::media($video->picture));	
@@ -444,7 +446,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		$alternative_machines = [];
 		foreach($machine->alternative_machine_ids as $alternative_machine_id) {
 			$alternative_machine = new Machine($alternative_machine_id, $machine->clang_id);
-			if($alternative_machine->online_status == 'online' && $alternative_machine->translation_needs_update != "delete") {
+			if($alternative_machine->online_status === 'online' && $alternative_machine->translation_needs_update !== "delete") {
 				$alternative_machines[] = $alternative_machine;
 			}
 		}
@@ -452,15 +454,15 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 			print '<div class="col-12 col-md-6">';
 			print '<h3>'. $tag_open .'d2u_machinery_alternative_machines'. $tag_close .'</h3>';
 			foreach($alternative_machines as $alternative_machine) {
-				print '<a href="'. $alternative_machine->getURL() .'"><div class="downloads">'. ($alternative_machine->lang_name == "" ? $alternative_machine->name : $alternative_machine->lang_name) .'</div></a>';
+				print '<a href="'. $alternative_machine->getURL() .'"><div class="downloads">'. ($alternative_machine->lang_name === "" ? $alternative_machine->name : $alternative_machine->lang_name) .'</div></a>';
 			}
 			print '</div>';
 		}
 	}
 		
 	// Downloads
-	$pdfs = array_unique(array_merge($machine->pdfs, $machine->category->pdfs));
-	if(is_array($pdfs) && count($pdfs) > 0) {
+	$pdfs = array_unique(array_merge($machine->pdfs, $machine->category instanceof Category ? $machine->category->pdfs : []));
+	if(count($pdfs) > 0) {
 		print '<div class="col-12 col-md-6">';
 		print '<h3>'. $tag_open .'d2u_machinery_downloads'. $tag_close .'</h3>';
 		foreach($pdfs as $pdf) {
@@ -472,7 +474,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 				$has_permission = rex_ycom_media_auth::checkPerm(rex_media_manager::create("", $pdf));
 			}
 			if($has_permission) {
-				print '<a href="'. rex_url::media($pdf) .'" target="_blank"><div class="downloads"><span class="fa-icon fa-file-pdf-o"></span> '. ($media instanceof rex_media && trim($media->getTitle()) != "" ? $media->getTitle() : $pdf) .'</div></a>';
+				print '<a href="'. rex_url::media($pdf) .'" target="_blank"><div class="downloads"><span class="fa-icon fa-file-pdf-o"></span> '. ($media instanceof rex_media && trim($media->getTitle()) !== "" ? $media->getTitle() : $pdf) .'</div></a>';
 			}
 		}
 		print '</div>';
@@ -518,7 +520,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 	print '</div>'; // END tab overview
 	
 	// Agitators
-	if($machine->agitator_type_id > 0 && $machine->category->show_agitators) {
+	if($machine->agitator_type_id > 0 && $machine->category instanceof Category && $machine->category->show_agitators === 'show') {
 		print '<div id="tab_agitator" class="tab-pane fade machine-tab">';
 		$agitator_type = new AgitatorType($machine->agitator_type_id, $machine->clang_id);
 		print '<div class="row">';
@@ -528,7 +530,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		foreach($agitators as $agitator) {
 			print '<div class="row">';
 			print '<div class="col-12 col-md-6 col-lg-2">';
-			if($agitator->pic != "") {
+			if($agitator->pic !== "") {
 				print '<a href="index.php?rex_media_type=d2u_helper_gallery_detail&rex_media_file='. $agitator->pic .'" '
 					.'data-toggle="lightbox_agitator" data-gallery="example-galleryagitator" data-title="'. $agitator->name .'">';
 				print '<img src="index.php?rex_media_type=d2u_machinery_features&rex_media_file='.
@@ -565,7 +567,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		foreach($features as $feature) {
 			print '<div class="row">';
 			print '<div class="col-12 col-sm-4 col-md-3 col-lg-2">';
-			if($feature->pic != "") {
+			if($feature->pic !== "") {
 				print '<a href="index.php?rex_media_type=d2u_helper_gallery_detail&rex_media_file='. $feature->pic .'" '
 					.'data-toggle="lightbox_features" data-gallery="example-galleryfeatures" data-title="'. $feature->name.'">';
                 print '<img src="index.php?rex_media_type=d2u_machinery_features&rex_media_file='. $feature->pic .'" class="img-fluid featurepic"'
@@ -603,6 +605,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		print '<div class="col-12">';
 		print '<table class="techdata">';
 		foreach ($tech_datas as $tech_data) {
+			/** @var string[] $tech_data */
 			print '<tr>';
 			print '<td class="description">'. $tech_data["description"] .'</td>';
 			print '<td class="unit">'. $tech_data["unit"] .'</td>';
@@ -616,27 +619,27 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 	}
 	
 	// Usage Areas
-	if(rex_plugin::get('d2u_machinery', 'machine_usage_area_extension')->isAvailable() && $d2u_machinery->getConfig("show_machine_usage_areas", "hide") == "show") {
+	if(rex_plugin::get('d2u_machinery', 'machine_usage_area_extension')->isAvailable() && strval($d2u_machinery->getConfig("show_machine_usage_areas", "hide")) === "show") {
 		print '<div id="tab_usage_areas" class="tab-pane fade machine-tab">';
 		print '<div class="row">';
 		print '<div class="col-12">';
 	
-		$usage_areas = UsageArea::getAll(rex_clang::getCurrentId(), $machine->category->category_id);
+		$usage_areas = UsageArea::getAll(rex_clang::getCurrentId(), $machine->category instanceof Category ? $machine->category->category_id : 0);
 		print '<table class="matrix">';
 		print '<thead><tr>';
 		print '<td></td>';
 		print '<td valign="bottom" align="center">';
 		print '<a href="'. $machine->getURL() .'"><div class="comparison-header">';
-		if(count($machine->pics) > 0 && $machine->pics[0] != "") {
-			print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.	$machine->pics[0] .'" alt='. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .'>';
+		if(count($machine->pics) > 0 && $machine->pics[0] !== "") {
+			print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.	$machine->pics[0] .'" alt='. ($machine->lang_name === "" ? $machine->name : $machine->lang_name) .'>';
 		}
-		print '<br><b>'. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .'</b></div></a></td>';
+		print '<br><b>'. ($machine->lang_name === "" ? $machine->name : $machine->lang_name) .'</b></div></a></td>';
 		print '</tr></thead>';
 		print '<tbody>';
 		foreach($usage_areas as $usage_area) {
 			print '<tr>';
 			print '<td class="inactive-cell usage-area-name">'. $usage_area->name .'</td>';
-			if(in_array($usage_area->usage_area_id, $machine->usage_area_ids)) {
+			if(in_array($usage_area->usage_area_id, $machine->usage_area_ids, true)) {
 				print '<td class="active-cell"></td>';
 			}
 			else {
@@ -673,13 +676,13 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		}
 		
 		$class = "";
-		if($number_sets == 2) {
+		if($number_sets === 2) {
 			$class = "col-sm-6";
 		}
-		if($number_sets == 3) {
+		if($number_sets === 3) {
 			$class = "col-sm-6 col-md-4";
 		}
-		if($number_sets == 4) {
+		if($number_sets === 4) {
 			$class = "col-sm-6";
 		}
 
@@ -694,9 +697,9 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		}
 		if(count($machine->pictures_delivery_set) > 0) {
 			print '<div class="col-12 '. $class .'"><div class="deliverysets"><div class="deliverybox">';
-			if(count($machine->pictures_delivery_set) == 1) {
+			if(count($machine->pictures_delivery_set) === 1) {
 				print '<img src="index.php?rex_media_type=d2u_machinery_construction_equipment_delivery_set_slider&rex_media_file='.
-					$machine->pictures_delivery_set[0] .'" alt="'. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .'" style="max-width:100%;">';
+					$machine->pictures_delivery_set[0] .'" alt="'. ($machine->lang_name === "" ? $machine->name : $machine->lang_name) .'" style="max-width:100%;">';
 			}
 			else {
 				// Slider
@@ -706,7 +709,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 				print '<ol class="carousel-indicators">';
 				for($i = 0; $i < count($machine->pictures_delivery_set); $i++) {
 					print '<li data-target="#deliverysetCarousel" data-slide-to="'. $i .'"';
-					if($i == 0) {
+					if($i === 0) {
 						print 'class="active"';
 					}
 					print '></li>';
@@ -717,12 +720,12 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 				print '<div class="carousel-inner">';
 				for($i = 0; $i < count($machine->pictures_delivery_set); $i++) {
 					print '<div class="carousel-item';
-					if($i == 0) {
+					if($i === 0) {
 						print ' active';
 					}
 					print '">';
 					print '<img class="d-block w-100" src="index.php?rex_media_type=d2u_machinery_construction_equipment_delivery_set_slider&rex_media_file='.
-					$machine->pictures_delivery_set[$i] .'" alt="'. ($machine->lang_name == "" ? $machine->name : $machine->lang_name) .'">';
+					$machine->pictures_delivery_set[$i] .'" alt="'. ($machine->lang_name === "" ? $machine->name : $machine->lang_name) .'">';
 					print '</div>';
 				}
 				print '</div>';
@@ -752,9 +755,9 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		foreach($service_options as $service_option) {
 			print '<div class="row">';
 			print '<div class="col-12 col-md-6 col-lg-2">';
-			if($service_option->picture != "") {
-				print '<a href="index.php?rex_media_type=d2u_helper_gallery_detail&rex_media_file='. $feature->pic .'" '
-					.'data-toggle="lightbox_service" data-gallery="example-galleryservice" data-title="'. $feature->name.'">';
+			if($service_option->picture !== "") {
+				print '<a href="index.php?rex_media_type=d2u_helper_gallery_detail&rex_media_file='. $service_option->picture .'" '
+					.'data-toggle="lightbox_service" data-gallery="example-galleryservice" data-title="'. $service_option->name.'">';
 				print '<img src="index.php?rex_media_type=d2u_machinery_features&rex_media_file='.
 						$service_option->picture .'" alt='. $service_option->name .' class="featurepic">';
 				print '</a>';
@@ -789,11 +792,11 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		$equipment_groups = [];
 		foreach($machine->equipment_ids as $equipment_id) {
 			$equipment = new Equipment($equipment_id, rex_clang::getCurrentId());
-			if($equipment->group !== FALSE && !array_key_exists($equipment->group->priority, $equipment_groups)) {
+			if($equipment->group instanceof EquipmentGroup && !array_key_exists($equipment->group->priority, $equipment_groups)) {
 				$equipment_groups[$equipment->group->priority] = $equipment->group;
 				$equipments[$equipment->group->group_id] = [];
 			}
-			if ($equipment->group !== FALSE && array_key_exists($equipment->group->group_id, $equipments)) {
+			if ($equipment->group instanceof EquipmentGroup && array_key_exists($equipment->group->group_id, $equipments)) {
 				$equipments[$equipment->group->group_id][$equipment->name] = $equipment;
 			}
 		}
@@ -802,7 +805,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		foreach($equipment_groups as $equipment_group) {
 			print '<div class="row">';
 			print '<div class="col-12 col-sm-4 col-md-3 col-lg-2">';
-			if($equipment_group->picture != "") {
+			if($equipment_group->picture !== "") {
 				print '<a href="index.php?rex_media_type=d2u_helper_gallery_detail&rex_media_file='. $equipment_group->picture .'" '
 					.'data-toggle="lightbox_equipment" data-gallery="example-galleryequipment" data-title="'. $equipment_group->name.'">';
                 print '<img src="index.php?rex_media_type=d2u_machinery_features&rex_media_file='. $equipment_group->picture .'" class="img-fluid featurepic"'
@@ -823,7 +826,11 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 			ksort($current_equipments);
 			foreach($current_equipments as $current_equipment) {
 				print '<div class="col-12">';
-				print '<div class="block-box"><b>'. $current_equipment->name .'</b> ('. $tag_open .'d2u_machinery_equipment_artno'. $tag_close .' '. $current_equipment->article_number .')</div>';
+				print '<div class="block-box"><b>'. $current_equipment->name .'</b>';
+				if($current_equipment->article_number !== '') {
+					print '('. $tag_open .'d2u_machinery_equipment_artno'. $tag_close .' '. $current_equipment->article_number .')';
+				}
+				print '</div>';
 				print '</div>';
 			}
 			print '</div>';
@@ -889,11 +896,11 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 			validate|empty|message|'. $tag_open .'d2u_helper_module_form_validate_message'. $tag_close .'
 			validate|empty|privacy_policy_accepted|'. $tag_open .'d2u_helper_module_form_validate_privacy_policy'. $tag_close .'
 
-			action|tpl2email|d2u_machinery_machine_request|'. ($machine->contact ? $machine->contact->email : $d2u_machinery->getConfig('request_form_email'));
+			action|tpl2email|d2u_machinery_machine_request|'. ($machine->contact instanceof \D2U_Machinery\Contact ? $machine->contact->email : $d2u_machinery->getConfig('request_form_email'));
 
 	$yform = new rex_yform;
 	$yform->setFormData(trim($form_data));
-	$yform->setObjectparams("form_action", $machine->getUrl());
+	$yform->setObjectparams("form_action", $machine->getURL());
 	$yform->setObjectparams("form_anchor", "tab_request");
 	$yform->setObjectparams("Error-occured", $tag_open .'d2u_helper_module_form_validate_title'. $tag_close);
 	$yform->setObjectparams("real_field_names", TRUE);
@@ -904,7 +911,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 	echo $yform->getForm();
 	
 	// Google Analytics Event
-	if(rex_config::get('d2u_machinery', 'google_analytics_activate', 'false') == 'true' &&
+	if(strval(rex_config::get('d2u_machinery', 'google_analytics_activate', 'false')) === 'true' &&
 			rex_config::get('d2u_machinery', 'analytics_event_category', '') !== '' &&
 			rex_config::get('d2u_machinery', 'analytics_event_action', '') !== '' &&
 			rex_request('search_it_build_index', 'int', FALSE) === FALSE) {
@@ -931,14 +938,16 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 	print '<div class="row">';
 	print '<div class="col-12">';
 	print '<div class="back-list">';
-	print '<a href="'. $machine->category->getURL() .'">';
-	print '<span class="fa-icon fa-back"></span>&nbsp;'. $tag_open .'d2u_machinery_back_machine_list'. $tag_close;
-	print '</a>';
+	if($machine->category instanceof Category) {
+		print '<a href="'. $machine->category->getURL() .'">';
+		print '<span class="fa-icon fa-back"></span>&nbsp;'. $tag_open .'d2u_machinery_back_machine_list'. $tag_close;
+		print '</a>';
+	}
 	print '</div>';
 	print '</div>';
 }
 else if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable() && (filter_input(INPUT_GET, 'industry_sector_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || ($url_namespace === "industry_sector_id" && $url_id > 0))) {
-	$industry_sector_id = filter_input(INPUT_GET, 'industry_sector_id', FILTER_VALIDATE_INT);
+	$industry_sector_id = intval(filter_input(INPUT_GET, 'industry_sector_id', FILTER_VALIDATE_INT));
 	if(\rex_addon::get("url")->isAvailable() && $url_id > 0) {
 		$industry_sector_id = $url_id;
 	}

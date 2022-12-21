@@ -4,12 +4,12 @@ $entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
 
 // Print message
-if($message != "") {
+if($message !== "") {
 	print rex_view::success(rex_i18n::msg($message));
 }
 
 // save settings
-if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_apply") == 1) {
+if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(INPUT_POST, "btn_apply")) === 1) {
 	$form = (array) rex_post('form', 'array', []);
 
 	$provider = new Provider($form['provider_id']);
@@ -38,7 +38,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	}
 	
 	// Redirect to make reload and thus double save impossible
-	if(filter_input(INPUT_POST, "btn_apply") == 1 && $message != 'form_save_error') {
+	if(filter_input(INPUT_POST, "btn_apply") == 1 && $message !== 'form_save_error') {
 		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$provider->provider_id, "func"=>'edit', "message"=>$message), FALSE));
 	}
 	else {
@@ -147,7 +147,7 @@ if ($func == 'edit' || $func == 'add') {
 						<button class="btn btn-apply" type="submit" name="btn_apply" value="1"><?php echo rex_i18n::msg('form_apply'); ?></button>
 						<button class="btn btn-abort" type="submit" name="btn_abort" formnovalidate="formnovalidate" value="1"><?php echo rex_i18n::msg('form_abort'); ?></button>
 						<?php
-							if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]')) {
+							if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
 								print '<button class="btn btn-delete" type="submit" name="btn_delete" formnovalidate="formnovalidate" data-confirm="'. rex_i18n::msg('form_delete') .'?" value="1">'. rex_i18n::msg('form_delete') .'</button>';
 							}
 						?>

@@ -31,7 +31,7 @@ class MachineryPark extends AFTPExport {
 		
 		// Create XML file
 		$error = $this->createCSV();
-		if($error != "") {
+		if($error !== "") {
 			return $error;
 		}
 		
@@ -43,7 +43,7 @@ class MachineryPark extends AFTPExport {
 		
 		// Upload
 		$error = $this->upload();
-		if($error != "") {
+		if($error !== "") {
 			return $error;
 		}
 		

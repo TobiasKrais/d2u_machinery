@@ -4,12 +4,12 @@ $entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
 
 // messages
-if($message != "") {
+if($message !== "") {
 	print rex_view::success(rex_i18n::msg($message));
 }
 
 // save settings
-if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_apply") == 1) {
+if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(INPUT_POST, "btn_apply")) === 1) {
 	$form = (array) rex_post('form', 'array', []);
 
 	// Media fields and links need special treatment
@@ -26,7 +26,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$option->priority = $form['priority'];
 			$option->pic = $input_media[1];
 			if(\rex_addon::get("d2u_videos")->isAvailable() && isset($form['video_id']) && $form['video_id'] > 0) {
-				$option->video = new Video($form['video_id'], rex_config::get("d2u_helper", "default_lang"));
+				$option->video = new Video($form['video_id'], intval(rex_config::get("d2u_helper", "default_lang")));
 			}
 			else {
 				$option->video = FALSE;
@@ -73,7 +73,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		$form = (array) rex_post('form', 'array', []);
 		$option_id = $form['option_id'];
 	}
-	$option = new Option($option_id, rex_config::get("d2u_helper", "default_lang"));
+	$option = new Option($option_id, intval(rex_config::get("d2u_helper", "default_lang")));
 	$option->option_id = $option_id; // Ensure correct ID in case language has no object
 	
 	// Check if object is used
@@ -120,10 +120,10 @@ if ($func == 'edit' || $func == 'add') {
 				<?php
 					foreach(rex_clang::getAll() as $rex_clang) {
 						$option = new Option($entry_id, $rex_clang->getId());
-						$required = $rex_clang->getId() == rex_config::get("d2u_helper", "default_lang") ? TRUE : FALSE;
+						$required = $rex_clang->getId() === intval(rex_config::get("d2u_helper", "default_lang")) ? TRUE : FALSE;
 						
 						$readonly_lang = TRUE;
-						if(\rex::getUser()->isAdmin() || (\rex::getUser()->hasPerm('d2u_machinery[edit_lang]') && \rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId()))) {
+						if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || (\rex::getUser()->hasPerm('d2u_machinery[edit_lang]') && \rex::getUser()->getComplexPerm('clang') instanceof rex_clang_perm && \rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId())))) {
 							$readonly_lang = FALSE;
 						}
 				?>
@@ -131,7 +131,7 @@ if ($func == 'edit' || $func == 'add') {
 						<legend><?php echo rex_i18n::msg('d2u_helper_text_lang') .' "'. $rex_clang->getName() .'"'; ?></legend>
 						<div class="panel-body-wrapper slide">
 							<?php
-								if($rex_clang->getId() != rex_config::get("d2u_helper", "default_lang")) {
+								if($rex_clang->getId() !== intval(rex_config::get("d2u_helper", "default_lang"))) {
 									$options_translations = [];
 									$options_translations["yes"] = rex_i18n::msg('d2u_helper_translation_needs_update');
 									$options_translations["no"] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
@@ -169,9 +169,9 @@ if ($func == 'edit' || $func == 'add') {
 					<div class="panel-body-wrapper slide">
 						<?php
 							// Do not use last object from translations, because you don't know if it exists in DB
-							$option = new Option($entry_id, rex_config::get("d2u_helper", "default_lang"));
+							$option = new Option($entry_id, intval(rex_config::get("d2u_helper", "default_lang")));
 							$readonly = TRUE;
-							if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]')) {
+							if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
 								$readonly = FALSE;
 							}
 
@@ -179,14 +179,14 @@ if ($func == 'edit' || $func == 'add') {
 							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', 1, $option->pic, $readonly);
 							
 							$options = [];
-							foreach(Category::getAll(rex_config::get("d2u_helper", "default_lang")) as $category) {
+							foreach(Category::getAll(intval(rex_config::get("d2u_helper", "default_lang"))) as $category) {
 								$options[$category->category_id] = $category->name;
 							}
 							d2u_addon_backend_helper::form_select('d2u_machinery_options_categories', 'form[category_ids][]', $options, $option->category_ids, 10, TRUE, $readonly);
 
 							if(\rex_addon::get("d2u_videos")->isAvailable()) {
 								$options_video = [0 => rex_i18n::msg('d2u_machinery_video_no')];
-								foreach (Video::getAll(rex_config::get("d2u_helper", "default_lang")) as $video) {
+								foreach (Video::getAll(intval(rex_config::get("d2u_helper", "default_lang"))) as $video) {
 									$options_video[$video->video_id] = $video->name;
 								}
 								d2u_addon_backend_helper::form_select('d2u_machinery_video', 'form[video_id]', $options_video, $option->video !== FALSE ? [$option->video->video_id] : [], 1, FALSE, $readonly);
@@ -202,7 +202,7 @@ if ($func == 'edit' || $func == 'add') {
 						<button class="btn btn-apply" type="submit" name="btn_apply" value="1"><?php echo rex_i18n::msg('form_apply'); ?></button>
 						<button class="btn btn-abort" type="submit" name="btn_abort" formnovalidate="formnovalidate" value="1"><?php echo rex_i18n::msg('form_abort'); ?></button>
 						<?php
-							if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]')) {
+							if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
 								print '<button class="btn btn-delete" type="submit" name="btn_delete" formnovalidate="formnovalidate" data-confirm="'. rex_i18n::msg('form_delete') .'?" value="1">'. rex_i18n::msg('form_delete') .'</button>';
 							}
 						?>
@@ -221,7 +221,7 @@ if ($func == '') {
 	$query = 'SELECT options.option_id, name, category_ids, priority '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_machinery_options AS options '
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_options_lang AS lang '
-			. 'ON options.option_id = lang.option_id AND lang.clang_id = '. rex_config::get("d2u_helper", "default_lang") .' '
+			. 'ON options.option_id = lang.option_id AND lang.clang_id = '. intval(rex_config::get("d2u_helper", "default_lang")) .' '
 		. 'ORDER BY name, priority ASC';
     $list = rex_list::factory($query, 1000);
 
@@ -229,7 +229,7 @@ if ($func == '') {
 
     $tdIcon = '<i class="rex-icon  fa-plug"></i>';
  	$thIcon = "";
-	if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]')) {
+	if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
 		$thIcon = '<a href="' . $list->getUrl(['func' => 'add']) . '" title="' . rex_i18n::msg('add') . '"><i class="rex-icon rex-icon-add-module"></i></a>';
 	}
     $list->addColumn($thIcon, $tdIcon, 0, ['<th class="rex-table-icon">###VALUE###</th>', '<td class="rex-table-icon">###VALUE###</td>']);
@@ -246,8 +246,8 @@ if ($func == '') {
 		$list_params = $params['list'];
 		$cat_names = [];
 		foreach(preg_grep('/^\s*$/s', explode("|", $list_params->getValue('category_ids')), PREG_GREP_INVERT) as $category_id) {
-			$category = new Category($category_id, rex_config::get("d2u_helper", "default_lang"));
-			if($category && $category->name != "") {
+			$category = new Category($category_id, intval(rex_config::get("d2u_helper", "default_lang")));
+			if($category && $category->name !== "") {
 				$cat_names[] = $category->name;
 			}
 		}
@@ -260,7 +260,7 @@ if ($func == '') {
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
     $list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###option_id###']);
 
-	if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]')) {
+	if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
 		$list->addColumn(rex_i18n::msg('delete_module'), '<i class="rex-icon rex-icon-delete"></i> ' . rex_i18n::msg('delete'));
 		$list->setColumnLayout(rex_i18n::msg('delete_module'), ['', '<td class="rex-table-action">###VALUE###</td>']);
 		$list->setColumnParams(rex_i18n::msg('delete_module'), ['func' => 'delete', 'entry_id' => '###option_id###']);

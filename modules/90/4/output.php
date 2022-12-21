@@ -5,22 +5,22 @@ if(!function_exists('print_used_machine_categories')) {
 	 * @param Category[] $categories Array with category objects.
 	 * @param string $offer_type Either "sale" or "rent"
 	 */
-	function print_used_machine_categories($categories, $offer_type = "") {
+	function print_used_machine_categories($categories, $offer_type = ""):void {
 		// Get placeholder wildcard tags
 		$sprog = rex_addon::get("sprog");
-		$number_offers_row = "REX_VALUE[2]" == "" ? 4 : "REX_VALUE[2]";
+		$number_offers_row = strval("REX_VALUE[2]") == "" ? 4 : "REX_VALUE[2]"; /** @phpstan-ignore-line */
 		$counter = 0;
 		foreach($categories as $category) {
 			// Only use used categories
-			if($offer_type != "") {
+			if($offer_type !== "") {
 				$category->setOfferType($offer_type);
 			}
 			if(count($category->getUsedMachines(TRUE)) > 0) {
-				print '<div class="col-sm-6 col-md-4'. ($number_offers_row == 4 ? ' col-lg-3' : '') .' abstand">';
+				print '<div class="col-sm-6 col-md-4'. ($number_offers_row == 4 ? ' col-lg-3' : '') .' abstand">'; /** @phpstan-ignore-line */
 				print '<a href="'. $category->getURL() .'">';
 				print '<div class="box" data-height-watch>';
-				if($category->pic != "" || $category->pic_lang != "") {
-					print '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $category->pic_lang != "" ? $category->pic_lang : $category->pic)
+				if($category->pic !== "" || $category->pic_lang !== "") {
+					print '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $category->pic_lang !== "" ? $category->pic_lang : $category->pic)
 						.'" alt="'. $category->name .'">';
 				}
 				print '<div>'. $category->name .'</div>';
@@ -32,7 +32,7 @@ if(!function_exists('print_used_machine_categories')) {
 		}
 		
 		// If no categories are used
-		if($counter == 0) {
+		if($counter === 0) {
 			print '<div class="col-12 abstand">';
 			print '<p>'. $sprog->getConfig('wildcard_open_tag') .'d2u_machinery_no_machines'. $sprog->getConfig('wildcard_close_tag') .'</p>';
 			print '</div>';
@@ -44,22 +44,24 @@ if(!function_exists('print_consulation_hint')) {
 	/**
 	 * Prints consulation hint.
 	 */
-	function print_consulation_hint() {
-		$show_consultation_picture = "REX_VALUE[1]" == 'true' ? FALSE : TRUE;
+	function print_consulation_hint():void {
+		$show_consultation_picture = "REX_VALUE[1]" === 'true' ? FALSE : TRUE; /** @phpstan-ignore-line */
 
 		$d2u_machinery = rex_addon::get("d2u_machinery");
 		// Get placeholder wildcard tags
 		$sprog = rex_addon::get("sprog");
 
-		print '<div class="col-12 col-md-9 consultation">';
-		print '<a href="'. rex_getUrl($d2u_machinery->getConfig('consultation_article_id')) .'">';
+		print '<div class="col-12 col-md-9">';
+		print '<div class="consultation">';
+		print '<a href="'. rex_getUrl(intval($d2u_machinery->getConfig('consultation_article_id'))) .'">';
 		print '<div class="abstand">';
-		if($show_consultation_picture && $d2u_machinery->getConfig('consultation_pic') != "") {
-			print '<img src="'. rex_url::media($d2u_machinery->getConfig('consultation_pic')) .'" alt=""><br><br>';
+		if($show_consultation_picture && $d2u_machinery->getConfig('consultation_pic') !== "") { /** @phpstan-ignore-line */
+			print '<img src="'. rex_url::media(strval($d2u_machinery->getConfig('consultation_pic'))) .'" alt=""><br><br>';
 		}
 		print '<p>'. $sprog->getConfig('wildcard_open_tag') .'d2u_machinery_consultation_hint'. $sprog->getConfig('wildcard_close_tag') .'</p>';
 		print '</div>';
 		print '</a>';
+		print '</div>';
 		print '</div>';
 	}
 }
@@ -69,22 +71,22 @@ if(!function_exists('print_used_machines')) {
 	 * Prints used machine list.
 	 * @param UsedMachine[] $used_machines Used Machines.
 	 */
-	function print_used_machines($used_machines) {
+	function print_used_machines($used_machines):void {
 		$d2u_machinery = rex_addon::get("d2u_machinery");
-		$number_offers_row = "REX_VALUE[2]" == "" ? 4 : "REX_VALUE[2]";
+		$number_offers_row = "REX_VALUE[2]" === "" ? 4 : "REX_VALUE[2]"; /** @phpstan-ignore-line */
 		$counter = 0;
 		foreach($used_machines as $used_machine) {
-			if($used_machine->online_status != 'online') {
+			if($used_machine->online_status !== 'online') {
 				continue;
 			}
-			print '<div class="col-sm-6 col-md-4'. ($number_offers_row == 4 ? ' col-lg-3' : '') .' abstand">';
+			print '<div class="col-sm-6 col-md-4'. ($number_offers_row == 4 ? ' col-lg-3' : '') .' abstand">'; /** @phpstan-ignore-line */
 			print '<a href="'. $used_machine->getURL(FALSE) .'">';
 			print '<div class="box" data-height-watch>';
-			if(count($used_machine->pics) > 0 && $used_machine->pics[0] != "") {
+			if(count($used_machine->pics) > 0 && $used_machine->pics[0] !== "") {
 				print '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $used_machine->pics[0])	 .'" alt="'. $used_machine->name .'">';
 			}
 			print '<div><b>'. $used_machine->manufacturer .' '. $used_machine->name .'</b></div>';
-			if($d2u_machinery->getConfig('show_teaser', 'hide') == 'show') {
+			if(strval($d2u_machinery->getConfig('show_teaser', 'hide')) === 'show') {
 				print '<div class="teaser">'. nl2br($used_machine->teaser) .'</div>';
 			}
 			print '</div>';
@@ -94,9 +96,9 @@ if(!function_exists('print_used_machines')) {
 		}
 		
 		// Directly forward if only one machine is available
-		if($counter == 1) {
+		if($counter === 1) {
 			foreach($used_machines as $used_machine) {
-				if($used_machine->online_status == 'online') {
+				if($used_machine->online_status === 'online') {
 					header("Location: ". $used_machine->getURL(FALSE));
 					exit;
 				}
@@ -117,7 +119,7 @@ $url_id = d2u_addon_frontend_helper::getUrlId();
 
 if(filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || $url_namespace === "used_rent_category_id"
 		|| filter_input(INPUT_GET, 'used_sale_category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || $url_namespace === "used_sale_category_id") {
-	$category_id = filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 ? filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT) : filter_input(INPUT_GET, 'used_sale_category_id', FILTER_VALIDATE_INT);
+	$category_id = intval(filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 ? filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT) : filter_input(INPUT_GET, 'used_sale_category_id', FILTER_VALIDATE_INT));
 	if(\rex_addon::get("url")->isAvailable() && $url_id > 0) {
 		$category_id = $url_id;
 	}
@@ -149,13 +151,13 @@ if(filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['optio
 else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || $url_namespace === "used_rent_machine_id")
 		|| (filter_input(INPUT_GET, 'used_sale_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || $url_namespace === "used_sale_machine_id")) {
 	// Print used machine
-	$used_machine_id = filter_input(INPUT_GET, 'used_sale_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 ? filter_input(INPUT_GET, 'used_sale_machine_id', FILTER_VALIDATE_INT) : filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT);
+	$used_machine_id = intval(filter_input(INPUT_GET, 'used_sale_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 ? filter_input(INPUT_GET, 'used_sale_machine_id', FILTER_VALIDATE_INT) : filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT));
 	if(\rex_addon::get("url")->isAvailable() && $url_id > 0) {
 		$used_machine_id = $url_id;
 	}
 	$used_machine = new UsedMachine($used_machine_id, rex_clang::getCurrentId());
 	// Redirect if object is not online
-	if($used_machine->online_status != "online") {
+	if($used_machine->online_status !== "online") {
 		\rex_redirect(rex_article::getNotfoundArticleId(), rex_clang::getCurrentId());
 	}
 	print '<div class="col-12">';
@@ -167,7 +169,7 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 	if(count($used_machine->pics) > 0) {
 		// Slider picture(s)
 		print '<div class="col-12 col-md-6 abstand">';
-		if($picture_type == 'lightbox' || count($used_machine->pics) == 1) {
+		if($picture_type === 'lightbox' || count($used_machine->pics) === 1) {
 			print '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
 				$used_machine->pics[0] .'" alt='. $used_machine->name .' style="max-width:100%;">';
 		}
@@ -178,7 +180,7 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 			print '<ol class="carousel-indicators">';
 			for($i = 0; $i < count($used_machine->pics); $i++) {
 				print '<li data-target="#machineCarousel" data-slide-to="'. $i .'"';
-				if($i == 0) {
+				if($i === 0) {
 					print 'class="active"';
 				}
 				print '></li>';
@@ -189,7 +191,7 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 			print '<div class="carousel-inner" role="listbox">';
 			for($i = 0; $i < count($used_machine->pics); $i++) {
 				print '<div class="carousel-item';
-				if($i == 0) {
+				if($i === 0) {
 					print ' active';
 				}
 				print '">';
@@ -218,7 +220,7 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 
 	// Text
 	print '<div class="col-12 col-md-6">'. d2u_addon_frontend_helper::prepareEditorField($used_machine->description) .'</div>';
-	if($picture_type == 'slider' && count($used_machine->pics) > 0) {
+	if($picture_type === 'slider' && count($used_machine->pics) > 0) {
 		print '<div class="col-12">&nbsp;</div>';
 	}
 		
@@ -227,11 +229,11 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 
 	// Video
 	if(\rex_addon::get('d2u_videos')->isAvailable()) {
-		if(is_array($used_machine->videos) && count($used_machine->videos) > 0) {
+		if(count($used_machine->videos) > 0) {
 			print '<div class="col-12" id="videoplayer">';
 			print '<h3>'. $tag_open .'d2u_machinery_video'. $tag_close .'</h3>';
 			
-			if(strval(rex_config::get('d2u_videos', 'player', 'ultimate')) == 'plyr' && rex_addon::get('plyr')->isAvailable()) {
+			if(strval(rex_config::get('d2u_videos', 'player', 'ultimate')) === 'plyr' && rex_addon::get('plyr')->isAvailable()) {
 				if(!function_exists('loadJsPlyr')) {
 					function loadJsPlyr():void {
 						print '<script src="'. rex_url::base('assets/addons/plyr/vendor/plyr/dist/plyr.min.js') .'"></script>';
@@ -242,7 +244,7 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 
 			if(count($used_machine->videos) > 1) {
 				// Multiple Videos
-				if(rex_config::get('d2u_videos', 'player', 'ultimate') == strval('plyr') && rex_addon::get('plyr')->isAvailable()) {
+				if(rex_config::get('d2u_videos', 'player', 'ultimate') === strval('plyr') && rex_addon::get('plyr')->isAvailable()) {
 					$media_filenames = [];
 					$ld_json = '';
 					foreach($used_machine->videos as $video) {
@@ -261,7 +263,7 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 			else {
 				// Only one video
 				$video = $used_machine->videos[array_key_first($used_machine->videos)];
-				if(strval(rex_config::get('d2u_videos', 'player', 'ultimate')) == 'plyr' && rex_addon::get('plyr')->isAvailable()) {
+				if(strval(rex_config::get('d2u_videos', 'player', 'ultimate')) === 'plyr' && rex_addon::get('plyr')->isAvailable()) {
 					$video_filename = $video->redaxo_file_lang !== '' ? $video->redaxo_file_lang : $video->redaxo_file;
 					print '<div class="row"><div class="col-12">';
 					print rex_plyr::outputMedia($video_filename, 'play-large,play,progress,current-time,duration,restart,volume,mute,pip,fullscreen', rex_url::media($video->picture));	
@@ -279,7 +281,7 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 	}
 
 	// Link to machine
-	if($used_machine->machine !== FALSE) {
+	if($used_machine->machine instanceof Machine) {
 		print '<div class="col-12">';
 		print '<p><b>'. $tag_open .'d2u_machinery_used_machines_link_machine'. $tag_close .':</b>';
 		print '<a href="'. $used_machine->machine->getURL() .'">'. $used_machine->machine->name .'</a></p>';
@@ -288,12 +290,16 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 	// Availability
 	print '<div class="col-12">';
 	print '<p><b>'. $tag_open .'d2u_machinery_used_machines_availible_from'. $tag_close .':</b> ';
-	if($used_machine->availability != "" && $used_machine->availability > date("Y-m-d")) {
-		if($d2u_machinery->hasConfig('lang_replacement_'. rex_clang::getCurrentId()) && $d2u_machinery->getConfig('lang_replacement_'. rex_clang::getCurrentId()) == "german") {
-			print date_format(date_create($used_machine->availability),"d.m.Y");
+	if($used_machine->availability !== "" && $used_machine->availability > date("Y-m-d")) {
+		if($d2u_machinery->hasConfig('lang_replacement_'. rex_clang::getCurrentId()) && strval($d2u_machinery->getConfig('lang_replacement_'. rex_clang::getCurrentId())) === "german") {
+			if(date_create($used_machine->availability) instanceof DateTime) {
+				print date_format(date_create($used_machine->availability),"d.m.Y");
+			}
 		}
 		else {
-			print date_format(date_create($used_machine->availability),"Y/m/d");
+			if(date_create($used_machine->availability) instanceof DateTime) {
+				print date_format(date_create($used_machine->availability),"Y/m/d");
+			}
 		}
 	}
 	else {
@@ -309,7 +315,7 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 	// Price
 	print '<div class="col-12">';
 	print '<p><b>'. $tag_open .'d2u_machinery_used_machines_price'. $tag_close .':</b> ';
-	if($used_machine->price != "0.00") {
+	if($used_machine->price !== 0) {
 		print $used_machine->price .' '. $used_machine->currency_code;
 		if($used_machine->vat > 0) {
 			print ' ('. $used_machine->vat .'% '.$tag_open .'d2u_machinery_used_machines_vat_included'. $tag_close .')';
@@ -323,13 +329,13 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 	}
 	print '</p></div>';
 	// Location
-	if($used_machine->location != "") {
+	if($used_machine->location !== "") {
 		print '<div class="col-12">';
 		print '<p><b>'. $tag_open .'d2u_machinery_used_machines_location'. $tag_close .':</b> '. $used_machine->location .'</p>';
 		print '</div>';
 	}
 	// External URL
-	if($used_machine->external_url != "" && filter_var($used_machine->external_url, FILTER_VALIDATE_URL)) {
+	if($used_machine->external_url !== "" && filter_var($used_machine->external_url, FILTER_VALIDATE_URL) !== false) {
 		print '<div class="col-12">';
 		print '<p><b>'. $tag_open .'d2u_machinery_used_machines_external_url'. $tag_close .':</b> <a href="'. $used_machine->external_url .'" target="_blank">'. $used_machine->external_url .'</a></p>';
 		print '</div>';
@@ -341,7 +347,10 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 		foreach($used_machine->downloads as $document) {
 			$rex_document = rex_media::get($document);
 			if($rex_document instanceof rex_media) {
-				$filesize = round(filesize(rex_path::media() .'/'. $document) / pow(1024, 2), 2);
+				$filesize = 0;
+				if(filesize(rex_path::media() .'/'. $document) !== false) { 
+					$filesize = round((filesize(rex_path::media() .'/'. $document)) / pow(1024, 2), 2);
+				}
 				$filetype = strtoupper(pathinfo(rex_path::media() . PATH_SEPARATOR . $document, PATHINFO_EXTENSION));
 				
 				// Check permissions
@@ -351,14 +360,14 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 				}
 				if($has_permission) {
 					print '<li>';
-					if($filetype == 'pdf') {
+					if($filetype === 'pdf') {
 						print '<span class="icon pdf"></span> ';
 					}
 					else {
 						print '<span class="icon file"></span> ';
 					}
 					print '<a href="'. rex_url::media($document) .'" target="_blank">'.
-							$rex_document->getTitle() .' <span>('. $filetype .', '. $filesize .' MB)</span></a></li>';
+							$rex_document->getTitle() .' <span>('. $filetype .($filesize > 0 ? ', '. $filesize .' MB' : '') .'</span></a></li>';
 				}
 			}
 		}
@@ -373,7 +382,7 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 	print '</div>'; // End tab
 
 	// Lightbox pictures tab
-	if($picture_type == 'lightbox' && count($used_machine->pics) > 0) {
+	if($picture_type === 'lightbox' && count($used_machine->pics) > 0) {
 		print '<div id="tab_pics" class="tab-pane fade machine-tab">';
 		print '<div class="row">';
 		$type_thumb = "d2u_helper_gallery_thumb";
@@ -415,7 +424,7 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 	print '<div class="col-12 col-md-8 abstand">';
 	$form_data = 'hidden|machine_name|'. $used_machine->manufacturer .' '. $used_machine->name .' (Gebrauchtmaschine)|REQUEST
 
-			html||<h3> '. $tag_open .'d2u_machinery_request'. $tag_close .': '. $machine->name .'</h3><br>
+			html||<h3> '. $tag_open .'d2u_machinery_request'. $tag_close .': '. $used_machine->name .'</h3><br>
 			text|vorname|'. $tag_open .'d2u_helper_module_form_first_name'. $tag_close .'
 			text|name|'. $tag_open .'d2u_helper_module_form_last_name'. $tag_close .' *|||{"required":"required"}
 			text|company|'. $tag_open .'d2u_machinery_form_company'. $tag_close .'
@@ -454,11 +463,11 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 			validate|empty|message|'. $tag_open .'d2u_helper_module_form_validate_message'. $tag_close .'
 			validate|empty|privacy_policy_accepted|'. $tag_open .'d2u_helper_module_form_validate_privacy_policy'. $tag_close .'
 
-			action|tpl2email|d2u_machinery_machine_request|'. ($used_machine->contact ? $used_machine->contact->email : $d2u_machinery->getConfig('request_form_email'));
+			action|tpl2email|d2u_machinery_machine_request|'. ($used_machine->contact instanceof \D2U_Machinery\Contact ? $used_machine->contact->email : $d2u_machinery->getConfig('request_form_email'));
 
 	$yform = new rex_yform;
 	$yform->setFormData(trim($form_data));
-	$yform->setObjectparams("form_action", $used_machine->getUrl());
+	$yform->setObjectparams("form_action", $used_machine->getURL());
 	$yform->setObjectparams("form_anchor", "tab_request");
 	$yform->setObjectparams("Error-occured", $tag_open .'d2u_helper_module_form_validate_title'. $tag_close);
 	$yform->setObjectparams("real_field_names", TRUE);
@@ -469,7 +478,7 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 	echo $yform->getForm();
 	
 	// Google Analytics Event
-	if(rex_config::get('d2u_machinery', 'google_analytics_activate', 'false') == 'true' &&
+	if(rex_config::get('d2u_machinery', 'google_analytics_activate', 'false') === 'true' &&
 			rex_config::get('d2u_machinery', 'analytics_event_category', '') !== '' &&
 			rex_config::get('d2u_machinery', 'analytics_event_action', '') !== '' &&
 			rex_request('search_it_build_index', 'int', FALSE) === FALSE) {
@@ -499,7 +508,7 @@ else {
 
 	$current_article = rex_article::getCurrent();
 	$class_active = ' active show';
-	if($current_article->getId() == $d2u_machinery->getConfig('used_machine_article_id_sale')) {
+	if($current_article instanceof rex_article && $current_article->getId() === intval($d2u_machinery->getConfig('used_machine_article_id_sale'))) {
 		// Sale offers
 		print '<div id="tab_sale" class="tab-pane fade machine-tab'. $class_active .'">';
 		$class_active = "";
@@ -509,7 +518,7 @@ else {
 		print '</div>';
 	}
 
-	if($current_article->getId() == $d2u_machinery->getConfig('used_machine_article_id_rent')) {
+	if($current_article instanceof rex_article && $current_article->getId() === intval($d2u_machinery->getConfig('used_machine_article_id_rent'))) {
 		// Rental offers
 		print '<div id="tab_rent" class="tab-pane fade machine-tab'. $class_active .'">';
 		print '<div class="row" data-match-height>';
@@ -518,14 +527,14 @@ else {
 		print '</div>';
 	}
 	
-	if($current_article->getId() != $d2u_machinery->getConfig('used_machine_article_id_rent') && $current_article->getId() != $d2u_machinery->getConfig('used_machine_article_id_sale')) {
+	if($current_article instanceof rex_article && $current_article->getId() !== intval($d2u_machinery->getConfig('used_machine_article_id_rent')) && $current_article->getId() !== intval($d2u_machinery->getConfig('used_machine_article_id_sale'))) {
 		print "<p>". $tag_open .'d2u_machinery_used_machines_config_error'. $tag_close ."</p>";
 	}
 
 	print '</div>';
+	print '<div class="col-12 abstand"></div>';
 	print '</div>';
 	
-	print '<div class="col-12 abstand"></div>';
 }
 
 print_consulation_hint();

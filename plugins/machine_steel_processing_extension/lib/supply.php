@@ -77,7 +77,7 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 			$this->name = stripslashes($result->getValue("name"));
 			$this->description = stripslashes($result->getValue("description"));
 			$this->pic = $result->getValue("pic");
-			if($result->getValue("translation_needs_update") != "") {
+			if($result->getValue("translation_needs_update") !== "") {
 				$this->translation_needs_update = $result->getValue("translation_needs_update");
 			}
 
@@ -131,7 +131,7 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 			."WHERE supply_id = ". $this->supply_id;
 		$result_main = \rex_sql::factory();
 		$result_main->setQuery($query_main);
-		if($result_main->getRows() == 0) {
+		if(intval($result_main->getRows()) === 0) {
 			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_steel_supply "
 				."WHERE supply_id = ". $this->supply_id;
 			$result = \rex_sql::factory();
@@ -231,12 +231,12 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 		$pre_save_supply = new Supply($this->supply_id, $this->clang_id);
 		
 		// save priority, but only if new or changed
-		if($this->priority != $pre_save_supply->priority || $this->supply_id == 0) {
+		if($this->priority !== $pre_save_supply->priority || $this->supply_id == 0) {
 			$this->setPriority();
 		}
 		
 		// saving the rest
-		if($this->supply_id == 0 || $pre_save_supply != $this) {
+		if($this->supply_id == 0 || $pre_save_supply !== $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_steel_supply SET "
 					."online_status = '". $this->online_status ."', "
 					."pic = '". $this->pic ."', "
@@ -266,7 +266,7 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 		if($error === FALSE) {
 			// Save the language specific part
 			$pre_save_supply = new Supply($this->supply_id, $this->clang_id);
-			if($pre_save_supply != $this) {
+			if($pre_save_supply !== $this) {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_steel_supply_lang SET "
 						."supply_id = '". $this->supply_id ."', "
 						."clang_id = '". $this->clang_id ."', "

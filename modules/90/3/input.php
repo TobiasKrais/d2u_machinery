@@ -25,7 +25,7 @@ if(rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
 		foreach($values as $key => $value) {
 			echo '<option value="'. $key .'" ';
 	
-			if ("REX_VALUE[3]" == $key) {
+			if ("REX_VALUE[3]" === $key) { /** @phpstan-ignore-line */
 				echo 'selected="selected" ';
 			}
 			echo '>'. $value .'</option>';
@@ -43,8 +43,8 @@ if(rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
 	<div class="col-xs-8">
 		<?php
 			print '<select name="REX_INPUT_VALUE[4]" class="form-control">';
-			print '<option value="3" '. ("REX_VALUE[4]" == 3 ? 'selected="selected" ' : '') .'>3</option>';
-			print '<option value="4" '. ("REX_VALUE[4]" == 4 ? 'selected="selected" ' : '') .'>4</option>';
+			print '<option value="3" '. (intval("REX_VALUE[4]") === 3 ? 'selected="selected" ' : '') .'>3</option>'; /** @phpstan-ignore-line */
+			print '<option value="4" '. (intval("REX_VALUE[4]") === 4 ? 'selected="selected" ' : '') .'>4</option>'; /** @phpstan-ignore-line */
 			print '</select>';
 		?>
 	</div>

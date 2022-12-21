@@ -170,7 +170,7 @@ class Provider {
 				if($provider->type == "europemachinery") {
 					$europemachinery = new EuropeMachinery($provider);
 					$europemachinery_error = $europemachinery->export();
-					if($europemachinery_error != "") {
+					if($europemachinery_error !== "") {
 						$message[] = $provider->name .": ". $europemachinery_error;
 						print $provider->name .": ". $europemachinery_error ."; ";
 						$error = TRUE;
@@ -182,7 +182,7 @@ class Provider {
 				else if($provider->type == "machinerypark") {
 					$machinerypark = new MachineryPark($provider);
 					$machinerypark_error = $machinerypark->export();
-					if($machinerypark_error != "") {
+					if($machinerypark_error !== "") {
 						$message[] = $provider->name .": ". $machinerypark_error;
 						print $provider->name .": ". $machinerypark_error ."; ";
 						$error = TRUE;
@@ -194,7 +194,7 @@ class Provider {
 				else if($provider->type == "mascus") {
 					$mascus = new Mascus($provider);
 					$mascus_error = $mascus->export();
-					if($mascus_error != "") {
+					if($mascus_error !== "") {
 						$message[] = $provider->name .": ". $mascus_error;
 						print $provider->name .": ". $mascus_error ."; ";
 						$error = TRUE;
@@ -207,7 +207,7 @@ class Provider {
 					$linkedin = new SocialExportLinkedIn($provider);
 					if($linkedin->hasAccessToken()) {
 						$linkedin_error = $linkedin->export();
-						if($mascus_error != "") {
+						if($mascus_error !== "") {
 							$message[] = $provider->name .": ". $linkedin_error;
 							print $provider->name .": ". $linkedin_error ."; ";
 							$error = TRUE;
@@ -326,7 +326,7 @@ class Provider {
 				else if(filter_input(INPUT_GET, 'oauth_verifier', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 && isset($_SESSION['linkedin']['requesttoken'])) {
 					// Logged in an verifiert pin available? Get access token and ...
 					$at_error = $linkedin->getAccessToken(filter_input(INPUT_GET, 'oauth_verifier', FILTER_VALIDATE_INT));
-					if($at_error != "") {
+					if($at_error !== "") {
 						return $at_error;
 					}
 				}

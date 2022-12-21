@@ -12,122 +12,122 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var int Database ID
 	 */
-	var $used_machine_id = 0;
+	public int $used_machine_id = 0;
 	
 	/**
 	 * @var int Redaxo Clang ID
 	 */
-	var $clang_id = 0;
+	public int $clang_id = 0;
 	
 	/**
 	 * @var string Machine manufacturer.
 	 */
-	var $manufacturer = "";
+	public string $manufacturer = "";
 
 	/**
 	 * @var string Name or machine model
 	 */
-	var $name = "";
+	public string $name = "";
 	
 	/**
-	 * @var Category Used machine category
+	 * @var Category|bool Used machine category
 	 */
-	var $category = false;
+	public Category|bool $category = false;
 
 	/**
-	 * @var \D2U_Machinery\Contact Machine contact
+	 * @var \D2U_Machinery\Contact|bool Machine contact
 	 */
-	var $contact = FALSE;
+	public \D2U_Machinery\Contact|bool $contact = false;
 
 	/**
 	 * @var string Offer type. This could be "sale" or "rent"
 	 */
-	var $offer_type = "sale";
+	public string $offer_type = "sale";
 
 	/**
 	 * @var string Date string with information concerning the availability of the machine.
 	 */
-	var $availability = "";
+	public string $availability = "";
 
 	/**
 	 * @var string Internal product number of the machine.
 	 */
-	var $product_number = "";
+	public string $product_number = "";
 
 	/**
 	 * @var int Year of construction
 	 */
-	var $year_built = 0;
+	public int $year_built = 0;
 
 	/**
 	 * @var int price
 	 */
-	var $price = 0;
+	public int $price = 0;
 
 	/**
 	 * @var string ISO 4217 currency code. Default is EUR.
 	 */
-	var $currency_code = "EUR";
+	public string $currency_code = "EUR";
 
 	/**
 	 * @var int VAT percentage included in price. 0 is without VAT
 	 */
-	var $vat = 0;
+	public int $vat = 0;
 
 	/**
 	 * @var string Online online_status. Either "online" or "offline"
 	 */
-	var $online_status = "online";
+	public string $online_status = "online";
 	
 	/**
 	 * @var string[] Picture filenames
 	 */
-	var $pics = [];
+	public array $pics = [];
 	
 	/**
-	 * @var Machine Machine objekt for technical data reference
+	 * @var Machine|bool Machine objekt for technical data reference
 	 */
-	var $machine = FALSE;
+	public Machine|bool $machine = FALSE;
 	
 	/**
 	 * @var string Place, where used machine is currently located.
 	 */
-	var $location = "";
+	public string $location = "";
 	
 	/**
 	 * @var string URL with additional information, e.g. an advertisement of the machine.
 	 */
-	var $external_url = "";
+	public string $external_url = "";
 
 	/**
 	 * @var string Teaser. Used for SEO purposes or as teaser in machine list..
 	 */
-	var $teaser = "";
+	public string $teaser = "";
 
 	/**
 	 * @var string Detailed description.
 	 */
-	var $description = "";
+	public string $description = "";
 
 	/**
 	 * @var string[] Download filenames
 	 */
-	var $downloads = [];
+	public array $downloads = [];
 
 	/**
 	 * @var Video[] Videomanager videos
 	 */
-	var $videos = [];
+	public array $videos = [];
 
 	/**
 	 * @var string Needs translation update? "no", "yes" or "delete"
 	 */
-	var $translation_needs_update = "delete";
+	public string $translation_needs_update = "delete";
 
 	/**
 	 * @var string URL of the used machine
 	 */
-	private $url = "";
+	private string $url = "";
 
 	/**
 	 * Constructor. Fetches the object from database
@@ -146,53 +146,57 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 		$num_rows = $result->getRows();
 
 		if ($num_rows > 0) {
-			$this->used_machine_id = $result->getValue("used_machines.used_machine_id");
-			$this->name = stripslashes($result->getValue("name"));
-			$this->category = new Category($result->getValue("category_id"), $this->clang_id);
-			$this->offer_type = $result->getValue("offer_type");
+			$this->used_machine_id = (int) $result->getValue("used_machines.used_machine_id");
+			$this->name = stripslashes((string) $result->getValue("name"));
+			$this->category = new Category((int) $result->getValue("category_id"), $this->clang_id);
+			$this->offer_type = (string) $result->getValue("offer_type");
 			$this->category->setOfferType($this->offer_type);
-			$this->availability = $result->getValue("availability");
-			$this->product_number = $result->getValue("product_number");
-			$this->manufacturer = $result->getValue("manufacturer");
-			$this->year_built = $result->getValue("year_built");
-			$this->price = $result->getValue("price");
-			$this->currency_code = $result->getValue("currency_code");
-			$this->vat = $result->getValue("vat");
-			if($result->getValue("online_status") != "") {
-				$this->online_status = $result->getValue("online_status");
+			$this->availability = (string) $result->getValue("availability");
+			$this->product_number = (string) $result->getValue("product_number");
+			$this->manufacturer = (string) $result->getValue("manufacturer");
+			$this->year_built = (int) $result->getValue("year_built");
+			$this->price = (int) $result->getValue("price");
+			$this->currency_code = (string) $result->getValue("currency_code");
+			$this->vat = (int) $result->getValue("vat");
+			if($result->getValue("online_status") !== "") {
+				$this->online_status = (string) $result->getValue("online_status");
 			}
-			$this->pics = preg_grep('/^\s*$/s', explode(",", $result->getValue("pics")), PREG_GREP_INVERT);
+			$pics = preg_grep('/^\s*$/s', explode(",", (string) $result->getValue("pics")), PREG_GREP_INVERT);
+			$this->pics = is_array($pics) ? $pics : [];
 			if($result->getValue("machine_id") > 0) {
-				$this->machine = new Machine($result->getValue("machine_id"), $clang_id);
+				$this->machine = new Machine((int) $result->getValue("machine_id"), $clang_id);
 			}
-			$this->location = $result->getValue("location");
-			$this->external_url = $result->getValue("external_url");
-			$this->description = stripslashes(htmlspecialchars_decode($result->getValue("description")));
-			$this->downloads = preg_grep('/^\s*$/s', explode(",", $result->getValue("downloads")), PREG_GREP_INVERT);
-			$this->teaser = stripslashes(htmlspecialchars_decode($result->getValue("teaser")));
-			if($result->getValue("translation_needs_update") != "") {
-				$this->translation_needs_update = $result->getValue("translation_needs_update");
+			$this->location = (string) $result->getValue("location");
+			$this->external_url = (string) $result->getValue("external_url");
+			$this->description = stripslashes(htmlspecialchars_decode((string) $result->getValue("description")));
+			$downloads = preg_grep('/^\s*$/s', explode(",", $result->getValue("downloads")), PREG_GREP_INVERT);
+			$this->downloads = is_array($downloads) ? $downloads : [];
+			$this->teaser = stripslashes(htmlspecialchars_decode((string) $result->getValue("teaser")));
+			if((string) $result->getValue("translation_needs_update") !== "") {
+				$this->translation_needs_update = (string) $result->getValue("translation_needs_update");
 			}
 
 			// URL des externen Links bei Bedarf korrigieren
-			if(strlen($this->external_url) > 3 && substr($this->external_url, 0, 4) != "http") {
+			if(strlen($this->external_url) > 3 && substr($this->external_url, 0, 4) !== "http") {
 				$this->external_url = "http://". $this->external_url;
 			}
 			
 			if(rex_plugin::get("d2u_machinery", "contacts")->isAvailable()) {
-				if($result->getValue("contact_id") > 0) {
-					$this->contact = new D2U_Machinery\Contact($result->getValue("contact_id"));
+				if((int) $result->getValue("contact_id") > 0) {
+					$this->contact = new D2U_Machinery\Contact((int) $result->getValue("contact_id"));
 				}
 			}
 
 			// Videos
-			if(\rex_addon::get('d2u_videos')->isAvailable() && $result->getValue("video_ids") != "") {
-				$video_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("video_ids")), PREG_GREP_INVERT);
-				foreach ($video_ids as $video_id) {
-					if($video_id > 0) {
-						$video = new Video($video_id, $clang_id);
-						if($video->getVideoURL() != "") {
-							$this->videos[$video_id] = $video;
+			if(\rex_addon::get('d2u_videos')->isAvailable() && (string) $result->getValue("video_ids") !== "") {
+				$video_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("video_ids")), PREG_GREP_INVERT);
+				if(is_array($video_ids)) {
+					foreach ($video_ids as $video_id) {
+						if($video_id > 0) {
+							$video = new Video($video_id, $clang_id);
+							if($video->getVideoURL() !== "") {
+								$this->videos[$video_id] = $video;
+							}
 						}
 					}
 				}
@@ -251,7 +255,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 			."WHERE used_machine_id = ". $this->used_machine_id;
 		$result_main = \rex_sql::factory();
 		$result_main->setQuery($query_main);
-		if($result_main->getRows() == 0) {
+		if(intval($result_main->getRows()) === 0) {
 			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_used_machines "
 				."WHERE used_machine_id = ". $this->used_machine_id;
 			$result = \rex_sql::factory();
@@ -297,12 +301,12 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 		$query = "SELECT lang.used_machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_used_machines_lang AS lang "
 			."LEFT JOIN ". \rex::getTablePrefix() ."d2u_machinery_used_machines AS machine "
 				."ON lang.used_machine_id = machine.used_machine_id AND clang_id = ". $clang_id ." ";
-		if($only_online || $offer_type != "") {
+		if($only_online || $offer_type !== "") {
 			$where = [];
 			if($only_online) {
 				$where[] = "online_status = 'online'";
 			}
-			if($offer_type != "") {
+			if($offer_type !== "") {
 				$where[] = "offer_type = '". $offer_type ."'";
 			}
 			$query .= "WHERE ". implode(" AND ", $where);
@@ -398,7 +402,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 		$query = "SELECT used_machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_used_machines "
 				."WHERE category_id = ". $category->category_id ." "
 					."AND online_status = 'online' ";
-		if($offer_type != "") {
+		if($offer_type !== "") {
 			$query .= "AND offer_type = '". $offer_type ."' ";
 
 		}
@@ -451,7 +455,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Returns the URL of this object.
-	 * @param string $including_domain TRUE if Domain name should be included
+	 * @param boolean $including_domain TRUE if Domain name should be included
 	 * @return string URL
 	 */
 	public function getURL($including_domain = FALSE) {
@@ -496,7 +500,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 		// Save the not language specific part
 		$pre_save_object = new UsedMachine($this->used_machine_id, $this->clang_id);
 		$regenerate_urls = false;
-		if($this->used_machine_id == 0 || $pre_save_object != $this) {
+		if($this->used_machine_id == 0 || $pre_save_object !== $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_used_machines SET "
 					."name = '". addslashes($this->name) ."', "
 					."category_id = ". $this->category->category_id .", "
@@ -536,7 +540,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 				$error = $result->hasError();
 			}
 			
-			if(!$error && $pre_save_object->name != $this->name) {
+			if(!$error && $pre_save_object->name !== $this->name) {
 				$regenerate_urls = true;
 			}
 		}
@@ -544,7 +548,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 		if($error === FALSE) {
 			// Save the language specific part
 			$pre_save_object = new UsedMachine($this->used_machine_id, $this->clang_id);
-			if($pre_save_object != $this) {
+			if($pre_save_object !== $this) {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_used_machines_lang SET "
 						."used_machine_id = '". $this->used_machine_id ."', "
 						."clang_id = '". $this->clang_id ."', "

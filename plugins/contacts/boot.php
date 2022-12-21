@@ -6,10 +6,11 @@ if(rex::isBackend()) {
 
 /**
  * Checks if media is used by this addon
- * @param rex_extension_point $ep Redaxo extension point
+ * @param rex_extension_point<string> $ep Redaxo extension point
  * @return string[] Warning message as array
  */
 function rex_d2u_machinery_contacts_media_is_in_use(rex_extension_point $ep) {
+	/** @var string[] $warning */
 	$warning = $ep->getSubject();
 	$params = $ep->getParams();
 	$filename = addslashes($params['filename']);
@@ -24,7 +25,7 @@ function rex_d2u_machinery_contacts_media_is_in_use(rex_extension_point $ep) {
 	for($i = 0; $i < $sql_contacts->getRows(); $i++) {
 		$message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/contact&func=edit&entry_id='. $sql_contacts->getValue('contact_id') .'\')">'.
 			 rex_i18n::msg('d2u_machinery_meta_title') ." - ". rex_i18n::msg('d2u_machinery_contacts') .': '. $sql_contacts->getValue('name') . '</a>';
-		if(!in_array($message, $warning)) {
+		if(!in_array($message, $warning, true)) {
 			$warning[] = $message;
 		}
 		$sql_contacts->next();

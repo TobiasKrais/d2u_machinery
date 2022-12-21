@@ -60,7 +60,7 @@ class Agitator implements \D2U_Helper\ITranslationHelper {
 			$this->name = stripslashes($result->getValue("name"));
 			$this->pic = $result->getValue("pic");
 			$this->description = stripslashes(htmlspecialchars_decode($result->getValue("description")));
-			if($result->getValue("translation_needs_update") != "") {
+			if($result->getValue("translation_needs_update") !== "") {
 				$this->translation_needs_update = $result->getValue("translation_needs_update");
 			}
 		}
@@ -83,7 +83,7 @@ class Agitator implements \D2U_Helper\ITranslationHelper {
 			."WHERE agitator_id = ". $this->agitator_id;
 		$result_main = \rex_sql::factory();
 		$result_main->setQuery($query_main);
-		if($result_main->getRows() == 0) {
+		if(intval($result_main->getRows()) === 0) {
 			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_agitators "
 				."WHERE agitator_id = ". $this->agitator_id;
 			$result = \rex_sql::factory();
@@ -173,7 +173,7 @@ class Agitator implements \D2U_Helper\ITranslationHelper {
 		$pre_save_agitator = new Agitator($this->agitator_id, $this->clang_id);
 		
 		// saving the rest
-		if($this->agitator_id == 0 || $pre_save_agitator != $this) {
+		if($this->agitator_id == 0 || $pre_save_agitator !== $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_agitators SET "
 					."pic = '". $this->pic ."' ";
 
@@ -195,7 +195,7 @@ class Agitator implements \D2U_Helper\ITranslationHelper {
 		if($error === FALSE) {
 			// Save the language specific part
 			$pre_save_agitator = new Agitator($this->agitator_id, $this->clang_id);
-			if($pre_save_agitator != $this) {
+			if($pre_save_agitator !== $this) {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_agitators_lang SET "
 						."agitator_id = '". $this->agitator_id ."', "
 						."clang_id = '". $this->clang_id ."', "

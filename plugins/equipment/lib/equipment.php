@@ -12,37 +12,37 @@ class Equipment implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var int Database ID
 	 */
-	var $equipment_id = 0;
+	public int $equipment_id = 0;
 	
 	/**
 	 * @var int Redaxo clang id
 	 */
-	var $clang_id = 0;
+	public int $clang_id = 0;
 		
 	/**
 	 * @var string Article number
 	 */
-	var $article_number = "";
+	public string $article_number = "";
 	
 	/**
-	 * @var EquipmentGroup Equipment group
+	 * @var EquipmentGroup|bool Equipment group
 	 */
-	var $group = FALSE;
+	public EquipmentGroup|bool $group = false;
 	
 	/**
 	 * @var String Status. Either "online" or "offline".
 	 */
-	var $online_status = "offline";
+	public string $online_status = "offline";
 	
 	/**
 	 * @var string Name
 	 */
-	var $name = "";
+	public string $name = "";
 	
 	/**
 	 * @var string "yes" if translation needs update
 	 */
-	var $translation_needs_update = "delete";
+	public string $translation_needs_update = "delete";
 
 	/**
 	 * Constructor. Reads a object stored in database.
@@ -61,15 +61,15 @@ class Equipment implements \D2U_Helper\ITranslationHelper {
 		$num_rows = $result->getRows();
 
 		if ($num_rows > 0) {
-			$this->equipment_id = $result->getValue("equipment_id");
-			$this->article_number = $result->getValue("article_number");
-			$this->online_status = $result->getValue("online_status");
-			$this->name = stripslashes($result->getValue("name"));
+			$this->equipment_id = (int) $result->getValue("equipment_id");
+			$this->article_number = (string) $result->getValue("article_number");
+			$this->online_status = (string) $result->getValue("online_status");
+			$this->name = stripslashes((string)  $result->getValue("name"));
 			if($result->getValue("group_id") > 0) {
-				$this->group = new EquipmentGroup($result->getValue("group_id"), $clang_id);
+				$this->group = new EquipmentGroup((int) $result->getValue("group_id"), $clang_id);
 			}
-			if($result->getValue("translation_needs_update") != "") {
-				$this->translation_needs_update = $result->getValue("translation_needs_update");
+			if((string) $result->getValue("translation_needs_update") !== "") {
+				$this->translation_needs_update = (string) $result->getValue("translation_needs_update");
 			}
 		}
 	}
@@ -117,7 +117,7 @@ class Equipment implements \D2U_Helper\ITranslationHelper {
 			."WHERE equipment_id = ". $this->equipment_id;
 		$result_main = \rex_sql::factory();
 		$result_main->setQuery($query_main);
-		if($result_main->getRows() == 0) {
+		if(intval($result_main->getRows()) === 0) {
 			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_equipments "
 				."WHERE equipment_id = ". $this->equipment_id;
 			$result = \rex_sql::factory();
@@ -208,7 +208,7 @@ class Equipment implements \D2U_Helper\ITranslationHelper {
 		$pre_save_object = new Equipment($this->equipment_id, $this->clang_id);
 
 		// saving the rest
-		if($this->equipment_id == 0 || $pre_save_object != $this) {
+		if($this->equipment_id == 0 || $pre_save_object !== $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_equipments SET "
 					."article_number = '". $this->article_number ."', "
 					."group_id = ". ($this->group !== FALSE ? $this->group->group_id : 0) .", "
@@ -232,7 +232,7 @@ class Equipment implements \D2U_Helper\ITranslationHelper {
 		if($error === FALSE) {
 			// Save the language specific part
 			$pre_save_object = new Equipment($this->equipment_id, $this->clang_id);
-			if($pre_save_object != $this) {
+			if($pre_save_object !== $this) {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_equipments_lang SET "
 						."equipment_id = '". $this->equipment_id ."', "
 						."clang_id = '". $this->clang_id ."', "

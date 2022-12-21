@@ -12,688 +12,688 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var int Machine id
 	 */
-	var $machine_id = 0;
+	public int $machine_id = 0;
 	
 	/**
 	 * @var int Redaxo language id
 	 */
-	var $clang_id = 0;
+	public int $clang_id = 0;
 
 	/**
 	 * @var string Machine name
 	 */
-	var $name = "";
+	public string $name = "";
 
 	/**
 	 * @var string[] Machine pictures
 	 */
-	var $pics = [];
+	public array $pics = [];
 
 	/**
-	 * @var Category Machine category
+	 * @var Category|false Machine category
 	 */
-	var $category = FALSE;
+	public Category|false $category = false;
 
 	/**
 	 * @var \D2U_Machinery\Contact Machine contact
 	 */
-	var $contact = FALSE;
+	public \D2U_Machinery\Contact|false $contact = false;
 
 	/**
 	 * @var int[] Usage area IDs
 	 */
-	var $usage_area_ids = [];
+	public array $usage_area_ids = [];
 
 	/**
 	 * @var int[] IDs of alternative machines
 	 */
-	var $alternative_machine_ids = [];
+	public array $alternative_machine_ids = [];
 
 	/**
 	 * @var int[] Machine feature ids
 	 */
-	var $feature_ids = [];
+	public array $feature_ids = [];
 
 	/**
 	 * @var int[] Machine option ids
 	 */
-	var $option_ids = [];
+	public array $option_ids = [];
 
 	/**
 	 * @var string Machine accessory ids.
 	 */
-	var $product_number = "";
+	public string $product_number = "";
 
 	/**
 	 * @var int[] Machine business ids.
 	 */
-	var $industry_sector_ids = [];
+	public array $industry_sector_ids = [];
 
 	/**
 	 * @var int Redaxo article id for additional software information
 	 */
-	var $article_id_software = 0;
+	public int $article_id_software = 0;
 
 	/**
 	 * @var int Redaxo article id for additional service information
 	 */
-	var $article_id_service = 0;
+	public int $article_id_service = 0;
 
 	/**
 	 * @var int[] Array with Redaxo article ids with customer success stories
 	 */
-	var $article_ids_references = [];
+	public array $article_ids_references = [];
 
 	/**
 	 * @var String Status. Either "online" or "offline".
 	 */
-	var $online_status = "offline";
+	public string $online_status = "offline";
 	
 	/**
 	 * @var int[] Certificate ids
 	 */
-	var $certificate_ids = [];
+	public array $certificate_ids = [];
 
 	/**
 	 * @var int Agitator type id
 	 */
-	var $agitator_type_id = 0;
+	public int $agitator_type_id = 0;
 
 	/**
 	 * @var int Max. viscosity in mPas
 	 */
-	var $viscosity = 0;
+	public int $viscosity = 0;
 
 	/**
 	 * @var string Engine power
 	 */
-	var $engine_power = "";
+	public string $engine_power = "";
 
 	/**
-	 * @var boolean Is engine power frequency controlled?
+	 * @var bool Is engine power frequency controlled?
 	 */
-	var $engine_power_frequency_controlled = false;
+	public bool $engine_power_frequency_controlled = false;
 
 	/**
 	 * @var int Machine length
 	 */
-	var $length = 0;
+	public int $length = 0;
 
 	/**
 	 * @var int Machine width
 	 */
-	var $width = 0;
+	public int $width = 0;
 
 	/**
 	 * @var int Machine height
 	 */
-	var $height = 0;
+	public int $height = 0;
 
 	/**
 	 * @var int Machine depth
 	 */
-	var $depth = 0;
+	public int $depth = 0;
 
 	/**
 	 * @var string Machine weight
 	 */
-	var $weight = "";	
+	public string $weight = "";	
 	
 	/**
 	 * @var string Machine operating voltage (v)
 	 */
-	var $operating_voltage_v = "";	
+	public string $operating_voltage_v = "";	
 	
 	/**
 	 * @var string Machine operating voltage (hz)
 	 */
-	var $operating_voltage_hz = "";	
+	public string $operating_voltage_hz = "";	
 	
 	/**
 	 * @var string Machine operating voltage (a)
 	 */
-	var $operating_voltage_a = "";	
+	public string $operating_voltage_a = "";	
 
 	/**
 	 * @var int Sort Priority
 	 */
-	var $priority = 0;
+	public int $priority = 0;
 	
 	/**
 	 * @var Process[] machine_steel_processing_extension: Process objects
 	 */
-	var $processes = [];
+	public array $processes = [];
 	
 	/**
 	 * @var Procedure[] machine_steel_processing_extension: Procedure objects
 	 */
-	var $procedures = [];
+	public array $procedures = [];
 	
 	/**
 	 * @var Material[] machine_steel_processing_extension: Material objects
 	 */
-	var $materials = [];
+	public array $materials = [];
 	
 	/**
 	 * @var Tool[] machine_steel_processing_extension: Tool objects
 	 */
-	var $tools = [];
+	public array $tools = [];
 	
 	/**
 	 * @var string machine_steel_processing_extension: Automation - Supply single stroke (mm)
 	 */
-	var $automation_supply_single_stroke = "";	
+	public string $automation_supply_single_stroke = "";	
 
 	/**
 	 * @var string machine_steel_processing_extension: Automation - Multiple single stroke (mm)
 	 */
-	var $automation_supply_multi_stroke = "";
+	public string $automation_supply_multi_stroke = "";
 
 	/**
 	 * @var string machine_steel_processing_extension: Automation - Feed rate range (mm/min)
 	 */
-	var $automation_feedrate = "";
+	public string $automation_feedrate = "";
 
 	/**
 	 * @var string machine_steel_processing_extension: Automation - Feed rate range for saw blades (mm/min)
 	 */
-	var $automation_feedrate_sawblade = "";
+	public string $automation_feedrate_sawblade = "";
 
 	/**
 	 * @var int machine_steel_processing_extension: Automation - Rush leader flyback (mm/min)
 	 */
-	var $automation_rush_leader_flyback = 0;
+	public int $automation_rush_leader_flyback = 0;
 
 	/**
 	 * @var Automation[] machine_steel_processing_extension: Automation grade objects
 	 */
-	var $automation_automationgrades = [];
+	public array $automation_automationgrades = [];
 	
 	/**
 	 * @var int[] machine_steel_processing_extension: Automation supply ids
 	 */
-	var $automation_supply_ids = [];
+	public array $automation_supply_ids = [];
 
 	/**
 	 * @var string machine_steel_processing_extension: Workspace (mm x mm or only mm).
 	 */
-	var $workspace = "";	
+	public string $workspace = "";
 
 	/**
 	 * @var string machine_steel_processing_extension: Workspace square material (mm x mm or only mm).
 	 */
-	var $workspace_square = "";	
+	public string $workspace_square = "";
 
 	/**
 	 * @var string machine_steel_processing_extension: Workspace flat material (mm x mm or only mm).
 	 */
-	var $workspace_flat = "";	
+	public string $workspace_flat = "";
 
 	/**
 	 * @var string machine_steel_processing_extension: Workspace plates (mm x mm or only mm).
 	 */
-	var $workspace_plate = "";	
+	public string $workspace_plate = "";
 
 	/**
 	 * @var string machine_steel_processing_extension: Workspace for profiles (mm x mm or only mm).
 	 */
-	var $workspace_profile = "";	
+	public string $workspace_profile = "";	
 
 	/**
 	 * @var string machine_steel_processing_extension: Workspace for angle steels (mm x mm x mm).
 	 */
-	var $workspace_angle_steel = "";	
+	public string $workspace_angle_steel = "";	
 
 	/**
 	 * @var string machine_steel_processing_extension: Workspace for round materials (mm x mm or only mm).
 	 */
-	var $workspace_round = "";	
+	public string $workspace_round = "";	
 
 	/**
 	 * @var string machine_steel_processing_extension: Minimum Workspace (mm x mm x mm or mm x mm or only mm).
 	 */
-	var $workspace_min = "";	
+	public string $workspace_min = "";	
 
 	/**
 	 * @var string machine_steel_processing_extension: sheet width range (mm).
 	 */
-	var $sheet_width = "";	
+	public string $sheet_width = "";	
 
 	/**
 	 * @var string machine_steel_processing_extension: sheet length range (mm).
 	 */
-	var $sheet_length = "";	
+	public string $sheet_length = "";	
 
 	/**
 	 * @var string machine_steel_processing_extension: sheet thickness ragne (mm).
 	 */
-	var $sheet_thickness = "";	
+	public string $sheet_thickness = "";	
 
 	/**
 	 * @var string machine_steel_processing_extension: number of tool changer locations.
 	 */
-	var $tool_changer_locations = "";	
+	public string $tool_changer_locations = "";	
 
 	/**
 	 * @var int machine_steel_processing_extension: number of drilling units from below.
 	 */
-	var $drilling_unit_below = 0;	
+	public int $drilling_unit_below = 0;	
 
 	/**
 	 * @var string machine_steel_processing_extension: number of vertical drilling units.
 	 */
-	var $drilling_unit_vertical = "";	
+	public string $drilling_unit_vertical = "";	
 
 	/**
 	 * @var string machine_steel_processing_extension: number of horizontal drilling units.
 	 */
-	var $drilling_unit_horizontal = "";	
+	public string $drilling_unit_horizontal = "";	
 
 	/**
 	 * @var string machine_steel_processing_extension: drilling whole diameter (range in mm).
 	 */
-	var $drilling_diameter = "";	
+	public string $drilling_diameter = "";	
 
 	/**
 	 * @var string machine_steel_processing_extension: number of drilling tools per axis.
 	 */
-	var $drilling_tools_axis = "";	
+	public string $drilling_tools_axis = "";	
 
 	/**
 	 * @var string machine_steel_processing_extension: axis driver power.
 	 */
-	var $drilling_axis_drive_power = "";	
+	public string $drilling_axis_drive_power = "";	
 
 	/**
 	 * @var string machine_steel_processing_extension: drilling speed (rpm).
 	 */
-	var $drilling_rpm_speed = "";	
+	public string $drilling_rpm_speed = "";	
 
 	/**
 	 * @var string machine_steel_processing_extension: saw blade diameter (mm, sometimes mm x mm).
 	 */
-	var $saw_blade = "";	
+	public string $saw_blade = "";	
 
 	/**
 	 * @var string machine_steel_processing_extension: saw band dimensions (mm x mm x mm).
 	 */
-	var $saw_band = "";	
+	public string $saw_band = "";	
 
 	/**
 	 * @var string machine_steel_processing_extension: saw band tilt range (°).
 	 */
-	var $saw_band_tilt = "";	
+	public string $saw_band_tilt = "";	
 
 	/**
 	 * @var string machine_steel_processing_extension: saw cutting speed range (mm).
 	 */
-	var $saw_cutting_speed = "";	
+	public string $saw_cutting_speed = "";	
 
 	/**
 	 * @var string machine_steel_processing_extension: saw miter (°).
 	 */
-	var $saw_miter = "";
+	public string $saw_miter = "";
 
 	/**
 	 * @var int machine_steel_processing_extension: Max. bevel angle (°).
 	 */
-	var $bevel_angle = 0;
+	public int $bevel_angle = 0;
 
 	/**
 	 * @var string machine_steel_processing_extension: punching diameter range (mm).
 	 */
-	var $punching_diameter = "";
+	public string $punching_diameter = "";
 
 	/**
-	 * @var string machine_steel_processing_extension: punching power.
+	 * @var int machine_steel_processing_extension: punching power.
 	 */
-	var $punching_power = 0;
+	public int $punching_power = 0;
 
 	/**
 	 * @var string machine_steel_processing_extension: number of punching tools.
 	 */
-	var $punching_tools = "";
+	public string $punching_tools = "";
 
 	/**
-	 * @var string machine_steel_processing_extension: angle steel single cut.
+	 * @var int machine_steel_processing_extension: angle steel single cut.
 	 */
-	var $shaving_unit_angle_steel_single_cut = 0;	
+	public int $shaving_unit_angle_steel_single_cut = 0;	
 
 	/**
 	 * @var Profile[] machine_steel_processing_extension: Profile area objects
 	 */
-	var $profiles = [];
+	public array $profiles = [];
 
 	/**
 	 * @var string machine_steel_processing_extension: carrier width (mm).
 	 */
-	var $carrier_width = "";	
+	public string $carrier_width = "";	
 
 	/**
 	 * @var string machine_steel_processing_extension: carrier height (mm).
 	 */
-	var $carrier_height = "";	
+	public string $carrier_height = "";	
 
 	/**
 	 * @var int machine_steel_processing_extension: carrier weight (kg).
 	 */
-	var $carrier_weight = 0;	
+	public int $carrier_weight = 0;	
 
 	/**
 	 * @var string machine_steel_processing_extension: flange thickness min. / max. (mm).
 	 */
-	var $flange_thickness = "";	
+	public string $flange_thickness = "";	
 
 	/**
 	 * @var string machine_steel_processing_extension: web thickness min. / max. (mm).
 	 */
-	var $web_thickness = "";	
+	public string $web_thickness = "";	
 
 	/**
 	 * @var string machine_steel_processing_extension: component length min. / max. (mm).
 	 */
-	var $component_length = "";	
+	public string $component_length = "";	
 
 	/**
 	 * @var int machine_steel_processing_extension: component weight (kg).
 	 */
-	var $component_weight = 0;	
+	public int $component_weight = 0;	
 
 	/**
 	 * @var Welding[] machine_steel_processing_extension: welding process objects
 	 */
-	var $weldings = [];
+	public array $weldings = [];
 
 	/**
 	 * @var int machine_steel_processing_extension: welding thickness ((a) mm).
 	 */
-	var $welding_thickness = 0;	
+	public int $welding_thickness = 0;	
 
 	/**
 	 * @var string machine_steel_processing_extension: welding_wire_thickness (mm).
 	 */
-	var $welding_wire_thickness = "";	
+	public string $welding_wire_thickness = "";	
 
 	/**
 	 * @var string machine_steel_processing_extension: beam machine continuous opening (mm).
 	 */
-	var $beam_continuous_opening = "";	
+	public string $beam_continuous_opening = "";	
 
 	/**
 	 * @var int machine_steel_processing_extension: number of turbines.
 	 */
-	var $beam_turbines = 0;	
+	public int $beam_turbines = 0;	
 
 	/**
 	 * @var string machine_steel_processing_extension: beam machine power per turbine (kW).
 	 */
-	var $beam_turbine_power = "";	
+	public string $beam_turbine_power = "";	
 
 	/**
 	 * @var string machine_steel_processing_extension: beam machine number of color guns.
 	 */
-	var $beam_color_guns = "";	
+	public string $beam_color_guns = "";	
 
 	/**
 	 * @var string Language specific name
 	 */
-	var $lang_name = "";
+	public string $lang_name = "";
 
 	/**
 	 * @var string Teaser
 	 */
-	var $teaser = "";
+	public string $teaser = "";
 
 	/**
 	 * @var string Machine description
 	 */
-	var $description = "";
+	public string $description = "";
 
 	/**
 	 * @var string Machine benefits (long version)
 	 */
-	var $benefits_long = "";
+	public string $benefits_long = "";
 
 	/**
 	 * @var string Machine benefits
 	 */
-	var $benefits_short = "";
+	public string $benefits_short = "";
 
 	/**
 	 * @var string[] File names of PDF files for the machine
 	 */
-	var $pdfs = [];
+	public array $pdfs = [];
 
 	/**
 	 * @var string Machine leaflet (PDF file)
 	 */
-	var $leaflet = "";
+	public string $leaflet = "";
 
 	/**
 	 * @var Video[] Videomanager videos
 	 */
-	var $videos = [];
+	public array $videos = [];
 	
 	/**
 	 * @var string Needs translation update? "no", "yes" or "delete"
 	 */
-	var $translation_needs_update = "delete";
+	public string $translation_needs_update = "delete";
 
 	/**
 	 * @var String URL der Maschine
 	 */
-	private $url = "";
+	private string $url = "";
 	
 	/* Variables from machine_construction_equipment_extension following */
 
 	/**
 	 * @var string Airless devices: hose connection (")
 	 */
-	var $airless_hose_connection = "";
+	public string $airless_hose_connection = "";
 
 	/**
 	 * @var int Airless devices: hose diameter (mm)
 	 */
-	var $airless_hose_diameter = 0;
+	public int $airless_hose_diameter = 0;
 
 	/**
 	 * @var int Airless devices: maximum hose length (m)
 	 */
-	var $airless_hose_length = 0;
+	public int $airless_hose_length = 0;
 
 	/**
 	 * @var string Airless devices: maximum nozzle size
 	 */
-	var $airless_nozzle_size = "";
+	public string $airless_nozzle_size = "";
 
 	/**
 	 * @var string Containers: maximum capacity (kg)
 	 */
-	var $container_capacity = "";
+	public string $container_capacity = "";
 
 	/**
 	 * @var string Containers: connection port
 	 */
-	var $container_connection_port = "";
+	public string $container_connection_port = "";
 
 	/**
 	 * @var string Containers: conveying wave
 	 */
-	var $container_conveying_wave = "";
+	public string $container_conveying_wave = "";
 
 	/**
 	 * @var string Containers: mixing performance (l/min)
 	 */
-	var $container_mixing_performance = "";
+	public string $container_mixing_performance = "";
 
 	/**
 	 * @var int Containers: water connection pressure (bar)
 	 */
-	var $container_waterconnect_pressure = 0;
+	public int $container_waterconnect_pressure = 0;
 
 	/**
 	 * @var string Containers: water connection diameter (")
 	 */
-	var $container_waterconnect_diameter = "";
+	public string $container_waterconnect_diameter = "";
 
 	/**
 	 * @var int Containers: empty container weight (kg)
 	 */
-	var $container_weight_empty = 0;
+	public int $container_weight_empty = 0;
 
 	/**
 	 * @var string Cutting devices: maximum cutting depth (cm)
 	 */
-	var $cutters_cutting_depth = "";
+	public string $cutters_cutting_depth = "";
 
 	/**
 	 * @var int Cutting devices: maximum cutting length (cm)
 	 */
-	var $cutters_cutting_length = 0;
+	public int $cutters_cutting_length = 0;
 
 	/**
 	 * @var string Cutting devices: rod length (mm)
 	 */
-	var $cutters_rod_length = "";
+	public string $cutters_rod_length = "";
 
 	/**
 	 * @var int Tillage machines: beam power on concrete (m²/h)
 	 */
-	var $floor_beam_power_on_concrete = 0;
+	public int $floor_beam_power_on_concrete = 0;
 
 	/**
 	 * @var int Tillage machines: dust extraction connection size (mm)
 	 */
-	var $floor_dust_extraction_connection = 0;
+	public int $floor_dust_extraction_connection = 0;
 
 	/**
 	 * @var string Tillage machines: feedrate (m/min)
 	 */
-	var $floor_feedrate = "";
+	public string $floor_feedrate = "";
 
 	/**
 	 * @var string Tillage machines: filter connection (mm)
 	 */
-	var $floor_filter_connection = "";
+	public string $floor_filter_connection = "";
 
 	/**
 	 * @var string Tillage machines: rotations (min-1)
 	 */
-	var $floor_rotations = "";
+	public string $floor_rotations = "";
 
 	/**
 	 * @var string Tillage machines: working pressure (kg)
 	 */
-	var $floor_working_pressure = "";
+	public string $floor_working_pressure = "";
 
 	/**
 	 * @var int Tillage machines: working width (mm)
 	 */
-	var $floor_working_width = 0;
+	public int $floor_working_width = 0;
 
 	/**
 	 * @var int Grinding machines: grinding plate (cm²)
 	 */
-	var $grinder_grinding_plate = 0;
+	public int $grinder_grinding_plate = 0;
 
 	/**
 	 * @var int Grinding machines: grinding wheel (mm)
 	 */
-	var $grinder_grinding_wheel = 0;
+	public int $grinder_grinding_wheel = 0;
 
 	/**
 	 * @var string Grinding machines: working pressure (u/min)
 	 */
-	var $grinder_rotational_frequency = "";
+	public string $grinder_rotational_frequency = "";
 
 	/**
 	 * @var string Grinding machines: sanding (u/min)
 	 */
-	var $grinder_sanding = "";
+	public string $grinder_sanding = "";
 
 	/**
 	 * @var int Grinding machines: vacuum connection (mm)
 	 */
-	var $grinder_vacuum_connection = 0;
+	public int $grinder_vacuum_connection = 0;
 
 	/**
 	 * @var string Pumps and other machines: operating pressure (bar)
 	 */
-	var $operating_pressure = "";
+	public string $operating_pressure = "";
 
 	/**
 	 * @var string Pumps: max. flow volume (l/min)
 	 */
-	var $pump_flow_volume = "";
+	public string $pump_flow_volume = "";
 
 	/**
 	 * @var int Pumps: max. conveying distance (m)
 	 */
-	var $pump_conveying_distance = 0;
+	public int $pump_conveying_distance = 0;
 
 	/**
 	 * @var int Pumps: max. pressure height (m)
 	 */
-	var $pump_pressure_height = 0;
+	public int $pump_pressure_height = 0;
 
 	/**
 	 * @var int Pumps: filling (mm)
 	 */
-	var $pump_filling = 0;
+	public int $pump_filling = 0;
 
 	/**
 	 * @var string Pumps: maximum grain size (mm)
 	 */
-	var $pump_grain_size = "";
+	public string $pump_grain_size = "";
 
 	/**
 	 * @var string Pumps: material container (l)
 	 */
-	var $pump_material_container = "";
+	public string $pump_material_container = "";
 
 	/**
 	 * @var int Waste water containers: capacity (l)
 	 */
-	var $waste_water_capacity = 0;
+	public int $waste_water_capacity = 0;
 
 	/**
 	 * @var string Description shown in technical data overview
 	 */
-	var $description_technical = "";
+	public string $description_technical = "";
 
 	/**
 	 * @var string[] Delivery set picture name
 	 */
-	var $pictures_delivery_set = [];
+	public array $pictures_delivery_set = [];
 
 	/**
 	 * @var string Basic delivery set description
 	 */
-	var $delivery_set_basic = "";
+	public string $delivery_set_basic = "";
 	
 	/**
 	 * @var string Conversion delivery set description
 	 */
-	var $delivery_set_conversion = "";
+	public string $delivery_set_conversion = "";
 	
 	/**
 	 * @var string Full delivery set description
 	 */
-	var $delivery_set_full = "";
+	public string $delivery_set_full = "";
 
 	/* Variables from service_options plugin following */
 
 	/**
 	 * @var int[] Machine service option ids
 	 */
-	var $service_option_ids = [];
+	public array $service_option_ids = [];
 
 	/* Variables from equipment plugin following */
 
 	/**
 	 * @var int[] Machine equipment ids
 	 */
-	var $equipment_ids = [];
+	public array $equipment_ids = [];
 
 	/**
 	 * Fetches a machine object from database or creates an empty machine object.
@@ -712,207 +712,235 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 		$num_rows = $result->getRows();
 
 		if($num_rows > 0) {
-			$this->machine_id = $result->getValue("machine_id");
-			$this->name = stripslashes($result->getValue("name"));
-			$this->pics = preg_grep('/^\s*$/s', explode(",", $result->getValue("pics")), PREG_GREP_INVERT);
-			$this->category = new Category($result->getValue("category_id"), $clang_id);
-			$this->alternative_machine_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("alternative_machine_ids")), PREG_GREP_INVERT);
-			$this->product_number = $result->getValue("product_number");
-			$this->article_id_software = $result->getValue("article_id_software");
-			$this->article_id_service = $result->getValue("article_id_service");
-			$this->article_ids_references = preg_grep('/^\s*$/s', explode(",", $result->getValue("article_ids_references")), PREG_GREP_INVERT);
-			$this->online_status = $result->getValue("online_status");
-			$this->engine_power = $result->getValue("engine_power");
-			$this->engine_power_frequency_controlled = $result->getValue("engine_power_frequency_controlled") == "true" ? TRUE : FALSE;
-			$this->length = $result->getValue("length");
-			$this->width = $result->getValue("width");
-			$this->height = $result->getValue("height");
-			$this->depth = $result->getValue("depth");
-			$this->weight = $result->getValue("weight");
-			$this->operating_voltage_v = $result->getValue("operating_voltage_v");
-			$this->operating_voltage_hz = $result->getValue("operating_voltage_hz");
-			$this->operating_voltage_a = $result->getValue("operating_voltage_a");
-			$this->lang_name = stripslashes($result->getValue("lang_name"));
-			$this->teaser = stripslashes(htmlspecialchars_decode($result->getValue("teaser")));
-			$this->description = stripslashes(htmlspecialchars_decode($result->getValue("description")));
-			$this->benefits_long = stripslashes(htmlspecialchars_decode($result->getValue("benefits_long")));
-			$this->benefits_short = stripslashes(htmlspecialchars_decode($result->getValue("benefits_short")));
-			$pdfs = preg_grep('/^\s*$/s', explode(",", $result->getValue("pdfs")), PREG_GREP_INVERT);
-			$this->leaflet = $result->getValue("leaflet");
-			$this->pdfs = is_array($pdfs) ? $pdfs : ($pdfs && strlen($pdfs) > 4 ? [$pdfs] : []);
-			$this->priority = $result->getValue("priority");
-			if($result->getValue("translation_needs_update") != "") {
-				$this->translation_needs_update = $result->getValue("translation_needs_update");
+			$this->machine_id = (int) $result->getValue("machine_id");
+			$this->name = stripslashes((string) $result->getValue("name"));
+			$pics = preg_grep('/^\s*$/s', explode(",", (string) $result->getValue("pics")), PREG_GREP_INVERT);
+			$this->pics = is_array($pics) ? $pics : [];
+			$this->category = new Category((int)$result->getValue("category_id"), $clang_id);
+			$alternative_machine_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("alternative_machine_ids")), PREG_GREP_INVERT);
+			$this->alternative_machine_ids = is_array($alternative_machine_ids) ? $alternative_machine_ids : [];
+			$this->product_number = (string) $result->getValue("product_number");
+			$this->article_id_software = (int) $result->getValue("article_id_software");
+			$this->article_id_service = (int) $result->getValue("article_id_service");
+			$article_ids_references = preg_grep('/^\s*$/s', explode(",", (string) $result->getValue("article_ids_references")), PREG_GREP_INVERT);
+			$this->article_ids_references = is_array($article_ids_references) ? $article_ids_references : [];
+			$this->online_status = (string) $result->getValue("online_status");
+			$this->engine_power = (string) $result->getValue("engine_power");
+			$this->engine_power_frequency_controlled = (string) $result->getValue("engine_power_frequency_controlled") === "true" ? TRUE : FALSE;
+			$this->length = (int) $result->getValue("length");
+			$this->width = (int) $result->getValue("width");
+			$this->height = (int) $result->getValue("height");
+			$this->depth = (int) $result->getValue("depth");
+			$this->weight = (string) $result->getValue("weight");
+			$this->operating_voltage_v = (string) $result->getValue("operating_voltage_v");
+			$this->operating_voltage_hz = (string) $result->getValue("operating_voltage_hz");
+			$this->operating_voltage_a = (string) $result->getValue("operating_voltage_a");
+			$this->lang_name = stripslashes((string) $result->getValue("lang_name"));
+			$this->teaser = stripslashes(htmlspecialchars_decode((string) $result->getValue("teaser")));
+			$this->description = stripslashes(htmlspecialchars_decode((string) $result->getValue("description")));
+			$this->benefits_long = stripslashes(htmlspecialchars_decode((string) $result->getValue("benefits_long")));
+			$this->benefits_short = stripslashes(htmlspecialchars_decode((string) $result->getValue("benefits_short")));
+			$pdfs = preg_grep('/^\s*$/s', explode(",", (string) $result->getValue("pdfs")), PREG_GREP_INVERT);
+			$this->pdfs = is_array($pdfs) ? $pdfs : [];
+			$this->leaflet = (string) $result->getValue("leaflet");
+			$this->priority = (int) $result->getValue("priority");
+			if((string) $result->getValue("translation_needs_update") !== "") {
+				$this->translation_needs_update = (string) $result->getValue("translation_needs_update");
 			}
 
-			if(rex_plugin::get("d2u_machinery", "contacts")->isAvailable()) {
-				if($result->getValue("contact_id") > 0) {
-					$this->contact = new D2U_Machinery\Contact($result->getValue("contact_id"));
+			if(rex_plugin::get("d2u_machinery", "contacts") instanceof rex_plugin && rex_plugin::get("d2u_machinery", "contacts")->isAvailable()) {
+				if((int) $result->getValue("contact_id") > 0) {
+					$this->contact = new D2U_Machinery\Contact((int) $result->getValue("contact_id"));
 				}
 			}
 
-			if(rex_plugin::get("d2u_machinery", "equipment")->isAvailable()) {
-				$this->equipment_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("equipment_ids")), PREG_GREP_INVERT);
+			if(rex_plugin::get("d2u_machinery", "contacts") instanceof rex_plugin && rex_plugin::get("d2u_machinery", "equipment")->isAvailable()) {
+				$equipment_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("equipment_ids")), PREG_GREP_INVERT);
+				$this->equipment_ids = is_array($equipment_ids) ? $equipment_ids : [];
 			}
 
-			if(rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable()) {
-				$this->industry_sector_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("industry_sector_ids")), PREG_GREP_INVERT);
+			if(rex_plugin::get("d2u_machinery", "contacts") instanceof rex_plugin && rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable()) {
+				$industry_sector_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("industry_sector_ids")), PREG_GREP_INVERT);
+				$this->industry_sector_ids = is_array($industry_sector_ids) ? $industry_sector_ids : [];
 			}
 
-			if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable()) {
-				$this->agitator_type_id = $result->getValue("agitator_type_id");
-				$this->viscosity = $result->getValue("viscosity");
+			if(rex_plugin::get("d2u_machinery", "contacts") instanceof rex_plugin && rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable()) {
+				$this->agitator_type_id = (int) $result->getValue("agitator_type_id");
+				$this->viscosity = (int) $result->getValue("viscosity");
 			}
 
-			if(rex_plugin::get("d2u_machinery", "machine_certificates_extension")->isAvailable()) {
-				$this->certificate_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("certificate_ids")), PREG_GREP_INVERT);
+			if(rex_plugin::get("d2u_machinery", "contacts") instanceof rex_plugin && rex_plugin::get("d2u_machinery", "machine_certificates_extension")->isAvailable()) {
+				$certificate_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("certificate_ids")), PREG_GREP_INVERT);
+				$this->certificate_ids = is_array($certificate_ids) ? $certificate_ids : [];
 			}
 
-			if(rex_plugin::get("d2u_machinery", "machine_construction_equipment_extension")->isAvailable()) {
-				$this->airless_hose_connection = $result->getValue("airless_hose_connection");
-				$this->airless_hose_diameter = $result->getValue("airless_hose_diameter");
-				$this->airless_hose_length = $result->getValue("airless_hose_length");
-				$this->airless_nozzle_size = $result->getValue("airless_nozzle_size");
-				$this->container_capacity = $result->getValue("container_capacity");
-				$this->container_mixing_performance = $result->getValue("container_mixing_performance");
-				$this->container_waterconnect_pressure = $result->getValue("container_waterconnect_pressure");
-				$this->container_waterconnect_diameter = $result->getValue("container_waterconnect_diameter");
-				$this->container_weight_empty = $result->getValue("container_weight_empty");
-				$this->cutters_cutting_depth = $result->getValue("cutters_cutting_depth");
-				$this->cutters_cutting_length = $result->getValue("cutters_cutting_length");
-				$this->cutters_rod_length = $result->getValue("cutters_rod_length");
-				$this->floor_beam_power_on_concrete = $result->getValue("floor_beam_power_on_concrete");
-				$this->floor_dust_extraction_connection = $result->getValue("floor_dust_extraction_connection");
-				$this->floor_feedrate = $result->getValue("floor_feedrate");
-				$this->floor_filter_connection = $result->getValue("floor_filter_connection");
-				$this->floor_rotations = $result->getValue("floor_rotations");
-				$this->floor_working_pressure = $result->getValue("floor_working_pressure");
-				$this->floor_working_width = $result->getValue("floor_working_width");
-				$this->grinder_grinding_plate = $result->getValue("grinder_grinding_plate");
-				$this->grinder_grinding_wheel = $result->getValue("grinder_grinding_wheel");
-				$this->grinder_rotational_frequency = $result->getValue("grinder_rotational_frequency");
-				$this->grinder_sanding = $result->getValue("grinder_sanding");
-				$this->grinder_vacuum_connection = $result->getValue("grinder_vacuum_connection");
-				$this->operating_pressure = $result->getValue("operating_pressure");
-				$this->pump_conveying_distance = $result->getValue("pump_conveying_distance");
-				$this->pump_filling = $result->getValue("pump_filling");
-				$this->pump_flow_volume = $result->getValue("pump_flow_volume");
-				$this->pump_grain_size = $result->getValue("pump_grain_size");
-				$this->pump_material_container = $result->getValue("pump_material_container");
-				$this->pump_pressure_height = $result->getValue("pump_pressure_height");
-				$this->waste_water_capacity = $result->getValue("waste_water_capacity");
-				$this->container_connection_port = $result->getValue("container_connection_port");
-				$this->container_conveying_wave = $result->getValue("container_conveying_wave");
-				$this->description_technical = $result->getValue("description_technical");
-				$this->pictures_delivery_set = preg_grep('/^\s*$/s', explode(",", $result->getValue("pictures_delivery_set")), PREG_GREP_INVERT);
-				$this->delivery_set_basic = stripslashes(htmlspecialchars_decode($result->getValue("delivery_set_basic")));
-				$this->delivery_set_conversion = stripslashes(htmlspecialchars_decode($result->getValue("delivery_set_conversion")));
-				$this->delivery_set_full = stripslashes(htmlspecialchars_decode($result->getValue("delivery_set_full")));
+			if(rex_plugin::get("d2u_machinery", "contacts") instanceof rex_plugin && rex_plugin::get("d2u_machinery", "machine_construction_equipment_extension")->isAvailable()) {
+				$this->airless_hose_connection = (string) $result->getValue("airless_hose_connection");
+				$this->airless_hose_diameter = (int) $result->getValue("airless_hose_diameter");
+				$this->airless_hose_length = (int) $result->getValue("airless_hose_length");
+				$this->airless_nozzle_size = (string) $result->getValue("airless_nozzle_size");
+				$this->container_capacity = (string) $result->getValue("container_capacity");
+				$this->container_mixing_performance = (string) $result->getValue("container_mixing_performance");
+				$this->container_waterconnect_pressure = (int) $result->getValue("container_waterconnect_pressure");
+				$this->container_waterconnect_diameter = (string) $result->getValue("container_waterconnect_diameter");
+				$this->container_weight_empty = (int) $result->getValue("container_weight_empty");
+				$this->cutters_cutting_depth = (string) $result->getValue("cutters_cutting_depth");
+				$this->cutters_cutting_length = (int) $result->getValue("cutters_cutting_length");
+				$this->cutters_rod_length = (string) $result->getValue("cutters_rod_length");
+				$this->floor_beam_power_on_concrete = (int) $result->getValue("floor_beam_power_on_concrete");
+				$this->floor_dust_extraction_connection = (int) $result->getValue("floor_dust_extraction_connection");
+				$this->floor_feedrate = (string) $result->getValue("floor_feedrate");
+				$this->floor_filter_connection = (string) $result->getValue("floor_filter_connection");
+				$this->floor_rotations = (string) $result->getValue("floor_rotations");
+				$this->floor_working_pressure = (string) $result->getValue("floor_working_pressure");
+				$this->floor_working_width = (int) $result->getValue("floor_working_width");
+				$this->grinder_grinding_plate = (int) $result->getValue("grinder_grinding_plate");
+				$this->grinder_grinding_wheel = (int) $result->getValue("grinder_grinding_wheel");
+				$this->grinder_rotational_frequency = (string) $result->getValue("grinder_rotational_frequency");
+				$this->grinder_sanding = (string) $result->getValue("grinder_sanding");
+				$this->grinder_vacuum_connection = (int) $result->getValue("grinder_vacuum_connection");
+				$this->operating_pressure = (string) $result->getValue("operating_pressure");
+				$this->pump_conveying_distance = (int) $result->getValue("pump_conveying_distance");
+				$this->pump_filling = (int) $result->getValue("pump_filling");
+				$this->pump_flow_volume = (string) $result->getValue("pump_flow_volume");
+				$this->pump_grain_size = (string) $result->getValue("pump_grain_size");
+				$this->pump_material_container = (string) $result->getValue("pump_material_container");
+				$this->pump_pressure_height = (int) $result->getValue("pump_pressure_height");
+				$this->waste_water_capacity = (int) $result->getValue("waste_water_capacity");
+				$this->container_connection_port = (string) $result->getValue("container_connection_port");
+				$this->container_conveying_wave = (string) $result->getValue("container_conveying_wave");
+				$this->description_technical = (string) $result->getValue("description_technical");
+				$pictures_delivery_set = preg_grep('/^\s*$/s', explode(",", (string) $result->getValue("pictures_delivery_set")), PREG_GREP_INVERT);
+				$this->pictures_delivery_set = is_array($pictures_delivery_set) ? $pictures_delivery_set : [];
+				$this->delivery_set_basic = stripslashes(htmlspecialchars_decode((string) $result->getValue("delivery_set_basic")));
+				$this->delivery_set_conversion = stripslashes(htmlspecialchars_decode((string) $result->getValue("delivery_set_conversion")));
+				$this->delivery_set_full = stripslashes(htmlspecialchars_decode((string) $result->getValue("delivery_set_full")));
 			}
 
-			if(rex_plugin::get("d2u_machinery", "service_options")->isAvailable()) {
-				$this->service_option_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("service_option_ids")), PREG_GREP_INVERT);
+			if(rex_plugin::get("d2u_machinery", "contacts") instanceof rex_plugin && rex_plugin::get("d2u_machinery", "service_options")->isAvailable()) {
+				$service_option_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("service_option_ids")), PREG_GREP_INVERT);
+				$this->service_option_ids = is_array($service_option_ids) ? $service_option_ids : [];
 			}
 
-			if(rex_plugin::get("d2u_machinery", "machine_features_extension")->isAvailable()) {
-				$this->feature_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("feature_ids")), PREG_GREP_INVERT);
+			if(rex_plugin::get("d2u_machinery", "contacts") instanceof rex_plugin && rex_plugin::get("d2u_machinery", "machine_features_extension")->isAvailable()) {
+				$feature_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("feature_ids")), PREG_GREP_INVERT);
+				$this->feature_ids = is_array($feature_ids) ? $feature_ids : [];
 			}
 
-			if(rex_plugin::get("d2u_machinery", "machine_options_extension")->isAvailable()) {
-				$this->option_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("option_ids")), PREG_GREP_INVERT);
+			if(rex_plugin::get("d2u_machinery", "contacts") instanceof rex_plugin && rex_plugin::get("d2u_machinery", "machine_options_extension")->isAvailable()) {
+				$option_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("option_ids")), PREG_GREP_INVERT);
+				$this->option_ids = is_array($option_ids) ? $option_ids : [];
 			}
 
-			if(rex_plugin::get("d2u_machinery", "machine_steel_processing_extension")->isAvailable()) {
-				$process_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("process_ids")), PREG_GREP_INVERT);
-				foreach($process_ids as $process_id) {
-					$this->processes[$process_id] = new Process($process_id, $this->clang_id);
+			if(rex_plugin::get("d2u_machinery", "contacts") instanceof rex_plugin && rex_plugin::get("d2u_machinery", "machine_steel_processing_extension")->isAvailable()) {
+				$process_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("process_ids")), PREG_GREP_INVERT);
+				if(is_array($process_ids)) {
+					foreach($process_ids as $process_id) {
+						$this->processes[$process_id] = new Process($process_id, $this->clang_id);
+					}
 				}
-				$procedure_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("procedure_ids")), PREG_GREP_INVERT);
-				foreach($procedure_ids as $procedure_id) {
-					$this->procedures[$procedure_id] = new Procedure($procedure_id, $this->clang_id);
+				$procedure_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("procedure_ids")), PREG_GREP_INVERT);
+				if(is_array($procedure_ids)) {
+					foreach($procedure_ids as $procedure_id) {
+						$this->procedures[$procedure_id] = new Procedure($procedure_id, $this->clang_id);
+					}
 				}
-				$material_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("material_ids")), PREG_GREP_INVERT);
-				foreach($material_ids as $material_id) {
-					$this->materials[$material_id] = new Material($material_id, $this->clang_id);
+				$material_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("material_ids")), PREG_GREP_INVERT);
+				if(is_array($material_ids)) {
+					foreach($material_ids as $material_id) {
+						$this->materials[$material_id] = new Material($material_id, $this->clang_id);
+					}
 				}
-				$tool_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("tool_ids")), PREG_GREP_INVERT);
-				foreach($tool_ids as $tool_id) {
-					$this->tools[$tool_id] = new Tool($tool_id, $this->clang_id);
+				$tool_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("tool_ids")), PREG_GREP_INVERT);
+				if(is_array($tool_ids)) {
+					foreach($tool_ids as $tool_id) {
+						$this->tools[$tool_id] = new Tool($tool_id, $this->clang_id);
+					}
 				}
-				$this->automation_supply_single_stroke = $result->getValue("automation_supply_single_stroke");
-				$this->automation_supply_multi_stroke = $result->getValue("automation_supply_multi_stroke");
-				$this->automation_feedrate = $result->getValue("automation_feedrate");
-				$this->automation_feedrate_sawblade = $result->getValue("automation_feedrate_sawblade");
-				$this->automation_rush_leader_flyback = $result->getValue("automation_rush_leader_flyback");
-				$automation_automationgrade_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("automation_automationgrade_ids")), PREG_GREP_INVERT);
-				foreach($automation_automationgrade_ids as $automation_automationgrade_id) {
-					$this->automation_automationgrades[$automation_automationgrade_id] = new Automation($automation_automationgrade_id, $this->clang_id);
+				$this->automation_supply_single_stroke = (string) $result->getValue("automation_supply_single_stroke");
+				$this->automation_supply_multi_stroke = (string) $result->getValue("automation_supply_multi_stroke");
+				$this->automation_feedrate = (string) $result->getValue("automation_feedrate");
+				$this->automation_feedrate_sawblade = (string) $result->getValue("automation_feedrate_sawblade");
+				$this->automation_rush_leader_flyback = (int) $result->getValue("automation_rush_leader_flyback");
+				$automation_automationgrade_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("automation_automationgrade_ids")), PREG_GREP_INVERT);
+				if(is_array($automation_automationgrade_ids)) {
+					foreach($automation_automationgrade_ids as $automation_automationgrade_id) {
+						$this->automation_automationgrades[$automation_automationgrade_id] = new Automation($automation_automationgrade_id, $this->clang_id);
+					}
 				}
-				$this->automation_supply_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("automation_supply_ids")), PREG_GREP_INVERT);
-				$this->workspace = $result->getValue("workspace");
-				$this->workspace_square = $result->getValue("workspace_square");
-				$this->workspace_flat = $result->getValue("workspace_flat");
-				$this->workspace_plate = $result->getValue("workspace_plate");
-				$this->workspace_profile = $result->getValue("workspace_profile");
-				$this->workspace_angle_steel = $result->getValue("workspace_angle_steel");
-				$this->workspace_round = $result->getValue("workspace_round");
-				$this->workspace_min = $result->getValue("workspace_min");
-				$this->sheet_width = $result->getValue("sheet_width");
-				$this->sheet_length = $result->getValue("sheet_length");
-				$this->sheet_thickness = $result->getValue("sheet_thickness");
-				$this->tool_changer_locations = $result->getValue("tool_changer_locations");
-				$this->drilling_unit_below = $result->getValue("drilling_unit_below");
-				$this->drilling_unit_vertical = $result->getValue("drilling_unit_vertical");
-				$this->drilling_unit_horizontal = $result->getValue("drilling_unit_horizontal");
-				$this->drilling_diameter = $result->getValue("drilling_diameter");
-				$this->drilling_tools_axis = $result->getValue("drilling_tools_axis");
-				$this->drilling_axis_drive_power = $result->getValue("drilling_axis_drive_power");
-				$this->drilling_rpm_speed = $result->getValue("drilling_rpm_speed");
-				$this->saw_blade = $result->getValue("saw_blade");
-				$this->saw_band = $result->getValue("saw_band");
-				$this->saw_band_tilt = $result->getValue("saw_band_tilt");
-				$this->saw_cutting_speed = $result->getValue("saw_cutting_speed");
-				$this->saw_miter = $result->getValue("saw_miter");
-				$this->bevel_angle = $result->getValue("bevel_angle");
-				$this->punching_diameter = $result->getValue("punching_diameter");
-				$this->punching_power = $result->getValue("punching_power");
-				$this->punching_tools = $result->getValue("punching_tools");
-				$this->shaving_unit_angle_steel_single_cut = $result->getValue("shaving_unit_angle_steel_single_cut");
-				$profile_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("profile_ids")), PREG_GREP_INVERT);
-				foreach($profile_ids as $profile_id) {
-					$this->profiles[$profile_id] = new Profile($profile_id, $this->clang_id);
+				$automation_supply_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("automation_supply_ids")), PREG_GREP_INVERT);
+				$this->automation_supply_ids = is_array($automation_supply_ids) ? $automation_supply_ids : [];
+				$this->workspace = (string) $result->getValue("workspace");
+				$this->workspace_square = (string) $result->getValue("workspace_square");
+				$this->workspace_flat = (string) $result->getValue("workspace_flat");
+				$this->workspace_plate = (string) $result->getValue("workspace_plate");
+				$this->workspace_profile = (string) $result->getValue("workspace_profile");
+				$this->workspace_angle_steel = (string) $result->getValue("workspace_angle_steel");
+				$this->workspace_round = (string) $result->getValue("workspace_round");
+				$this->workspace_min = (string) $result->getValue("workspace_min");
+				$this->sheet_width = (string) $result->getValue("sheet_width");
+				$this->sheet_length = (string) $result->getValue("sheet_length");
+				$this->sheet_thickness = (string) $result->getValue("sheet_thickness");
+				$this->tool_changer_locations = (string) $result->getValue("tool_changer_locations");
+				$this->drilling_unit_below = (int) $result->getValue("drilling_unit_below");
+				$this->drilling_unit_vertical = (string) $result->getValue("drilling_unit_vertical");
+				$this->drilling_unit_horizontal = (string) $result->getValue("drilling_unit_horizontal");
+				$this->drilling_diameter = (string) $result->getValue("drilling_diameter");
+				$this->drilling_tools_axis = (string) $result->getValue("drilling_tools_axis");
+				$this->drilling_axis_drive_power = (string) $result->getValue("drilling_axis_drive_power");
+				$this->drilling_rpm_speed = (string) $result->getValue("drilling_rpm_speed");
+				$this->saw_blade = (string) $result->getValue("saw_blade");
+				$this->saw_band = (string) $result->getValue("saw_band");
+				$this->saw_band_tilt = (string) $result->getValue("saw_band_tilt");
+				$this->saw_cutting_speed = (string) $result->getValue("saw_cutting_speed");
+				$this->saw_miter = (string) $result->getValue("saw_miter");
+				$this->bevel_angle = (int) $result->getValue("bevel_angle");
+				$this->punching_diameter = (string) $result->getValue("punching_diameter");
+				$this->punching_power = (int) $result->getValue("punching_power");
+				$this->punching_tools = (string) $result->getValue("punching_tools");
+				$this->shaving_unit_angle_steel_single_cut = (int) $result->getValue("shaving_unit_angle_steel_single_cut");
+				$profile_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("profile_ids")), PREG_GREP_INVERT);
+				if(is_array($profile_ids)) {
+					foreach($profile_ids as $profile_id) {
+						$this->profiles[$profile_id] = new Profile($profile_id, $this->clang_id);
+					}
 				}
-				$this->carrier_width = $result->getValue("carrier_width");
-				$this->carrier_height = $result->getValue("carrier_height");
-				$this->carrier_weight = $result->getValue("carrier_weight");
-				$this->flange_thickness = $result->getValue("flange_thickness");
-				$this->web_thickness = $result->getValue("web_thickness");
-				$this->component_length = $result->getValue("component_length");
-				$this->component_weight = $result->getValue("component_weight");
-				$welding_process_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("welding_process_ids")), PREG_GREP_INVERT);
-				foreach($welding_process_ids as $welding_process_id) {
-					$this->weldings[$welding_process_id] = new Welding($welding_process_id, $this->clang_id);
+				$this->carrier_width = (string) $result->getValue("carrier_width");
+				$this->carrier_height = (string) $result->getValue("carrier_height");
+				$this->carrier_weight = (int) $result->getValue("carrier_weight");
+				$this->flange_thickness = (string) $result->getValue("flange_thickness");
+				$this->web_thickness = (string) $result->getValue("web_thickness");
+				$this->component_length = (string) $result->getValue("component_length");
+				$this->component_weight = (int) $result->getValue("component_weight");
+				$welding_process_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("welding_process_ids")), PREG_GREP_INVERT);
+				if(is_array($welding_process_ids)) {
+					foreach($welding_process_ids as $welding_process_id) {
+						$this->weldings[$welding_process_id] = new Welding($welding_process_id, $this->clang_id);
+					}
 				}
-				$this->welding_thickness = $result->getValue("welding_thickness");
-				$this->welding_wire_thickness = $result->getValue("welding_wire_thickness");
-				$this->beam_continuous_opening = $result->getValue("beam_continuous_opening");
-				$this->beam_turbines = $result->getValue("beam_turbines");
-				$this->beam_turbine_power = $result->getValue("beam_turbine_power");
-				$this->beam_color_guns = $result->getValue("beam_color_guns");
+				$this->welding_thickness = (int) $result->getValue("welding_thickness");
+				$this->welding_wire_thickness = (string) $result->getValue("welding_wire_thickness");
+				$this->beam_continuous_opening = (string) $result->getValue("beam_continuous_opening");
+				$this->beam_turbines = (int) $result->getValue("beam_turbines");
+				$this->beam_turbine_power =(string) $result->getValue("beam_turbine_power");
+				$this->beam_color_guns =(string)  $result->getValue("beam_color_guns");
 			}
 
-			if(rex_plugin::get("d2u_machinery", "machine_usage_area_extension")->isAvailable()) {
-				$this->usage_area_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("usage_area_ids")), PREG_GREP_INVERT);
+			if(rex_plugin::get("d2u_machinery", "contacts") instanceof rex_plugin && rex_plugin::get("d2u_machinery", "machine_usage_area_extension")->isAvailable()) {
+				$usage_area_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("usage_area_ids")), PREG_GREP_INVERT);
+				$this->usage_area_ids = is_array($usage_area_ids) ? $usage_area_ids : [];
 			}
 			
 			// Videos
-			if(\rex_addon::get('d2u_videos')->isAvailable() && $result->getValue("video_ids") != "") {
-				$video_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("video_ids")), PREG_GREP_INVERT);
-				foreach ($video_ids as $video_id) {
-					if($video_id > 0) {
-						$video = new Video($video_id, $clang_id);
-						if($video->getVideoURL() != "") {
-							$this->videos[$video_id] = $video;
+			if(rex_plugin::get("d2u_machinery", "contacts") instanceof rex_plugin && \rex_addon::get('d2u_videos')->isAvailable() && $result->getValue("video_ids") !== "") {
+				$video_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("video_ids")), PREG_GREP_INVERT);
+				if(is_array($video_ids)) {
+					foreach ($video_ids as $video_id) {
+						if($video_id > 0) {
+							$video = new Video($video_id, $clang_id);
+							if($video->getVideoURL() !== "") {
+								$this->videos[$video_id] = $video;
+							}
 						}
 					}
 				}
@@ -923,8 +951,8 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * Changes the status of a machine
 	 */
-	public function changeStatus() {
-		if($this->online_status == "online") {
+	public function changeStatus():void {
+		if($this->online_status === "online") {
 			if($this->machine_id > 0) {
 				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_machines "
 					."SET online_status = 'offline' "
@@ -951,10 +979,10 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Deletes the object.
-	 * @param int $delete_all If TRUE, all translations and main object are deleted. If 
+	 * @param boolean $delete_all If TRUE, all translations and main object are deleted. If 
 	 * FALSE, only this translation will be deleted.
 	 */
-	public function delete($delete_all = TRUE) {
+	public function delete($delete_all = TRUE):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_machines_lang "
 			."WHERE machine_id = ". $this->machine_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
@@ -966,7 +994,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			."WHERE machine_id = ". $this->machine_id;
 		$result_main = \rex_sql::factory();
 		$result_main->setQuery($query_main);
-		if($result_main->getRows() == 0) {
+		if(intval($result_main->getRows()) === 0) {
 			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
 				."WHERE machine_id = ". $this->machine_id;
 			$result = \rex_sql::factory();
@@ -1003,14 +1031,14 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	 * Get all machines.
 	 * @param int $clang_id Redaxo clang id.
 	 * @param boolean $only_online Show only online machines
-	 * @return Machines[] Array with Machine objects.
+	 * @return array<Machine> Array with Machine objects.
 	 */
 	public static function getAll($clang_id, $only_online = FALSE) {
 		$query = "SELECT machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_machines ";
 		if($only_online) {
 			$query .= "WHERE online_status = 'online' ";
 		}
-		if(\rex_addon::get('d2u_machinery')->getConfig('default_machine_sort') == 'priority') {
+		if(strval(\rex_addon::get('d2u_machinery')->getConfig('default_machine_sort')) === 'priority') {
 			$query .= 'ORDER BY priority ASC';
 		}
 		else {
@@ -1021,13 +1049,14 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 		
 		$machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$machines[] = new Machine($result->getValue("machine_id"), $clang_id);
+			$machines[] = new Machine((int) $result->getValue("machine_id"), $clang_id);
 			$result->next();
 		}
 		return $machines;
 	}
 	
 	/**
+	 * @api
 	 * Get Feature objects related to this machine.
 	 * @return Feature[] Array with Feature objects.
 	 */
@@ -1042,6 +1071,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	}
 	
 	/**
+	 * @api
 	 * Get Option objects related to this machine.
 	 * @return Option[] Array with Option objects.
 	 */
@@ -1056,6 +1086,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	}
 	
 	/**
+	 * @api
 	 * Get supply objects related to this machine.
 	 * @return Supply[] Array with supply objects.
 	 */
@@ -1081,7 +1112,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 		
 		$machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$machines[] = new Machine($result->getValue("machine_id"), $this->clang_id);
+			$machines[] = new Machine((int) $result->getValue("machine_id"), $this->clang_id);
 			$result->next();
 		}
 		return $machines;
@@ -1100,7 +1131,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 
 			$production_lines = [];
 			for($i = 0; $i < $result->getRows(); $i++) {
-				$production_lines[] = new ProductionLine($result->getValue("production_line_id"), $this->clang_id);
+				$production_lines[] = new ProductionLine((int) $result->getValue("production_line_id"), $this->clang_id);
 				$result->next();
 			}
 			return $production_lines;
@@ -1123,7 +1154,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 
 			$used_machines = [];
 			for($i = 0; $i < $result->getRows(); $i++) {
-				$used_machines[] = new UsedMachine($result->getValue("used_machine_id"), $this->clang_id);
+				$used_machines[] = new UsedMachine((int) $result->getValue("used_machine_id"), $this->clang_id);
 				$result->next();
 			}
 			return $used_machines;
@@ -1142,7 +1173,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 		$service_options = [];
 		foreach ($this->service_option_ids as $service_option_id) {
 			$service_option = new ServiceOption($service_option_id, $this->clang_id);
-			if(($online_only && $service_option->online_status == "online") || !$online_only) {
+			if(($online_only && $service_option->online_status === "online") || !$online_only) {
 				$service_options[] = $service_option;
 			}
 		}
@@ -1151,7 +1182,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 
 	/**
 	 * Get Technical Data as array.
-	 * @return string[] Array with technical data. Each element is an array itself.
+	 * @return mixed[] Array with technical data. Each element is an array itself.
 	 * First element ist the translation wildcard, second is the value and third
 	 * the unit.
 	 */
@@ -1174,7 +1205,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 
 		if(rex_plugin::get("d2u_machinery", "machine_construction_equipment_extension")->isAvailable()) {
 			// Operating pressure
-			if($this->operating_pressure != "") {
+			if($this->operating_pressure !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_construction_equipment_operating_pressure" . $tag_close,
 					"value" => $tag_open . "d2u_machinery_construction_equipment_up_to" . $tag_close .' '. $this->operating_pressure,
@@ -1186,10 +1217,10 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 		}
 
 		// Operating voltage
-		if($this->operating_voltage_v != "") {
-			$v = $this->operating_voltage_v == "" ? "-" : $this->operating_voltage_v;
-			$h = $this->operating_voltage_hz == "" ? " / -" : " / ". $this->operating_voltage_hz;
-			$a = $this->operating_voltage_a == "" ? " / -" : " / ". $this->operating_voltage_a;
+		if($this->operating_voltage_v !== "") {
+			$v = $this->operating_voltage_v;
+			$h = $this->operating_voltage_hz === "" ? " / -" : " / ". $this->operating_voltage_hz;
+			$a = $this->operating_voltage_a === "" ? " / -" : " / ". $this->operating_voltage_a;
 			$tech_data[] = [
 				"description" => $tag_open . "d2u_machinery_operating_voltage" . $tag_close,
 				"value" => $v . $h . $a,
@@ -1198,7 +1229,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 		}
 
 		// Engine power
-		if($this->engine_power != "") {
+		if($this->engine_power !== "") {
 			$tech_data[] = [
 				"description" => $tag_open . "d2u_machinery_engine_power" . $tag_close,
 				"value" => $this->engine_power . ($this->engine_power_frequency_controlled ?  ' ('. $tag_open . "d2u_machinery_engine_power_frequency_controlled" . $tag_close .')' : ''),
@@ -1217,7 +1248,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Capacity
-			if($this->container_capacity != "") {
+			if($this->container_capacity !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_construction_equipment_container_capacity" . $tag_close,
 					"value" => $tag_open . "d2u_machinery_construction_equipment_max" . $tag_close .' '. $this->container_capacity,
@@ -1235,7 +1266,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Mixing performance
-			if($this->container_mixing_performance != "") {
+			if($this->container_mixing_performance !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_construction_equipment_container_mixing_performance" . $tag_close,
 					"value" => $tag_open . "d2u_machinery_construction_equipment_max" . $tag_close .' '. $this->container_mixing_performance,
@@ -1244,7 +1275,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Flow volume
-			if($this->pump_flow_volume != "") {
+			if($this->pump_flow_volume !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_construction_equipment_pump_flow_volume" . $tag_close,
 					"value" => $tag_open . "d2u_machinery_construction_equipment_max" . $tag_close .' '. $this->pump_flow_volume,
@@ -1271,7 +1302,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Grain size
-			if($this->pump_grain_size != "") {
+			if($this->pump_grain_size !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_construction_equipment_pump_grain_size" . $tag_close,
 					"value" => $tag_open . "d2u_machinery_construction_equipment_max" . $tag_close .' '. $this->pump_grain_size,
@@ -1280,7 +1311,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Nozzle size
-			if($this->airless_nozzle_size != "") {
+			if($this->airless_nozzle_size !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_construction_equipment_airless_nozzle_size" . $tag_close,
 					"value" => $tag_open . "d2u_machinery_construction_equipment_max" . $tag_close .' '. $this->airless_nozzle_size,
@@ -1289,7 +1320,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Nozzle size
-			if($this->pump_material_container != "") {
+			if($this->pump_material_container !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_construction_equipment_pump_material_container" . $tag_close,
 					"value" => $this->pump_material_container,
@@ -1307,7 +1338,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Hose connection
-			if($this->airless_hose_connection != "") {
+			if($this->airless_hose_connection !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_construction_equipment_airless_hose_connection" . $tag_close,
 					"value" => $this->airless_hose_connection,
@@ -1352,7 +1383,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Grinding wheel
-			if($this->grinder_rotational_frequency != "") {
+			if($this->grinder_rotational_frequency !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_construction_equipment_grinder_rotational_frequency" . $tag_close,
 					"value" => $this->grinder_rotational_frequency,
@@ -1370,7 +1401,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Sanding
-			if($this->grinder_sanding != "") {
+			if($this->grinder_sanding !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_construction_equipment_grinder_sanding" . $tag_close,
 					"value" => $this->grinder_sanding,
@@ -1388,7 +1419,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Cutting depth
-			if($this->cutters_cutting_depth != "") {
+			if($this->cutters_cutting_depth !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_construction_equipment_cutters_cutting_depth" . $tag_close,
 					"value" => $tag_open . "d2u_machinery_construction_equipment_max" . $tag_close .' '. $this->cutters_cutting_depth,
@@ -1397,7 +1428,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Rod length
-			if($this->cutters_rod_length != "") {
+			if($this->cutters_rod_length !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_construction_equipment_cutters_rod_length" . $tag_close,
 					"value" => $this->cutters_rod_length,
@@ -1406,7 +1437,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Conveying wave
-			if($this->container_conveying_wave != "") {
+			if($this->container_conveying_wave !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_construction_equipment_container_conveying_wave" . $tag_close,
 					"value" => $this->container_conveying_wave,
@@ -1415,7 +1446,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Water connection
-			if($this->container_waterconnect_diameter != "" && $this->container_waterconnect_pressure > 0) {
+			if($this->container_waterconnect_diameter !== "" && $this->container_waterconnect_pressure > 0) {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_construction_equipment_container_waterconnect" . $tag_close,
 					"value" => $this->container_waterconnect_pressure .' ('. $this->container_waterconnect_diameter .'")',
@@ -1424,7 +1455,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Connection port
-			if($this->container_connection_port != "") {
+			if($this->container_connection_port !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_construction_equipment_container_connection_port" . $tag_close,
 					"value" => $this->container_connection_port,
@@ -1436,7 +1467,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			if($this->category !== FALSE) {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_construction_equipment_machine_technique" . $tag_close,
-					"value" => '<a href="'. $this->category->getUrl() .'">'. $this->category->name .'</a>',
+					"value" => '<a href="'. $this->category->getURL() .'">'. $this->category->name .'</a>',
 					"unit" => ""
 				];
 			}
@@ -1451,7 +1482,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Working pressure
-			if($this->floor_working_pressure != "") {
+			if($this->floor_working_pressure !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_construction_equipment_floor_working_pressure" . $tag_close,
 					"value" => $this->floor_working_pressure,
@@ -1469,7 +1500,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Feedrate
-			if($this->floor_feedrate != "") {
+			if($this->floor_feedrate !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_construction_equipment_floor_feedrate" . $tag_close,
 					"value" => $this->floor_feedrate,
@@ -1487,7 +1518,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Filter connection
-			if($this->floor_filter_connection != "") {
+			if($this->floor_filter_connection !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_construction_equipment_floor_filter_connection" . $tag_close,
 					"value" => $this->floor_filter_connection,
@@ -1496,7 +1527,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Rotations
-			if($this->floor_rotations != "") {
+			if($this->floor_rotations !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_construction_equipment_floor_rotations" . $tag_close,
 					"value" => $this->floor_rotations,
@@ -1505,7 +1536,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Technical description
-			if($this->description_technical != "") {
+			if($this->description_technical !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_construction_equipment_description_technical" . $tag_close,
 					"value" => $this->description_technical,
@@ -1539,7 +1570,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 		}
 
 		// Weight
-		if($this->weight != "") {
+		if($this->weight !== "") {
 			$tech_data[] = [
 				"description" => $tag_open . "d2u_machinery_weight" . $tag_close,
 				"value" => $tag_open . "d2u_machinery_unit_ca" . $tag_close .' '. $this->weight,
@@ -1562,7 +1593,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Saw blade
-			if($this->saw_blade != "") {
+			if($this->saw_blade !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_saw_blade" . $tag_close,
 					"value" => $this->saw_blade,
@@ -1571,7 +1602,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Saw band
-			if($this->saw_band != "") {
+			if($this->saw_band !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_saw_band" . $tag_close,
 					"value" => $this->saw_band,
@@ -1580,7 +1611,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Saw band tilt
-			if($this->saw_band_tilt != "") {
+			if($this->saw_band_tilt !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_saw_band_tilt" . $tag_close,
 					"value" => $this->saw_band_tilt,
@@ -1589,7 +1620,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Saw cutting speed
-			if($this->saw_cutting_speed != "") {
+			if($this->saw_cutting_speed !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_saw_cutting_speed" . $tag_close,
 					"value" => $this->saw_cutting_speed,
@@ -1598,7 +1629,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Feed rate
-			if($this->automation_feedrate != "") {
+			if($this->automation_feedrate !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_automation_feedrate" . $tag_close,
 					"value" => $this->automation_feedrate,
@@ -1607,7 +1638,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Feed rate for saw blades
-			if($this->automation_feedrate_sawblade != "") {
+			if($this->automation_feedrate_sawblade !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_automation_feedrate_sawblade" . $tag_close,
 					"value" => $this->automation_feedrate_sawblade,
@@ -1616,7 +1647,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Rush leader flyback
-			if($this->automation_rush_leader_flyback != "" && $this->automation_rush_leader_flyback != 0) {
+			if($this->automation_rush_leader_flyback !== 0) {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_automation_rush_leader_flyback" . $tag_close,
 					"value" => $this->automation_rush_leader_flyback,
@@ -1625,7 +1656,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Workspace max.
-			if($this->workspace != "") {
+			if($this->workspace !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_workspace" . $tag_close,
 					"value" => $this->workspace,
@@ -1634,7 +1665,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Workspace square
-			if($this->workspace_square != "") {
+			if($this->workspace_square !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_workspace_square" . $tag_close,
 					"value" => $this->workspace_square,
@@ -1643,7 +1674,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Workspace flat
-			if($this->workspace_flat != "") {
+			if($this->workspace_flat !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_workspace_flat" . $tag_close,
 					"value" => $this->workspace_flat,
@@ -1652,7 +1683,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Workspace round
-			if($this->workspace_round != "") {
+			if($this->workspace_round !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_workspace_round" . $tag_close,
 					"value" => $this->workspace_round,
@@ -1661,7 +1692,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Workspace plates
-			if($this->workspace_plate != "") {
+			if($this->workspace_plate !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_workspace_plate" . $tag_close,
 					"value" => $this->workspace_plate,
@@ -1670,7 +1701,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Workspace profile
-			if($this->workspace_profile != "") {
+			if($this->workspace_profile !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_workspace_profile" . $tag_close,
 					"value" => $this->workspace_profile,
@@ -1679,7 +1710,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Workspace angle steel
-			if($this->workspace_angle_steel != "") {
+			if($this->workspace_angle_steel !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_workspace_angle_steel" . $tag_close,
 					"value" => $this->workspace_angle_steel,
@@ -1688,7 +1719,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Workspace minimum
-			if($this->workspace_min != "") {
+			if($this->workspace_min !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_workspace_min" . $tag_close,
 					"value" => $this->workspace_min,
@@ -1706,7 +1737,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Continuous opening
-			if($this->beam_continuous_opening != "") {
+			if($this->beam_continuous_opening !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_beam_continuous_opening" . $tag_close,
 					"value" => $this->beam_continuous_opening,
@@ -1715,7 +1746,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Color guns
-			if($this->beam_color_guns != "") {
+			if($this->beam_color_guns !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_beam_color_guns" . $tag_close,
 					"value" => $this->beam_color_guns,
@@ -1733,7 +1764,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Turbine power
-			if($this->beam_turbine_power != "") {
+			if($this->beam_turbine_power !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_beam_turbine_power" . $tag_close,
 					"value" => $this->beam_turbine_power,
@@ -1742,7 +1773,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// saw miter
-			if($this->saw_miter != "") {
+			if($this->saw_miter !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_saw_miter" . $tag_close,
 					"value" => $this->saw_miter,
@@ -1751,7 +1782,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Vertical drilling units 
-			if($this->drilling_unit_vertical != "") {
+			if($this->drilling_unit_vertical !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_drilling_unit_vertical" . $tag_close,
 					"value" => $this->drilling_unit_vertical,
@@ -1760,7 +1791,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Horizontal drilling units 
-			if($this->drilling_unit_horizontal != "") {
+			if($this->drilling_unit_horizontal !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_drilling_unit_horizontal" . $tag_close,
 					"value" => $this->drilling_unit_horizontal,
@@ -1778,7 +1809,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Drilling diameter
-			if($this->drilling_diameter != "") {
+			if($this->drilling_diameter !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_drilling_diameter" . $tag_close,
 					"value" => $this->drilling_diameter,
@@ -1787,7 +1818,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Drilling tools per axis 
-			if($this->drilling_tools_axis != "") {
+			if($this->drilling_tools_axis !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_drilling_tools_axis" . $tag_close,
 					"value" => $this->drilling_tools_axis,
@@ -1796,7 +1827,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Drilling axis drive power
-			if($this->drilling_axis_drive_power != "") {
+			if($this->drilling_axis_drive_power !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_drilling_axis_drive_power" . $tag_close,
 					"value" => $this->drilling_axis_drive_power,
@@ -1805,7 +1836,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Max. drilling speed
-			if($this->drilling_rpm_speed != "") {
+			if($this->drilling_rpm_speed !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_drilling_rpm_speed" . $tag_close,
 					"value" => $this->drilling_rpm_speed,
@@ -1814,7 +1845,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Sheet width
-			if($this->sheet_width != "") {
+			if($this->sheet_width !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_sheet_width" . $tag_close,
 					"value" => $this->sheet_width,
@@ -1823,7 +1854,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Sheet length
-			if($this->sheet_length != "") {
+			if($this->sheet_length !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_sheet_length" . $tag_close,
 					"value" => $this->sheet_length,
@@ -1832,7 +1863,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Sheet thickness
-			if($this->sheet_thickness != "") {
+			if($this->sheet_thickness !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_sheet_thickness" . $tag_close,
 					"value" => $this->sheet_thickness,
@@ -1841,7 +1872,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Tool changer locations
-			if($this->tool_changer_locations != "") {
+			if($this->tool_changer_locations !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_tool_changer_locations" . $tag_close,
 					"value" => $this->tool_changer_locations,
@@ -1850,7 +1881,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// punching diameter
-			if($this->punching_diameter != "") {
+			if($this->punching_diameter !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_punching_diameter" . $tag_close,
 					"value" => $this->punching_diameter,
@@ -1859,7 +1890,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Number of punching tools
-			if($this->punching_tools != "") {
+			if($this->punching_tools !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_punching_tools" . $tag_close,
 					"value" => $this->punching_tools,
@@ -1951,7 +1982,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Carrier width
-			if($this->carrier_width != "") {
+			if($this->carrier_width !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_carrier_width" . $tag_close,
 					"value" => $this->carrier_width,
@@ -1960,7 +1991,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Carrier height
-			if($this->carrier_height != "") {
+			if($this->carrier_height !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_carrier_height" . $tag_close,
 					"value" => $this->carrier_height,
@@ -1978,7 +2009,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Flange thickness
-			if($this->flange_thickness != "") {
+			if($this->flange_thickness !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_flange_thickness" . $tag_close,
 					"value" => $this->flange_thickness,
@@ -1987,7 +2018,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Web thickness min. / max.
-			if($this->web_thickness != "") {
+			if($this->web_thickness !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_web_thickness" . $tag_close,
 					"value" => $this->web_thickness,
@@ -1996,7 +2027,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Component length
-			if($this->component_length != "") {
+			if($this->component_length !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_component_length" . $tag_close,
 					"value" => $this->component_length,
@@ -2036,7 +2067,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Welding wire thickness
-			if($this->welding_wire_thickness != "") {
+			if($this->welding_wire_thickness !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_welding_wire_thickness" . $tag_close,
 					"value" => $this->welding_wire_thickness,
@@ -2045,7 +2076,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Welding wire thickness
-			if($this->welding_wire_thickness != "") {
+			if($this->welding_wire_thickness !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_welding_wire_thickness" . $tag_close,
 					"value" => $this->welding_wire_thickness,
@@ -2054,7 +2085,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Automation supply single stroke
-			if($this->automation_supply_single_stroke != "") {
+			if($this->automation_supply_single_stroke !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_automation_supply_single_stroke" . $tag_close,
 					"value" => $this->automation_supply_single_stroke,
@@ -2063,7 +2094,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Automation supply multi stroke
-			if($this->automation_supply_multi_stroke != "") {
+			if($this->automation_supply_multi_stroke !== "") {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_steel_automation_supply_multi_stroke" . $tag_close,
 					"value" => $this->automation_supply_multi_stroke,
@@ -2087,7 +2118,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 					.'ON lang.machine_id = main.machine_id '
 				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
 				.'ORDER BY name';
-		if($type == 'missing') {
+		if($type === 'missing') {
 			$query = 'SELECT main.machine_id FROM '. \rex::getTablePrefix() .'d2u_machinery_machines AS main '
 					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_machines_lang AS target_lang '
 						.'ON main.machine_id = target_lang.machine_id AND target_lang.clang_id = '. $clang_id .' '
@@ -2095,14 +2126,14 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 						.'ON main.machine_id = default_lang.machine_id AND default_lang.clang_id = '. \rex_config::get('d2u_helper', 'default_lang') .' '
 					."WHERE target_lang.machine_id IS NULL "
 					.'ORDER BY main.name';
-			$clang_id = \rex_config::get('d2u_helper', 'default_lang');
+			$clang_id = intval(\rex_config::get('d2u_helper', 'default_lang'));
 		}
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
 
 		$objects = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$objects[] = new Machine($result->getValue("machine_id"), $clang_id);
+			$objects[] = new Machine((int) $result->getValue("machine_id"), $clang_id);
 			$result->next();
 		}
 		
@@ -2111,18 +2142,18 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Returns the URL of this object.
-	 * @param string $including_domain TRUE if Domain name should be included
+	 * @param boolean $including_domain TRUE if Domain name should be included
 	 * @return string URL
 	 */
-	public function getURL($including_domain = FALSE) {
-		if($this->url == "") {
+	public function getURL($including_domain = false) {
+		if($this->url === "") {
 			$parameterArray = [];
 			$parameterArray['machine_id'] = $this->machine_id;
-			$this->url = rex_getUrl(rex_config::get('d2u_machinery', 'article_id'), $this->clang_id, $parameterArray, "&");
+			$this->url = rex_getUrl(intval(rex_config::get('d2u_machinery', 'article_id')), $this->clang_id, $parameterArray, "&");
 		}
 
 		if($including_domain) {
-			if(\rex_addon::get('yrewrite') && \rex_addon::get('yrewrite')->isAvailable())  {
+			if(\rex_addon::get('yrewrite') instanceof rex_addon && \rex_addon::get('yrewrite')->isAvailable())  {
 				return str_replace(\rex_yrewrite::getCurrentDomain()->getUrl() .'/', \rex_yrewrite::getCurrentDomain()->getUrl(), \rex_yrewrite::getCurrentDomain()->getUrl() . $this->url);
 			}
 			else {
@@ -2145,11 +2176,11 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 		$pre_save_object = new Machine($this->machine_id, $this->clang_id);
 
 		$regenerate_urls = false;
-		if($this->machine_id == 0 || $pre_save_object != $this) {
+		if($this->machine_id === 0 || $pre_save_object !== $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_machines SET "
 					."name = '". addslashes($this->name) ."', "
 					."pics = '". implode(",", $this->pics) ."', "
-					."category_id = ". ($this->category ? $this->category->category_id : 0) .", "
+					."category_id = ". ($this->category instanceof Category? $this->category->category_id : 0) .", "
 					."alternative_machine_ids = '|". implode("|", $this->alternative_machine_ids) ."|', "
 					."product_number = '". $this->product_number ."', "
 					."article_id_software = '". $this->article_id_software ."', "
@@ -2167,7 +2198,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 					."operating_voltage_hz = '". $this->operating_voltage_hz ."', "
 					."operating_voltage_a = '". $this->operating_voltage_a ."' ";
 			if(rex_plugin::get("d2u_machinery", "contacts")->isAvailable()) {
-				$query .= ", contact_id = ". ($this->contact ? $this->contact->contact_id : 0) ." ";
+				$query .= ", contact_id = ". ($this->contact instanceof \D2U_Machinery\Contact ? $this->contact->contact_id : 0) ." ";
 			}
 			if(rex_plugin::get("d2u_machinery", "equipment")->isAvailable()) {
 				$query .= ", equipment_ids = '|". implode("|", $this->equipment_ids) ."|' ";
@@ -2191,12 +2222,12 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 					.", container_mixing_performance = '". $this->container_mixing_performance ."' "
 					.", container_waterconnect_pressure = ". $this->container_waterconnect_pressure ." "
 					.", container_waterconnect_diameter = '". $this->container_waterconnect_diameter ."' "
-					.", container_weight_empty = ". ($this->container_weight_empty ?: 0) ." "
+					.", container_weight_empty = ". ($this->container_weight_empty > 0 ? $this->container_weight_empty: 0) ." "
 					.", cutters_cutting_depth = '". $this->cutters_cutting_depth ."' "
-					.", cutters_cutting_length = ". ($this->cutters_cutting_length ?: 0) ." "
+					.", cutters_cutting_length = ". ($this->cutters_cutting_length > 0 ? $this->cutters_cutting_length: 0) ." "
 					.", cutters_rod_length = '". $this->cutters_rod_length ."' "
-					.", floor_beam_power_on_concrete = ". ($this->floor_beam_power_on_concrete ?: 0) ." "
-					.", floor_dust_extraction_connection = ". ($this->floor_dust_extraction_connection ?: 0) ." "
+					.", floor_beam_power_on_concrete = ". ($this->floor_beam_power_on_concrete > 0 ? $this->floor_beam_power_on_concrete : 0) ." "
+					.", floor_dust_extraction_connection = ". ($this->floor_dust_extraction_connection > 0 ? $this->floor_dust_extraction_connection : 0) ." "
 					.", floor_feedrate = '". $this->floor_feedrate ."' "
 					.", floor_filter_connection = '". $this->floor_filter_connection ."' "
 					.", floor_rotations = '". $this->floor_rotations ."' "
@@ -2209,13 +2240,13 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 					.", grinder_vacuum_connection = ". $this->grinder_vacuum_connection ." "
 					.", operating_pressure = '". $this->operating_pressure ."' "
 					.", pictures_delivery_set = '". implode(",", $this->pictures_delivery_set) ."' "
-					.", pump_conveying_distance = ". ($this->pump_conveying_distance ?: 0) ." "
-					.", pump_filling = ". ($this->pump_filling ?: 0) ." "
+					.", pump_conveying_distance = ". ($this->pump_conveying_distance > 0 ? $this->pump_conveying_distance : 0) ." "
+					.", pump_filling = ". ($this->pump_filling > 0 ? $this->pump_filling : 0) ." "
 					.", pump_flow_volume = '". $this->pump_flow_volume ."' "
 					.", pump_grain_size = '". $this->pump_grain_size ."' "
 					.", pump_material_container = '". $this->pump_material_container ."' "
-					.", pump_pressure_height = ". ($this->pump_pressure_height ?: 0) ." "
-					.", waste_water_capacity = ". ($this->waste_water_capacity ?: 0) ." ";
+					.", pump_pressure_height = ". ($this->pump_pressure_height > 0 ? $this->pump_pressure_height : 0) ." "
+					.", waste_water_capacity = ". ($this->waste_water_capacity > 0 ? $this->waste_water_capacity : 0) ." ";
 			}
 			if(rex_plugin::get("d2u_machinery", "service_options")->isAvailable()) {
 				$query .= ", service_option_ids = '|". implode("|", $this->service_option_ids) ."|' ";
@@ -2250,7 +2281,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 					.", sheet_length = '". $this->sheet_length ."' "
 					.", sheet_thickness = '". $this->sheet_thickness ."' "
 					.", tool_changer_locations = '". $this->tool_changer_locations ."' "
-					.", drilling_unit_below = ". ($this->drilling_unit_below ?: 0) ." "
+					.", drilling_unit_below = ". ($this->drilling_unit_below > 0 ? $this->drilling_unit_below : 0) ." "
 					.", drilling_unit_vertical = '". $this->drilling_unit_vertical ."' "
 					.", drilling_unit_horizontal = '". $this->drilling_unit_horizontal ."' "
 					.", drilling_diameter = '". $this->drilling_diameter ."' "
@@ -2294,7 +2325,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 				$query .= ", video_ids = '' ";
 			}
 
-			if($this->machine_id == 0) {
+			if($this->machine_id === 0) {
 				$query = "INSERT INTO ". $query;
 			}
 			else {
@@ -2302,24 +2333,24 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			$result = \rex_sql::factory();
 			$result->setQuery($query);
-			if($this->machine_id == 0) {
-				$this->machine_id = $result->getLastId();
+			if($this->machine_id === 0) {
+				$this->machine_id = intval($result->getLastId());
 				$error = $result->hasError();
 			}
 			
-			if(!$error && $pre_save_object->name != $this->name) {
+			if(!$error && $pre_save_object->name !== $this->name) {
 				$regenerate_urls = true;
 			}
 		}
 		// save priority, but only if new or changed
-		if($this->priority != $pre_save_object->priority || $this->machine_id == 0) {
+		if($this->priority !== $pre_save_object->priority || $this->machine_id === 0) {
 			$this->setPriority();
 		}
 
 		if($error === FALSE) {
 			// Save the language specific part
 			$pre_save_object = new Machine($this->machine_id, $this->clang_id);
-			if($pre_save_object != $this) {
+			if($pre_save_object !== $this) {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_machines_lang SET "
 						."machine_id = '". $this->machine_id ."', "
 						."clang_id = '". $this->clang_id ."', "
@@ -2332,7 +2363,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 						."pdfs = '". implode(",", $this->pdfs) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = CURRENT_TIMESTAMP, "
-						."updateuser = '". \rex::getUser()->getLogin() ."' ";
+						."updateuser = '". (\rex::getUser() instanceof rex_user ? \rex::getUser()->getLogin() : '') ."' ";
 				if(rex_plugin::get("d2u_machinery", "machine_construction_equipment_extension")->isAvailable()) {
 					$query .= ", container_connection_port = '". $this->container_connection_port ."' "
 						.", container_conveying_wave = '". $this->container_conveying_wave ."' "
@@ -2345,7 +2376,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 				$result->setQuery($query);
 				$error = $result->hasError();
 
-				if(!$error && $pre_save_object->lang_name != $this->lang_name) {
+				if(!$error && $pre_save_object->lang_name !== $this->lang_name) {
 					$regenerate_urls = true;
 				}
 			}
@@ -2361,7 +2392,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	 * Reassigns priorities in database.
 	 * @param boolean $delete Reorder priority after deletion
 	 */
-	private function setPriority($delete = FALSE) {
+	private function setPriority($delete = FALSE):void {
 		// Pull prios from database
 		$query = "SELECT machine_id, priority FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
 			."WHERE machine_id <> ". $this->machine_id ." ORDER BY priority";
@@ -2375,7 +2406,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 		
 		// When prio is too high or was deleted, simply add at end 
 		if($this->priority > $result->getRows() || $delete) {
-			$this->priority = $result->getRows() + 1;
+			$this->priority = intval($result->getRows()) + 1;
 		}
 
 		$machines = [];
@@ -2388,7 +2419,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 		// Save all prios
 		foreach($machines as $prio => $machine_id) {
 			$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_machines "
-					."SET priority = ". ($prio + 1) ." " // +1 because array_splice recounts at zero
+					."SET priority = ". ((int) $prio + 1) ." " // +1 because array_splice recounts at zero
 					."WHERE machine_id = ". $machine_id;
 			$result = \rex_sql::factory();
 			$result->setQuery($query);

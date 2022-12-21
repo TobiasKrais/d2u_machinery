@@ -114,7 +114,7 @@ class Contact {
 	 * @return \Machine[] Machines
 	 */
 	public function getMachines() {
-		$clang_id = \rex_config::get("d2u_helper", "default_lang");
+		$clang_id = \intval(rex_config::get("d2u_helper", "default_lang"));
 		$query = "SELECT machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
 			."WHERE contact_id = ". $this->contact_id ." ";
 		$query .= 'ORDER BY name ASC';
@@ -138,7 +138,7 @@ class Contact {
 
 		$pre_save_contact = new Contact($this->contact_id);
 
-		if($this->contact_id == 0 || $pre_save_contact != $this) {
+		if($this->contact_id == 0 || $pre_save_contact !== $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_contacts SET "
 					."email = '". $this->email ."', "
 					."name = '". addslashes($this->name) ."', "

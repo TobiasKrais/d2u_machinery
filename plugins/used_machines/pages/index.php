@@ -4,12 +4,12 @@ $entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
 
 // Print message
-if($message != "") {
+if($message !== "") {
 	print rex_view::success(rex_i18n::msg($message));
 }
 
 // save settings
-if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_apply") == 1) {
+if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(INPUT_POST, "btn_apply")) === 1) {
 	$form = (array) rex_post('form', 'array', []);
 
 	// Media fields and links need special treatment
@@ -48,7 +48,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 				$used_machine->videos = []; // Clear video array
 				foreach($video_ids as $video_id) {
 					if($video_id > 0) {
-						$used_machine->videos[$video_id] = new Video($video_id, rex_config::get("d2u_helper", "default_lang"));
+						$used_machine->videos[$video_id] = new Video($video_id, intval(rex_config::get("d2u_helper", "default_lang")));
 					}
 				}
 			}
@@ -95,7 +95,7 @@ else if (filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		$form = (array) rex_post('form', 'array', []);
 		$used_machine_id = $form['used_machine_id'];
 	}
-	$used_machine = new UsedMachine($used_machine_id, rex_config::get("d2u_helper", "default_lang"));
+	$used_machine = new UsedMachine($used_machine_id, intval(rex_config::get("d2u_helper", "default_lang")));
 	$used_machine->used_machine_id = $used_machine_id; // Ensure correct ID in case language has no object
 	
 	foreach(rex_clang::getAll() as $rex_clang) {
@@ -114,7 +114,7 @@ else if (filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 }
 // Change online status of machine
 else if($func == 'changestatus') {
-	$used_machine = new UsedMachine($entry_id, rex_config::get("d2u_helper", "default_lang"));
+	$used_machine = new UsedMachine($entry_id, intval(rex_config::get("d2u_helper", "default_lang")));
 	$used_machine->used_machine_id = $entry_id; // Ensure correct ID in case language has no object
 	$used_machine->changeStatus();
 
@@ -124,7 +124,7 @@ else if($func == 'changestatus') {
 
 // Eingabeformular
 if ($func == 'edit' || $func == 'clone' || $func == 'add') {
-	$used_machine = new UsedMachine($entry_id, rex_config::get("d2u_helper", "default_lang"));
+	$used_machine = new UsedMachine($entry_id, intval(rex_config::get("d2u_helper", "default_lang")));
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
@@ -135,13 +135,13 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 					<legend><?php echo rex_i18n::msg('d2u_helper_data_all_lang'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-							$readonly = (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]')) ? FALSE : TRUE;
+							$readonly = (\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) ? FALSE : TRUE;
 							
 							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_manufacturer', "form[manufacturer]", $used_machine->manufacturer, TRUE, $readonly, "text");
 							d2u_addon_backend_helper::form_input('d2u_helper_name', "form[name]", $used_machine->name, TRUE, $readonly, "text");
 							$options = [];
-							foreach(Category::getAll(rex_config::get("d2u_helper", "default_lang")) as $category) {
-								if($category->name != "") {
+							foreach(Category::getAll(intval(rex_config::get("d2u_helper", "default_lang"))) as $category) {
+								if($category->name !== "") {
 									$options[$category->category_id] = $category->name;
 								}
 							}
@@ -167,7 +167,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 							d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', $used_machine->online_status == "online", $readonly);
 							d2u_addon_backend_helper::form_medialistfield('d2u_helper_picture', 1, $used_machine->pics, $readonly);
 							$options_machines = array(0 => rex_i18n::msg('d2u_machinery_no_selection'));
-							foreach(Machine::getAll(rex_config::get("d2u_helper", "default_lang")) as $machine) {
+							foreach(Machine::getAll(intval(rex_config::get("d2u_helper", "default_lang"))) as $machine) {
 								$options_machines[$machine->machine_id] = $machine->name;
 							}
 							d2u_addon_backend_helper::form_select('d2u_machinery_used_machines_linked_machine', 'form[machine_id]', $options_machines, ($used_machine->machine === FALSE ? [] : [$used_machine->machine->machine_id]), 1, FALSE, $readonly);
@@ -175,7 +175,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_external_url', "form[external_url]", $used_machine->external_url, FALSE, $readonly, "text");
 							if(\rex_addon::get("d2u_videos")->isAvailable()) {
 								$options = [];
-								foreach(Video::getAll(rex_config::get("d2u_helper", "default_lang")) as $video) {
+								foreach(Video::getAll(intval(rex_config::get("d2u_helper", "default_lang"))) as $video) {
 									$options[$video->video_id] = $video->name;
 								}
 								d2u_addon_backend_helper::form_select('d2u_machinery_category_videos', 'form[video_ids][]', $options, array_keys($used_machine->videos), 10, TRUE, $readonly);
@@ -186,10 +186,10 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 				<?php
 					foreach(rex_clang::getAll() as $rex_clang) {
 						$used_machine_lang = new UsedMachine($entry_id, $rex_clang->getId());
-						$required = $rex_clang->getId() == rex_config::get("d2u_helper", "default_lang") ? TRUE : FALSE;
+						$required = $rex_clang->getId() === intval(rex_config::get("d2u_helper", "default_lang")) ? TRUE : FALSE;
 						
 						$readonly_lang = TRUE;
-						if(\rex::getUser()->isAdmin() || (\rex::getUser()->hasPerm('d2u_machinery[edit_lang]') && \rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId()))) {
+						if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || (\rex::getUser()->hasPerm('d2u_machinery[edit_lang]') && \rex::getUser()->getComplexPerm('clang') instanceof rex_clang_perm && \rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId())))) {
 							$readonly_lang = FALSE;
 						}
 				?>
@@ -197,7 +197,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						<legend><?php echo rex_i18n::msg('d2u_helper_text_lang') .' "'. $rex_clang->getName() .'"'; ?></legend>
 						<div class="panel-body-wrapper slide">
 							<?php
-								if($rex_clang->getId() != rex_config::get("d2u_helper", "default_lang")) {
+								if($rex_clang->getId() !== intval(rex_config::get("d2u_helper", "default_lang"))) {
 									$options_translations = [];
 									$options_translations["yes"] = rex_i18n::msg('d2u_helper_translation_needs_update');
 									$options_translations["no"] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
@@ -239,7 +239,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						<button class="btn btn-apply" type="submit" name="btn_apply" value="1"><?php echo rex_i18n::msg('form_apply'); ?></button>
 						<button class="btn btn-abort" type="submit" name="btn_abort" formnovalidate="formnovalidate" value="1"><?php echo rex_i18n::msg('form_abort'); ?></button>
 						<?php
-							if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]')) {
+							if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
 								print '<button class="btn btn-delete" type="submit" name="btn_delete" formnovalidate="formnovalidate" data-confirm="'. rex_i18n::msg('form_delete') .'?" value="1">'. rex_i18n::msg('form_delete') .'</button>';
 							}
 						?>
@@ -258,13 +258,13 @@ if ($func == '') {
     $list = rex_list::factory('SELECT used_machine_id, manufacturer, machines.name AS machinename, year_built, product_number, categories.name AS categoryname, offer_type, online_status '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_machinery_used_machines AS machines '
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_categories_lang AS categories '
-			. 'ON machines.category_id = categories.category_id AND categories.clang_id = '. rex_config::get("d2u_helper", "default_lang") .' '
+			. 'ON machines.category_id = categories.category_id AND categories.clang_id = '. intval(rex_config::get("d2u_helper", "default_lang")) .' '
 		. 'ORDER BY machines.name ASC', 100);
     $list->addTableAttribute('class', 'table-striped table-hover');
 
     $tdIcon = '<i class="rex-icon fa-truck"></i>';
 	$thIcon = "";
-	if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]')) {
+	if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
 	    $thIcon = '<a href="' . $list->getUrl(['func' => 'add']) . '" title="' . rex_i18n::msg('add') . '"><i class="rex-icon rex-icon-add-module"></i></a>';
 	}
     $list->addColumn($thIcon, $tdIcon, 0, ['<th class="rex-table-icon">###VALUE###</th>', '<td class="rex-table-icon">###VALUE###</td>']);
@@ -293,7 +293,7 @@ if ($func == '') {
     $list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###used_machine_id###']);
 
 	$list->removeColumn('online_status');
-	if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]')) {
+	if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
 		$list->addColumn(rex_i18n::msg('status_online'), '<a class="rex-###online_status###" href="' . rex_url::currentBackendPage(['func' => 'changestatus']) . '&entry_id=###used_machine_id###"><i class="rex-icon rex-icon-###online_status###"></i> ###online_status###</a>');
 		$list->setColumnLayout(rex_i18n::msg('status_online'), ['', '<td class="rex-table-action">###VALUE###</td>']);
 
