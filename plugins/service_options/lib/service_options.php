@@ -12,37 +12,37 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var int Database ID
 	 */
-	var $service_option_id = 0;
+	public int $service_option_id = 0;
 	
 	/**
 	 * @var int Redaxo clang id
 	 */
-	var $clang_id = 0;
+	public int $clang_id = 0;
 	
 	/**
 	 * @var string Name
 	 */
-	var $name = "";
+	public string $name = "";
 	
 	/**
 	 * @var string Description
 	 */
-	var $description = "";
+	public string $description = "";
 
 	/**
 	 * @var string Picture file name 
 	 */
-	var $picture = "";
+	public string $picture = "";
 	
 	/**
 	 * @var String Status. Either "online" or "offline".
 	 */
-	var $online_status = "offline";
+	public string $online_status = "offline";
 	
 	/**
 	 * @var string "yes" if translation needs update
 	 */
-	var $translation_needs_update = "delete";
+	public string $translation_needs_update = "delete";
 	
 	/**
 	 * Constructor. Reads an Service Option stored in database.
@@ -61,13 +61,13 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper {
 		$num_rows = $result->getRows();
 
 		if ($num_rows > 0) {
-			$this->service_option_id = $result->getValue("service_option_id");
-			$this->name = stripslashes($result->getValue("name"));
-			$this->description = stripslashes(htmlspecialchars_decode($result->getValue("description")));
-			$this->picture = $result->getValue("picture");
-			$this->online_status = $result->getValue("online_status");
+			$this->service_option_id = (int) $result->getValue("service_option_id");
+			$this->name = stripslashes((string) $result->getValue("name"));
+			$this->description = stripslashes(htmlspecialchars_decode((string) $result->getValue("description")));
+			$this->picture = (string) $result->getValue("picture");
+			$this->online_status = (string) $result->getValue("online_status");
 			if($result->getValue("translation_needs_update") !== "") {
-				$this->translation_needs_update = $result->getValue("translation_needs_update");
+				$this->translation_needs_update = (string) $result->getValue("translation_needs_update");
 			}
 		}
 	}
@@ -100,8 +100,8 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Deletes the object in all languages.
-	 * @param bool $delete_all If TRUE, all translations and main object are deleted. If 
-	 * FALSE, only this translation will be deleted.
+	 * @param bool $delete_all If true, all translations and main object are deleted. If 
+	 * false, only this translation will be deleted.
 	 */
 	public function delete($delete_all = true):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_service_options_lang "
@@ -126,10 +126,10 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * Get all Service Options.
 	 * @param int $clang_id Redaxo clang id.
-	 * @param boolean $online_only TRUE if only online objects should be returned.
+	 * @param boolean $online_only true if only online objects should be returned.
 	 * @return ServiceOption[] Array with ServiceOption objects.
 	 */
-	public static function getAll($clang_id, $online_only = FALSE) {
+	public static function getAll($clang_id, $online_only = false) {
 		$query = "SELECT service_option_id FROM ". \rex::getTablePrefix() ."d2u_machinery_service_options_lang "
 			."WHERE clang_id = ". $clang_id ." ";
 		$query .= "ORDER BY name";
@@ -139,11 +139,11 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper {
 		
 		$service_options = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$service_option = new ServiceOption($result->getValue("service_option_id"), $clang_id);
+			$service_option = new ServiceOption((int) $result->getValue("service_option_id"), $clang_id);
 			if($online_only && $service_option->online_status === "online") {
 				$service_options[] = $service_option;
 			}
-			else if($online_only === FALSE) {
+			else if($online_only === false) {
 				$service_options[] = $service_option;
 			}
 			$result->next();
@@ -153,10 +153,10 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Gets the machines referring to this object.
-	 * @param boolean $online_only TRUE if only online machines should be returned.
+	 * @param boolean $online_only true if only online machines should be returned.
 	 * @return Machine[] Machines referring to this object.
 	 */
-	public function getReferringMachines($online_only = FALSE) {
+	public function getReferringMachines($online_only = false) {
 		$query = "SELECT machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
 			."WHERE service_option_ids LIKE '%|". $this->service_option_id ."|%'";
 		$result = \rex_sql::factory();
@@ -165,7 +165,7 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper {
 		$machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$machine = new Machine((int) $result->getValue("machine_id"), $this->clang_id);
-			if($online_only === FALSE || ($online_only && $machine->online_status === "online")) {
+			if($online_only === false || ($online_only && $machine->online_status === "online")) {
 				$machines[] = $machine;
 			}
 			$result->next();
@@ -183,7 +183,7 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper {
 		$query = 'SELECT service_option_id FROM '. \rex::getTablePrefix() .'d2u_machinery_service_options_lang '
 				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
 				.'ORDER BY name';
-		if($type == 'missing') {
+		if($type === 'missing') {
 			$query = 'SELECT main.service_option_id FROM '. \rex::getTablePrefix() .'d2u_machinery_service_options AS main '
 					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_service_options_lang AS target_lang '
 						.'ON main.service_option_id = target_lang.service_option_id AND target_lang.clang_id = '. $clang_id .' '
@@ -198,7 +198,7 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper {
 
 		$objects = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$objects[] = new ServiceOption($result->getValue("service_option_id"), $clang_id);
+			$objects[] = new ServiceOption((int) $result->getValue("service_option_id"), $clang_id);
 			$result->next();
 		}
 		
@@ -207,16 +207,16 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Updates or inserts the object into database.
-	 * @return boolean TRUE if successful
+	 * @return boolean true if successful
 	 */
 	public function save() {
-		$error = FALSE;
+		$error = false;
 
 		// Save the not language specific part
 		$pre_save_service_option = new ServiceOption($this->service_option_id, $this->clang_id);
 		
 		// saving the rest
-		if($this->service_option_id == 0 || $pre_save_service_option !== $this) {
+		if($this->service_option_id === 0 || $pre_save_service_option !== $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_service_options SET "
 					."online_status = '". $this->online_status ."', "
 					."picture = '". $this->picture ."' ";
@@ -236,7 +236,7 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper {
 			}
 		}
 		
-		if($error === FALSE) {
+		if($error === false) {
 			// Save the language specific part
 			$pre_save_service_option = new ServiceOption($this->service_option_id, $this->clang_id);
 			if($pre_save_service_option !== $this) {
@@ -247,7 +247,7 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper {
 						."description = '". addslashes(htmlspecialchars($this->description)) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = CURRENT_TIMESTAMP, "
-						."updateuser = '". \rex::getUser()->getLogin() ."' ";
+						."updateuser = '". (\rex::getUser() instanceof rex_user ? \rex::getUser()->getLogin() : '') ."' ";
 
 				$result = \rex_sql::factory();
 				$result->setQuery($query);

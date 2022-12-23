@@ -137,10 +137,10 @@ if(rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable() && (intval(r
 				<legend><small><i class="rex-icon rex-icon-database"></i></small> <?php echo rex_i18n::msg('d2u_helper_settings'); ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
-						d2u_addon_backend_helper::form_input('d2u_machinery_settings_request_form_email', 'settings[request_form_email]', strval(rex_config::get('d2u_machinery', 'request_form_email')), TRUE, FALSE, 'email');
-						d2u_addon_backend_helper::form_input('d2u_machinery_settings_contact_phone', 'settings[contact_phone]', strval(rex_config::get('d2u_machinery', 'contact_phone')), TRUE, FALSE);
+						d2u_addon_backend_helper::form_input('d2u_machinery_settings_request_form_email', 'settings[request_form_email]', strval(rex_config::get('d2u_machinery', 'request_form_email')), true, false, 'email');
+						d2u_addon_backend_helper::form_input('d2u_machinery_settings_contact_phone', 'settings[contact_phone]', strval(rex_config::get('d2u_machinery', 'contact_phone')), true, false);
 						$consultation_pics = rex_config::get('d2u_machinery', 'consultation_pics','') !== '' ? preg_grep('/^\s*$/s', explode(",", strval(rex_config::get('d2u_machinery', 'consultation_pics'))), PREG_GREP_INVERT) : (rex_config::get('d2u_machinery', 'consultation_pic', '') !== '' ? [rex_config::get('d2u_machinery', 'consultation_pic')] : []);
-						d2u_addon_backend_helper::form_medialistfield('d2u_machinery_settings_consultation_pics', 1, is_array($consultation_pics) ? $consultation_pics : [], FALSE);
+						d2u_addon_backend_helper::form_medialistfield('d2u_machinery_settings_consultation_pics', 1, is_array($consultation_pics) ? $consultation_pics : [], false);
 						d2u_addon_backend_helper::form_linkfield('d2u_machinery_settings_consultation_article', '2', intval(rex_config::get('d2u_machinery', 'consultation_article_id')), intval(rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId())));
 						if(rex_addon::get("url")->isAvailable()) {
 							d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_short_urls', 'settings[short_urls]', 'true', rex_config::get('d2u_machinery', 'short_urls') === 'true');
@@ -290,7 +290,7 @@ if(rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable() && (intval(r
 					<div class="panel-body-wrapper slide">
 						<?php
 						d2u_addon_backend_helper::form_checkbox('d2u_machinery_export_settings_autoexport', 'settings[export_autoexport]', 'active', rex_config::get('d2u_machinery', 'export_autoexport') === 'active');
-						d2u_addon_backend_helper::form_input('d2u_machinery_export_settings_email', 'settings[export_failure_email]', strval(rex_config::get('d2u_machinery', 'export_failure_email')), TRUE, FALSE, 'email');
+						d2u_addon_backend_helper::form_input('d2u_machinery_export_settings_email', 'settings[export_failure_email]', strval(rex_config::get('d2u_machinery', 'export_failure_email')), true, false, 'email');
 						?>
 					</div>
 				</fieldset>
@@ -302,8 +302,8 @@ if(rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable() && (intval(r
 				<div class="panel-body-wrapper slide">
 					<?php
 						d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_analytics_activate', 'settings[google_analytics_activate]', 'true', rex_config::get('d2u_machinery', 'google_analytics_activate') === 'true');
-						d2u_addon_backend_helper::form_input('d2u_machinery_settings_analytics_event_category', 'settings[analytics_event_category]', strval(rex_config::get('d2u_machinery', 'analytics_event_category')), FALSE, FALSE, 'text');
-						d2u_addon_backend_helper::form_input('d2u_machinery_settings_analytics_event_action', 'settings[analytics_event_action]', strval(rex_config::get('d2u_machinery', 'analytics_event_action')), FALSE, FALSE, 'text');
+						d2u_addon_backend_helper::form_input('d2u_machinery_settings_analytics_event_category', 'settings[analytics_event_category]', strval(rex_config::get('d2u_machinery', 'analytics_event_category')), false, false, 'text');
+						d2u_addon_backend_helper::form_input('d2u_machinery_settings_analytics_event_action', 'settings[analytics_event_action]', strval(rex_config::get('d2u_machinery', 'analytics_event_action')), false, false, 'text');
 					?>
 					<script>
 						function changeType() {

@@ -19,7 +19,7 @@ abstract class AExport {
 	 */
 	 public function __construct($provider) {
 		$this->provider = $provider;
-		$this->exported_used_machines = ExportedUsedMachine::getAll($this->provider);
+		$this->exported_used_machines = ExportedUsedMachine::getAll($provider);
 	}
 	
 	/**

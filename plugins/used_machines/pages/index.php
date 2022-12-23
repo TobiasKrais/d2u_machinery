@@ -13,14 +13,14 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	$form = rex_post('form', 'array', []);
 
 	// Media fields and links need special treatment
-	$input_media_list = (array) rex_post('REX_INPUT_MEDIALIST', 'array', array());
+	$input_media_list = rex_post('REX_INPUT_MEDIALIST', 'array', []);
 	
-	$success = TRUE;
-	$used_machine = FALSE;
+	$success = true;
+	$used_machine = false;
 
 	$used_machine_id = $form['used_machine_id'];
 	foreach(rex_clang::getAll() as $rex_clang) {
-		if($used_machine === FALSE) {
+		if($used_machine === false) {
 			$used_machine = new UsedMachine($used_machine_id, $rex_clang->getId());
 			$used_machine->used_machine_id = $used_machine_id; // Ensure correct ID in case first language has no object
 			$used_machine->name = $form['name'];
@@ -34,8 +34,9 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 			$used_machine->currency_code = $form['currency_code'];
 			$used_machine->vat = $form['vat'];
 			$used_machine->online_status = array_key_exists('online_status', $form) ? "online" : "offline";
-			$used_machine->pics = preg_grep('/^\s*$/s', explode(",", $input_media_list[1]), PREG_GREP_INVERT);
-			$used_machine->machine = $form['machine_id'] > 0 ? new Machine($form['machine_id'], $rex_clang->getId()) : FALSE;
+			$pics = preg_grep('/^\s*$/s', explode(",", $input_media_list[1]), PREG_GREP_INVERT);
+			$used_machine->pics = is_array($pics) ? $pics : [];
+			$used_machine->machine = $form['machine_id'] > 0 ? new Machine($form['machine_id'], $rex_clang->getId()) : false;
 			$used_machine->location = $form['location'];
 			$used_machine->external_url = $form['external_url'];
 
@@ -59,17 +60,18 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 		$used_machine->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 		$used_machine->teaser = $form['lang'][$rex_clang->getId()]['teaser'];
 		$used_machine->description = $form['lang'][$rex_clang->getId()]['description'];
-		$used_machine->downloads = preg_grep('/^\s*$/s', explode(",", $input_media_list[$rex_clang->getId() + 100]), PREG_GREP_INVERT);
+		$downloads = preg_grep('/^\s*$/s', explode(",", $input_media_list[$rex_clang->getId() + 100]), PREG_GREP_INVERT);
+		$used_machine->downloads = is_array($downloads) ? $downloads : [];
 	
 		if($used_machine->translation_needs_update === "delete") {
-			$used_machine->delete(FALSE);
+			$used_machine->delete(false);
 		}
 		else if($used_machine->save()){
 			// remember id, for each database lang object needs same id
 			$used_machine_id = $used_machine->used_machine_id;
 		}
 		else {
-			$success = FALSE;
+			$success = false;
 		}
 	}
 
@@ -80,16 +82,16 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	}
 
 	// Redirect to make reload and thus double save impossible
-	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$used_machine !== FALSE) {
-		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$used_machine->used_machine_id, "func"=>'edit', "message"=>$message), FALSE));
+	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$used_machine !== false) {
+		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$used_machine->used_machine_id, "func"=>'edit', "message"=>$message), false));
 	}
 	else {
-		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), FALSE));
+		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), false));
 	}
 	exit;
 }
 // Delete
-else if (filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
+else if (intval(filter_input(INPUT_POST, "btn_delete", FILTER_VALIDATE_INT)) === 1 || $func === 'delete') {
 	$used_machine_id = $entry_id;
 	if($used_machine_id === 0) {
 		$form = rex_post('form', 'array', []);
@@ -99,14 +101,7 @@ else if (filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$used_machine->used_machine_id = $used_machine_id; // Ensure correct ID in case language has no object
 	
 	foreach(rex_clang::getAll() as $rex_clang) {
-		if($used_machine === FALSE) {
-			$used_machine = new UsedMachine($used_machine_id, $rex_clang->getId());
-			// If object is not found in language, set id anyway to be able to delete
-			$used_machine->used_machine_id = $used_machine_id;
-		}
-		else {
-			$used_machine->clang_id = $rex_clang->getId();
-		}
+		$used_machine->clang_id = $rex_clang->getId();
 		$used_machine->delete();
 	}
 	
@@ -135,50 +130,50 @@ if ($func === 'edit' || $func === 'clone' || $func === 'add') {
 					<legend><?php echo rex_i18n::msg('d2u_helper_data_all_lang'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-							$readonly = (\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) ? FALSE : TRUE;
+							$readonly = (\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) ? false : true;
 							
-							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_manufacturer', "form[manufacturer]", $used_machine->manufacturer, TRUE, $readonly, "text");
-							d2u_addon_backend_helper::form_input('d2u_helper_name', "form[name]", $used_machine->name, TRUE, $readonly, "text");
+							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_manufacturer', "form[manufacturer]", $used_machine->manufacturer, true, $readonly, "text");
+							d2u_addon_backend_helper::form_input('d2u_helper_name', "form[name]", $used_machine->name, true, $readonly, "text");
 							$options = [];
 							foreach(Category::getAll(intval(rex_config::get("d2u_helper", "default_lang"))) as $category) {
 								if($category->name !== "") {
 									$options[$category->category_id] = $category->name;
 								}
 							}
-							d2u_addon_backend_helper::form_select('d2u_helper_category', 'form[category_id]', $options, [$used_machine->category->category_id], 1, FALSE, $readonly);
+							d2u_addon_backend_helper::form_select('d2u_helper_category', 'form[category_id]', $options, [$used_machine->category instanceof Category ? $used_machine->category->category_id : 0], 1, false, $readonly);
 							if(rex_plugin::get("d2u_machinery", "contacts")->isAvailable()) {
 								$options_contacts = [0 => rex_i18n::msg('d2u_machinery_contacts_settings_contact')];
 								foreach(\D2U_Machinery\Contact::getAll() as $contact) {
-									if($contact->name) {
+									if($contact->name !== '') {
 										$options_contacts[$contact->contact_id] = $contact->name;
 									}
 								}
-								d2u_addon_backend_helper::form_select('d2u_machinery_contacts_contact', 'form[contact_id]', $options_contacts, [$used_machine->contact ? $used_machine->contact->contact_id : 0], 1, FALSE, $readonly);
+								d2u_addon_backend_helper::form_select('d2u_machinery_contacts_contact', 'form[contact_id]', $options_contacts, [$used_machine->contact instanceof D2U_Machinery\Contact ? $used_machine->contact->contact_id : 0], 1, false, $readonly);
 							}
 							$options_offer_type = ["sale" => rex_i18n::msg('d2u_machinery_used_machines_offer_type_sale'),
 								"rent" => rex_i18n::msg('d2u_machinery_used_machines_offer_type_rent')];
-							d2u_addon_backend_helper::form_select('d2u_machinery_used_machines_offer_type', 'form[offer_type]', $options_offer_type, [$used_machine->offer_type], 1, FALSE, $readonly);
-							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_availability', "form[availability]", $used_machine->availability, FALSE, $readonly, "date");
-							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_product_number', "form[product_number]", $used_machine->product_number, FALSE, $readonly, "text");
-							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_year_built', "form[year_built]", $used_machine->year_built, FALSE, $readonly, "number");
-							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_price', "form[price]", $used_machine->price, FALSE, $readonly, "number");
-							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_currency_code', "form[currency_code]", $used_machine->currency_code, FALSE, $readonly, "text");
-							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_vat', "form[vat]", $used_machine->vat, FALSE, $readonly, "number");
+							d2u_addon_backend_helper::form_select('d2u_machinery_used_machines_offer_type', 'form[offer_type]', $options_offer_type, [$used_machine->offer_type], 1, false, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_availability', "form[availability]", $used_machine->availability, false, $readonly, "date");
+							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_product_number', "form[product_number]", $used_machine->product_number, false, $readonly, "text");
+							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_year_built', "form[year_built]", $used_machine->year_built, false, $readonly, "number");
+							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_price', "form[price]", $used_machine->price, false, $readonly, "number");
+							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_currency_code', "form[currency_code]", $used_machine->currency_code, false, $readonly, "text");
+							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_vat', "form[vat]", $used_machine->vat, false, $readonly, "number");
 							d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', $used_machine->online_status === "online", $readonly);
 							d2u_addon_backend_helper::form_medialistfield('d2u_helper_picture', 1, $used_machine->pics, $readonly);
 							$options_machines = array(0 => rex_i18n::msg('d2u_machinery_no_selection'));
 							foreach(Machine::getAll(intval(rex_config::get("d2u_helper", "default_lang"))) as $machine) {
 								$options_machines[$machine->machine_id] = $machine->name;
 							}
-							d2u_addon_backend_helper::form_select('d2u_machinery_used_machines_linked_machine', 'form[machine_id]', $options_machines, ($used_machine->machine === FALSE ? [] : [$used_machine->machine->machine_id]), 1, FALSE, $readonly);
-							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_location', "form[location]", $used_machine->location, FALSE, $readonly, "text");
-							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_external_url', "form[external_url]", $used_machine->external_url, FALSE, $readonly, "text");
+							d2u_addon_backend_helper::form_select('d2u_machinery_used_machines_linked_machine', 'form[machine_id]', $options_machines, ($used_machine->machine === false ? [] : [$used_machine->machine instanceof Machine ? $used_machine->machine->machine_id : 0]), 1, false, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_location', "form[location]", $used_machine->location, false, $readonly, "text");
+							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_external_url', "form[external_url]", $used_machine->external_url, false, $readonly, "text");
 							if(\rex_addon::get("d2u_videos")->isAvailable()) {
 								$options = [];
 								foreach(Video::getAll(intval(rex_config::get("d2u_helper", "default_lang"))) as $video) {
 									$options[$video->video_id] = $video->name;
 								}
-								d2u_addon_backend_helper::form_select('d2u_machinery_category_videos', 'form[video_ids][]', $options, array_keys($used_machine->videos), 10, TRUE, $readonly);
+								d2u_addon_backend_helper::form_select('d2u_machinery_category_videos', 'form[video_ids][]', $options, array_keys($used_machine->videos), 10, true, $readonly);
 							}
 						?>
 					</div>
@@ -186,11 +181,11 @@ if ($func === 'edit' || $func === 'clone' || $func === 'add') {
 				<?php
 					foreach(rex_clang::getAll() as $rex_clang) {
 						$used_machine_lang = new UsedMachine($entry_id, $rex_clang->getId());
-						$required = $rex_clang->getId() === intval(rex_config::get("d2u_helper", "default_lang")) ? TRUE : FALSE;
+						$required = $rex_clang->getId() === intval(rex_config::get("d2u_helper", "default_lang")) ? true : false;
 						
-						$readonly_lang = TRUE;
+						$readonly_lang = true;
 						if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || (\rex::getUser()->hasPerm('d2u_machinery[edit_lang]') && \rex::getUser()->getComplexPerm('clang') instanceof rex_clang_perm && \rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId())))) {
-							$readonly_lang = FALSE;
+							$readonly_lang = false;
 						}
 				?>
 					<fieldset>
@@ -202,7 +197,7 @@ if ($func === 'edit' || $func === 'clone' || $func === 'add') {
 									$options_translations["yes"] = rex_i18n::msg('d2u_helper_translation_needs_update');
 									$options_translations["no"] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
 									$options_translations["delete"] = rex_i18n::msg('d2u_helper_translation_delete');
-									d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$used_machine_lang->translation_needs_update], 1, FALSE, $readonly_lang);
+									d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$used_machine_lang->translation_needs_update], 1, false, $readonly_lang);
 								}
 								else {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="no">';
@@ -221,8 +216,8 @@ if ($func === 'edit' || $func === 'clone' || $func === 'add') {
 							</script>
 							<div id="details_clang_<?php print $rex_clang->getId(); ?>">
 								<?php
-									d2u_addon_backend_helper::form_input('d2u_machinery_machine_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $used_machine_lang->teaser, FALSE, $readonly_lang, "text");
-									d2u_addon_backend_helper::form_textarea('d2u_helper_description', "form[lang][". $rex_clang->getId() ."][description]", $used_machine_lang->description, 5, FALSE, $readonly_lang, TRUE);
+									d2u_addon_backend_helper::form_input('d2u_machinery_machine_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $used_machine_lang->teaser, false, $readonly_lang, "text");
+									d2u_addon_backend_helper::form_textarea('d2u_helper_description', "form[lang][". $rex_clang->getId() ."][description]", $used_machine_lang->description, 5, false, $readonly_lang, true);
 									d2u_addon_backend_helper::form_medialistfield('d2u_machinery_used_machines_downloads', $rex_clang->getId() + 100, $used_machine_lang->downloads, $readonly_lang);
 								?>
 							</div>

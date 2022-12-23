@@ -9,7 +9,6 @@ if(\rex::isBackend()) {
 	rex_extension::register('ART_PRE_DELETED', 'rex_d2u_machinery_used_machines_article_is_in_use');
 }
 else {
-	rex_extension::register('PACKAGES_INCLUDED', 'd2u_machinery_used_machines_add_open_graph_call', rex_extension::LATE);
 	$d2u_video = rex_addon::get('d2u_videos');
 	if($d2u_video->isAvailable() && rex_version::compare($d2u_video->getVersion(), '1.1', '>=')) {
 		rex_extension::register('YREWRITE_SITEMAP', 'rex_d2u_machinery_used_machines_video_sitemap');	
@@ -30,8 +29,8 @@ function rex_d2u_machinery_used_machines_article_is_in_use(rex_extension_point $
 	// Prepare warnings
 	// Settings
 	$addon = rex_addon::get("d2u_machinery");
-	if($addon->hasConfig("used_machine_article_id_rent") && $addon->getConfig("used_machine_article_id_rent") == $article_id ||
-			$addon->hasConfig("used_machine_article_id_sale") && $addon->getConfig("used_machine_article_id_sale") == $article_id) {
+	if($addon->hasConfig("used_machine_article_id_rent") && intval($addon->getConfig("used_machine_article_id_rent")) === $article_id ||
+			$addon->hasConfig("used_machine_article_id_sale") && intval($addon->getConfig("used_machine_article_id_sale")) === $article_id) {
 		$warning[] = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/settings\')">'.
 			 rex_i18n::msg('d2u_machinery_used_machines') ." - ". rex_i18n::msg('d2u_helper_settings') . '</a>';
 	}
@@ -40,7 +39,7 @@ function rex_d2u_machinery_used_machines_article_is_in_use(rex_extension_point $
 		throw new rex_api_exception(rex_i18n::msg('d2u_helper_rex_article_cannot_delete') ."<ul><li>". implode("</li><li>", $warning) ."</li></ul>");
 	}
 	else {
-		return "";
+		return [];
 	}
 }
 
@@ -59,7 +58,7 @@ function rex_d2u_machinery_used_machines_clang_deleted(rex_extension_point $ep) 
 	// Delete
 	$used_machines = UsedMachine::getAll($clang_id);
 	foreach ($used_machines as $used_machine) {
-		$used_machine->delete(FALSE);
+		$used_machine->delete(false);
 	}
 	
 	// Delete language replacements
@@ -100,48 +99,12 @@ function rex_d2u_machinery_used_machines_media_is_in_use(rex_extension_point $ep
 }
 
 /**
- * Call Open Graph method when all functions are available <head>.
- */
-function d2u_machinery_used_machines_add_open_graph_call() {
-	rex_extension::register('OUTPUT_FILTER', 'd2u_machinery_used_machines_add_open_graph');	
-}
-
-/**
- * Add Open Graph to used machine sites
- * @param rex_extension_point<string> $ep Redaxo extension point
- */
-function d2u_machinery_used_machines_add_open_graph(rex_extension_point $ep) {
-	$url_namespace = d2u_addon_frontend_helper::getUrlNamespace();
-	$url_id = d2u_addon_frontend_helper::getUrlId();
-	
-	if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || $url_namespace === "used_rent_machine_id")
-			|| (filter_input(INPUT_GET, 'used_sale_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || $url_namespace === "used_sale_machine_id")) {
-		$used_machine_id = filter_input(INPUT_GET, 'used_sale_machine_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 ? filter_input(INPUT_GET, 'used_sale_machine_id', FILTER_VALIDATE_INT) : filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT);
-		if(\rex_addon::get("url")->isAvailable() && $url_id > 0) {
-			$used_machine_id = $url_id;
-		}
-		
-		if($used_machine_id > 0) { 
-			$used_machine = new UsedMachine($used_machine_id, rex_clang::getCurrentId());
-			$og_head = '
-				<meta property="og:url" content="'. $used_machine->getURL(TRUE) .'" />
-				<meta property="og:type" content="article" />
-				<meta property="og:title" content="'. $used_machine->manufacturer .' '. $used_machine->name .'" />
-				<meta property="og:description"	content="'. $used_machine->getExtendedTeaser() .'" />'. PHP_EOL;
-			if(count($used_machine->pics) > 0) {
-				$og_head .= '<meta property="og:image" content="'. rex_url::media($used_machine->pics[0]).'" />'. PHP_EOL;
-			}
-			$ep->setSubject(str_replace('</head>', $og_head .'</head>', $ep->getSubject()));
-		}
-	}
-}
-
-/**
  * Adds videos to sitemap
  * @param rex_extension_point<string> $ep Redaxo extension point
  * @return string[] updated sitemap entries
  */
 function rex_d2u_machinery_used_machines_video_sitemap(rex_extension_point $ep) {
+	/** @var string[] $sitemap_entries */
 	$sitemap_entries = $ep->getSubject();
 
 	foreach(rex_clang::getAllIds(true) as $clang_id) {		

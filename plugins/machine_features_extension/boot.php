@@ -18,7 +18,7 @@ function rex_d2u_machinery_features_clang_deleted(rex_extension_point $ep) {
 	// Delete
 	$features = Feature::getAll($clang_id);
 	foreach ($features as $feature) {
-		$feature->delete(FALSE);
+		$feature->delete(false);
 	}
 
 	// Delete language replacements

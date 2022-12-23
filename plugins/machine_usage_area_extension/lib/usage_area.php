@@ -12,32 +12,32 @@ class UsageArea implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var int Database ID
 	 */
-	var $usage_area_id = 0;
+	public int $usage_area_id = 0;
 	
 	/**
 	 * @var int Redaxo clang id
 	 */
-	var $clang_id = 0;
+	public int $clang_id = 0;
 	
 	/**
 	 * @var int Sort Priority
 	 */
-	var $priority = 0;
+	public int $priority = 0;
 	
 	/**
 	 * @var string Name
 	 */
-	var $name = "";
+	public string $name = "";
 	
 	/**
 	 * @var int[] Category ids in which object will be available
 	 */
-	var $category_ids = [];
+	public array $category_ids = [];
 		
 	/**
 	 * @var string "yes" if translation needs update
 	 */
-	var $translation_needs_update = "delete";
+	public string $translation_needs_update = "delete";
 
 	/**
 	 * Constructor. Reads an Usage Area stored in database.
@@ -56,20 +56,21 @@ class UsageArea implements \D2U_Helper\ITranslationHelper {
 		$num_rows = $result->getRows();
 
 		if ($num_rows > 0) {
-			$this->usage_area_id = $result->getValue("usage_area_id");
-			$this->name = stripslashes($result->getValue("name"));
-			$this->priority = $result->getValue("priority");
-			$this->category_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("category_ids")), PREG_GREP_INVERT);
+			$this->usage_area_id = (int) $result->getValue("usage_area_id");
+			$this->name = stripslashes((string) $result->getValue("name"));
+			$this->priority = (int) $result->getValue("priority");
+			$category_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("category_ids")), PREG_GREP_INVERT);
+			$this->category_ids = is_array($category_ids) ? $category_ids : [];
 			if($result->getValue("translation_needs_update") !== "") {
-				$this->translation_needs_update = $result->getValue("translation_needs_update");
+				$this->translation_needs_update = (string) $result->getValue("translation_needs_update");
 			}
 		}
 	}
 	
 	/**
 	 * Deletes the object in all languages.
-	 * @param bool $delete_all If TRUE, all translations and main object are deleted. If 
-	 * FALSE, only this translation will be deleted.
+	 * @param bool $delete_all If true, all translations and main object are deleted. If 
+	 * false, only this translation will be deleted.
 	 */
 	public function delete($delete_all = true):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_usage_areas_lang "
@@ -90,7 +91,7 @@ class UsageArea implements \D2U_Helper\ITranslationHelper {
 			$result->setQuery($query);
 
 			// reset priorities
-			$this->setPriority(TRUE);			
+			$this->setPriority(true);			
 		}
 	}
 	
@@ -115,7 +116,7 @@ class UsageArea implements \D2U_Helper\ITranslationHelper {
 		
 		$usage_areas = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$usage_areas[] = new UsageArea($result->getValue("usage_area_id"), $clang_id);
+			$usage_areas[] = new UsageArea((int) $result->getValue("usage_area_id"), $clang_id);
 			$result->next();
 		}
 		return $usage_areas;
@@ -149,7 +150,7 @@ class UsageArea implements \D2U_Helper\ITranslationHelper {
 		$query = 'SELECT usage_area_id FROM '. \rex::getTablePrefix() .'d2u_machinery_usage_areas_lang '
 				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
 				.'ORDER BY name';
-		if($type == 'missing') {
+		if($type === 'missing') {
 			$query = 'SELECT main.usage_area_id FROM '. \rex::getTablePrefix() .'d2u_machinery_usage_areas AS main '
 					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_usage_areas_lang AS target_lang '
 						.'ON main.usage_area_id = target_lang.usage_area_id AND target_lang.clang_id = '. $clang_id .' '
@@ -164,7 +165,7 @@ class UsageArea implements \D2U_Helper\ITranslationHelper {
 
 		$objects = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$objects[] = new UsageArea($result->getValue("usage_area_id"), $clang_id);
+			$objects[] = new UsageArea((int) $result->getValue("usage_area_id"), $clang_id);
 			$result->next();
 		}
 		
@@ -173,10 +174,10 @@ class UsageArea implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Updates or inserts the object into database.
-	 * @return boolean TRUE if successful
+	 * @return boolean true if successful
 	 */
 	public function save() {
-		$error = FALSE;
+		$error = false;
 
 		// Save the not language specific part
 		$pre_save_usage_area = new UsageArea($this->usage_area_id, $this->clang_id);
@@ -186,7 +187,7 @@ class UsageArea implements \D2U_Helper\ITranslationHelper {
 			$this->setPriority();
 		}
 
-		if($this->usage_area_id == 0 || $pre_save_usage_area !== $this) {
+		if($this->usage_area_id === 0 || $pre_save_usage_area !== $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_usage_areas SET "
 					."category_ids = '|". implode("|", $this->category_ids) ."|', "
 					."priority = '". $this->priority ."' ";
@@ -206,7 +207,7 @@ class UsageArea implements \D2U_Helper\ITranslationHelper {
 			}
 		}
 		
-		if($error === FALSE) {
+		if($error === false) {
 			// Save the language specific part
 			$pre_save_usage_area = new UsageArea($this->usage_area_id, $this->clang_id);
 			if($pre_save_usage_area !== $this) {
@@ -243,7 +244,7 @@ class UsageArea implements \D2U_Helper\ITranslationHelper {
 		
 		// When prio is too high or was deleted, simply add at end 
 		if($this->priority > $result->getRows() || $delete) {
-			$this->priority = $result->getRows() + 1;
+			$this->priority = intval($result->getRows()) + 1;
 		}
 
 		$usage_areas = [];
@@ -256,7 +257,7 @@ class UsageArea implements \D2U_Helper\ITranslationHelper {
 		// Save all priorities
 		foreach($usage_areas as $prio => $usage_area_id) {
 			$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_usage_areas "
-					."SET priority = ". ($prio + 1) ." " // +1 because array_splice recounts at zero
+					."SET priority = ". (intval($prio) + 1) ." " // +1 because array_splice recounts at zero
 					."WHERE usage_area_id = ". $usage_area_id;
 			$result = \rex_sql::factory();
 			$result->setQuery($query);

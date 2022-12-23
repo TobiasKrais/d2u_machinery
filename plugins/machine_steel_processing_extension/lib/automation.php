@@ -12,27 +12,27 @@ class Automation implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var int Database ID
 	 */
-	var $automation_id = 0;
+	public int $automation_id = 0;
 	
 	/**
 	 * @var int Redaxo clang id
 	 */
-	var $clang_id = 0;
+	public int $clang_id = 0;
 	
 	/**
 	 * @var string Internal name
 	 */
-	var $internal_name = "";
+	public string $internal_name = "";
 
 	/**
 	 * @var string Name
 	 */
-	var $name = "";
+	public string $name = "";
 	
 	/**
 	 * @var string "yes" if translation needs update
 	 */
-	var $translation_needs_update = "delete";
+	public string $translation_needs_update = "delete";
 
 	/**
 	 * Constructor. Reads object stored in database.
@@ -51,19 +51,19 @@ class Automation implements \D2U_Helper\ITranslationHelper {
 		$num_rows = $result->getRows();
 
 		if ($num_rows > 0) {
-			$this->automation_id = $result->getValue("automation_id");
-			$this->internal_name = $result->getValue("internal_name");
-			$this->name = stripslashes($result->getValue("name"));
+			$this->automation_id = (int) $result->getValue("automation_id");
+			$this->internal_name = (string) $result->getValue("internal_name");
+			$this->name = stripslashes((string) $result->getValue("name"));
 			if($result->getValue("translation_needs_update") !== "") {
-				$this->translation_needs_update = $result->getValue("translation_needs_update");
+				$this->translation_needs_update = (string) $result->getValue("translation_needs_update");
 			}
 		}
 	}
 	
 	/**
 	 * Deletes the object in all languages.
-	 * @param bool $delete_all If TRUE, all translations and main object are deleted. If 
-	 * FALSE, only this translation will be deleted.
+	 * @param bool $delete_all If true, all translations and main object are deleted. If 
+	 * false, only this translation will be deleted.
 	 */
 	public function delete($delete_all = true):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_steel_automation_lang "
@@ -100,7 +100,7 @@ class Automation implements \D2U_Helper\ITranslationHelper {
 		
 		$automations = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$automations[] = new Automation($result->getValue("automation_id"), $clang_id);
+			$automations[] = new Automation((int) $result->getValue("automation_id"), $clang_id);
 			$result->next();
 		}
 		return $automations;
@@ -134,7 +134,7 @@ class Automation implements \D2U_Helper\ITranslationHelper {
 		$query = 'SELECT automation_id FROM '. \rex::getTablePrefix() .'d2u_machinery_steel_automation_lang '
 				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
 				.'ORDER BY name';
-		if($type == 'missing') {
+		if($type === 'missing') {
 			$query = 'SELECT main.automation_id FROM '. \rex::getTablePrefix() .'d2u_machinery_steel_automation AS main '
 					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_steel_automation_lang AS target_lang '
 						.'ON main.automation_id = target_lang.automation_id AND target_lang.clang_id = '. $clang_id .' '
@@ -149,7 +149,7 @@ class Automation implements \D2U_Helper\ITranslationHelper {
 
 		$objects = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$objects[] = new Automation($result->getValue("automation_id"), $clang_id);
+			$objects[] = new Automation((int) $result->getValue("automation_id"), $clang_id);
 			$result->next();
 		}
 		
@@ -158,16 +158,16 @@ class Automation implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Updates or inserts the object into database.
-	 * @return boolean TRUE if successful
+	 * @return boolean true if successful
 	 */
 	public function save() {
-		$error = FALSE;
+		$error = false;
 
 		// Save the not language specific part
 		$pre_save_automation = new Automation($this->automation_id, $this->clang_id);
 		
 		// saving the rest
-		if($this->automation_id == 0 || $pre_save_automation !== $this) {
+		if($this->automation_id === 0 || $pre_save_automation !== $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_steel_automation SET "
 					."internal_name = '". $this->internal_name ."' ";
 			if($this->automation_id === 0) {
@@ -185,7 +185,7 @@ class Automation implements \D2U_Helper\ITranslationHelper {
 			}
 		}
 		
-		if($error === FALSE) {
+		if($error === false) {
 			// Save the language specific part
 			$pre_save_automation = new Automation($this->automation_id, $this->clang_id);
 			if($pre_save_automation !== $this) {

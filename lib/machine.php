@@ -726,7 +726,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			$this->article_ids_references = is_array($article_ids_references) ? $article_ids_references : [];
 			$this->online_status = (string) $result->getValue("online_status");
 			$this->engine_power = (string) $result->getValue("engine_power");
-			$this->engine_power_frequency_controlled = (string) $result->getValue("engine_power_frequency_controlled") === "true" ? TRUE : FALSE;
+			$this->engine_power_frequency_controlled = (string) $result->getValue("engine_power_frequency_controlled") === "true" ? true : false;
 			$this->length = (int) $result->getValue("length");
 			$this->width = (int) $result->getValue("width");
 			$this->height = (int) $result->getValue("height");
@@ -979,10 +979,10 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Deletes the object.
-	 * @param boolean $delete_all If TRUE, all translations and main object are deleted. If 
-	 * FALSE, only this translation will be deleted.
+	 * @param boolean $delete_all If true, all translations and main object are deleted. If 
+	 * false, only this translation will be deleted.
 	 */
-	public function delete($delete_all = TRUE):void {
+	public function delete($delete_all = true):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_machines_lang "
 			."WHERE machine_id = ". $this->machine_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
@@ -1001,7 +1001,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			$result->setQuery($query);
 
 			// reset priorities
-			$this->setPriority(TRUE);			
+			$this->setPriority(true);			
 		}
 
 		// Don't forget to regenerate URL cache / search_it index
@@ -1013,14 +1013,14 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 				foreach(rex_clang::getAllIds() as $clang_id) {
 					$lang_object = new self($this->machine_id, $clang_id);
 					$query_forward = "DELETE FROM ". \rex::getTablePrefix() ."yrewrite_forward "
-						."WHERE extern = '". $lang_object->getURL(TRUE) ."'";
+						."WHERE extern = '". $lang_object->getURL(true) ."'";
 					$result_forward = \rex_sql::factory();
 					$result_forward->setQuery($query_forward);
 				}
 			}
 			else {
 				$query_forward = "DELETE FROM ". \rex::getTablePrefix() ."yrewrite_forward "
-					."WHERE extern = '". $this->getURL(TRUE) ."'";
+					."WHERE extern = '". $this->getURL(true) ."'";
 				$result_forward = \rex_sql::factory();
 				$result_forward->setQuery($query_forward);
 			}
@@ -1033,7 +1033,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	 * @param boolean $only_online Show only online machines
 	 * @return array<Machine> Array with Machine objects.
 	 */
-	public static function getAll($clang_id, $only_online = FALSE) {
+	public static function getAll($clang_id, $only_online = false) {
 		$query = "SELECT machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_machines ";
 		if($only_online) {
 			$query .= "WHERE online_status = 'online' ";
@@ -1166,10 +1166,10 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Get Service Option objects related to this machine.
-	 * @param boolean $online_only TRUE if only online objects are returned
+	 * @param boolean $online_only true if only online objects are returned
 	 * @return ServiceOption[] Array with ServiceOption objects.
 	 */
-	public function getServiceOptions($online_only = TRUE) {
+	public function getServiceOptions($online_only = true) {
 		$service_options = [];
 		foreach ($this->service_option_ids as $service_option_id) {
 			$service_option = new ServiceOption($service_option_id, $this->clang_id);
@@ -1464,7 +1464,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Machine technique
-			if($this->category !== FALSE) {
+			if($this->category !== false) {
 				$tech_data[] = [
 					"description" => $tag_open . "d2u_machinery_construction_equipment_machine_technique" . $tag_close,
 					"value" => '<a href="'. $this->category->getURL() .'">'. $this->category->name .'</a>',
@@ -2142,7 +2142,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Returns the URL of this object.
-	 * @param boolean $including_domain TRUE if Domain name should be included
+	 * @param boolean $including_domain true if Domain name should be included
 	 * @return string URL
 	 */
 	public function getURL($including_domain = false) {
@@ -2167,10 +2167,10 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 
 	/**
 	 * Updates or inserts the object into database.
-	 * @return boolean TRUE if successful
+	 * @return boolean true if successful
 	 */
 	public function save() {
-		$error = FALSE;
+		$error = false;
 
 		// Save the not language specific part
 		$pre_save_object = new Machine($this->machine_id, $this->clang_id);
@@ -2318,7 +2318,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			if(rex_plugin::get("d2u_machinery", "machine_usage_area_extension")->isAvailable()) {
 				$query .= ", usage_area_ids = '|". implode("|", $this->usage_area_ids) ."|' ";
 			}
-			if(\rex_addon::get('d2u_videos')->isAvailable() && count($this->videos) > 0) {
+			if(\rex_addon::get('d2u_videos') instanceof rex_addon && \rex_addon::get('d2u_videos')->isAvailable() && count($this->videos) > 0) {
 				$query .= ", video_ids = '|". implode("|", array_keys($this->videos)) ."|' ";
 			}
 			else {
@@ -2347,7 +2347,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			$this->setPriority();
 		}
 
-		if($error === FALSE) {
+		if($error === false) {
 			// Save the language specific part
 			$pre_save_object = new Machine($this->machine_id, $this->clang_id);
 			if($pre_save_object !== $this) {
@@ -2392,7 +2392,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	 * Reassigns priorities in database.
 	 * @param boolean $delete Reorder priority after deletion
 	 */
-	private function setPriority($delete = FALSE):void {
+	private function setPriority($delete = false):void {
 		// Pull prios from database
 		$query = "SELECT machine_id, priority FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
 			."WHERE machine_id <> ". $this->machine_id ." ORDER BY priority";

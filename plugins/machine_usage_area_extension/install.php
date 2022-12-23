@@ -1,20 +1,17 @@
 <?php
-$sql = \rex_sql::factory();
-
-// Create tables
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_usage_areas (
-	usage_area_id int(10) unsigned NOT NULL auto_increment,
-	priority int(10) default NULL,
-	category_ids varchar(255) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (usage_area_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_usage_areas_lang (
-	usage_area_id int(10) NOT NULL,
-	clang_id int(10) NOT NULL,
-	name varchar(255) collate utf8mb4_unicode_ci default NULL,
-	translation_needs_update varchar(7) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (usage_area_id, clang_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
+\rex_sql_table::get(\rex::getTable('d2u_machinery_usage_areas'))
+	->ensureColumn(new rex_sql_column('usage_area_id', 'INT(11) unsigned', false, null, 'auto_increment'))
+	->setPrimaryKey('usage_area_id')
+	->ensureColumn(new \rex_sql_column('priority', 'INT(11)', true))
+    ->ensureColumn(new \rex_sql_column('category_ids', 'INT(11)', true))
+    ->ensure();
+\rex_sql_table::get(\rex::getTable('d2u_machinery_usage_areas_lang'))
+	->ensureColumn(new rex_sql_column('usage_area_id', 'INT(11)', false))
+    ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
+	->setPrimaryKey(['usage_area_id', 'clang_id'])
+    ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
+    ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)', true))
+    ->ensure();
 
 // Alter machine table
 \rex_sql_table::get(
@@ -23,6 +20,10 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machi
     ->alter();
 
 // Insert frontend translations
+if(!class_exists('d2u_machinery_machine_usage_area_extension_lang_helper')) {
+	// Load class in case addon is deactivated
+	require_once 'lib/d2u_machinery_machine_usage_area_extension_lang_helper.php';
+}
 if(class_exists('d2u_machinery_machine_usage_area_extension_lang_helper')) {
 	d2u_machinery_machine_usage_area_extension_lang_helper::factory()->install();
 }

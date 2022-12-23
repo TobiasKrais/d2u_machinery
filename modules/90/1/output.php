@@ -152,7 +152,7 @@ if(!function_exists('print_machines')) {
 		if($counter === 1) {
 			foreach($machines as $machine) {
 				if($machine->online_status === 'online') {
-					header("Location: ". $machine->getURL(FALSE));
+					header("Location: ". $machine->getURL(false));
 					exit;
 				}
 			}
@@ -184,7 +184,7 @@ if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['d
 		print_categories($child_categories);
 	}
 	else {
-		$machines = $category->getMachines(TRUE);
+		$machines = $category->getMachines(true);
 		print '<div class="col-12">';
 		print '<div class="tab-content">';
 
@@ -388,7 +388,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 	}
 
 	// Video
-	if(\rex_addon::get('d2u_videos')->isAvailable()) {
+	if(\rex_addon::get('d2u_videos') instanceof rex_addon && \rex_addon::get('d2u_videos')->isAvailable()) {
 		$videos = array_merge($machine->videos, $machine->category instanceof Category ? $machine->category->videos : []);
 		if(count($videos) > 0) {
 			print '<div class="col-12'. (count($videos) > 1 ? '' : ' col-lg-6') .'" id="videoplayer">';
@@ -469,7 +469,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 			$media = rex_media::get($pdf);
 			
 			// Check permissions
-			$has_permission = TRUE;
+			$has_permission = true;
 			if(rex_plugin::get('ycom', 'media_auth')->isAvailable() && $media instanceof rex_media) {
 				$has_permission = rex_ycom_media_auth::checkPerm(rex_media_manager::create("", $pdf));
 			}
@@ -903,7 +903,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 	$yform->setObjectparams("form_action", $machine->getURL());
 	$yform->setObjectparams("form_anchor", "tab_request");
 	$yform->setObjectparams("Error-occured", $tag_open .'d2u_helper_module_form_validate_title'. $tag_close);
-	$yform->setObjectparams("real_field_names", TRUE);
+	$yform->setObjectparams("real_field_names", true);
 
 	// action - showtext
 	$yform->setActionField("showtext", [$tag_open .'d2u_helper_module_form_thanks'. $tag_close]);
@@ -914,7 +914,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 	if(strval(rex_config::get('d2u_machinery', 'google_analytics_activate', 'false')) === 'true' &&
 			rex_config::get('d2u_machinery', 'analytics_event_category', '') !== '' &&
 			rex_config::get('d2u_machinery', 'analytics_event_action', '') !== '' &&
-			rex_request('search_it_build_index', 'int', FALSE) === FALSE) {
+			rex_request('search_it_build_index', 'int', false) === false) {
 		print '<script>'. PHP_EOL;
 		print '	$(\'button[type="submit"]\').click(function(e) {'. PHP_EOL;
 		print "		ga('send', 'event', {". PHP_EOL;

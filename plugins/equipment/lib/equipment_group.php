@@ -74,8 +74,8 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Deletes the object in all languages.
-	 * @param bool $delete_all If TRUE, all translations and main object are deleted. If 
-	 * FALSE, only this translation will be deleted.
+	 * @param bool $delete_all If true, all translations and main object are deleted. If 
+	 * false, only this translation will be deleted.
 	 */
 	public function delete($delete_all = true):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_equipment_groups_lang "
@@ -96,7 +96,7 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 			$result->setQuery($query);
 
 			// reset priorities
-			$this->setPriority(TRUE);			
+			$this->setPriority(true);			
 		}
 	}
 	
@@ -174,10 +174,10 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Updates or inserts the object into database.
-	 * @return boolean TRUE if successful
+	 * @return boolean true if successful
 	 */
 	public function save() {
-		$error = FALSE;
+		$error = false;
 
 		// Save the not language specific part
 		$pre_save_object = new EquipmentGroup($this->group_id, $this->clang_id);
@@ -208,7 +208,7 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 			}
 		}
 		
-		if($error === FALSE) {
+		if($error === false) {
 			// Save the language specific part
 			$pre_save_object = new EquipmentGroup($this->group_id, $this->clang_id);
 			if($pre_save_object !== $this) {

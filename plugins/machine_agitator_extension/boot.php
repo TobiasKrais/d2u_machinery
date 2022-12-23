@@ -18,11 +18,11 @@ function rex_d2u_machinery_agitators_clang_deleted(rex_extension_point $ep) {
 	// Delete
 	$agitators = Agitator::getAll($clang_id);
 	foreach ($agitators as $agitator) {
-		$agitator->delete(FALSE);
+		$agitator->delete(false);
 	}
 	$agitator_types = AgitatorType::getAll($clang_id);
 	foreach ($agitator_types as $agitator_type) {
-		$agitator_type->delete(FALSE);
+		$agitator_type->delete(false);
 	}
 
 	// Delete language replacements

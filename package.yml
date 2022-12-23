@@ -1,5 +1,5 @@
 package: d2u_machinery
-version: '1.3.7'
+version: '1.4.0'
 author: Tobias Krais
 supportpage: http://github.com/tobiaskrais/d2u_machinery
 
@@ -27,6 +27,13 @@ requires:
 conflicts:
     packages:
         d2u_videos: '<1.1'
+        
+default_config:
+    default_category_sort: 'name'
+    default_machine_sort: 'name'
+    show_categories_usage_area: 'hide'
+    show_teaser: 'hide'
+    show_techdata: 'show'
         
 installer_ignore:
     - .github

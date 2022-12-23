@@ -12,11 +12,11 @@ if($message !== "") {
 if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(INPUT_POST, "btn_apply")) === 1) {
 	$form = rex_post('form', 'array', []);
 
-	$success = TRUE;
-	$procedure = FALSE;
+	$success = true;
+	$procedure = false;
 	$procedure_id = $form['procedure_id'];
 	foreach(rex_clang::getAll() as $rex_clang) {
-		if($procedure === FALSE) {
+		if($procedure === false) {
 			$procedure = new Procedure($procedure_id, $rex_clang->getId());
 			$procedure->procedure_id = $procedure_id; // Ensure correct ID in case first language has no object
 			$procedure->internal_name = $form['internal_name'];
@@ -28,14 +28,14 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 		$procedure->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 
 		if($procedure->translation_needs_update === "delete") {
-			$procedure->delete(FALSE);
+			$procedure->delete(false);
 		}
 		else if($procedure->save()){
 			// remember id, for each database lang object needs same id
 			$procedure_id = $procedure->procedure_id;
 		}
 		else {
-			$success = FALSE;
+			$success = false;
 		}
 	}
 
@@ -46,11 +46,11 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	}
 	
 	// Redirect to make reload and thus double save impossible
-	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$procedure !== FALSE) {
-		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$procedure->procedure_id, "func"=>'edit', "message"=>$message), FALSE));
+	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$procedure !== false) {
+		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$procedure->procedure_id, "func"=>'edit', "message"=>$message), false));
 	}
 	else {
-		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), FALSE));
+		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), false));
 	}
 	exit;
 }
@@ -69,7 +69,7 @@ else if(intval(filter_input(INPUT_POST, "btn_delete", FILTER_VALIDATE_INT)) === 
 
 	// If not used, delete
 	if(count($referring_machines) === 0) {
-		$procedure->delete(TRUE);
+		$procedure->delete(true);
 	}
 	else {
 		$message = '<ul>';
@@ -98,22 +98,22 @@ if ($func === 'edit' || $func === 'add') {
 						<?php
 							// Do not use last object from translations, because you don't know if it exists in DB
 							$procedure = new Procedure($entry_id, intval(rex_config::get("d2u_helper", "default_lang")));
-							$readonly = TRUE;
+							$readonly = true;
 							if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
-								$readonly = FALSE;
+								$readonly = false;
 							}
-							d2u_addon_backend_helper::form_input('d2u_helper_name', "form[internal_name]", $procedure->internal_name, TRUE, $readonly, "text");
+							d2u_addon_backend_helper::form_input('d2u_helper_name', "form[internal_name]", $procedure->internal_name, true, $readonly, "text");
 						?>
 					</div>
 				</fieldset>
 				<?php
 					foreach(rex_clang::getAll() as $rex_clang) {
 						$procedure = new Procedure($entry_id, $rex_clang->getId());
-						$required = $rex_clang->getId() === intval(rex_config::get("d2u_helper", "default_lang")) ? TRUE : FALSE;
+						$required = $rex_clang->getId() === intval(rex_config::get("d2u_helper", "default_lang")) ? true : false;
 						
-						$readonly_lang = TRUE;
+						$readonly_lang = true;
 						if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || (\rex::getUser()->hasPerm('d2u_machinery[edit_lang]') && \rex::getUser()->getComplexPerm('clang') instanceof rex_clang_perm && \rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId())))) {
-							$readonly_lang = FALSE;
+							$readonly_lang = false;
 						}
 				?>
 					<fieldset>
@@ -125,7 +125,7 @@ if ($func === 'edit' || $func === 'add') {
 									$options_translations["yes"] = rex_i18n::msg('d2u_helper_translation_needs_update');
 									$options_translations["no"] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
 									$options_translations["delete"] = rex_i18n::msg('d2u_helper_translation_delete');
-									d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$procedure->translation_needs_update], 1, FALSE, $readonly_lang);
+									d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$procedure->translation_needs_update], 1, false, $readonly_lang);
 								}
 								else {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';

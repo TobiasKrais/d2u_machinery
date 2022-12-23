@@ -16,9 +16,9 @@ function rex_d2u_machinery_industry_sectors_clang_deleted(rex_extension_point $e
 	$clang_id = $params['id'];
 
 	// Delete
-	$industry_sectors = IndustrySector::getAll($clang_id, FALSE);
+	$industry_sectors = IndustrySector::getAll($clang_id, false);
 	foreach ($industry_sectors as $industry_sector) {
-		$industry_sector->delete(FALSE);
+		$industry_sector->delete(false);
 	}
 
 	// Delete language replacements

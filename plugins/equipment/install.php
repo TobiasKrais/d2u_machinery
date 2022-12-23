@@ -1,36 +1,35 @@
 <?php
+\rex_sql_table::get(\rex::getTable('d2u_machinery_equipments'))
+	->ensureColumn(new rex_sql_column('equipment_id', 'INT(11) unsigned', false, null, 'auto_increment'))
+	->setPrimaryKey('equipment_id')
+    ->ensureColumn(new \rex_sql_column('article_number', 'VARCHAR(255)'))
+	->ensureColumn(new \rex_sql_column('group_id', 'INT(11)', true))
+    ->ensureColumn(new \rex_sql_column('online_status', 'VARCHAR(10)', true))
+    ->ensure();
+\rex_sql_table::get(\rex::getTable('d2u_machinery_equipments_lang'))
+	->ensureColumn(new rex_sql_column('equipment_id', 'INT(11)', false))
+    ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
+	->setPrimaryKey(['equipment_id', 'clang_id'])
+    ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
+    ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)', true))
+    ->ensure();
+
+\rex_sql_table::get(\rex::getTable('d2u_machinery_equipment_groups'))
+	->ensureColumn(new rex_sql_column('group_id', 'INT(11) unsigned', false, null, 'auto_increment'))
+	->setPrimaryKey('group_id')
+    ->ensureColumn(new \rex_sql_column('picture', 'VARCHAR(255)'))
+	->ensureColumn(new \rex_sql_column('priority', 'INT(11)', true))
+    ->ensure();
+\rex_sql_table::get(\rex::getTable('d2u_machinery_equipment_groups_lang'))
+	->ensureColumn(new rex_sql_column('group_id', 'INT(11)', false))
+    ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
+	->setPrimaryKey(['group_id', 'clang_id'])
+    ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
+    ->ensureColumn(new \rex_sql_column('description', 'TEXT'))
+    ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)', true))
+    ->ensure();
+
 $sql = \rex_sql::factory();
-
-// Create tables
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_equipments (
-	equipment_id int(10) unsigned NOT NULL auto_increment,
-	article_number varchar(255) collate utf8mb4_unicode_ci default NULL,
-	group_id int(10) default 0,
-	online_status varchar(10) collate utf8mb4_unicode_ci default 'online',
-	PRIMARY KEY (equipment_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_equipments_lang (
-	equipment_id int(10) NOT NULL,
-	clang_id int(10) NOT NULL,
-	name varchar(255) collate utf8mb4_unicode_ci default NULL,
-	translation_needs_update varchar(7) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (equipment_id, clang_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
-
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_equipment_groups (
-	group_id int(10) unsigned NOT NULL auto_increment,
-	picture varchar(255) collate utf8mb4_unicode_ci default NULL,
-	priority int(10) NOT NULL default 0,
-	PRIMARY KEY (group_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_equipment_groups_lang (
-	group_id int(10) NOT NULL,
-	clang_id int(10) NOT NULL,
-	name varchar(255) collate utf8mb4_unicode_ci default NULL,
-	description text collate utf8mb4_unicode_ci default NULL,
-	translation_needs_update varchar(7) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (group_id, clang_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
 
 // Alter machine table
 \rex_sql_table::get(
@@ -38,7 +37,9 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machi
     ->ensureColumn(new \rex_sql_column('equipment_ids', 'TEXT'))
     ->alter();
 
-// Insert frontend translations
-if(class_exists('d2u_machinery_equipment_lang_helper')) {
-	d2u_machinery_equipment_lang_helper::factory()->install();
+// Insert / update language replacements
+if(!class_exists('d2u_machinery_equipment_lang_helper')) {
+	// Load class in case addon is deactivated
+	require_once 'lib/d2u_machinery_equipment_lang_helper.php';
 }
+d2u_machinery_equipment_lang_helper::factory()->install();

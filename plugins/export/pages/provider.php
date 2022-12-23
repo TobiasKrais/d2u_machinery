@@ -30,7 +30,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	$provider->linkedin_email = $form['linkedin_email'];
 	$provider->linkedin_groupid = $form['linkedin_groupid'];
 
-	if($provider->save() === FALSE){
+	if($provider->save() === false){
 		$message = 'form_save_error';
 	}
 	else {
@@ -39,10 +39,10 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	
 	// Redirect to make reload and thus double save impossible
 	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$message !== 'form_save_error') {
-		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$provider->provider_id, "func"=>'edit', "message"=>$message), FALSE));
+		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$provider->provider_id, "func"=>'edit', "message"=>$message), false));
 	}
 	else {
-		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), FALSE));
+		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), false));
 	}
 	exit;
 }
@@ -81,23 +81,23 @@ if ($func === 'edit' || $func === 'add') {
 					<div class="panel-body-wrapper slide">
 						<?php
 							$provider = new Provider($entry_id);
-							$readonly = FALSE;
+							$readonly = false;
 							
-							d2u_addon_backend_helper::form_input('d2u_helper_name', 'form[name]', $provider->name, TRUE, $readonly, 'text');
+							d2u_addon_backend_helper::form_input('d2u_helper_name', 'form[name]', $provider->name, true, $readonly, 'text');
 							$options = ['europemachinery' => rex_i18n::msg('d2u_machinery_export_europemachinery'),
 								'linkedin' => rex_i18n::msg('d2u_machinery_export_linkedin'),
 								'machinerypark' => rex_i18n::msg('d2u_machinery_export_machinerypark'),
 								'mascus' => rex_i18n::msg('d2u_machinery_export_mascus')];
-							d2u_addon_backend_helper::form_select('d2u_machinery_export_type', 'form[type]', $options, [$provider->type], 1, FALSE, $readonly);
+							d2u_addon_backend_helper::form_select('d2u_machinery_export_type', 'form[type]', $options, [$provider->type], 1, false, $readonly);
 							
 							$options_lang = [];
 							foreach(rex_clang::getAll() as $rex_clang) {
 								$options_lang[$rex_clang->getId()] = $rex_clang->getName();
 							}
 							d2u_addon_backend_helper::form_select('d2u_machinery_export_clang', 'form[clang_id]', $options_lang, [$provider->clang_id]);
-							d2u_addon_backend_helper::form_input('d2u_machinery_export_company_name', 'form[company_name]', $provider->company_name, TRUE, $readonly, 'text');
-							d2u_addon_backend_helper::form_input('d2u_machinery_export_company_email', 'form[company_email]', $provider->company_email, TRUE, $readonly, 'email');
-							d2u_addon_backend_helper::form_input('d2u_machinery_export_customer_number', 'form[customer_number]', $provider->customer_number, FALSE, $readonly, 'text');
+							d2u_addon_backend_helper::form_input('d2u_machinery_export_company_name', 'form[company_name]', $provider->company_name, true, $readonly, 'text');
+							d2u_addon_backend_helper::form_input('d2u_machinery_export_company_email', 'form[company_email]', $provider->company_email, true, $readonly, 'email');
+							d2u_addon_backend_helper::form_input('d2u_machinery_export_customer_number', 'form[customer_number]', $provider->customer_number, false, $readonly, 'text');
 							$options_media = [];
 							$media_sql = \rex_sql::factory();
 							$media_sql->setQuery("SELECT name FROM ". \rex::getTablePrefix() ."media_manager_type");
@@ -114,10 +114,10 @@ if ($func === 'edit' || $func === 'add') {
 					<legend><?php echo rex_i18n::msg('d2u_machinery_export_ftp_settings'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-							d2u_addon_backend_helper::form_input('d2u_machinery_export_ftp_server', "form[ftp_server]", $provider->ftp_server, FALSE, $readonly, "text");
-							d2u_addon_backend_helper::form_input('d2u_machinery_export_ftp_username', "form[ftp_username]", $provider->ftp_username, FALSE, $readonly, "text");
-							d2u_addon_backend_helper::form_input('d2u_machinery_export_ftp_password', "form[ftp_password]", $provider->ftp_password, FALSE, $readonly, "text");
-							d2u_addon_backend_helper::form_input('d2u_machinery_export_ftp_filename', "form[ftp_filename]", $provider->ftp_filename, FALSE, $readonly, "text");
+							d2u_addon_backend_helper::form_input('d2u_machinery_export_ftp_server', "form[ftp_server]", $provider->ftp_server, false, $readonly, "text");
+							d2u_addon_backend_helper::form_input('d2u_machinery_export_ftp_username', "form[ftp_username]", $provider->ftp_username, false, $readonly, "text");
+							d2u_addon_backend_helper::form_input('d2u_machinery_export_ftp_password', "form[ftp_password]", $provider->ftp_password, false, $readonly, "text");
+							d2u_addon_backend_helper::form_input('d2u_machinery_export_ftp_filename', "form[ftp_filename]", $provider->ftp_filename, false, $readonly, "text");
 						?>
 					</div>
 				</fieldset>
@@ -125,8 +125,8 @@ if ($func === 'edit' || $func === 'add') {
 					<legend><?php echo rex_i18n::msg('d2u_machinery_export_social_settings'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-							d2u_addon_backend_helper::form_input('d2u_machinery_export_social_app_id', "form[social_app_id]", $provider->social_app_id, FALSE, $readonly, "text");
-							d2u_addon_backend_helper::form_input('d2u_machinery_export_social_app_secret', "form[social_app_secret]", $provider->social_app_secret, FALSE, $readonly, "text");
+							d2u_addon_backend_helper::form_input('d2u_machinery_export_social_app_id', "form[social_app_id]", $provider->social_app_id, false, $readonly, "text");
+							d2u_addon_backend_helper::form_input('d2u_machinery_export_social_app_secret', "form[social_app_secret]", $provider->social_app_secret, false, $readonly, "text");
 						?>
 					</div>
 				</fieldset>
@@ -134,8 +134,8 @@ if ($func === 'edit' || $func === 'add') {
 					<legend><?php echo rex_i18n::msg('d2u_machinery_export_social_settings_linkedin'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-							d2u_addon_backend_helper::form_input('d2u_machinery_export_login_email', "form[linkedin_email]", $provider->linkedin_email, FALSE, $readonly, "text");
-							d2u_addon_backend_helper::form_input('d2u_machinery_export_linkedin_groupid', "form[linkedin_groupid]", $provider->linkedin_groupid, FALSE, $readonly, "text");
+							d2u_addon_backend_helper::form_input('d2u_machinery_export_login_email', "form[linkedin_email]", $provider->linkedin_email, false, $readonly, "text");
+							d2u_addon_backend_helper::form_input('d2u_machinery_export_linkedin_groupid', "form[linkedin_groupid]", $provider->linkedin_groupid, false, $readonly, "text");
 						?>
 					</div>
 				</fieldset>

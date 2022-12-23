@@ -15,7 +15,7 @@
     ->ensure();
 \rex_sql_table::get(\rex::getTable('d2u_machinery_production_lines_lang'))
 	->ensureColumn(new rex_sql_column('production_line_id', 'int(10) unsigned', false, null, 'auto_increment'))
-    ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false, 1))
+    ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
 	->setPrimaryKey(['production_line_id', 'clang_id'])
     ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
     ->ensureColumn(new \rex_sql_column('teaser', 'VARCHAR(255)'))
@@ -33,7 +33,7 @@
     ->ensure();
 \rex_sql_table::get(\rex::getTable('d2u_machinery_production_lines_usps_lang'))
 	->ensureColumn(new rex_sql_column('usp_id', 'int(10) unsigned', false, null, 'auto_increment'))
-    ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false, 1))
+    ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
 	->setPrimaryKey(['usp_id', 'clang_id'])
     ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
     ->ensureColumn(new \rex_sql_column('teaser', 'VARCHAR(255)'))
@@ -52,7 +52,7 @@ $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_machinery
 
 // add url addon stuff
 if(\rex_addon::get('url')->isAvailable()) {
-	$clang_id = count(rex_clang::getAllIds()) == 1 ? rex_clang::getStartId() : 0;
+	$clang_id = count(rex_clang::getAllIds()) === 1 ? rex_clang::getStartId() : 0;
 	$article_id = rex_config::get('d2u_machinery', 'production_lines_article_id', 0) > 0 ? rex_config::get('d2u_machinery', 'production_lines_article_id') : rex_article::getSiteStartArticleId(); 
 
 	// Insert url schemes Version 2.x

@@ -15,7 +15,7 @@ if(!function_exists('print_used_machine_categories')) {
 			if($offer_type !== "") {
 				$category->setOfferType($offer_type);
 			}
-			if(count($category->getUsedMachines(TRUE)) > 0) {
+			if(count($category->getUsedMachines(true)) > 0) {
 				print '<div class="col-sm-6 col-md-4'. ($number_offers_row == 4 ? ' col-lg-3' : '') .' abstand">'; /** @phpstan-ignore-line */
 				print '<a href="'. $category->getURL() .'">';
 				print '<div class="box" data-height-watch>';
@@ -45,7 +45,7 @@ if(!function_exists('print_consulation_hint')) {
 	 * Prints consulation hint.
 	 */
 	function print_consulation_hint():void {
-		$show_consultation_picture = "REX_VALUE[1]" === 'true' ? FALSE : TRUE; /** @phpstan-ignore-line */
+		$show_consultation_picture = "REX_VALUE[1]" === 'true' ? false : true; /** @phpstan-ignore-line */
 
 		$d2u_machinery = rex_addon::get("d2u_machinery");
 		// Get placeholder wildcard tags
@@ -80,7 +80,7 @@ if(!function_exists('print_used_machines')) {
 				continue;
 			}
 			print '<div class="col-sm-6 col-md-4'. ($number_offers_row == 4 ? ' col-lg-3' : '') .' abstand">'; /** @phpstan-ignore-line */
-			print '<a href="'. $used_machine->getURL(FALSE) .'">';
+			print '<a href="'. $used_machine->getURL(false) .'">';
 			print '<div class="box" data-height-watch>';
 			if(count($used_machine->pics) > 0 && $used_machine->pics[0] !== "") {
 				print '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $used_machine->pics[0])	 .'" alt="'. $used_machine->name .'">';
@@ -99,7 +99,7 @@ if(!function_exists('print_used_machines')) {
 		if($counter === 1) {
 			foreach($used_machines as $used_machine) {
 				if($used_machine->online_status === 'online') {
-					header("Location: ". $used_machine->getURL(FALSE));
+					header("Location: ". $used_machine->getURL(false));
 					exit;
 				}
 			}
@@ -228,7 +228,7 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 	print '<div class="row">'; // START details row
 
 	// Video
-	if(\rex_addon::get('d2u_videos')->isAvailable()) {
+	if(\rex_addon::get('d2u_videos') instanceof rex_addon && \rex_addon::get('d2u_videos')->isAvailable()) {
 		if(count($used_machine->videos) > 0) {
 			print '<div class="col-12" id="videoplayer">';
 			print '<h3>'. $tag_open .'d2u_machinery_video'. $tag_close .'</h3>';
@@ -354,7 +354,7 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 				$filetype = strtoupper(pathinfo(rex_path::media() . PATH_SEPARATOR . $document, PATHINFO_EXTENSION));
 				
 				// Check permissions
-				$has_permission = TRUE;
+				$has_permission = true;
 				if(rex_plugin::get('ycom', 'media_auth')->isAvailable()) {
 					$has_permission = rex_ycom_media_auth::checkPerm(rex_media_manager::create("", $document));
 				}
@@ -470,7 +470,7 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 	$yform->setObjectparams("form_action", $used_machine->getURL());
 	$yform->setObjectparams("form_anchor", "tab_request");
 	$yform->setObjectparams("Error-occured", $tag_open .'d2u_helper_module_form_validate_title'. $tag_close);
-	$yform->setObjectparams("real_field_names", TRUE);
+	$yform->setObjectparams("real_field_names", true);
 
 	// action - showtext
 	$yform->setActionField("showtext", [$tag_open .'d2u_helper_module_form_thanks'. $tag_close]);
@@ -481,7 +481,7 @@ else if((filter_input(INPUT_GET, 'used_rent_machine_id', FILTER_VALIDATE_INT, ['
 	if(rex_config::get('d2u_machinery', 'google_analytics_activate', 'false') === 'true' &&
 			rex_config::get('d2u_machinery', 'analytics_event_category', '') !== '' &&
 			rex_config::get('d2u_machinery', 'analytics_event_action', '') !== '' &&
-			rex_request('search_it_build_index', 'int', FALSE) === FALSE) {
+			rex_request('search_it_build_index', 'int', false) === false) {
 		print '<script>'. PHP_EOL;
 		print '	$(\'button[type="submit"]\').click(function(e) {'. PHP_EOL;
 		print "		ga('send', 'event', {". PHP_EOL;

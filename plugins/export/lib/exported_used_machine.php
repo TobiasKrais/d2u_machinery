@@ -80,7 +80,7 @@ class ExportedUsedMachine {
 	 */
 	public static function addAllToExport($provider_id):void {
 		$provider = new Provider($provider_id);
-		$used_machines = UsedMachine::getAll($provider->clang_id, TRUE);
+		$used_machines = UsedMachine::getAll($provider->clang_id, true);
 		foreach($used_machines as $used_machine) {
 			$exported_used_machine = new ExportedUsedMachine($used_machine->used_machine_id, $provider_id);
 			if($exported_used_machine->export_action === "" && $exported_used_machine->export_timestamp === "") {
@@ -109,7 +109,7 @@ class ExportedUsedMachine {
 	 * @param Provider|bool $provider Optional provider object
 	 * @return ExportedUsedMachine[] Array with ExportedUsedMachine objects.
 	 */
-	public static function getAll($provider = FALSE) {
+	public static function getAll($provider = false) {
 		$query = "SELECT used_machine_id, provider_id FROM ". \rex::getTablePrefix() ."d2u_machinery_export_machines AS export";
 		if ($provider instanceof Provider && $provider->provider_id > 0) {
 			$query .= " WHERE provider_id = ". $provider->provider_id;
@@ -127,14 +127,14 @@ class ExportedUsedMachine {
 	
 	/**
 	 * Proves, if UsedMachine is set for export for this provider.
-	 * @return boolean TRUE if set, FALSE if not
+	 * @return boolean true if set, false if not
 	 */
 	public function isSetForExport() {
 		if($this->export_action === "add" || $this->export_action === "update" || ($this->export_action === "" && $this->export_timestamp !== "")) {
-			return TRUE;
+			return true;
 		}
 		else {
-			return FALSE;
+			return false;
 		}
 	}
 	
@@ -195,7 +195,7 @@ class ExportedUsedMachine {
 
 	/**
 	 * Updates or inserts the object into database.
-	 * @return boolean TRUE if successful
+	 * @return boolean true if successful
 	 */
 	public function save() {
 		$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_machinery_export_machines SET "

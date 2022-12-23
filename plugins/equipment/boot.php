@@ -18,11 +18,11 @@ function rex_d2u_machinery_equipment_clang_deleted(rex_extension_point $ep) {
 	// Delete
 	$equipments = Equipment::getAll($clang_id);
 	foreach ($equipments as $equipment) {
-		$equipment->delete(FALSE);
+		$equipment->delete(false);
 	}
 	$equipment_groups = EquipmentGroup::getAll($clang_id);
 	foreach ($equipment_groups as $equipment_group) {
-		$equipment_group->delete(FALSE);
+		$equipment_group->delete(false);
 	}
 
 	// Delete language replacements

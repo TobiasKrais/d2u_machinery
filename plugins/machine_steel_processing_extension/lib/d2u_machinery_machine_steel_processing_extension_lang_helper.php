@@ -501,7 +501,7 @@ class d2u_machinery_machine_steel_processing_extension_lang_helper extends d2u_m
 
 	/**
 	 * Factory method.
-	 * @return d2u_machinery_machine_features_extension_lang_helper Object
+	 * @return d2u_machinery_machine_steel_processing_extension_lang_helper Object
 	 */
 	public static function factory() {
 		return new d2u_machinery_machine_steel_processing_extension_lang_helper();

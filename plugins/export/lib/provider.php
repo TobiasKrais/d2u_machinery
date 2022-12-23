@@ -1,7 +1,7 @@
 <?php
 /**
- * Provider export configurations.
  * @api
+ * Provider export configurations.
  */
 class Provider {
 	/**
@@ -153,7 +153,7 @@ class Provider {
 		$providers = Provider::getAll();
 		$message = [];
 		
-		$error = FALSE;
+		$error = false;
 		
 		foreach($providers as $provider) {
 			if($provider->isExportNeeded() || $provider->getLastExportTimestamp() < strtotime("-1 week")) {
@@ -163,7 +163,7 @@ class Provider {
 					if($europemachinery_error !== "") {
 						$message[] = $provider->name .": ". $europemachinery_error;
 						print $provider->name .": ". $europemachinery_error ."; ";
-						$error = TRUE;
+						$error = true;
 					}
 					else {
 						$message[] = $provider->name .": ". rex_i18n::msg('d2u_machinery_export_success');
@@ -175,7 +175,7 @@ class Provider {
 					if($machinerypark_error !== "") {
 						$message[] = $provider->name .": ". $machinerypark_error;
 						print $provider->name .": ". $machinerypark_error ."; ";
-						$error = TRUE;
+						$error = true;
 					}
 					else {
 						$message[] = $provider->name .": ". rex_i18n::msg('d2u_machinery_export_success');
@@ -187,7 +187,7 @@ class Provider {
 					if($mascus_error !== "") {
 						$message[] = $provider->name .": ". $mascus_error;
 						print $provider->name .": ". $mascus_error ."; ";
-						$error = TRUE;
+						$error = true;
 					}
 					else {
 						$message[] = $provider->name .": ". rex_i18n::msg('d2u_machinery_export_success');
@@ -201,7 +201,7 @@ class Provider {
 						if($linkedin_error !== "") {
 							$message[] = $provider->name .": ". $linkedin_error;
 							print $provider->name .": ". $linkedin_error ."; ";
-							$error = TRUE;
+							$error = true;
 						}
 						else {
 							$message[] = $provider->name .": ". rex_i18n::msg('d2u_machinery_export_success');
@@ -356,7 +356,7 @@ class Provider {
 	 * @param boolean $online_only Return only online (active) providers
 	 * @return Provider[] Array with Provider objects.
 	 */
-	public static function getAll($online_only = TRUE) {
+	public static function getAll($online_only = true) {
 		$query = "SELECT provider_id FROM ". \rex::getTablePrefix() ."d2u_machinery_export_provider ";
 		if($online_only) {
 			$query .= "WHERE online_status = 'online' ";
@@ -386,7 +386,7 @@ class Provider {
 		$result->setQuery($query);
 		
 		if($result->getRows() > 0) {
-			return TRUE;
+			return true;
 		}
 		
 		$query = "SELECT used_machines.updatedate, export.export_timestamp FROM ". \rex::getTablePrefix() ."d2u_machinery_used_machines_lang AS used_machines "
@@ -396,10 +396,10 @@ class Provider {
 		$result->setQuery($query);
 		
 		if($result->getRows() > 0 && $result->getValue("updatedate") > $result->getValue("export_timestamp")) {
-			return TRUE;
+			return true;
 		}
 		
-		return FALSE;
+		return false;
 	}
 	
 	/**
@@ -414,9 +414,9 @@ class Provider {
 		$result->setQuery($query);
 		
 		if($result->getRows() > 0) {
-			return TRUE;
+			return true;
 		}
-		return FALSE;
+		return false;
 	}
 	
 	/**
@@ -451,7 +451,7 @@ class Provider {
 	
 	/**
 	 * Updates or inserts the object into database.
-	 * @return boolean TRUE if successful
+	 * @return boolean true if successful
 	 */
 	public function save() {
 		$this->clang_id = $this->clang_id === 0 ? intval(rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId())) : $this->clang_id;
@@ -491,9 +491,9 @@ class Provider {
 		}
 
 		if($result->hasError()) {
-			return FALSE;
+			return false;
 		}
 		
-		return TRUE;
+		return true;
 	}
 }

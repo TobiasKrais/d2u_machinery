@@ -12,47 +12,47 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var int Database ID
 	 */
-	var $supply_id = 0;
+	public int $supply_id = 0;
 	
 	/**
 	 * @var int Redaxo clang id
 	 */
-	var $clang_id = 0;
+	public int $clang_id = 0;
 	
 	/**
 	 * @var int Sort Priority
 	 */
-	var $priority = 0;
+	public int $priority = 0;
 	
 	/**
 	 * @var String Status. Either "online" or "offline".
 	 */
-	var $online_status = "online";
+	public string $online_status = "online";
 	
 	/**
 	 * @var string Name
 	 */
-	var $name = "";
+	public string $name = "";
 	
 	/**
 	 * @var string Description
 	 */
-	var $description = "";
+	public string $description = "";
 	
 	/**
 	 * @var string Picture
 	 */
-	var $pic = "";
+	public string $pic = "";
 	
 	/**
-	 * @var Video Videomanager video
+	 * @var Video|bool Videomanager video
 	 */
-	var $video = FALSE;
+	public Video|bool $video = false;
 	
 	/**
 	 * @var string "yes" if translation needs update
 	 */
-	var $translation_needs_update = "delete";
+	public string $translation_needs_update = "delete";
 
 	/**
 	 * Constructor. Reads object stored in database.
@@ -71,18 +71,18 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 		$num_rows = $result->getRows();
 
 		if ($num_rows > 0) {
-			$this->supply_id = $result->getValue("supply_id");
-			$this->priority = $result->getValue("priority");
-			$this->online_status = $result->getValue("online_status");
-			$this->name = stripslashes($result->getValue("name"));
-			$this->description = stripslashes($result->getValue("description"));
-			$this->pic = $result->getValue("pic");
+			$this->supply_id = (int) $result->getValue("supply_id");
+			$this->priority = (int) $result->getValue("priority");
+			$this->online_status = (string) $result->getValue("online_status");
+			$this->name = stripslashes((string) $result->getValue("name"));
+			$this->description = stripslashes((string) $result->getValue("description"));
+			$this->pic = (string) $result->getValue("pic");
 			if($result->getValue("translation_needs_update") !== "") {
-				$this->translation_needs_update = $result->getValue("translation_needs_update");
+				$this->translation_needs_update = (string) $result->getValue("translation_needs_update");
 			}
 
-			if(\rex_addon::get('d2u_videos')->isAvailable() && $result->getValue("video_id") > 0) {
-				$this->video = new Video($result->getValue("video_id"), $clang_id);
+			if(\rex_addon::get('d2u_videos') instanceof rex_addon && \rex_addon::get('d2u_videos')->isAvailable() && $result->getValue("video_id") > 0) {
+				$this->video = new Video((int) $result->getValue("video_id"), $clang_id);
 			}
 		}
 	}
@@ -116,8 +116,8 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 
 	/**
 	 * Deletes the object in all languages.
-	 * @param bool $delete_all If TRUE, all translations and main object are deleted. If 
-	 * FALSE, only this translation will be deleted.
+	 * @param bool $delete_all If true, all translations and main object are deleted. If 
+	 * false, only this translation will be deleted.
 	 */
 	public function delete($delete_all = true):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_steel_supply_lang "
@@ -138,7 +138,7 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 			$result->setQuery($query);
 
 			// reset priorities
-			$this->setPriority(TRUE);			
+			$this->setPriority(true);			
 		}
 	}
 	
@@ -148,7 +148,7 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 	 * @param boolean $only_online Show only online objects
 	 * @return Supply[] Array with Supply objects.
 	 */
-	public static function getAll($clang_id, $only_online = FALSE) {
+	public static function getAll($clang_id, $only_online = false) {
 		$query = "SELECT lang.supply_id FROM ". \rex::getTablePrefix() ."d2u_machinery_steel_supply_lang AS lang "
 			. "LEFT JOIN ". \rex::getTablePrefix() ."d2u_machinery_steel_supply AS supply "
 				. "ON lang.supply_id = supply.supply_id "
@@ -164,7 +164,7 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 		
 		$supplys = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$supplys[] = new Supply($result->getValue("supply_id"), $clang_id);
+			$supplys[] = new Supply((int) $result->getValue("supply_id"), $clang_id);
 			$result->next();
 		}
 		return $supplys;
@@ -198,7 +198,7 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 		$query = 'SELECT supply_id FROM '. \rex::getTablePrefix() .'d2u_machinery_steel_supply_lang '
 				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
 				.'ORDER BY name';
-		if($type == 'missing') {
+		if($type === 'missing') {
 			$query = 'SELECT main.supply_id FROM '. \rex::getTablePrefix() .'d2u_machinery_steel_supply AS main '
 					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_steel_supply_lang AS target_lang '
 						.'ON main.supply_id = target_lang.supply_id AND target_lang.clang_id = '. $clang_id .' '
@@ -213,7 +213,7 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 
 		$objects = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$objects[] = new Supply($result->getValue("supply_id"), $clang_id);
+			$objects[] = new Supply((int) $result->getValue("supply_id"), $clang_id);
 			$result->next();
 		}
 		
@@ -222,10 +222,10 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Updates or inserts the object into database.
-	 * @return boolean TRUE if successful
+	 * @return boolean true if successful
 	 */
 	public function save() {
-		$error = FALSE;
+		$error = false;
 
 		// Save the not language specific part
 		$pre_save_supply = new Supply($this->supply_id, $this->clang_id);
@@ -236,12 +236,12 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 		}
 		
 		// saving the rest
-		if($this->supply_id == 0 || $pre_save_supply !== $this) {
+		if($this->supply_id === 0 || $pre_save_supply !== $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_steel_supply SET "
 					."online_status = '". $this->online_status ."', "
 					."pic = '". $this->pic ."', "
 					."priority = ". $this->priority ." ";
-			if(\rex_addon::get('d2u_videos')->isAvailable() && $this->video !== FALSE) {
+			if(\rex_addon::get('d2u_videos') instanceof rex_addon && \rex_addon::get('d2u_videos')->isAvailable() && $this->video instanceof Video) {
 				$query .= ", video_id = ". $this->video->video_id;
 			}
 			else {
@@ -263,7 +263,7 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 			}
 		}
 		
-		if($error === FALSE) {
+		if($error === false) {
 			// Save the language specific part
 			$pre_save_supply = new Supply($this->supply_id, $this->clang_id);
 			if($pre_save_supply !== $this) {
@@ -301,7 +301,7 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 		
 		// When prio is too high or was deleted, simply add at end 
 		if($this->priority > $result->getRows() || $delete) {
-			$this->priority = $result->getRows() + 1;
+			$this->priority = intval($result->getRows()) + 1;
 		}
 
 		$objects = [];
@@ -314,7 +314,7 @@ class Supply implements \D2U_Helper\ITranslationHelper {
 		// Save all prios
 		foreach($objects as $prio => $object_id) {
 			$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_steel_supply "
-					."SET priority = ". ($prio + 1) ." " // +1 because array_splice recounts at zero
+					."SET priority = ". (intval($prio) + 1) ." " // +1 because array_splice recounts at zero
 					."WHERE supply_id = ". $object_id;
 			$result = \rex_sql::factory();
 			$result->setQuery($query);

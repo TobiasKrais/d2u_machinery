@@ -17,7 +17,7 @@ function rex_d2u_machinery_usage_area_clang_deleted(rex_extension_point $ep) {
 	// Delete
 	$usage_areas = UsageArea::getAll($clang_id, 0);
 	foreach ($usage_areas as $usage_area) {
-		$usage_area->delete(FALSE);
+		$usage_area->delete(false);
 	}
 	
 	// Delete language replacements

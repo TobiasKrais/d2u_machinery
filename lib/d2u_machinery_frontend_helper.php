@@ -1,5 +1,6 @@
 <?php
 /**
+ * @api
  * Offers helper functions for frontend
  */
 class d2u_machinery_frontend_helper {
@@ -21,7 +22,7 @@ class d2u_machinery_frontend_helper {
 			}
 
 			if($machine_id > 0) {
-				foreach(rex_clang::getAllIds(TRUE) as $this_lang_key) {
+				foreach(rex_clang::getAllIds(true) as $this_lang_key) {
 					$lang_machine = new Machine($machine_id, $this_lang_key);
 					if($lang_machine->translation_needs_update !== "delete") {
 						$alternate_URLs[$this_lang_key] = $lang_machine->getURL();
@@ -58,7 +59,7 @@ class d2u_machinery_frontend_helper {
 			}
 
 			if($category_id > 0) {
-				foreach(rex_clang::getAllIds(TRUE) as $this_lang_key) {
+				foreach(rex_clang::getAllIds(true) as $this_lang_key) {
 					$lang_category = new Category($category_id, $this_lang_key);
 					$lang_category->setOfferType($offer_type);
 					if($lang_category->translation_needs_update !== "delete") {
@@ -74,7 +75,7 @@ class d2u_machinery_frontend_helper {
 			}
 
 			if($industry_sector_id > 0) {
-				foreach(rex_clang::getAllIds(TRUE) as $this_lang_key) {
+				foreach(rex_clang::getAllIds(true) as $this_lang_key) {
 					$lang_industry_sector = new IndustrySector($industry_sector_id, $this_lang_key);
 					if($lang_industry_sector->translation_needs_update !== "delete") {
 						$alternate_URLs[$this_lang_key] = $lang_industry_sector->getURL();
@@ -90,7 +91,7 @@ class d2u_machinery_frontend_helper {
 			}
 
 			if($used_machine_id > 0) { 
-				foreach(rex_clang::getAllIds(TRUE) as $this_lang_key) {
+				foreach(rex_clang::getAllIds(true) as $this_lang_key) {
 					$lang_used_machine = new UsedMachine($used_machine_id, $this_lang_key);
 					if($lang_used_machine->translation_needs_update !== "delete") {
 						$alternate_URLs[$this_lang_key] = $lang_used_machine->getURL();
@@ -110,9 +111,9 @@ class d2u_machinery_frontend_helper {
 		$breadcrumbs = [];
 
 		// Prepare objects first for sorting in correct order
-		$category = FALSE;
-		$machine = FALSE;
-		$used_machine = FALSE;
+		$category = false;
+		$machine = false;
+		$used_machine = false;
 
 		$url_namespace = d2u_addon_frontend_helper::getUrlNamespace();
 		$url_id = d2u_addon_frontend_helper::getUrlId();
@@ -241,7 +242,7 @@ class d2u_machinery_frontend_helper {
 					print '<ul class="dl-submenu">';
 					print '<li class="dl-back"><a href="#">&nbsp;</a></li>';
 					print '<li><a href="'. $category->getURL() .'" title="'. $category->name .'">'. strtoupper($category->name) .'</a></li>';
-					$machines = $category->getMachines(TRUE);
+					$machines = $category->getMachines(true);
 					foreach ($machines as $machine) {
 						print '<li'. ($machine->machine_id === $current_machine_id ? ' class="current"' : '') .'><a href="'. $machine->getURL() .'" title="'. $machine->name .'">'. $machine->name .'</a></li>';
 					}
@@ -289,7 +290,7 @@ class d2u_machinery_frontend_helper {
 				if(strval(rex_config::get('d2u_machinery', 'show_machines_navi', 'hide')) === 'show') {
 					print '<ul>';
 					print '<li><a href="'. $category->getURL() .'" title="'. $category->name .'">'. strtoupper($category->name) .'</a></li>';
-					$machines = $category->getMachines(TRUE);
+					$machines = $category->getMachines(true);
 					foreach ($machines as $machine) {
 						print '<li'. ($machine->machine_id === $current_machine_id ? ' class="current"' : '') .'><a href="'. $machine->getURL() .'" title="'. $machine->name .'">'. $machine->name .'</a></li>';
 					}

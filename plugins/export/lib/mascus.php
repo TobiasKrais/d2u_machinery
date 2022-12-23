@@ -132,7 +132,7 @@ class Mascus extends AFTPExport {
 
 		// write XML file
 		try {
-			if($xml->save($this->cache_path . $this->xml_filename) === FALSE) {
+			if($xml->save($this->cache_path . $this->xml_filename) === false) {
 				return rex_i18n::msg('d2u_machinery_export_xml_cannot_create');
 			}
 			else {

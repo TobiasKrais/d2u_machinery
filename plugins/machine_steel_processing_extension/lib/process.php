@@ -12,27 +12,27 @@ class Process implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var int Database ID
 	 */
-	var $process_id = 0;
+	public int $process_id = 0;
 	
 	/**
 	 * @var int Redaxo clang id
 	 */
-	var $clang_id = 0;
+	public int $clang_id = 0;
 	
 	/**
 	 * @var string Internal name
 	 */
-	var $internal_name = "";
+	public string $internal_name = "";
 
 	/**
 	 * @var string Name
 	 */
-	var $name = "";
+	public string $name = "";
 	
 	/**
 	 * @var string "yes" if translation needs update
 	 */
-	var $translation_needs_update = "delete";
+	public string $translation_needs_update = "delete";
 
 	/**
 	 * Constructor. Reads object stored in database.
@@ -51,19 +51,19 @@ class Process implements \D2U_Helper\ITranslationHelper {
 		$num_rows = $result->getRows();
 
 		if ($num_rows > 0) {
-			$this->process_id = $result->getValue("process_id");
-			$this->internal_name = $result->getValue("internal_name");
-			$this->name = stripslashes($result->getValue("name"));
+			$this->process_id = (int) $result->getValue("process_id");
+			$this->internal_name = (string) $result->getValue("internal_name");
+			$this->name = stripslashes((string) $result->getValue("name"));
 			if($result->getValue("translation_needs_update") !== "") {
-				$this->translation_needs_update = $result->getValue("translation_needs_update");
+				$this->translation_needs_update = (string) $result->getValue("translation_needs_update");
 			}
 		}
 	}
 	
 	/**
 	 * Deletes the object in all languages.
-	 * @param bool $delete_all If TRUE, all translations and main object are deleted. If 
-	 * FALSE, only this translation will be deleted.
+	 * @param bool $delete_all If true, all translations and main object are deleted. If 
+	 * false, only this translation will be deleted.
 	 */
 	public function delete($delete_all = true):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_steel_process_lang "
@@ -100,7 +100,7 @@ class Process implements \D2U_Helper\ITranslationHelper {
 		
 		$process = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$process[] = new Process($result->getValue("process_id"), $clang_id);
+			$process[] = new Process((int) $result->getValue("process_id"), $clang_id);
 			$result->next();
 		}
 		return $process;
@@ -134,7 +134,7 @@ class Process implements \D2U_Helper\ITranslationHelper {
 		$query = 'SELECT process_id FROM '. \rex::getTablePrefix() .'d2u_machinery_steel_process_lang '
 				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
 				.'ORDER BY name';
-		if($type == 'missing') {
+		if($type === 'missing') {
 			$query = 'SELECT main.process_id FROM '. \rex::getTablePrefix() .'d2u_machinery_steel_process AS main '
 					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_steel_process_lang AS target_lang '
 						.'ON main.process_id = target_lang.process_id AND target_lang.clang_id = '. $clang_id .' '
@@ -149,7 +149,7 @@ class Process implements \D2U_Helper\ITranslationHelper {
 
 		$objects = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$objects[] = new Process($result->getValue("process_id"), $clang_id);
+			$objects[] = new Process((int)$result->getValue("process_id"), $clang_id);
 			$result->next();
 		}
 		
@@ -158,16 +158,16 @@ class Process implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Updates or inserts the object into database.
-	 * @return boolean TRUE if successful
+	 * @return boolean true if successful
 	 */
 	public function save() {
-		$error = FALSE;
+		$error = false;
 
 		// Save the not language specific part
 		$pre_save_process = new Process($this->process_id, $this->clang_id);
 		
 		// saving the rest
-		if($this->process_id == 0 || $pre_save_process !== $this) {
+		if($this->process_id === 0 || $pre_save_process !== $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_steel_process SET "
 					."internal_name = '". $this->internal_name ."' ";
 			if($this->process_id === 0) {
@@ -185,7 +185,7 @@ class Process implements \D2U_Helper\ITranslationHelper {
 			}
 		}
 		
-		if($error === FALSE) {
+		if($error === false) {
 			// Save the language specific part
 			$pre_save_process = new Process($this->process_id, $this->clang_id);
 			if($pre_save_process !== $this) {

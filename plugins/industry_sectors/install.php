@@ -1,25 +1,22 @@
 <?php
-$sql = \rex_sql::factory();
-
-// Create tables
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors (
-	industry_sector_id int(10) unsigned NOT NULL auto_increment,
-	online_status varchar(7) collate utf8mb4_unicode_ci default NULL,
-	pic varchar(100) collate utf8mb4_unicode_ci default NULL,
-	icon varchar(100) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (industry_sector_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang (
-	industry_sector_id int(10) NOT NULL,
-	clang_id int(10) NOT NULL,
-	name varchar(255) collate utf8mb4_unicode_ci default NULL,
-	teaser varchar(255) collate utf8mb4_unicode_ci default NULL,
-	description TEXT collate utf8mb4_unicode_ci default NULL,
-	translation_needs_update varchar(7) collate utf8mb4_unicode_ci default NULL,
-	updatedate DATETIME default NULL,
-	updateuser varchar(255) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (industry_sector_id, clang_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
+\rex_sql_table::get(\rex::getTable('d2u_machinery_industry_sectors'))
+	->ensureColumn(new rex_sql_column('industry_sector_id', 'INT(11) unsigned', false, null, 'auto_increment'))
+	->setPrimaryKey('industry_sector_id')
+	->ensureColumn(new \rex_sql_column('online_status', 'VARCHAR(7)', true))
+    ->ensureColumn(new \rex_sql_column('pic', 'VARCHAR(255)', true))
+    ->ensureColumn(new \rex_sql_column('icon', 'VARCHAR(255)', true))
+    ->ensure();
+\rex_sql_table::get(\rex::getTable('d2u_machinery_industry_sectors_lang'))
+	->ensureColumn(new rex_sql_column('industry_sector_id', 'INT(11)', false))
+    ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
+	->setPrimaryKey(['industry_sector_id', 'clang_id'])
+    ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
+    ->ensureColumn(new \rex_sql_column('teaser', 'VARCHAR(255)', true))
+    ->ensureColumn(new \rex_sql_column('description', 'TEXT', true))
+    ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)', true))
+    ->ensureColumn(new \rex_sql_column('updatedate', 'DATETIME', true))
+    ->ensureColumn(new \rex_sql_column('updateuser', 'VARCHAR(255)', true))
+    ->ensure();
 
 // Alter machine table
 \rex_sql_table::get(
@@ -27,6 +24,8 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machi
     ->ensureColumn(new \rex_sql_column('industry_sector_ids', 'TEXT'))
     ->alter();
 
+
+$sql = \rex_sql::factory();
 // Create views for url addon
 $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_machinery_url_industry_sectors AS
 	SELECT lang.industry_sector_id, lang.clang_id, lang.name, lang.name AS seo_title, lang.teaser AS seo_description, industries.pic AS picture, lang.updatedate
@@ -52,7 +51,14 @@ if(\rex_addon::get('url')->isAvailable()) {
 	\d2u_addon_backend_helper::generateUrlCache('industry_sector_id');
 }
 
-// Insert frontend translations
-if(class_exists('d2u_machinery_industry_sectors_lang_helper')) {
-	d2u_machinery_industry_sectors_lang_helper::factory()->install();
+// Insert / update frontend translations
+if(!class_exists('d2u_machinery_industry_sectors_lang_helper')) {
+	// Load class in case addon is deactivated
+	require_once 'lib/d2u_machinery_industry_sectors_lang_helper.php';
+}
+d2u_machinery_industry_sectors_lang_helper::factory()->install();
+
+// Default Config
+if(!rex_config::has('d2u_machinery', 'industry_sectors_article_id')) {
+	rex_config::set('d2u_machinery', 'industry_sectors_article_id', rex_config::get('d2u_machinery', 'article_id'));
 }

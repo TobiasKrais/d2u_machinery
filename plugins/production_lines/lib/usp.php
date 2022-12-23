@@ -12,31 +12,31 @@ class USP implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var int Database ID
 	 */
-	var int $usp_id = 0;
+	public int $usp_id = 0;
 	
 	/**
 	 * @var int Redaxo clang id
 	 */
-	var int $clang_id = 0;
+	public int $clang_id = 0;
 	
 	/**
 	 * @var string Picture file names 
 	 */
-	var string $picture = "";
+	public string $picture = "";
 
 	/**
 	 * @var string Name
 	 */
-	var string $name = "";
+	public string $name = "";
 	
 	/**
 	 * @var string Teaser
 	 */
-	var string $teaser = "";
+	public string $teaser = "";
 	/**
 	 * @var string "yes" if translation needs update
 	 */
-	var $translation_needs_update = "delete";
+	public $translation_needs_update = "delete";
 	
 	/**
 	 * Constructor. Reads the object stored in database.
@@ -55,19 +55,19 @@ class USP implements \D2U_Helper\ITranslationHelper {
 		$num_rows = $result->getRows();
 
 		if ($num_rows > 0) {
-			$this->usp_id = $result->getValue("usp_id");
-			$this->name = stripslashes($result->getValue("name"));
-			$this->picture = $result->getValue("picture");
-			$this->teaser = stripslashes($result->getValue("teaser"));
+			$this->usp_id = (int) $result->getValue("usp_id");
+			$this->name = stripslashes((string) $result->getValue("name"));
+			$this->picture = (string) $result->getValue("picture");
+			$this->teaser = stripslashes((string) $result->getValue("teaser"));
 			if($result->getValue("translation_needs_update") !== "") {
-				$this->translation_needs_update = $result->getValue("translation_needs_update");
+				$this->translation_needs_update = (string) $result->getValue("translation_needs_update");
 			}
 		}
 	}
 	/**
 	 * Deletes the object in all languages.
-	 * @param bool $delete_all If TRUE, all translations and main object are deleted. If 
-	 * FALSE, only this translation will be deleted.
+	 * @param bool $delete_all If true, all translations and main object are deleted. If 
+	 * false, only this translation will be deleted.
 	 */
 	public function delete($delete_all = true):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_production_lines_usps_lang "
@@ -104,7 +104,7 @@ class USP implements \D2U_Helper\ITranslationHelper {
 		
 		$usps = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$usps[] = new USP($result->getValue("usp_id"), $clang_id);
+			$usps[] = new USP((int) $result->getValue("usp_id"), $clang_id);
 			$result->next();
 		}
 		return $usps;
@@ -112,10 +112,10 @@ class USP implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Gets the machines referring to this object.
-	 * @param boolean $online_only TRUE if only online production lines should be returned.
+	 * @param boolean $online_only true if only online production lines should be returned.
 	 * @return ProductionLine[] Production lines referring to this object.
 	 */
-	public function getReferringProductionLines($online_only = FALSE) {
+	public function getReferringProductionLines($online_only = false) {
 		$query = "SELECT production_lines.production_line_id FROM ". \rex::getTablePrefix() ."d2u_machinery_production_lines AS production_lines "
 			."LEFT JOIN ". \rex::getTablePrefix() ."d2u_machinery_production_lines_lang AS lang "
 				." ON production_lines.production_line_id = lang.production_line_id AND lang.clang_id = ". $this->clang_id ." "
@@ -127,8 +127,8 @@ class USP implements \D2U_Helper\ITranslationHelper {
 		
 		$production_lines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$production_line =  new ProductionLine($result->getValue("production_line_id"), $this->clang_id);
-			if(!$online_only || ($online_only && $production_line->isOnline())) {
+			$production_line =  new ProductionLine((int) $result->getValue("production_line_id"), $this->clang_id);
+			if($online_only === false || ($online_only === true && $production_line->isOnline())) {
 				$production_lines[] = $production_line;
 			}
 			$result->next();
@@ -146,7 +146,7 @@ class USP implements \D2U_Helper\ITranslationHelper {
 		$query = 'SELECT usp_id FROM '. \rex::getTablePrefix() .'d2u_machinery_production_lines_usps_lang '
 				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
 				.'ORDER BY name';
-		if($type == 'missing') {
+		if($type === 'missing') {
 			$query = 'SELECT main.usp_id FROM '. \rex::getTablePrefix() .'d2u_machinery_production_lines_usps AS main '
 					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_production_lines_usps_lang AS target_lang '
 						.'ON main.usp_id = target_lang.usp_id AND target_lang.clang_id = '. $clang_id .' '
@@ -161,7 +161,7 @@ class USP implements \D2U_Helper\ITranslationHelper {
 
 		$objects = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$objects[] = new USP($result->getValue("usp_id"), $clang_id);
+			$objects[] = new USP((int) $result->getValue("usp_id"), $clang_id);
 			$result->next();
 		}
 		
@@ -170,16 +170,16 @@ class USP implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Updates or inserts the object into database.
-	 * @return boolean TRUE if successful
+	 * @return boolean true if successful
 	 */
 	public function save() {
-		$error = FALSE;
+		$error = false;
 
 		// Save the not language specific part
 		$pre_save_object = new USP($this->usp_id, $this->clang_id);
 		
 		// saving the rest
-		if($this->usp_id == 0 || $pre_save_object !== $this) {
+		if($this->usp_id === 0 || $pre_save_object !== $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_production_lines_usps SET "
 					."picture = '". $this->picture ."' ";
 
@@ -199,7 +199,7 @@ class USP implements \D2U_Helper\ITranslationHelper {
 		}
 		
 		$regenerate_urls = false;
-		if($error === FALSE) {
+		if($error === false) {
 			// Save the language specific part
 			$pre_save_object = new USP($this->usp_id, $this->clang_id);
 			if($pre_save_object !== $this) {
@@ -210,7 +210,7 @@ class USP implements \D2U_Helper\ITranslationHelper {
 						."teaser = '". addslashes($this->teaser) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = CURRENT_TIMESTAMP, "
-						."updateuser = '". \rex::getUser()->getLogin() ."' ";
+						."updateuser = '". (\rex::getUser() instanceof rex_user ? \rex::getUser()->getLogin() : '') ."' ";
 
 				$result = \rex_sql::factory();
 				$result->setQuery($query);

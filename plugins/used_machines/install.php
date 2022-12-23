@@ -33,7 +33,7 @@ if(!$d2u_machinery->hasConfig('used_machine_article_id_sale')) {
 
 \rex_sql_table::get(\rex::getTable('d2u_machinery_used_machines_lang'))
 	->ensureColumn(new rex_sql_column('used_machine_id', 'INT(10) unsigned', false, null, 'auto_increment'))
-    ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false, 1))
+    ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
 	->setPrimaryKey(['used_machine_id', 'clang_id'])
 	->ensureColumn(new \rex_sql_column('teaser', 'TEXT', true))
     ->ensureColumn(new \rex_sql_column('description', 'TEXT', true))
@@ -44,7 +44,6 @@ if(!$d2u_machinery->hasConfig('used_machine_article_id_sale')) {
     ->ensure();
 
 $sql = \rex_sql::factory();
-
 // Create views for url addon
 $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_machinery_url_used_machines_rent AS
 	SELECT lang.used_machine_id, lang.clang_id, CONCAT(machines.manufacturer, " ", machines.name) AS name, CONCAT(machines.manufacturer, " ", machines.name, " - ", categories.name) AS seo_title, lang.teaser AS seo_description, SUBSTRING_INDEX(machines.pics, ",", 1) as picture, machines.category_id, lang.updatedate
@@ -85,7 +84,7 @@ $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_machinery
 
 // Insert url schemes
 if(\rex_addon::get('url')->isAvailable()) {
-	$clang_id = count(rex_clang::getAllIds()) == 1 ? rex_clang::getStartId() : 0;
+	$clang_id = count(rex_clang::getAllIds()) === 1 ? rex_clang::getStartId() : 0;
 	$article_id_rent = rex_config::get('d2u_machinery', 'used_machine_article_id_rent', rex_article::getSiteStartArticleId()); 
 	$article_id_sale = rex_config::get('d2u_machinery', 'used_machine_article_id_sale', rex_article::getSiteStartArticleId()); 
 

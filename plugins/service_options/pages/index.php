@@ -13,13 +13,13 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	$form = rex_post('form', 'array', []);
 
 	// Media fields and links need special treatment
-	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', []);
+	$input_media = rex_post('REX_INPUT_MEDIA', 'array', []);
 
-	$success = TRUE;
-	$service_option = FALSE;
+	$success = true;
+	$service_option = false;
 	$service_option_id = $form['service_option_id'];
 	foreach(rex_clang::getAll() as $rex_clang) {
-		if($service_option === FALSE) {
+		if($service_option === false) {
 			$service_option = new ServiceOption($service_option_id, $rex_clang->getId());
 			$service_option->service_option_id = $service_option_id; // Ensure correct ID in case first language has no object
 			$service_option->picture = $input_media[1];
@@ -32,14 +32,14 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 		$service_option->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 
 		if($service_option->translation_needs_update === "delete") {
-			$service_option->delete(FALSE);
+			$service_option->delete(false);
 		}
 		else if($service_option->save()){
 			// remember id, for each database lang object needs same id
 			$service_option_id = $service_option->service_option_id;
 		}
 		else {
-			$success = FALSE;
+			$success = false;
 		}
 	}
 
@@ -50,11 +50,11 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	}
 	
 	// Redirect to make reload and thus double save impossible
-	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$service_option !== FALSE) {
-		header("Location: ". rex_url::currentBackendPage(["entry_id"=>$service_option->service_option_id, "func"=>'edit', "message"=>$message], FALSE));
+	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$service_option !== false) {
+		header("Location: ". rex_url::currentBackendPage(["entry_id"=>$service_option->service_option_id, "func"=>'edit', "message"=>$message], false));
 	}
 	else {
-		header("Location: ". rex_url::currentBackendPage(["message"=>$message], FALSE));
+		header("Location: ". rex_url::currentBackendPage(["message"=>$message], false));
 	}
 	exit;
 }
@@ -73,12 +73,12 @@ else if(intval(filter_input(INPUT_POST, "btn_delete", FILTER_VALIDATE_INT)) === 
 
 	// If not used, delete
 	if(count($referring_machines) === 0) {
-		$service_option->delete(TRUE);
+		$service_option->delete(true);
 	}
 	else {
 		$message = '<ul>';
 		foreach($referring_machines as $referring_machine) {
-			$message .= '<li><a href="index.php?page=d2u_machinery/machine&func=edit&entry_id='. $referring_machine->service_option_id .'">'. $referring_machine->name.'</a></li>';
+			$message .= '<li><a href="index.php?page=d2u_machinery/machine&func=edit&entry_id='. $referring_machine->machine_id .'">'. $referring_machine->name.'</a></li>';
 		}
 		$message .= '</ul>';
 
@@ -108,11 +108,11 @@ if ($func === 'edit' || $func === 'add') {
 				<?php
 					foreach(rex_clang::getAll() as $rex_clang) {
 						$service_option = new ServiceOption($entry_id, $rex_clang->getId());
-						$required = $rex_clang->getId() === intval(rex_config::get("d2u_helper", "default_lang")) ? TRUE : FALSE;
+						$required = $rex_clang->getId() === intval(rex_config::get("d2u_helper", "default_lang")) ? true : false;
 						
-						$readonly_lang = TRUE;
+						$readonly_lang = true;
 						if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || (\rex::getUser()->hasPerm('d2u_machinery[edit_lang]') && \rex::getUser()->getComplexPerm('clang') instanceof rex_clang_perm && \rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId())))) {
-							$readonly_lang = FALSE;
+							$readonly_lang = false;
 						}
 				?>
 					<fieldset>
@@ -124,7 +124,7 @@ if ($func === 'edit' || $func === 'add') {
 									$options_translations["yes"] = rex_i18n::msg('d2u_helper_translation_needs_update');
 									$options_translations["no"] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
 									$options_translations["delete"] = rex_i18n::msg('d2u_helper_translation_delete');
-									d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$service_option->translation_needs_update], 1, FALSE, $readonly_lang);
+									d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$service_option->translation_needs_update], 1, false, $readonly_lang);
 								}
 								else {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
@@ -144,7 +144,7 @@ if ($func === 'edit' || $func === 'add') {
 							<div id="details_clang_<?php print $rex_clang->getId(); ?>">
 								<?php
 									d2u_addon_backend_helper::form_input('d2u_helper_name', "form[lang][". $rex_clang->getId() ."][name]", $service_option->name, $required, $readonly_lang, "text");
-									d2u_addon_backend_helper::form_textarea('d2u_helper_description', "form[lang][". $rex_clang->getId() ."][description]", $service_option->description, 10, FALSE, $readonly_lang, TRUE)
+									d2u_addon_backend_helper::form_textarea('d2u_helper_description', "form[lang][". $rex_clang->getId() ."][description]", $service_option->description, 10, false, $readonly_lang, true)
 								?>
 							</div>
 						</div>
@@ -158,9 +158,9 @@ if ($func === 'edit' || $func === 'add') {
 						<?php
 							// Do not use last object from translations, because you don't know if it exists in DB
 							$service_option = new ServiceOption($entry_id, intval(rex_config::get("d2u_helper", "default_lang")));
-							$readonly = TRUE;
+							$readonly = true;
 							if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
-								$readonly = FALSE;
+								$readonly = false;
 							}
 
 							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', '1', $service_option->picture, $readonly);

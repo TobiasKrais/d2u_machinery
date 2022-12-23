@@ -68,8 +68,8 @@ class Agitator implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Deletes the object.
-	 * @param bool $delete_all If TRUE, all translations and main object are deleted. If 
-	 * FALSE, only this translation will be deleted.
+	 * @param bool $delete_all If true, all translations and main object are deleted. If 
+	 * false, only this translation will be deleted.
 	 */
 	public function delete($delete_all = true):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_agitators_lang "
@@ -164,10 +164,10 @@ class Agitator implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Updates or inserts the object into database.
-	 * @return boolean TRUE if successful
+	 * @return boolean true if successful
 	 */
 	public function save() {
-		$error = FALSE;
+		$error = false;
 
 		// Save the not language specific part
 		$pre_save_agitator = new Agitator($this->agitator_id, $this->clang_id);
@@ -192,7 +192,7 @@ class Agitator implements \D2U_Helper\ITranslationHelper {
 			}
 		}
 		
-		if($error === FALSE) {
+		if($error === false) {
 			// Save the language specific part
 			$pre_save_agitator = new Agitator($this->agitator_id, $this->clang_id);
 			if($pre_save_agitator !== $this) {

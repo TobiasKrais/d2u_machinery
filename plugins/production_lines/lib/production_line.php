@@ -6,93 +6,94 @@
  */
 
 /**
+ * @api
  * Production line
  */
 class ProductionLine implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var int Database ID
 	 */
-	var int $production_line_id = 0;
+	public int $production_line_id = 0;
 	
 	/**
 	 * @var int Redaxo clang id
 	 */
-	var int $clang_id = 0;
+	public int $clang_id = 0;
 	
 	/**
 	 * @var string Name
 	 */
-	var string $line_code = "";
+	public string $line_code = "";
 	
 	/**
 	 * @var int[] Industry sectors ids
 	 */
-	var array $industry_sector_ids = [];
+	public array $industry_sector_ids = [];
 	
 	/**
 	 * @var int[] machine ids
 	 */
-	var array $machine_ids = [];
+	public array $machine_ids = [];
 	
 	/**
 	 * @var int[] Complementary machine ids
 	 */
-	var array $complementary_machine_ids = [];
+	public array $complementary_machine_ids = [];
 	
 	/**
 	 * @var int[] machine_steel_processing_extension: Automation supply ids
 	 */
-	var array $automation_supply_ids = [];
+	public array $automation_supply_ids = [];
 
 	/**
 	 * @var string[] Picture file names 
 	 */
-	var array $pictures = [];
+	public array $pictures = [];
 
 	/**
 	 * @var string Picture file name with links
 	 */
-	var string $link_picture = "";
+	public string $link_picture = "";
 
 	/**
 	 * @var int[] Videomanager video ids
 	 */
-	var array $video_ids = [];
+	public array $video_ids = [];
 
 	/**
 	 * @var String Status. Either "online" or "offline".
 	 */
-	var string $online_status = "offline";
+	public string $online_status = "offline";
 	
 	/**
 	 * @var string Name
 	 */
-	var string $name = "";
+	public string $name = "";
 	
 	/**
 	 * @var string Teaser
 	 */
-	var string $teaser = "";
+	public string $teaser = "";
 
 	/**
 	 * @var string Short description
 	 */
-	var string $description_short = "";
+	public string $description_short = "";
 
 	/**
 	 * @var string Long description
 	 */
-	var string $description_long = "";
+	public string $description_long = "";
 
 	/**
 	 * @var string[] Unique selling proposition
 	 */
-	var array $usp_ids = [];
+	public array $usp_ids = [];
 	
 	/**
 	 * @var string "yes" if translation needs update
 	 */
-	var $translation_needs_update = "delete";
+	public string $translation_needs_update = "delete";
 
 	/**
 	 * @var string URL
@@ -116,29 +117,36 @@ class ProductionLine implements \D2U_Helper\ITranslationHelper {
 		$num_rows = $result->getRows();
 
 		if ($num_rows > 0) {
-			$this->production_line_id = $result->getValue("production_line_id");
-			$this->complementary_machine_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("complementary_machine_ids")), PREG_GREP_INVERT);
-			$this->description_long = stripslashes($result->getValue("description_long"));
-			$this->description_short = stripslashes($result->getValue("description_short"));
+			$this->production_line_id = (int) $result->getValue("production_line_id");
+			$complementary_machine_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("complementary_machine_ids")), PREG_GREP_INVERT);
+			$this->complementary_machine_ids = is_array($complementary_machine_ids) ? $complementary_machine_ids : [];
+			$this->description_long = stripslashes((string) $result->getValue("description_long"));
+			$this->description_short = stripslashes((string) $result->getValue("description_short"));
 			if(rex_plugin::get('d2u_machinery', 'industry_sectors')->isAvailable()) {
-				$this->industry_sector_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("industry_sector_ids")), PREG_GREP_INVERT);
+				$industry_sector_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("industry_sector_ids")), PREG_GREP_INVERT);
+				$this->industry_sector_ids = is_array($industry_sector_ids) ? $industry_sector_ids : [];
 			}
 			if(rex_plugin::get("d2u_machinery", "machine_steel_processing_extension")->isAvailable()) {
-				$this->automation_supply_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("automation_supply_ids")), PREG_GREP_INVERT);
+				$automation_supply_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("automation_supply_ids")), PREG_GREP_INVERT);
+				$this->automation_supply_ids = is_array($automation_supply_ids) ? $automation_supply_ids : [];
 			}
-			$this->line_code = stripslashes($result->getValue("line_code"));
-			$this->machine_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("machine_ids")), PREG_GREP_INVERT);
-			$this->name = stripslashes($result->getValue("name"));
-			$this->online_status = $result->getValue("online_status");
-			$this->pictures = preg_grep('/^\s*$/s', explode(",", $result->getValue("pictures")), PREG_GREP_INVERT);
-			$this->link_picture = $result->getValue("link_picture");
-			$this->teaser = stripslashes($result->getValue("teaser"));
+			$this->line_code = stripslashes((string) $result->getValue("line_code"));
+			$machine_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("machine_ids")), PREG_GREP_INVERT);
+			$this->machine_ids = is_array($machine_ids) ? $machine_ids : [];
+			$this->name = stripslashes((string) $result->getValue("name"));
+			$this->online_status = (string) $result->getValue("online_status");
+			$pictures = preg_grep('/^\s*$/s', explode(",", (string) $result->getValue("pictures")), PREG_GREP_INVERT);
+			$this->pictures = is_array($pictures) ? $pictures : [];
+			$this->link_picture = (string) $result->getValue("link_picture");
+			$this->teaser = stripslashes((string) $result->getValue("teaser"));
 			if($result->getValue("translation_needs_update") !== "") {
-				$this->translation_needs_update = $result->getValue("translation_needs_update");
+				$this->translation_needs_update = (string) $result->getValue("translation_needs_update");
 			}
-			$this->usp_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("usp_ids")), PREG_GREP_INVERT);
+			$usp_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("usp_ids")), PREG_GREP_INVERT);
+			$this->usp_ids = is_array($usp_ids) ? $usp_ids : [];
 			if(rex_addon::get('d2u_videos')->isAvailable()) {
-				$this->video_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("video_ids")), PREG_GREP_INVERT);
+				$video_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("video_ids")), PREG_GREP_INVERT);
+				$this->video_ids = is_array($video_ids) ? $video_ids : [];
 			}
 		}
 	}
@@ -174,8 +182,8 @@ class ProductionLine implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Deletes the object in all languages.
-	 * @param bool $delete_all If TRUE, all translations and main object are deleted. If 
-	 * FALSE, only this translation will be deleted.
+	 * @param bool $delete_all If true, all translations and main object are deleted. If 
+	 * false, only this translation will be deleted.
 	 */
 	public function delete($delete_all = true):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_production_lines_lang "
@@ -205,14 +213,14 @@ class ProductionLine implements \D2U_Helper\ITranslationHelper {
 				foreach(rex_clang::getAllIds() as $clang_id) {
 					$lang_object = new self($this->production_line_id, $clang_id);
 					$query_forward = "DELETE FROM ". \rex::getTablePrefix() ."yrewrite_forward "
-						."WHERE extern = '". $lang_object->getURL(TRUE) ."'";
+						."WHERE extern = '". $lang_object->getURL(true) ."'";
 					$result_forward = \rex_sql::factory();
 					$result_forward->setQuery($query_forward);
 				}
 			}
 			else {
 				$query_forward = "DELETE FROM ". \rex::getTablePrefix() ."yrewrite_forward "
-					."WHERE extern = '". $this->getURL(TRUE) ."'";
+					."WHERE extern = '". $this->getURL(true) ."'";
 				$result_forward = \rex_sql::factory();
 				$result_forward->setQuery($query_forward);
 			}
@@ -222,10 +230,10 @@ class ProductionLine implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * Get all objects.
 	 * @param int $clang_id Redaxo clang id.
-	 * @param boolean $online_only TRUE if only online objects should be returned.
+	 * @param boolean $online_only true if only online objects should be returned.
 	 * @return ProductionLine[] Array with production line objects.
 	 */
-	public static function getAll($clang_id, $online_only = FALSE) {
+	public static function getAll($clang_id, $online_only = false) {
 		$query = "SELECT production_line_id FROM ". \rex::getTablePrefix() ."d2u_machinery_production_lines_lang "
 			."WHERE clang_id = ". $clang_id ." ";
 		$query .= "ORDER BY name";
@@ -235,11 +243,11 @@ class ProductionLine implements \D2U_Helper\ITranslationHelper {
 		
 		$production_lines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$production_line = new ProductionLine($result->getValue("production_line_id"), $clang_id);
+			$production_line = new ProductionLine((int) $result->getValue("production_line_id"), $clang_id);
 			if($online_only && $production_line->isOnline()) {
 				$production_lines[] = $production_line;
 			}
-			else if($online_only === FALSE) {
+			else if($online_only === false) {
 				$production_lines[] = $production_line;
 			}
 			$result->next();
@@ -249,14 +257,14 @@ class ProductionLine implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Gets the machines referring to this object.
-	 * @param boolean $online_only TRUE if only online machines should be returned.
+	 * @param boolean $online_only true if only online machines should be returned.
 	 * @return Machine[] Machines referring to this object.
 	 */
-	public function getMachines($online_only = FALSE) {
+	public function getMachines($online_only = false) {
 		$machines = [];
 		foreach ($this->machine_ids as $machine_id) {
 			$machine = new Machine($machine_id, $this->clang_id);
-			if($online_only === FALSE || ($online_only && $machine->online_status === "online")) {
+			if($online_only === false || ($online_only && $machine->online_status === "online")) {
 				$machines[] = $machine;
 			}
 		}
@@ -273,7 +281,7 @@ class ProductionLine implements \D2U_Helper\ITranslationHelper {
 		$query = 'SELECT production_line_id FROM '. \rex::getTablePrefix() .'d2u_machinery_production_lines_lang '
 				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
 				.'ORDER BY name';
-		if($type == 'missing') {
+		if($type === 'missing') {
 			$query = 'SELECT main.production_line_id FROM '. \rex::getTablePrefix() .'d2u_machinery_production_lines AS main '
 					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_production_lines_lang AS target_lang '
 						.'ON main.production_line_id = target_lang.production_line_id AND target_lang.clang_id = '. $clang_id .' '
@@ -288,7 +296,7 @@ class ProductionLine implements \D2U_Helper\ITranslationHelper {
 
 		$objects = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$objects[] = new ProductionLine($result->getValue("production_line_id"), $clang_id);
+			$objects[] = new ProductionLine((int) $result->getValue("production_line_id"), $clang_id);
 			$result->next();
 		}
 		
@@ -297,20 +305,20 @@ class ProductionLine implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Returns the URL of this object.
-	 * @param string $including_domain TRUE if Domain name should be included
+	 * @param bool $including_domain true if Domain name should be included
 	 * @return string URL
 	 */
-	public function getURL($including_domain = FALSE) {
-		if($this->url == "") {
+	public function getURL($including_domain = false) {
+		if($this->url === "") {
 			$d2u_machinery = rex_addon::get("d2u_machinery");
 				
 			$parameterArray = [];
 			$parameterArray['production_line_id'] = $this->production_line_id;
-			$this->url = rex_getUrl($d2u_machinery->getConfig('article_id'), $this->clang_id, $parameterArray, "&");
+			$this->url = rex_getUrl(intval($d2u_machinery->getConfig('article_id')), $this->clang_id, $parameterArray, "&");
 		}
 
 		if($including_domain) {
-			if(\rex_addon::get('yrewrite') && \rex_addon::get('yrewrite')->isAvailable())  {
+			if(\rex_addon::get('yrewrite') instanceof rex_addon && \rex_addon::get('yrewrite')->isAvailable())  {
 				return str_replace(\rex_yrewrite::getCurrentDomain()->getUrl() .'/', \rex_yrewrite::getCurrentDomain()->getUrl(), \rex_yrewrite::getCurrentDomain()->getUrl() . $this->url);
 			}
 			else {
@@ -324,24 +332,24 @@ class ProductionLine implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Returns if object is used and thus online.
-	 * @return boolean TRUE if object is online, otherwise FALSE.
+	 * @return boolean true if object is online, otherwise false.
 	 */
 	public function isOnline() {
-		return ($this->online_status == 'online');
+		return ($this->online_status === 'online');
 	}	
 	
 	/**
 	 * Updates or inserts the object into database.
-	 * @return boolean TRUE if successful
+	 * @return boolean true if successful
 	 */
 	public function save() {
-		$error = FALSE;
+		$error = false;
 
 		// Save the not language specific part
 		$pre_save_object = new ProductionLine($this->production_line_id, $this->clang_id);
 		
 		// saving the rest
-		if($this->production_line_id == 0 || $pre_save_object !== $this) {
+		if($this->production_line_id === 0 || $pre_save_object !== $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_production_lines SET "
 					."complementary_machine_ids = '|". implode("|", $this->complementary_machine_ids) ."|', "
 					."line_code = '". $this->line_code ."', "
@@ -374,7 +382,7 @@ class ProductionLine implements \D2U_Helper\ITranslationHelper {
 		}
 		
 		$regenerate_urls = false;
-		if($error === FALSE) {
+		if($error === false) {
 			// Save the language specific part
 			$pre_save_object = new ProductionLine($this->production_line_id, $this->clang_id);
 			if($pre_save_object !== $this) {
@@ -387,7 +395,7 @@ class ProductionLine implements \D2U_Helper\ITranslationHelper {
 						."teaser = '". addslashes($this->teaser) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = CURRENT_TIMESTAMP, "
-						."updateuser = '". \rex::getUser()->getLogin() ."' ";
+						."updateuser = '". (\rex::getUser() instanceof rex_user ? \rex::getUser()->getLogin() : '') ."' ";
 
 				$result = \rex_sql::factory();
 				$result->setQuery($query);

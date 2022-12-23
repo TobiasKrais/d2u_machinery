@@ -6,6 +6,7 @@
  */
 
 /**
+ * @api
  * Used machine object.
  */
 class UsedMachine implements \D2U_Helper\ITranslationHelper {
@@ -87,7 +88,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var Machine|bool Machine objekt for technical data reference
 	 */
-	public Machine|bool $machine = FALSE;
+	public Machine|bool $machine = false;
 	
 	/**
 	 * @var string Place, where used machine is currently located.
@@ -169,7 +170,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 			$this->location = (string) $result->getValue("location");
 			$this->external_url = (string) $result->getValue("external_url");
 			$this->description = stripslashes(htmlspecialchars_decode((string) $result->getValue("description")));
-			$downloads = preg_grep('/^\s*$/s', explode(",", $result->getValue("downloads")), PREG_GREP_INVERT);
+			$downloads = preg_grep('/^\s*$/s', explode(",", (string) $result->getValue("downloads")), PREG_GREP_INVERT);
 			$this->downloads = is_array($downloads) ? $downloads : [];
 			$this->teaser = stripslashes(htmlspecialchars_decode((string) $result->getValue("teaser")));
 			if((string) $result->getValue("translation_needs_update") !== "") {
@@ -188,7 +189,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 			}
 
 			// Videos
-			if(\rex_addon::get('d2u_videos')->isAvailable() && (string) $result->getValue("video_ids") !== "") {
+			if(\rex_addon::get('d2u_videos') instanceof rex_addon && \rex_addon::get('d2u_videos')->isAvailable() && (string) $result->getValue("video_ids") !== "") {
 				$video_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("video_ids")), PREG_GREP_INVERT);
 				if(is_array($video_ids)) {
 					foreach ($video_ids as $video_id) {
@@ -240,8 +241,8 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Deletes the object.
-	 * @param bool $delete_all If TRUE, all translations and main object are deleted. If 
-	 * FALSE, only this translation will be deleted.
+	 * @param bool $delete_all If true, all translations and main object are deleted. If 
+	 * false, only this translation will be deleted.
 	 */
 	public function delete($delete_all = true):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_used_machines_lang "
@@ -276,14 +277,14 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 				foreach(rex_clang::getAllIds() as $clang_id) {
 					$lang_object = new self($this->used_machine_id, $clang_id);
 					$query_forward = "DELETE FROM ". \rex::getTablePrefix() ."yrewrite_forward "
-						."WHERE extern = '". $lang_object->getURL(TRUE) ."'";
+						."WHERE extern = '". $lang_object->getURL(true) ."'";
 					$result_forward = \rex_sql::factory();
 					$result_forward->setQuery($query_forward);
 				}
 			}
 			else {
 				$query_forward = "DELETE FROM ". \rex::getTablePrefix() ."yrewrite_forward "
-					."WHERE extern = '". $this->getURL(TRUE) ."'";
+					."WHERE extern = '". $this->getURL(true) ."'";
 				$result_forward = \rex_sql::factory();
 				$result_forward->setQuery($query_forward);
 			}
@@ -297,7 +298,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 	 * @param string $offer_type Either "sale", "rent" or leave string empty for both
 	 * @return UsedMachine[] Array with UsedMachines objects. The key is used_machine_id
 	 */
-	public static function getAll($clang_id, $only_online = FALSE, $offer_type = "") {
+	public static function getAll($clang_id, $only_online = false, $offer_type = "") {
 		$query = "SELECT lang.used_machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_used_machines_lang AS lang "
 			."LEFT JOIN ". \rex::getTablePrefix() ."d2u_machinery_used_machines AS machine "
 				."ON lang.used_machine_id = machine.used_machine_id AND clang_id = ". $clang_id ." ";
@@ -317,7 +318,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 		
 		$used_machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$used_machines[$result->getValue("used_machine_id")] = new UsedMachine($result->getValue("used_machine_id"), $clang_id);
+			$used_machines[$result->getValue("used_machine_id")] = new UsedMachine((int) $result->getValue("used_machine_id"), $clang_id);
 			$result->next();
 		}
 		return $used_machines;
@@ -330,7 +331,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 	 */
 	public function getExtendedTeaser() {
 		$extended_teaser = "";
-		if ($this->offer_type == "rent") {
+		if ($this->offer_type === "rent") {
 			$extended_teaser .= \Sprog\Wildcard::get('d2u_machinery_used_machines_offer_rent', $this->clang_id) .": ";
 		}
 		if (strlen($this->teaser) > 0) {
@@ -362,7 +363,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 		$result->setQuery($query);
 
 		if($result->getRows() > 0) {
-			return $result->getValue("offer_type");
+			return (string) $result->getValue("offer_type");
 		}
 		
 		return "";
@@ -384,7 +385,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 		
 		$used_machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$used_machines[] = new UsedMachine($result->getValue("used_machine_id"), $machine->clang_id);
+			$used_machines[] = new UsedMachine((int) $result->getValue("used_machine_id"), $machine->clang_id);
 			$result->next();
 		}
 		
@@ -412,7 +413,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 		
 		$used_machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$used_machines[] = new UsedMachine($result->getValue("used_machine_id"), $category->clang_id);
+			$used_machines[] = new UsedMachine((int) $result->getValue("used_machine_id"), $category->clang_id);
 			$result->next();
 		}
 		
@@ -431,7 +432,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 						.'ON main.used_machine_id = lang.used_machine_id '
 				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
 				.'ORDER BY manufacturer, name';
-		if($type == 'missing') {
+		if($type === 'missing') {
 			$query = 'SELECT main.used_machine_id FROM '. \rex::getTablePrefix() .'d2u_machinery_used_machines AS main '
 					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_used_machines_lang AS target_lang '
 						.'ON main.used_machine_id = target_lang.used_machine_id AND target_lang.clang_id = '. $clang_id .' '
@@ -446,7 +447,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 
 		$objects = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$objects[] = new UsedMachine($result->getValue("used_machine_id"), $clang_id);
+			$objects[] = new UsedMachine((int) $result->getValue("used_machine_id"), $clang_id);
 			$result->next();
 		}
 		
@@ -455,26 +456,26 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Returns the URL of this object.
-	 * @param boolean $including_domain TRUE if Domain name should be included
+	 * @param boolean $including_domain true if Domain name should be included
 	 * @return string URL
 	 */
-	public function getURL($including_domain = FALSE) {
-		if($this->url == "") {
+	public function getURL($including_domain = false) {
+		if($this->url === "") {
 			$d2u_machinery = rex_addon::get("d2u_machinery");
 				
 			$parameterArray = [];
-			if($this->offer_type == 'rent') {
+			if($this->offer_type === 'rent') {
 				$parameterArray['used_rent_machine_id'] = $this->used_machine_id;
 			}
 			else {
 				$parameterArray['used_sale_machine_id'] = $this->used_machine_id;
 			}
-			$article_id = $this->offer_type == "sale" ? $d2u_machinery->getConfig('used_machine_article_id_sale') : $d2u_machinery->getConfig('used_machine_article_id_rent');
+			$article_id = $this->offer_type === "sale" ? intval($d2u_machinery->getConfig('used_machine_article_id_sale')) : intval($d2u_machinery->getConfig('used_machine_article_id_rent'));
 			$this->url = rex_getUrl($article_id, $this->clang_id, $parameterArray, "&");
 		}
 
 		if($including_domain) {
-			if(\rex_addon::get('yrewrite') && \rex_addon::get('yrewrite')->isAvailable())  {
+			if(\rex_addon::get('yrewrite') instanceof rex_addon && \rex_addon::get('yrewrite')->isAvailable())  {
 				return str_replace(\rex_yrewrite::getCurrentDomain()->getUrl() .'/', \rex_yrewrite::getCurrentDomain()->getUrl(), \rex_yrewrite::getCurrentDomain()->getUrl() . $this->url);
 			}
 			else {
@@ -488,22 +489,18 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Updates or inserts the object into database.
-	 * @return boolean TRUE if successful
+	 * @return boolean true if successful
 	 */
 	public function save() {
-		$error = FALSE;
+		$error = false;
 		
-		$this->price = $this->price == "" ? 0 : $this->price;
-		$this->vat = $this->vat == "" ? 0 : $this->vat;
-		$this->year_built = $this->year_built == "" ? 0 : $this->year_built;
-
 		// Save the not language specific part
 		$pre_save_object = new UsedMachine($this->used_machine_id, $this->clang_id);
 		$regenerate_urls = false;
-		if($this->used_machine_id == 0 || $pre_save_object !== $this) {
+		if($this->used_machine_id === 0 || $pre_save_object !== $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_used_machines SET "
 					."name = '". addslashes($this->name) ."', "
-					."category_id = ". $this->category->category_id .", "
+					."category_id = ". ($this->category instanceof Category ? $this->category->category_id : 0) .", "
 					."offer_type = '". $this->offer_type ."', "
 					."availability = '". $this->availability ."', "
 					."product_number = '". $this->product_number ."', "
@@ -514,13 +511,13 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 					."vat = ". $this->vat .", "
 					."online_status = '". $this->online_status ."', "
 					."pics = '". implode(",", $this->pics) ."', "
-					."machine_id = ". ($this->machine === FALSE ? 0 : $this->machine->machine_id) .", "
+					."machine_id = ". ($this->machine instanceof Machine? $this->machine->machine_id : 0) .", "
 					."location = '". $this->location ."', "
 					."external_url = '". $this->external_url ."' ";
 			if(rex_plugin::get("d2u_machinery", "contacts")->isAvailable()) {
-				$query .= ", contact_id = ". ($this->contact ? $this->contact->contact_id : 0) ." ";
+				$query .= ", contact_id = ". ($this->contact instanceof D2U_Machinery\Contact ? $this->contact->contact_id : 0) ." ";
 			}
-			if(\rex_addon::get('d2u_videos')->isAvailable() && count($this->videos) > 0) {
+			if(\rex_addon::get('d2u_videos') instanceof rex_addon && \rex_addon::get('d2u_videos')->isAvailable() && count($this->videos) > 0) {
 				$query .= ", video_ids = '|". implode("|", array_keys($this->videos)) ."|' ";
 			}
 			else {
@@ -545,7 +542,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 			}
 		}
 		
-		if($error === FALSE) {
+		if($error === false) {
 			// Save the language specific part
 			$pre_save_object = new UsedMachine($this->used_machine_id, $this->clang_id);
 			if($pre_save_object !== $this) {
@@ -557,7 +554,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 						."downloads = '". implode(",", $this->downloads) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = CURRENT_TIMESTAMP, "
-						."updateuser = '". \rex::getUser()->getLogin() ."' ";
+						."updateuser = '". (\rex::getUser() instanceof rex_user ? \rex::getUser()->getLogin() : '') ."' ";
 				$result = \rex_sql::factory();
 				$result->setQuery($query);
 				$error = $result->hasError();
@@ -565,13 +562,13 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 		}
 
 		// Remove from export
-		if($this->online_status == "offline" && rex_plugin::get("d2u_machinery", "export")->isAvailable()) {
+		if($this->online_status === "offline" && rex_plugin::get("d2u_machinery", "export")->isAvailable()) {
 			ExportedUsedMachine::removeMachineFromAllExports($this->used_machine_id);
 		}
 
 		// Update URLs
 		if($regenerate_urls) {
-			if($this->offer_type == "rent") {
+			if($this->offer_type === "rent") {
 				\d2u_addon_backend_helper::generateUrlCache('used_rent_machine_id');
 			}
 			else {

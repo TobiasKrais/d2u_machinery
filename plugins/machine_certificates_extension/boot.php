@@ -18,7 +18,7 @@ function rex_d2u_machinery_certificates_clang_deleted(rex_extension_point $ep) {
 	// Delete
 	$certificates = Certificate::getAll($clang_id);
 	foreach ($certificates as $certificate) {
-		$certificate->delete(FALSE);
+		$certificate->delete(false);
 	}
 
 	return $warning;

@@ -39,7 +39,7 @@ else if ($func === 'export') {
 
 // Fetch providers
 $providers = Provider::getAll();
-$used_machines = UsedMachine::getAll(intval(rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId())), TRUE);
+$used_machines = UsedMachine::getAll(intval(rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId())), true);
 
 print '<table class="table table-striped table-hover">';
 if(count($providers) > 0) {

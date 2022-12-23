@@ -12,11 +12,11 @@ if($message !== "") {
 if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(INPUT_POST, "btn_apply")) === 1) {
 	$form = rex_post('form', 'array', []);
 
-	$success = TRUE;
-	$welding = FALSE;
+	$success = true;
+	$welding = false;
 	$welding_id = $form['welding_id'];
 	foreach(rex_clang::getAll() as $rex_clang) {
-		if($welding === FALSE) {
+		if($welding === false) {
 			$welding = new Welding($welding_id, $rex_clang->getId());
 			$welding->welding_id = $welding_id; // Ensure correct ID in case first language has no object
 			$welding->internal_name = $form['internal_name'];
@@ -28,14 +28,14 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 		$welding->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 
 		if($welding->translation_needs_update === "delete") {
-			$welding->delete(FALSE);
+			$welding->delete(false);
 		}
 		else if($welding->save()){
 			// remember id, for each database lang object needs same id
 			$welding_id = $welding->welding_id;
 		}
 		else {
-			$success = FALSE;
+			$success = false;
 		}
 	}
 
@@ -46,11 +46,11 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	}
 	
 	// Redirect to make reload and thus double save impossible
-	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$welding !== FALSE) {
-		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$welding->welding_id, "func"=>'edit', "message"=>$message), FALSE));
+	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$welding !== false) {
+		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$welding->welding_id, "func"=>'edit', "message"=>$message), false));
 	}
 	else {
-		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), FALSE));
+		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), false));
 	}
 	exit;
 }
@@ -67,8 +67,9 @@ else if(intval(filter_input(INPUT_POST, "btn_delete", FILTER_VALIDATE_INT)) === 
 	// Check if object is used
 
 	// If not used, delete
+	$referring_machines = $welding->getReferringMachines();
 	if(count($referring_machines) === 0) {
-		$welding->delete(TRUE);
+		$welding->delete(true);
 	}
 	else {
 		$message = '<ul>';
@@ -97,22 +98,22 @@ if ($func === 'edit' || $func === 'add') {
 						<?php
 							// Do not use last object from translations, because you don't know if it exists in DB
 							$welding = new Welding($entry_id, intval(rex_config::get("d2u_helper", "default_lang")));
-							$readonly = TRUE;
+							$readonly = true;
 							if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
-								$readonly = FALSE;
+								$readonly = false;
 							}
-							d2u_addon_backend_helper::form_input('d2u_helper_name', "form[internal_name]", $welding->internal_name, TRUE, $readonly, "text");
+							d2u_addon_backend_helper::form_input('d2u_helper_name', "form[internal_name]", $welding->internal_name, true, $readonly, "text");
 						?>
 					</div>
 				</fieldset>
 				<?php
 					foreach(rex_clang::getAll() as $rex_clang) {
 						$welding = new Welding($entry_id, $rex_clang->getId());
-						$required = $rex_clang->getId() === intval(rex_config::get("d2u_helper", "default_lang")) ? TRUE : FALSE;
+						$required = $rex_clang->getId() === intval(rex_config::get("d2u_helper", "default_lang")) ? true : false;
 						
-						$readonly_lang = TRUE;
+						$readonly_lang = true;
 						if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || (\rex::getUser()->hasPerm('d2u_machinery[edit_lang]') && \rex::getUser()->getComplexPerm('clang') instanceof rex_clang_perm && \rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId())))) {
-							$readonly_lang = FALSE;
+							$readonly_lang = false;
 						}
 				?>
 					<fieldset>
@@ -124,7 +125,7 @@ if ($func === 'edit' || $func === 'add') {
 									$options_translations["yes"] = rex_i18n::msg('d2u_helper_translation_needs_update');
 									$options_translations["no"] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
 									$options_translations["delete"] = rex_i18n::msg('d2u_helper_translation_delete');
-									d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$welding->translation_needs_update], 1, FALSE, $readonly_lang);
+									d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$welding->translation_needs_update], 1, false, $readonly_lang);
 								}
 								else {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';

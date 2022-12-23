@@ -13,7 +13,7 @@ if(!function_exists('print_used_machines')) {
 				continue;
 			}
 			print '<div class="col-sm-6 col-md-4'. ($number_offers_row === 4 ? ' col-lg-3' : '') .' abstand">'; /** @phpstan-ignore-line */
-			print '<a href="'. $used_machine->getURL(FALSE) .'">';
+			print '<a href="'. $used_machine->getURL(false) .'">';
 			print '<div class="box" data-height-watch>';
 			if(count($used_machine->pics) > 0 && $used_machine->pics[0] !== "") {
 				print '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $used_machine->pics[0])	 .'" alt="'. $used_machine->name .'">';

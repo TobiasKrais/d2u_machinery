@@ -1,20 +1,17 @@
 <?php
-$sql = \rex_sql::factory();
-
-// Create tables
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_certificates (
-	certificate_id int(10) unsigned NOT NULL auto_increment,
-	pic varchar(100) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (certificate_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_certificates_lang (
-	certificate_id int(10) NOT NULL,
-	clang_id int(10) NOT NULL,
-	name varchar(255) collate utf8mb4_unicode_ci default NULL,
-	description varchar(255) collate utf8mb4_unicode_ci default NULL,
-	translation_needs_update varchar(7) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (certificate_id, clang_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
+\rex_sql_table::get(\rex::getTable('d2u_machinery_certificates'))
+	->ensureColumn(new rex_sql_column('certificate_id', 'INT(11) unsigned', false, null, 'auto_increment'))
+	->setPrimaryKey('certificate_id')
+    ->ensureColumn(new \rex_sql_column('pic', 'VARCHAR(255)', true))
+    ->ensure();
+\rex_sql_table::get(\rex::getTable('d2u_machinery_certificates_lang'))
+	->ensureColumn(new rex_sql_column('certificate_id', 'INT(11)', false))
+    ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
+	->setPrimaryKey(['certificate_id', 'clang_id'])
+    ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
+    ->ensureColumn(new \rex_sql_column('description', 'TEXT'))
+    ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)', true))
+    ->ensure();
 
 // Alter machine table
 \rex_sql_table::get(

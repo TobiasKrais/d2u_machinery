@@ -29,10 +29,10 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	
 	// Redirect to make reload and thus double save impossible
 	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1) {
-		header("Location: ". rex_url::currentBackendPage(["entry_id"=>$contact->contact_id, "func"=>'edit', "message"=>$message], FALSE));
+		header("Location: ". rex_url::currentBackendPage(["entry_id"=>$contact->contact_id, "func"=>'edit', "message"=>$message], false));
 	}
 	else {
-		header("Location: ". rex_url::currentBackendPage(["message"=>$message], FALSE));
+		header("Location: ". rex_url::currentBackendPage(["message"=>$message], false));
 	}
 	exit;
 }
@@ -79,14 +79,14 @@ if ($func === 'edit' || $func === 'add') {
 					<div class="panel-body-wrapper slide">
 						<?php
 							$contact = new D2U_Machinery\Contact($entry_id);
-							$readonly = TRUE;
+							$readonly = true;
 							if(rex::getUser() instanceof rex_user && (rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
-								$readonly = FALSE;
+								$readonly = false;
 							}
 							
-							d2u_addon_backend_helper::form_input('d2u_helper_name', 'form[name]', $contact->name, TRUE, $readonly);
-							d2u_addon_backend_helper::form_input('d2u_machinery_contacts_email', 'form[email]', $contact->email, TRUE, $readonly, 'email');
-							d2u_addon_backend_helper::form_input('d2u_machinery_contacts_phone', 'form[phone]', $contact->phone, FALSE, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_helper_name', 'form[name]', $contact->name, true, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_machinery_contacts_email', 'form[email]', $contact->email, true, $readonly, 'email');
+							d2u_addon_backend_helper::form_input('d2u_machinery_contacts_phone', 'form[phone]', $contact->phone, false, $readonly);
 							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', '1', $contact->picture, $readonly);
 						?>
 					</div>

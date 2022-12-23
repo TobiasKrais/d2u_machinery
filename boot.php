@@ -85,11 +85,11 @@ function rex_d2u_machinery_clang_deleted(rex_extension_point $ep) {
 	// Delete
 	$categories = Category::getAll($clang_id);
 	foreach ($categories as $category) {
-		$category->delete(FALSE);
+		$category->delete(false);
 	}
-	$machines = Machine::getAll($clang_id, FALSE);
+	$machines = Machine::getAll($clang_id, false);
 	foreach ($machines as $machine) {
-		$machine->delete(FALSE);
+		$machine->delete(false);
 	}
 	
 	// Delete language settings

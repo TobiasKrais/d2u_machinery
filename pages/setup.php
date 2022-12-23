@@ -46,9 +46,11 @@ $d2u_module_manager->showManagerList();
 	</form>
 </fieldset>
 <h2>Changelog</h2>
-<p>1.3.7-DEV:</p>
+<p>1.4.0-DEV:</p>
 <ul>
 	<li>.github Verzeichnis aus Installer Action ausgeschlossen.</li>
+	<li>Über 2.500 rexstan Hinweise korrigiert.</li>
+	<li>install.php und update.php auf Redaxo Art umgestellt und vereinfacht.</li>
 	<li>Wenn D2U Videomanager installiert ist, werden Videos von Maschinen und Kategorien in der Sitemap hinzugefügt.</li>
 	<li>Bugfix used_achines Plugin: Wenn in den Einstellungen der gleiche Artikel für Maschinen, Gebrauchtmaschinen (Verkauf oder Miete) eingestellt wird, erfolg ein Warnhinweis.</li>
 	<li>Bugfix machine_construction_equipment_extension Plugin: Einheit für Arbeitsdruck von Bodenschleifmaschinen auf kg/cm² korrigiert.</li>

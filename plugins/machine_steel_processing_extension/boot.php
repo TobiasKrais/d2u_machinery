@@ -18,35 +18,35 @@ function rex_d2u_machinery_steel_processing_clang_deleted(rex_extension_point $e
 	// Delete
 	$automations = Automation::getAll($clang_id);
 	foreach ($automations as $automation) {
-		$automation->delete(FALSE);
+		$automation->delete(false);
 	}
 	$materials = Material::getAll($clang_id);
 	foreach ($materials as $material) {
-		$material->delete(FALSE);
+		$material->delete(false);
 	}
 	$procedures = Procedure::getAll($clang_id);
 	foreach ($procedures as $procedure) {
-		$procedure->delete(FALSE);
+		$procedure->delete(false);
 	}
 	$processes = Process::getAll($clang_id);
 	foreach ($processes as $process) {
-		$process->delete(FALSE);
+		$process->delete(false);
 	}
 	$profiles = Profile::getAll($clang_id);
 	foreach ($profiles as $profile) {
-		$profile->delete(FALSE);
+		$profile->delete(false);
 	}
 	$supplies = Supply::getAll($clang_id);
 	foreach ($supplies as $supply) {
-		$supply->delete(FALSE);
+		$supply->delete(false);
 	}
 	$tools = Tool::getAll($clang_id);
 	foreach ($tools as $tool) {
-		$tool->delete(FALSE);
+		$tool->delete(false);
 	}
 	$weldings = Welding::getAll($clang_id);
 	foreach ($weldings as $welding) {
-		$welding->delete(FALSE);
+		$welding->delete(false);
 	}
 	
 	// Delete language replacements

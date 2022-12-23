@@ -1,39 +1,48 @@
 <?php
 // Extend machine table
-\rex_sql_table::get(
-    \rex::getTable('d2u_machinery_machines'))
+\rex_sql_table::get(\rex::getTable('d2u_machinery_machines'))
     ->ensureColumn(new \rex_sql_column('airless_hose_connection', 'VARCHAR(255)'))
-    ->ensureColumn(new \rex_sql_column('airless_hose_diameter', 'INT(5)', FALSE))
-    ->ensureColumn(new \rex_sql_column('airless_hose_length', 'INT(5)', FALSE))
+    ->ensureColumn(new \rex_sql_column('airless_hose_diameter', 'INT(5)', false))
+    ->ensureColumn(new \rex_sql_column('airless_hose_length', 'INT(5)', false))
     ->ensureColumn(new \rex_sql_column('container_capacity', 'VARCHAR(50)'))
     ->ensureColumn(new \rex_sql_column('container_mixing_performance', 'VARCHAR(255)'))
-    ->ensureColumn(new \rex_sql_column('container_waterconnect_pressure', 'INT(5)', FALSE))
+    ->ensureColumn(new \rex_sql_column('container_waterconnect_pressure', 'INT(5)', false))
     ->ensureColumn(new \rex_sql_column('container_waterconnect_diameter', 'VARCHAR(255)'))
-    ->ensureColumn(new \rex_sql_column('container_weight_empty', 'INT(5)', FALSE))
+    ->ensureColumn(new \rex_sql_column('container_weight_empty', 'INT(5)', false))
     ->ensureColumn(new \rex_sql_column('cutters_cutting_depth', 'VARCHAR(50)'))
-    ->ensureColumn(new \rex_sql_column('cutters_cutting_length', 'INT(5)', FALSE))
+    ->ensureColumn(new \rex_sql_column('cutters_cutting_length', 'INT(5)', false))
     ->ensureColumn(new \rex_sql_column('cutters_rod_length', 'VARCHAR(50)'))
-    ->ensureColumn(new \rex_sql_column('floor_beam_power_on_concrete', 'INT(5)', FALSE))
-    ->ensureColumn(new \rex_sql_column('floor_dust_extraction_connection', 'INT(5)', FALSE))
+    ->ensureColumn(new \rex_sql_column('floor_beam_power_on_concrete', 'INT(5)', false))
+    ->ensureColumn(new \rex_sql_column('floor_dust_extraction_connection', 'INT(5)', false))
     ->ensureColumn(new \rex_sql_column('floor_feedrate', 'VARCHAR(50)'))
     ->ensureColumn(new \rex_sql_column('floor_filter_connection', 'VARCHAR(255)'))
     ->ensureColumn(new \rex_sql_column('floor_rotations', 'VARCHAR(50)'))
     ->ensureColumn(new \rex_sql_column('floor_working_pressure', 'VARCHAR(50)'))
-    ->ensureColumn(new \rex_sql_column('floor_working_width', 'INT(5)', FALSE))
-    ->ensureColumn(new \rex_sql_column('grinder_grinding_plate', 'INT(5)', FALSE))
-    ->ensureColumn(new \rex_sql_column('grinder_grinding_wheel', 'INT(5)', FALSE))
+    ->ensureColumn(new \rex_sql_column('floor_working_width', 'INT(5)', false))
+    ->ensureColumn(new \rex_sql_column('grinder_grinding_plate', 'INT(5)', false))
+    ->ensureColumn(new \rex_sql_column('grinder_grinding_wheel', 'INT(5)', false))
     ->ensureColumn(new \rex_sql_column('grinder_rotational_frequency', 'VARCHAR(50)'))
     ->ensureColumn(new \rex_sql_column('grinder_sanding', 'VARCHAR(50)'))
-    ->ensureColumn(new \rex_sql_column('grinder_vacuum_connection', 'INT(5)', FALSE))
+    ->ensureColumn(new \rex_sql_column('grinder_vacuum_connection', 'INT(5)', false))
     ->ensureColumn(new \rex_sql_column('operating_pressure', 'VARCHAR(50)'))
     ->ensureColumn(new \rex_sql_column('pictures_delivery_set', 'TEXT'))
-    ->ensureColumn(new \rex_sql_column('pump_conveying_distance', 'INT(5)', FALSE))
-    ->ensureColumn(new \rex_sql_column('pump_filling', 'INT(10)', FALSE))
+    ->ensureColumn(new \rex_sql_column('pump_conveying_distance', 'INT(5)', false))
+    ->ensureColumn(new \rex_sql_column('pump_filling', 'INT(10)', false))
     ->ensureColumn(new \rex_sql_column('pump_flow_volume', 'VARCHAR(50)'))
     ->ensureColumn(new \rex_sql_column('pump_grain_size', 'VARCHAR(50)'))
     ->ensureColumn(new \rex_sql_column('pump_material_container', 'VARCHAR(50)'))
-    ->ensureColumn(new \rex_sql_column('pump_pressure_height', 'INT(5)', FALSE))
-    ->ensureColumn(new \rex_sql_column('waste_water_capacity', 'INT(5)', FALSE))
+    ->ensureColumn(new \rex_sql_column('pump_pressure_height', 'INT(5)', false))
+    ->ensureColumn(new \rex_sql_column('waste_water_capacity', 'INT(5)', false))
+    ->alter();
+
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_machines'))
+    ->removeColumn('pump_conveying_distance_mineral')
+    ->removeColumn('pump_conveying_distance_pasty')
+    ->removeColumn('pump_flow_volume_mineral')
+    ->removeColumn('pump_flow_volume_pasty')
+    ->removeColumn('pump_pressure_height_mineral')
+    ->removeColumn('pump_pressure_height_pasty')
     ->alter();
 
 \rex_sql_table::get(
@@ -49,7 +58,7 @@
 // Media Manager media types
 $sql = \rex_sql::factory();
 $sql->setQuery("SELECT * FROM ". \rex::getTablePrefix() ."media_manager_type WHERE name = 'd2u_machinery_construction_equipment_delivery_set_slider'");
-if($sql->getRows() == 0) {
+if(intval($sql->getRows()) === 0) {
 	$sql->setQuery("INSERT INTO ". \rex::getTablePrefix() ."media_manager_type (`status`, `name`, `description`) VALUES
 		(0, 'd2u_machinery_construction_equipment_delivery_set_slider', 'D2U Machinery Addon - Baustellenausrüstung Plugin: Bilder slider Lieferumfang');");
 	$last_id_d2u_machinery_list_tile = $sql->getLastId();
@@ -59,6 +68,10 @@ if($sql->getRows() == 0) {
 }
 
 // Insert frontend translations
+if(!class_exists('d2u_machinery_machine_construction_equipment_extension_lang_helper')) {
+	// Load class in case addon is deactivated
+	require_once 'lib/d2u_machinery_machine_construction_equipment_extension_lang_helper.php';
+}
 if(class_exists('d2u_machinery_machine_construction_equipment_extension_lang_helper')) {
 	d2u_machinery_machine_construction_equipment_extension_lang_helper::factory()->install();
 }

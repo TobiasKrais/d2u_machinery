@@ -1,20 +1,31 @@
 <?php
-$sql = \rex_sql::factory();
+\rex_sql_table::get(\rex::getTable('d2u_machinery_agitator_types'))
+	->ensureColumn(new rex_sql_column('agitator_type_id', 'INT(11) unsigned', false, null, 'auto_increment'))
+	->setPrimaryKey('agitator_type_id')
+    ->ensureColumn(new \rex_sql_column('agitator_ids', 'TEXT', true))
+    ->ensureColumn(new \rex_sql_column('pic', 'VARCHAR(255)', true))
+    ->ensure();
+\rex_sql_table::get(\rex::getTable('d2u_machinery_agitator_types_lang'))
+	->ensureColumn(new rex_sql_column('agitator_type_id', 'INT(11)', false))
+    ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
+	->setPrimaryKey(['agitator_type_id', 'clang_id'])
+    ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
+    ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)', true))
+    ->ensure();
 
-// Create tables: agitator types
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_agitator_types (
-	agitator_type_id int(10) unsigned NOT NULL auto_increment,
-	agitator_ids varchar(255) collate utf8mb4_unicode_ci default NULL,
-	pic varchar(100) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (agitator_type_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_agitator_types_lang (
-	agitator_type_id int(10) NOT NULL,
-	clang_id int(10) NOT NULL,
-	name varchar(255) collate utf8mb4_unicode_ci default NULL,
-	translation_needs_update varchar(7) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (agitator_type_id, clang_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
+\rex_sql_table::get(\rex::getTable('d2u_machinery_agitators'))
+	->ensureColumn(new rex_sql_column('agitator_id', 'INT(11) unsigned', false, null, 'auto_increment'))
+	->setPrimaryKey('agitator_id')
+    ->ensureColumn(new \rex_sql_column('pic', 'VARCHAR(255)', true))
+    ->ensure();
+\rex_sql_table::get(\rex::getTable('d2u_machinery_agitators_lang'))
+	->ensureColumn(new rex_sql_column('agitator_id', 'INT(11)', false))
+    ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
+	->setPrimaryKey(['agitator_id', 'clang_id'])
+    ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
+    ->ensureColumn(new \rex_sql_column('description', 'TEXT'))
+    ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)', true))
+    ->ensure();
 
 // Alter machine table
 \rex_sql_table::get(
@@ -29,22 +40,9 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machi
     ->ensureColumn(new \rex_sql_column('show_agitators', 'VARCHAR(4)'))
     ->alter();
 
-// Create tables: agitators
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_agitators (
-	agitator_id int(10) unsigned NOT NULL auto_increment,
-	pic varchar(100) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (agitator_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_agitators_lang (
-	agitator_id int(10) NOT NULL,
-	clang_id int(10) NOT NULL,
-	name varchar(255) collate utf8mb4_unicode_ci default NULL,
-	description text collate utf8mb4_unicode_ci default NULL,
-	translation_needs_update varchar(7) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (agitator_id, clang_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
-
 // Insert frontend translations
-if(class_exists('d2u_machinery_machine_agitator_extension_lang_helper')) {
-	d2u_machinery_machine_agitator_extension_lang_helper::factory()->install();
+if(!class_exists('d2u_machinery_machine_agitator_extension_lang_helper')) {
+	// Load class in case addon is deactivated
+	require_once 'lib/d2u_machinery_machine_agitator_extension_lang_helper.php';
 }
+d2u_machinery_machine_agitator_extension_lang_helper::factory()->install();

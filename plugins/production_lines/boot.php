@@ -16,13 +16,10 @@ function rex_d2u_machinery_production_lines_clang_deleted(rex_extension_point $e
 	$clang_id = $params['id'];
 
 	// Delete
-	$production_lines = ProductionLine::getAll($clang_id, FALSE);
-	foreach ($production_lines as $$production_lines) {
-		$$production_lines->delete(FALSE);
+	$production_lines = ProductionLine::getAll($clang_id, false);
+	foreach ($production_lines as $production_line) {
+		$production_line->delete(false);
 	}
-
-	// Delete language replacements
-	d2u_machinery_production_lines_lang_helper::factory()->uninstall($clang_id);
 
 	return $warning;
 }

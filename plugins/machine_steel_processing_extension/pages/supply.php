@@ -13,23 +13,23 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	$form = rex_post('form', 'array', []);
 
 	// Media fields and links need special treatment
-	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', []);
+	$input_media = rex_post('REX_INPUT_MEDIA', 'array', []);
 
-	$success = TRUE;
-	$supply = FALSE;
+	$success = true;
+	$supply = false;
 	$supply_id = $form['supply_id'];
 	foreach(rex_clang::getAll() as $rex_clang) {
-		if($supply === FALSE) {
+		if($supply === false) {
 			$supply = new Supply($supply_id, $rex_clang->getId());
 			$supply->supply_id = $supply_id; // Ensure correct ID in case first language has no object
 			$supply->priority = $form['priority'];
-			$supply->internal_name = $form['internal_name'];
+			$supply->name = $form['name'];
 			$supply->pic = $input_media[1];
 			if(\rex_addon::get("d2u_videos")->isAvailable() && isset($form['video_id']) && $form['video_id'] > 0) {
 				$supply->video = new Video($form['video_id'], intval(rex_config::get("d2u_helper", "default_lang")));
 			}
 			else {
-				$supply->video = FALSE;
+				$supply->video = false;
 			}
 		}
 		else {
@@ -40,14 +40,14 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 		$supply->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 
 		if($supply->translation_needs_update === "delete") {
-			$supply->delete(FALSE);
+			$supply->delete(false);
 		}
 		else if($supply->save()){
 			// remember id, for each database lang object needs same id
 			$supply_id = $supply->supply_id;
 		}
 		else {
-			$success = FALSE;
+			$success = false;
 		}
 	}
 
@@ -58,11 +58,11 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	}
 	
 	// Redirect to make reload and thus double save impossible
-	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$supply !== FALSE) {
-		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$supply->supply_id, "func"=>'edit', "message"=>$message), FALSE));
+	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$supply !== false) {
+		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$supply->supply_id, "func"=>'edit', "message"=>$message), false));
 	}
 	else {
-		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), FALSE));
+		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), false));
 	}
 	exit;
 }
@@ -119,19 +119,19 @@ if ($func === 'edit' || $func === 'add') {
 						<?php
 							// Do not use last object from translations, because you don't know if it exists in DB
 							$supply = new Supply($entry_id, intval(rex_config::get("d2u_helper", "default_lang")));
-							$readonly = TRUE;
+							$readonly = true;
 							if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
-								$readonly = FALSE;
+								$readonly = false;
 							}
 							d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', $supply->online_status === "online", $readonly);
-							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $supply->priority, TRUE, $readonly, 'number');
+							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $supply->priority, true, $readonly, 'number');
 							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', '1', $supply->pic, $readonly);
 							if(\rex_addon::get("d2u_videos")->isAvailable()) {
 								$options_video = [0 => rex_i18n::msg('d2u_machinery_video_no')];
 								foreach (Video::getAll(intval(rex_config::get("d2u_helper", "default_lang"))) as $video) {
 									$options_video[$video->video_id] = $video->name;
 								}
-								d2u_addon_backend_helper::form_select('d2u_machinery_video', 'form[video_id]', $options_video, $supply->video !== FALSE ? [$supply->video->video_id] : [], 1, FALSE, $readonly);
+								d2u_addon_backend_helper::form_select('d2u_machinery_video', 'form[video_id]', $options_video, $supply->video !== false ? [$supply->video instanceof Video ? $supply->video->video_id : 0] : [], 1, false, $readonly);
 							}
 						?>
 					</div>
@@ -139,11 +139,11 @@ if ($func === 'edit' || $func === 'add') {
 				<?php
 					foreach(rex_clang::getAll() as $rex_clang) {
 						$supply = new Supply($entry_id, $rex_clang->getId());
-						$required = $rex_clang->getId() === intval(rex_config::get("d2u_helper", "default_lang")) ? TRUE : FALSE;
+						$required = $rex_clang->getId() === intval(rex_config::get("d2u_helper", "default_lang")) ? true : false;
 						
-						$readonly_lang = TRUE;
+						$readonly_lang = true;
 						if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || (\rex::getUser()->hasPerm('d2u_machinery[edit_lang]') && \rex::getUser()->getComplexPerm('clang') instanceof rex_clang_perm && \rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId())))) {
-							$readonly_lang = FALSE;
+							$readonly_lang = false;
 						}
 				?>
 					<fieldset>
@@ -155,7 +155,7 @@ if ($func === 'edit' || $func === 'add') {
 									$options_translations["yes"] = rex_i18n::msg('d2u_helper_translation_needs_update');
 									$options_translations["no"] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
 									$options_translations["delete"] = rex_i18n::msg('d2u_helper_translation_delete');
-									d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$supply->translation_needs_update], 1, FALSE, $readonly_lang);
+									d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$supply->translation_needs_update], 1, false, $readonly_lang);
 								}
 								else {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
@@ -175,7 +175,7 @@ if ($func === 'edit' || $func === 'add') {
 							<div id="details_clang_<?php print $rex_clang->getId(); ?>">
 								<?php
 									d2u_addon_backend_helper::form_input('d2u_helper_name', "form[lang][". $rex_clang->getId() ."][name]", $supply->name, $required, $readonly_lang, "text");
-									d2u_addon_backend_helper::form_textarea('d2u_helper_description', "form[lang][". $rex_clang->getId() ."][description]", $supply->description, 5, FALSE, $readonly_lang, TRUE);
+									d2u_addon_backend_helper::form_textarea('d2u_helper_description', "form[lang][". $rex_clang->getId() ."][description]", $supply->description, 5, false, $readonly_lang, true);
 								?>
 							</div>
 						</div>

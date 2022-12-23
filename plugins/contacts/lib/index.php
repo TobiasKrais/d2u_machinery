@@ -2,6 +2,7 @@
 namespace D2U_Machinery;
 
 /**
+ * @api
  * Job contact class
  */
 class Contact {
@@ -141,7 +142,7 @@ class Contact {
 					."email = '". $this->email ."', "
 					."name = '". addslashes($this->name) ."', "
 					."phone = '". $this->phone ."', "
-					."picture = '". (strpos($this->picture, "noavatar.jpg") !== FALSE ? '' : $this->picture) ."' ";
+					."picture = '". (strpos($this->picture, "noavatar.jpg") !== false ? '' : $this->picture) ."' ";
 
 			if($this->contact_id === 0) {
 				$query = "INSERT INTO ". $query;

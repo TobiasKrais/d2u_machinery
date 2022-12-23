@@ -15,11 +15,11 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	// Media fields and links need special treatment
 	$input_media = rex_post('REX_INPUT_MEDIA', 'array', []);
 
-	$success = TRUE;
-	$certificate = FALSE;
+	$success = true;
+	$certificate = false;
 	$certificate_id = $form['certificate_id'];
 	foreach(rex_clang::getAll() as $rex_clang) {
-		if($certificate === FALSE) {
+		if($certificate === false) {
 			$certificate = new Certificate($certificate_id, $rex_clang->getId());
 			$certificate->certificate_id = $certificate_id; // Ensure correct ID in case first language has no object
 			$certificate->pic = $input_media[1];
@@ -32,14 +32,14 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 		$certificate->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 
 		if($certificate->translation_needs_update === "delete") {
-			$certificate->delete(FALSE);
+			$certificate->delete(false);
 		}
 		else if($certificate->save()){
 			// remember id, for each database lang object needs same id
 			$certificate_id = $certificate->certificate_id;
 		}
 		else {
-			$success = FALSE;
+			$success = false;
 		}
 	}
 
@@ -50,11 +50,11 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	}
 	
 	// Redirect to make reload and thus double save impossible
-	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$certificate !== FALSE) {
-		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$certificate->certificate_id, "func"=>'edit', "message"=>$message), FALSE));
+	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$certificate !== false) {
+		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$certificate->certificate_id, "func"=>'edit', "message"=>$message), false));
 	}
 	else {
-		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), FALSE));
+		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), false));
 	}
 	exit;
 }
@@ -99,11 +99,11 @@ if ($func === 'edit' || $func === 'add') {
 				<?php
 					foreach(rex_clang::getAll() as $rex_clang) {
 						$certificate = new Certificate($entry_id, $rex_clang->getId());
-						$required = $rex_clang->getId() === intval(rex_config::get("d2u_helper", "default_lang")) ? TRUE : FALSE;
+						$required = $rex_clang->getId() === intval(rex_config::get("d2u_helper", "default_lang")) ? true : false;
 						
-						$readonly_lang = TRUE;
+						$readonly_lang = true;
 						if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || (\rex::getUser()->hasPerm('d2u_machinery[edit_lang]') && \rex::getUser()->getComplexPerm('clang') instanceof rex_clang_perm && \rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId())))) {
-							$readonly_lang = FALSE;
+							$readonly_lang = false;
 						}
 				?>
 					<fieldset>
@@ -115,7 +115,7 @@ if ($func === 'edit' || $func === 'add') {
 									$options_translations["yes"] = rex_i18n::msg('d2u_helper_translation_needs_update');
 									$options_translations["no"] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
 									$options_translations["delete"] = rex_i18n::msg('d2u_helper_translation_delete');
-									d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$certificate->translation_needs_update], 1, FALSE, $readonly_lang);
+									d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$certificate->translation_needs_update], 1, false, $readonly_lang);
 								}
 								else {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
@@ -135,7 +135,7 @@ if ($func === 'edit' || $func === 'add') {
 							<div id="details_clang_<?php print $rex_clang->getId(); ?>">
 								<?php
 									d2u_addon_backend_helper::form_input('d2u_helper_name', "form[lang][". $rex_clang->getId() ."][name]", $certificate->name, $required, $readonly_lang, "text");
-									d2u_addon_backend_helper::form_textarea('d2u_helper_description', "form[lang][". $rex_clang->getId() ."][description]", $certificate->description, 10, FALSE, $readonly_lang, TRUE)
+									d2u_addon_backend_helper::form_textarea('d2u_helper_description', "form[lang][". $rex_clang->getId() ."][description]", $certificate->description, 10, false, $readonly_lang, true)
 								?>
 							</div>
 						</div>
@@ -149,9 +149,9 @@ if ($func === 'edit' || $func === 'add') {
 						<?php
 							// Do not use last object from translations, because you don't know if it exists in DB
 							$certificate = new Certificate($entry_id, intval(rex_config::get("d2u_helper", "default_lang")));
-							$readonly = TRUE;
+							$readonly = true;
 							if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
-								$readonly = FALSE;
+								$readonly = false;
 							}
 
 							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', '1', $certificate->pic, $readonly);

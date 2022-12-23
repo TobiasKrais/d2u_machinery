@@ -1,6 +1,4 @@
 <?php
-$sql = \rex_sql::factory();
-
 // Create tables
 \rex_sql_table::get(\rex::getTable('d2u_machinery_options'))
 	->ensureColumn(new rex_sql_column('option_id', 'INT(11) unsigned', false, null, 'auto_increment'))
@@ -11,8 +9,8 @@ $sql = \rex_sql::factory();
     ->ensureColumn(new \rex_sql_column('video_id', 'INT(11)', true))
     ->ensure();
 \rex_sql_table::get(\rex::getTable('d2u_machinery_options_lang'))
-	->ensureColumn(new rex_sql_column('option_id', 'INT(11) unsigned', false, null, 'auto_increment'))
-    ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false, 1))
+	->ensureColumn(new rex_sql_column('option_id', 'INT(11)'))
+    ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
 	->setPrimaryKey(['option_id', 'clang_id'])
     ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
     ->ensureColumn(new \rex_sql_column('description', 'TEXT', true))

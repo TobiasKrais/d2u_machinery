@@ -165,7 +165,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 			}
 
 			// Videos
-			if(\rex_addon::get('d2u_videos')->isAvailable() && $result->getValue("video_ids") !== "") {
+			if(\rex_addon::get('d2u_videos') instanceof rex_addon && \rex_addon::get('d2u_videos')->isAvailable() && $result->getValue("video_ids") !== "") {
 				$video_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("video_ids")), PREG_GREP_INVERT);
 				if(is_array($video_ids)) {
 					foreach ($video_ids as $video_id) {
@@ -217,8 +217,8 @@ class Category implements \D2U_Helper\ITranslationHelper{
 	
 	/**
 	 * Deletes the object in all languages.
-	 * @param boolean $delete_all If TRUE, all translations and main object are deleted. If 
-	 * FALSE, only this translation will be deleted.
+	 * @param boolean $delete_all If true, all translations and main object are deleted. If 
+	 * false, only this translation will be deleted.
 	 */
 	public function delete($delete_all = true):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_categories_lang "
@@ -239,7 +239,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 			$result->setQuery($query);
 
 			// reset priorities
-			$this->setPriority(TRUE);			
+			$this->setPriority(true);			
 		}
 
 		// Don't forget to regenerate URL list and search_it index
@@ -251,14 +251,14 @@ class Category implements \D2U_Helper\ITranslationHelper{
 				foreach(rex_clang::getAllIds() as $clang_id) {
 					$lang_object = new self($this->category_id, $clang_id);
 					$query_forward = "DELETE FROM ". \rex::getTablePrefix() ."yrewrite_forward "
-						."WHERE extern = '". $lang_object->getURL(TRUE) ."'";
+						."WHERE extern = '". $lang_object->getURL(true) ."'";
 					$result_forward = \rex_sql::factory();
 					$result_forward->setQuery($query_forward);
 				}
 			}
 			else {
 				$query_forward = "DELETE FROM ". \rex::getTablePrefix() ."yrewrite_forward "
-					."WHERE extern = '". $this->getURL(TRUE) ."'";
+					."WHERE extern = '". $this->getURL(true) ."'";
 				$result_forward = \rex_sql::factory();
 				$result_forward->setQuery($query_forward);
 			}
@@ -318,7 +318,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 	 * with the machine id as key and the value as value.
 	 */
 	public function getTechDataMatrix() {
-		$machines = $this->getMachines(TRUE);
+		$machines = $this->getMachines(true);
 		$matrix = [];
 		$tech_data_arrays = [];
 		$tech_data_wildcards = [];
@@ -359,7 +359,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 	 */
 	public function getUsageAreaMatrix() {
 		$usage_areas = UsageArea::getAll($this->clang_id, $this->category_id);
-		$machines = $this->getMachines(TRUE);
+		$machines = $this->getMachines(true);
 		
 		$matrix = [];
 		foreach($usage_areas as $usage_area) {
@@ -376,10 +376,10 @@ class Category implements \D2U_Helper\ITranslationHelper{
 	
 	/**
 	 * Gets the machines of the category.
-	 * @param boolean $online_only TRUE if only online machines should be returned.
+	 * @param boolean $online_only true if only online machines should be returned.
 	 * @return Machine[] Machines in this category
 	 */
-	public function getMachines($online_only = FALSE) {
+	public function getMachines($online_only = false) {
 		$query = "SELECT lang.machine_id, IF(lang.lang_name IS NULL or lang.lang_name = '', machines.name, lang.lang_name) as machine_name "
 			. "FROM ". \rex::getTablePrefix() ."d2u_machinery_machines_lang AS lang "
 			."LEFT JOIN ". \rex::getTablePrefix() ."d2u_machinery_machines AS machines "
@@ -410,7 +410,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 	 * @param boolean $online_only If true only online used machines are returned
 	 * @return UsedMachine[] Used machines of this category
 	 */
-	public function getUsedMachines($online_only = FALSE) {
+	public function getUsedMachines($online_only = false) {
 		$usedMachines = [];
 		if(rex_plugin::get("d2u_machinery", "used_machines")->isAvailable()) {
 			$query = "SELECT lang.used_machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_used_machines_lang AS lang "
@@ -469,7 +469,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 
 	/**
 	 * Returns the URL of this object.
-	 * @param boolean $including_domain TRUE if Domain name should be included
+	 * @param boolean $including_domain true if Domain name should be included
 	 * @param int $current_article_id Redaxo article id. Category can be used for different
 	 * articles, e.g. machines or used machines. When passing article id, 
 	 * category URL can be securely determined, otherwise there might be some
@@ -525,7 +525,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 
 	/**
 	 * Detects usage of this category as parent category.
-	 * @return boolean TRUE if childs exist, otherwise FALSE
+	 * @return boolean true if childs exist, otherwise false
 	 */
 	public function hasChildren() {
 		$query = "SELECT category_id FROM ". \rex::getTablePrefix() ."d2u_machinery_categories "
@@ -534,17 +534,17 @@ class Category implements \D2U_Helper\ITranslationHelper{
 		$result->setQuery($query);
 		
 		if($result->getRows() > 0) {
-			return TRUE;
+			return true;
 		}
 		else {
-			return FALSE;
+			return false;
 		}
 	}
 	
 	/**
 	 * Detects if machines in this category exist
 	 * @param boolean $ignore_offlines Ignore offline machines, default is false
-	 * @return boolean TRUE if machines exist, otherwise FALSE
+	 * @return boolean true if machines exist, otherwise false
 	 */
 	public function hasMachines($ignore_offlines = false) {
 		$query = "SELECT lang.machine_id "
@@ -557,17 +557,17 @@ class Category implements \D2U_Helper\ITranslationHelper{
 		$result->setQuery($query);
 		
 		if($result->getRows() > 0) {
-			return TRUE;
+			return true;
 		}
 		else {
-			return FALSE;
+			return false;
 		}
 	}
 	
 	/**
 	 * Detects if used machines in this category exist
 	 * @param boolean $ignore_offlines Ignore offline used machines, default is false
-	 * @return boolean TRUE if used machines exist, otherwise FALSE
+	 * @return boolean true if used machines exist, otherwise false
 	 */
 	public function hasUsedMachines($ignore_offlines = false) {
 		if(rex_plugin::get("d2u_machinery", "used_machines")->isAvailable()) {
@@ -586,7 +586,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 			$result->setQuery($query);
 
 			if($result->getRows() > 0) {
-				return TRUE;
+				return true;
 			}
 		}
 		return false;
@@ -594,23 +594,23 @@ class Category implements \D2U_Helper\ITranslationHelper{
 	
 	/**
 	 * Detects whether category is child or not.
-	 * @return boolean TRUE if category has father.
+	 * @return boolean true if category has father.
 	 */
 	public function isChild() {
-		if($this->parent_category === FALSE) {
-			return FALSE;
+		if($this->parent_category === false) {
+			return false;
 		}
 		else {
-			return TRUE;
+			return true;
 		}
 	}
 	
 	/**
 	 * Updates or inserts the object into database.
-	 * @return boolean TRUE if successful
+	 * @return boolean true if successful
 	 */
 	public function save() {
-		$error = FALSE;
+		$error = false;
 
 		// Save the not language specific part
 		$pre_save_object = new Category($this->category_id, $this->clang_id);
@@ -636,7 +636,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 				$query .= ", show_agitators = '". $this->show_agitators ."' ";
 			}
 
-			if(\rex_addon::get('d2u_videos')->isAvailable() && count($this->videos) > 0) {
+			if(\rex_addon::get('d2u_videos') instanceof rex_addon && \rex_addon::get('d2u_videos')->isAvailable() && count($this->videos) > 0) {
 				$query .= ", video_ids = '|". implode("|", array_keys($this->videos)) ."|' ";
 			}
 			else {
@@ -659,7 +659,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 		}
 		
 		$regenerate_urls = false;
-		if($error === FALSE) {
+		if($error === false) {
 			// Save the language specific part
 			$pre_save_object = new Category($this->category_id, $this->clang_id);
 			if($pre_save_object !== $this) {
@@ -716,7 +716,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 	 * Reassigns priorities in database.
 	 * @param boolean $delete Reorder priority after deletion
 	 */
-	private function setPriority($delete = FALSE):void {
+	private function setPriority($delete = false):void {
 		// Pull prios from database
 		$query = "SELECT category_id, priority FROM ". \rex::getTablePrefix() ."d2u_machinery_categories "
 			."WHERE category_id <> ". $this->category_id ." ORDER BY priority";

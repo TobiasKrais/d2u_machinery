@@ -16,18 +16,18 @@ if (intval(filter_input(INPUT_POST, "btn_save", FILTER_VALIDATE_INT)) === 1 || i
 	$input_media = rex_post('REX_INPUT_MEDIA', 'array', []);
 	$input_media_list = rex_post('REX_INPUT_MEDIALIST', 'array', []);
 
-	$success = TRUE;
-	$category = FALSE;
+	$success = true;
+	$category = false;
 	$category_id = $form['category_id'];
 	foreach(rex_clang::getAll() as $rex_clang) {
-		if($category === FALSE) {
+		if($category === false) {
 			$category = new Category($category_id, $rex_clang->getId());
 			$category->category_id = $category_id; // Ensure correct ID in case first language has no object
 			if(isset($form['parent_category_id']) && $form['parent_category_id'] > 0) {
 				$category->parent_category = new Category($form['parent_category_id'], $rex_clang->getId());
 			}
 			else {
-				$category->parent_category = FALSE;
+				$category->parent_category = false;
 			}
 			$category->priority = $form['priority'];
 			$category->pic = $input_media[1];
@@ -65,14 +65,14 @@ if (intval(filter_input(INPUT_POST, "btn_save", FILTER_VALIDATE_INT)) === 1 || i
 		}
 		
 		if($category->translation_needs_update === "delete") {
-			$category->delete(FALSE);
+			$category->delete(false);
 		}
 		else if($category->save()){
 			// remember id, for each database lang object needs same id
 			$category_id = $category->category_id;
 		}
 		else {
-			$success = FALSE;
+			$success = false;
 		}
 	}
 
@@ -84,10 +84,10 @@ if (intval(filter_input(INPUT_POST, "btn_save", FILTER_VALIDATE_INT)) === 1 || i
 	
 	// Redirect to make reload and thus double save impossible
 	if(intval(filter_input(INPUT_POST, "btn_apply")) === 1 && $category instanceof Category) {
-		header("Location: ". rex_url::currentBackendPage(["entry_id"=>$category->category_id, "func"=>'edit', "message"=>$message], FALSE));
+		header("Location: ". rex_url::currentBackendPage(["entry_id"=>$category->category_id, "func"=>'edit', "message"=>$message], false));
 	}
 	else {
-		header("Location: ". rex_url::currentBackendPage(["message"=>$message], FALSE));
+		header("Location: ". rex_url::currentBackendPage(["message"=>$message], false));
 	}
 	exit;
 }
@@ -111,7 +111,7 @@ else if(intval(filter_input(INPUT_POST, "btn_delete", FILTER_VALIDATE_INT)) === 
 	
 	// If not used, delete
 	if(count($uses_machines) === 0 && count($uses_used_machines) === 0 && count($uses_categories) === 0) {
-		$category->delete(TRUE);
+		$category->delete(true);
 	}
 	else {
 		$message = '<ul>';
@@ -145,11 +145,11 @@ if ($func === 'edit' || $func === 'add') {
 				<?php
 					foreach(rex_clang::getAll() as $rex_clang) {
 						$category = new Category($entry_id, $rex_clang->getId());
-						$required = $rex_clang->getId() === intval(rex_config::get("d2u_helper", "default_lang")) ? TRUE : FALSE;
+						$required = $rex_clang->getId() === intval(rex_config::get("d2u_helper", "default_lang")) ? true : false;
 						
-						$readonly_lang = TRUE;
+						$readonly_lang = true;
 						if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || (\rex::getUser()->hasPerm('d2u_machinery[edit_lang]') && \rex::getUser()->getComplexPerm('clang') instanceof rex_clang_perm && \rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId())))) {
-							$readonly_lang = FALSE;
+							$readonly_lang = false;
 						}
 				?>
 					<fieldset>
@@ -161,7 +161,7 @@ if ($func === 'edit' || $func === 'add') {
 									$options_translations["yes"] = rex_i18n::msg('d2u_helper_translation_needs_update');
 									$options_translations["no"] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
 									$options_translations["delete"] = rex_i18n::msg('d2u_helper_translation_delete');
-									d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$category->translation_needs_update], 1, FALSE, $readonly_lang);
+									d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$category->translation_needs_update], 1, false, $readonly_lang);
 								}
 								else {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
@@ -181,9 +181,9 @@ if ($func === 'edit' || $func === 'add') {
 							<div id="details_clang_<?php print $rex_clang->getId(); ?>">
 								<?php
 									d2u_addon_backend_helper::form_input('d2u_helper_name', "form[lang][". $rex_clang->getId() ."][name]", $category->name, $required, $readonly_lang, "text");
-									d2u_addon_backend_helper::form_input('d2u_machinery_machine_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $category->teaser, FALSE, $readonly_lang, "text");
-									d2u_addon_backend_helper::form_textarea('d2u_helper_description', "form[lang][". $rex_clang->getId() ."][description]", $category->description, 5, FALSE, $readonly_lang, TRUE);
-									d2u_addon_backend_helper::form_input('d2u_machinery_category_usage_area', "form[lang][". $rex_clang->getId() ."][usage_area]", $category->usage_area, FALSE, $readonly_lang, "text");
+									d2u_addon_backend_helper::form_input('d2u_machinery_machine_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $category->teaser, false, $readonly_lang, "text");
+									d2u_addon_backend_helper::form_textarea('d2u_helper_description', "form[lang][". $rex_clang->getId() ."][description]", $category->description, 5, false, $readonly_lang, true);
+									d2u_addon_backend_helper::form_input('d2u_machinery_category_usage_area', "form[lang][". $rex_clang->getId() ."][usage_area]", $category->usage_area, false, $readonly_lang, "text");
 									d2u_addon_backend_helper::form_mediafield('d2u_machinery_category_pic_lang', 'pic_lang_'. $rex_clang->getId(), $category->pic_lang, $readonly_lang);
 									d2u_addon_backend_helper::form_medialistfield('d2u_machinery_category_pdfs', intval('1'. $rex_clang->getId()), $category->pdfs, $readonly_lang);
 								?>
@@ -199,9 +199,9 @@ if ($func === 'edit' || $func === 'add') {
 						<?php
 							// Do not use last object from translations, because you don't know if it exists in DB
 							$category = new Category($entry_id, intval(rex_config::get("d2u_helper", "default_lang")));
-							$readonly = TRUE;
+							$readonly = true;
 							if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
-								$readonly = FALSE;
+								$readonly = false;
 							}
 							
 							$options = array("-1"=>rex_i18n::msg('d2u_machinery_category_parent_none'));
@@ -211,8 +211,8 @@ if ($func === 'edit' || $func === 'add') {
 									$options[$parent_category->category_id] = $parent_category->name;
 								}
 							}
-							d2u_addon_backend_helper::form_select('d2u_machinery_category_parent', 'form[parent_category_id]', $options, ($category->parent_category instanceof Category ? [(string) $category->parent_category->category_id] : []), 1, FALSE, $readonly);
-							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', (string) $category->priority, TRUE, $readonly, 'number');
+							d2u_addon_backend_helper::form_select('d2u_machinery_category_parent', 'form[parent_category_id]', $options, ($category->parent_category instanceof Category ? [(string) $category->parent_category->category_id] : []), 1, false, $readonly);
+							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', (string) $category->priority, true, $readonly, 'number');
 							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', '1', $category->pic, $readonly);
 							d2u_addon_backend_helper::form_mediafield('d2u_machinery_category_pic_usage', '2', $category->pic_usage, $readonly);
 
@@ -221,7 +221,7 @@ if ($func === 'edit' || $func === 'add') {
 								foreach(Video::getAll(intval(rex_config::get("d2u_helper", "default_lang"))) as $video) {
 									$options[$video->video_id] = $video->name;
 								}
-								d2u_addon_backend_helper::form_select('d2u_machinery_category_videos', 'form[video_ids][]', $options, array_keys($category->videos), 10, TRUE, $readonly);
+								d2u_addon_backend_helper::form_select('d2u_machinery_category_videos', 'form[video_ids][]', $options, array_keys($category->videos), 10, true, $readonly);
 							}
 						?>
 					</div>
@@ -233,10 +233,10 @@ if ($func === 'edit' || $func === 'add') {
 						<legend><?php echo rex_i18n::msg('d2u_machinery_category_export'); ?></legend>
 						<div class="panel-body-wrapper slide">
 							<?php
-								d2u_addon_backend_helper::form_input('d2u_machinery_category_export_machinerypark_category_id', "form[export_machinerypark_category_id]", (string) $category->export_machinerypark_category_id, FALSE, $readonly, "number");
-								d2u_addon_backend_helper::form_input('d2u_machinery_category_export_europemachinery_category_id', "form[export_europemachinery_category_id]", (string) $category->export_europemachinery_category_id, FALSE, $readonly, "number");
-								d2u_addon_backend_helper::form_input('d2u_machinery_category_export_europemachinery_category_name', "form[export_europemachinery_category_name]", $category->export_europemachinery_category_name, FALSE, $readonly, "text");
-								d2u_addon_backend_helper::form_input('d2u_machinery_category_export_mascus_category_name', "form[export_mascus_category_name]", $category->export_mascus_category_name, FALSE, $readonly, "text");
+								d2u_addon_backend_helper::form_input('d2u_machinery_category_export_machinerypark_category_id', "form[export_machinerypark_category_id]", (string) $category->export_machinerypark_category_id, false, $readonly, "number");
+								d2u_addon_backend_helper::form_input('d2u_machinery_category_export_europemachinery_category_id', "form[export_europemachinery_category_id]", (string) $category->export_europemachinery_category_id, false, $readonly, "number");
+								d2u_addon_backend_helper::form_input('d2u_machinery_category_export_europemachinery_category_name', "form[export_europemachinery_category_name]", $category->export_europemachinery_category_name, false, $readonly, "text");
+								d2u_addon_backend_helper::form_input('d2u_machinery_category_export_mascus_category_name', "form[export_mascus_category_name]", $category->export_mascus_category_name, false, $readonly, "text");
 							?>
 						</div>
 					</fieldset>

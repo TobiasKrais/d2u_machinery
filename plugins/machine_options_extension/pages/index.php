@@ -15,11 +15,11 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	// Media fields and links need special treatment
 	$input_media = rex_post('REX_INPUT_MEDIA', 'array', []);
 
-	$success = TRUE;
-	$option = FALSE;
+	$success = true;
+	$option = false;
 	$option_id = $form['option_id'];
 	foreach(rex_clang::getAll() as $rex_clang) {
-		if($option === FALSE) {
+		if($option === false) {
 			$option = new Option($option_id, $rex_clang->getId());
 			$option->option_id = $option_id; // Ensure correct ID in case first language has no object
 			$option->category_ids = $form['category_ids'];
@@ -29,7 +29,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 				$option->video = new Video($form['video_id'], intval(rex_config::get("d2u_helper", "default_lang")));
 			}
 			else {
-				$option->video = FALSE;
+				$option->video = false;
 			}
 		}
 		else {
@@ -40,14 +40,14 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 		$option->description = $form['lang'][$rex_clang->getId()]['description'];
 
 		if($option->translation_needs_update === "delete") {
-			$option->delete(FALSE);
+			$option->delete(false);
 		}
 		else if($option->save()){
 			// remember id, for each database lang object needs same id
 			$option_id = $option->option_id;
 		}
 		else {
-			$success = FALSE;
+			$success = false;
 		}
 	}
 
@@ -58,11 +58,11 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	}
 	
 	// Redirect to make reload and thus double save impossible
-	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$option !== FALSE) {
-		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$option->option_id, "func"=>'edit', "message"=>$message), FALSE));
+	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$option !== false) {
+		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$option->option_id, "func"=>'edit', "message"=>$message), false));
 	}
 	else {
-		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), FALSE));
+		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), false));
 	}
 	exit;
 }
@@ -81,7 +81,7 @@ else if(intval(filter_input(INPUT_POST, "btn_delete", FILTER_VALIDATE_INT)) === 
 
 	// If not used, delete
 	if(count($referring_machines) === 0) {
-		$option->delete(TRUE);
+		$option->delete(true);
 	}
 	else {
 		$message = '<ul>';
@@ -96,11 +96,11 @@ else if(intval(filter_input(INPUT_POST, "btn_delete", FILTER_VALIDATE_INT)) === 
 	$func = '';
 }
 // Delete unused
-else if($func == 'delete_unused') {
+else if($func === 'delete_unused') {
 	$options = Option::getUnused();
-	if($options !== FALSE) {
+	if(is_array($options)) {
 		foreach ($options as $option) {
-			$option->delete(TRUE);
+			$option->delete(true);
 		}
 
 		print rex_view::success(count($options) .' ' . rex_i18n::msg('d2u_machinery_options_delete_unused_success') . $message);
@@ -120,11 +120,11 @@ if ($func === 'edit' || $func === 'add') {
 				<?php
 					foreach(rex_clang::getAll() as $rex_clang) {
 						$option = new Option($entry_id, $rex_clang->getId());
-						$required = $rex_clang->getId() === intval(rex_config::get("d2u_helper", "default_lang")) ? TRUE : FALSE;
+						$required = $rex_clang->getId() === intval(rex_config::get("d2u_helper", "default_lang")) ? true : false;
 						
-						$readonly_lang = TRUE;
+						$readonly_lang = true;
 						if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || (\rex::getUser()->hasPerm('d2u_machinery[edit_lang]') && \rex::getUser()->getComplexPerm('clang') instanceof rex_clang_perm && \rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId())))) {
-							$readonly_lang = FALSE;
+							$readonly_lang = false;
 						}
 				?>
 					<fieldset>
@@ -136,7 +136,7 @@ if ($func === 'edit' || $func === 'add') {
 									$options_translations["yes"] = rex_i18n::msg('d2u_helper_translation_needs_update');
 									$options_translations["no"] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
 									$options_translations["delete"] = rex_i18n::msg('d2u_helper_translation_delete');
-									d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$option->translation_needs_update], 1, FALSE, $readonly_lang);
+									d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$option->translation_needs_update], 1, false, $readonly_lang);
 								}
 								else {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
@@ -156,7 +156,7 @@ if ($func === 'edit' || $func === 'add') {
 							<div id="details_clang_<?php print $rex_clang->getId(); ?>">
 								<?php
 									d2u_addon_backend_helper::form_input('d2u_helper_name', "form[lang][". $rex_clang->getId() ."][name]", $option->name, $required, $readonly_lang, "text");
-									d2u_addon_backend_helper::form_textarea('d2u_helper_description', "form[lang][". $rex_clang->getId() ."][description]", $option->description, 10, FALSE, $readonly_lang, TRUE);
+									d2u_addon_backend_helper::form_textarea('d2u_helper_description', "form[lang][". $rex_clang->getId() ."][description]", $option->description, 10, false, $readonly_lang, true);
 								?>
 							</div>
 						</div>
@@ -170,26 +170,26 @@ if ($func === 'edit' || $func === 'add') {
 						<?php
 							// Do not use last object from translations, because you don't know if it exists in DB
 							$option = new Option($entry_id, intval(rex_config::get("d2u_helper", "default_lang")));
-							$readonly = TRUE;
+							$readonly = true;
 							if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
-								$readonly = FALSE;
+								$readonly = false;
 							}
 
-							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $option->priority, TRUE, $readonly, 'number');
+							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $option->priority, true, $readonly, 'number');
 							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', '1', $option->pic, $readonly);
 							
 							$options = [];
 							foreach(Category::getAll(intval(rex_config::get("d2u_helper", "default_lang"))) as $category) {
 								$options[$category->category_id] = $category->name;
 							}
-							d2u_addon_backend_helper::form_select('d2u_machinery_options_categories', 'form[category_ids][]', $options, $option->category_ids, 10, TRUE, $readonly);
+							d2u_addon_backend_helper::form_select('d2u_machinery_options_categories', 'form[category_ids][]', $options, $option->category_ids, 10, true, $readonly);
 
 							if(\rex_addon::get("d2u_videos")->isAvailable()) {
 								$options_video = [0 => rex_i18n::msg('d2u_machinery_video_no')];
 								foreach (Video::getAll(intval(rex_config::get("d2u_helper", "default_lang"))) as $video) {
 									$options_video[$video->video_id] = $video->name;
 								}
-								d2u_addon_backend_helper::form_select('d2u_machinery_video', 'form[video_id]', $options_video, $option->video !== FALSE ? [$option->video->video_id] : [], 1, FALSE, $readonly);
+								d2u_addon_backend_helper::form_select('d2u_machinery_video', 'form[video_id]', $options_video, $option->video !== false ? [$option->video instanceof Video ? $option->video->video_id : 0] : [], 1, false, $readonly);
 							}
 						?>
 					</div>
@@ -245,10 +245,13 @@ if ($func === '') {
 	$list->setColumnFormat('category_ids', 'custom', function ($params) {
 		$list_params = $params['list'];
 		$cat_names = [];
-		foreach(preg_grep('/^\s*$/s', explode("|", $list_params->getValue('category_ids')), PREG_GREP_INVERT) as $category_id) {
-			$category = new Category($category_id, intval(rex_config::get("d2u_helper", "default_lang")));
-			if($category && $category->name !== "") {
-				$cat_names[] = $category->name;
+		$category_ids = preg_grep('/^\s*$/s', explode("|", $list_params->getValue('category_ids')), PREG_GREP_INVERT);
+		if(is_array($category_ids)) {
+			foreach($category_ids as $category_id) {
+				$category = new Category($category_id, intval(rex_config::get("d2u_helper", "default_lang")));
+				if($category->name !== "") {
+					$cat_names[] = $category->name;
+				}
 			}
 		}
 		return implode(', ', $cat_names);
@@ -275,7 +278,7 @@ if ($func === '') {
     echo $fragment->parse('core/page/section.php');
 	
 	// Delete unused options
-	if(Option::getUnused() !== FALSE) {
-		print '<p><a href="'. rex_url::currentBackendPage(["func" => "delete_unused"], FALSE) .'"><button class="btn btn-save">'. rex_i18n::msg('d2u_machinery_options_delete_unused') .'</button></a></p><br><br>';
+	if(Option::getUnused() !== false) {
+		print '<p><a href="'. rex_url::currentBackendPage(["func" => "delete_unused"], false) .'"><button class="btn btn-save">'. rex_i18n::msg('d2u_machinery_options_delete_unused') .'</button></a></p><br><br>';
 	}
 }

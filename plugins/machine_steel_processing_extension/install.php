@@ -1,114 +1,115 @@
 <?php
-$sql = \rex_sql::factory();
+\rex_sql_table::get(\rex::getTable('d2u_machinery_steel_automation'))
+	->ensureColumn(new rex_sql_column('automation_id', 'INT(11) unsigned', false, null, 'auto_increment'))
+	->setPrimaryKey('automation_id')
+    ->ensureColumn(new \rex_sql_column('internal_name', 'VARCHAR(255)', true))
+    ->ensure();
+\rex_sql_table::get(\rex::getTable('d2u_machinery_steel_automation_lang'))
+	->ensureColumn(new rex_sql_column('automation_id', 'INT(11)'))
+    ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
+	->setPrimaryKey(['automation_id', 'clang_id'])
+    ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
+    ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)'))
+    ->ensure();
 
-// Create tables: automation
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_automation (
-	automation_id int(10) unsigned NOT NULL auto_increment,
-	internal_name varchar(255) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (automation_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_automation_lang (
-	automation_id int(10) NOT NULL,
-	clang_id int(10) NOT NULL,
-	name varchar(255) collate utf8mb4_unicode_ci default NULL,
-	translation_needs_update varchar(7) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (automation_id, clang_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
-// Create tables: material classes
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_material (
-	material_id int(10) unsigned NOT NULL auto_increment,
-	internal_name varchar(255) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (material_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_material_lang (
-	material_id int(10) NOT NULL,
-	clang_id int(10) NOT NULL,
-	name varchar(255) collate utf8mb4_unicode_ci default NULL,
-	translation_needs_update varchar(7) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (material_id, clang_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
-// Create tables: processes
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_process (
-	process_id int(10) unsigned NOT NULL auto_increment,
-	internal_name varchar(255) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (process_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_process_lang (
-	process_id int(10) NOT NULL,
-	clang_id int(10) NOT NULL,
-	name varchar(255) collate utf8mb4_unicode_ci default NULL,
-	translation_needs_update varchar(7) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (process_id, clang_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
-// Create tables: procedures
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_procedure (
-	procedure_id int(10) unsigned NOT NULL auto_increment,
-	internal_name varchar(255) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (procedure_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_procedure_lang (
-	procedure_id int(10) NOT NULL,
-	clang_id int(10) NOT NULL,
-	name varchar(255) collate utf8mb4_unicode_ci default NULL,
-	translation_needs_update varchar(7) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (procedure_id, clang_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
-// Create tables: profile areas
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_profile (
-	profile_id int(10) unsigned NOT NULL auto_increment,
-	internal_name varchar(255) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (profile_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_profile_lang (
-	profile_id int(10) NOT NULL,
-	clang_id int(10) NOT NULL,
-	name varchar(255) collate utf8mb4_unicode_ci default NULL,
-	translation_needs_update varchar(7) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (profile_id, clang_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
-// Create tables: supply chain
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_supply (
-	supply_id int(10) unsigned NOT NULL auto_increment,
-	priority int(10) default NULL,
-	online_status varchar(10) collate utf8mb4_unicode_ci default 'online',
-	pic varchar(255) collate utf8mb4_unicode_ci default NULL,
-	video_id int(10) default NULL,
-	PRIMARY KEY (supply_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_supply_lang (
-	supply_id int(10) NOT NULL,
-	clang_id int(10) NOT NULL,
-	name varchar(255) collate utf8mb4_unicode_ci default NULL,
-	description text collate utf8mb4_unicode_ci default NULL,
-	translation_needs_update varchar(7) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (supply_id, clang_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
-// Create tables: tools
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_tool (
-	tool_id int(10) unsigned NOT NULL auto_increment,
-	internal_name varchar(255) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (tool_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_tool_lang (
-	tool_id int(10) NOT NULL,
-	clang_id int(10) NOT NULL,
-	name varchar(255) collate utf8mb4_unicode_ci default NULL,
-	translation_needs_update varchar(7) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (tool_id, clang_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
-// Create tables: welding process
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_welding (
-	welding_id int(10) unsigned NOT NULL auto_increment,
-	internal_name varchar(255) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (welding_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machinery_steel_welding_lang (
-	welding_id int(10) NOT NULL,
-	clang_id int(10) NOT NULL,
-	name varchar(255) collate utf8mb4_unicode_ci default NULL,
-	translation_needs_update varchar(7) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (welding_id, clang_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
+\rex_sql_table::get(\rex::getTable('d2u_machinery_steel_material'))
+	->ensureColumn(new rex_sql_column('material_id', 'INT(11) unsigned', false, null, 'auto_increment'))
+	->setPrimaryKey('material_id')
+    ->ensureColumn(new \rex_sql_column('internal_name', 'VARCHAR(255)', true))
+    ->ensure();
+\rex_sql_table::get(\rex::getTable('d2u_machinery_steel_material_lang'))
+	->ensureColumn(new rex_sql_column('material_id', 'INT(11)'))
+    ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
+	->setPrimaryKey(['material_id', 'clang_id'])
+    ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
+    ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)'))
+    ->ensure();
+
+\rex_sql_table::get(\rex::getTable('d2u_machinery_steel_process'))
+	->ensureColumn(new rex_sql_column('process_id', 'INT(11) unsigned', false, null, 'auto_increment'))
+	->setPrimaryKey('process_id')
+    ->ensureColumn(new \rex_sql_column('internal_name', 'VARCHAR(255)', true))
+    ->ensure();
+\rex_sql_table::get(\rex::getTable('d2u_machinery_steel_process_lang'))
+	->ensureColumn(new rex_sql_column('process_id', 'INT(11)'))
+    ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
+	->setPrimaryKey(['process_id', 'clang_id'])
+    ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
+    ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)'))
+    ->ensure();
+
+\rex_sql_table::get(\rex::getTable('d2u_machinery_steel_procedure'))
+	->ensureColumn(new rex_sql_column('procedure_id', 'INT(11) unsigned', false, null, 'auto_increment'))
+	->setPrimaryKey('procedure_id')
+    ->ensureColumn(new \rex_sql_column('internal_name', 'VARCHAR(255)', true))
+    ->ensure();
+\rex_sql_table::get(\rex::getTable('d2u_machinery_steel_procedure_lang'))
+	->ensureColumn(new rex_sql_column('procedure_id', 'INT(11)'))
+    ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
+	->setPrimaryKey(['procedure_id', 'clang_id'])
+    ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
+    ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)'))
+    ->ensure();
+
+\rex_sql_table::get(\rex::getTable('d2u_machinery_steel_profile'))
+	->ensureColumn(new rex_sql_column('profile_id', 'INT(11) unsigned', false, null, 'auto_increment'))
+	->setPrimaryKey('profile_id')
+    ->ensureColumn(new \rex_sql_column('internal_name', 'VARCHAR(255)', true))
+    ->ensure();
+\rex_sql_table::get(\rex::getTable('d2u_machinery_steel_profile_lang'))
+	->ensureColumn(new rex_sql_column('profile_id', 'INT(11)'))
+    ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
+	->setPrimaryKey(['profile_id', 'clang_id'])
+    ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
+    ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)'))
+    ->ensure();
+
+\rex_sql_table::get(\rex::getTable('d2u_machinery_steel_supply'))
+	->ensureColumn(new rex_sql_column('supply_id', 'INT(11) unsigned', false, null, 'auto_increment'))
+	->setPrimaryKey('supply_id')
+    ->ensureColumn(new \rex_sql_column('priority', 'INT(10)', true))
+    ->ensureColumn(new \rex_sql_column('online_status', 'VARCHAR(10)', true))
+    ->ensureColumn(new \rex_sql_column('pic', 'VARCHAR(255)', true))
+    ->ensureColumn(new \rex_sql_column('video_id', 'INT(11)', true))
+    ->ensure();
+\rex_sql_table::get(\rex::getTable('d2u_machinery_steel_supply_lang'))
+	->ensureColumn(new rex_sql_column('supply_id', 'INT(11)'))
+    ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
+	->setPrimaryKey(['supply_id', 'clang_id'])
+    ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
+    ->ensureColumn(new \rex_sql_column('description', 'TEXT'))
+    ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)'))
+    ->ensure();
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_steel_supply_lang'))
+	->removeColumn('title')
+    ->alter();
+
+\rex_sql_table::get(\rex::getTable('d2u_machinery_steel_tool'))
+	->ensureColumn(new rex_sql_column('tool_id', 'INT(11) unsigned', false, null, 'auto_increment'))
+	->setPrimaryKey('tool_id')
+    ->ensureColumn(new \rex_sql_column('internal_name', 'VARCHAR(255)', true))
+    ->ensure();
+\rex_sql_table::get(\rex::getTable('d2u_machinery_steel_tool_lang'))
+	->ensureColumn(new rex_sql_column('tool_id', 'INT(11)'))
+    ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
+	->setPrimaryKey(['tool_id', 'clang_id'])
+    ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
+    ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)'))
+    ->ensure();
+
+\rex_sql_table::get(\rex::getTable('d2u_machinery_steel_welding'))
+	->ensureColumn(new rex_sql_column('welding_id', 'INT(11) unsigned', false, null, 'auto_increment'))
+	->setPrimaryKey('welding_id')
+    ->ensureColumn(new \rex_sql_column('internal_name', 'VARCHAR(255)', true))
+    ->ensure();
+\rex_sql_table::get(\rex::getTable('d2u_machinery_steel_welding_lang'))
+	->ensureColumn(new rex_sql_column('welding_id', 'INT(11)'))
+    ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
+	->setPrimaryKey(['welding_id', 'clang_id'])
+    ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
+    ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)'))
+    ->ensure();
 
 // Extend machine table
 \rex_sql_table::get(
@@ -170,7 +171,17 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_machi
     ->ensureColumn(new \rex_sql_column('beam_color_guns', 'VARCHAR(255)'))
     ->alter();
 
+\rex_sql_table::get(
+    \rex::getTable('d2u_machinery_categories_lang'))
+	->removeColumn('steel_processing_saw_cutting_range_file')
+	->removeColumn('steel_processing_saw_cutting_range_title')
+    ->alter();
+
 // Insert frontend translations
+if(!class_exists('d2u_machinery_machine_steel_processing_extension_lang_helper')) {
+	// Load class in case addon is deactivated
+	require_once 'lib/d2u_machinery_machine_steel_processing_extension_lang_helper.php';
+}
 if(class_exists('d2u_machinery_machine_steel_processing_extension_lang_helper')) {
 	d2u_machinery_machine_steel_processing_extension_lang_helper::factory()->install();
 }

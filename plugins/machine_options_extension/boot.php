@@ -18,7 +18,7 @@ function rex_d2u_machinery_options_clang_deleted(rex_extension_point $ep) {
 	// Delete
 	$options = Option::getAll($clang_id);
 	foreach ($options as $option) {
-		$option->delete(FALSE);
+		$option->delete(false);
 	}
 
 	// Delete language replacements

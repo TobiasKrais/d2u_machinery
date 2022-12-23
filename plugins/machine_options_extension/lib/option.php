@@ -12,47 +12,47 @@ class Option implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var int Database ID
 	 */
-	var $option_id = 0;
+	public int $option_id = 0;
 	
 	/**
 	 * @var int Redaxo clang id
 	 */
-	var $clang_id = 0;
+	public int $clang_id = 0;
 	
 	/**
 	 * @var int Sort Priority
 	 */
-	var $priority = 0;
+	public int $priority = 0;
 	
 	/**
 	 * @var string Name
 	 */
-	var $name = "";
+	public string $name = "";
 	
 	/**
 	 * @var string Preview picture file name 
 	 */
-	var $pic = "";
+	public string $pic = "";
 	
 	/**
-	 * @var Video Videomanager video
+	 * @var Video|bool Videomanager video
 	 */
-	var $video = FALSE;
+	public Video|bool $video = false;
 	
 	/**
 	 * @var int[] Category ids in which the option will be available
 	 */
-	var $category_ids = [];
+	public array $category_ids = [];
 	
 	/**
 	 * @var string Detailed description
 	 */
-	var $description = "";
+	public string $description = "";
 	
 	/**
 	 * @var string "yes" if translation needs update
 	 */
-	var $translation_needs_update = "delete";
+	public string $translation_needs_update = "delete";
 
 	/**
 	 * Constructor. Reads a option stored in database.
@@ -71,26 +71,27 @@ class Option implements \D2U_Helper\ITranslationHelper {
 		$num_rows = $result->getRows();
 
 		if ($num_rows > 0) {
-			$this->option_id = $result->getValue("option_id");
-			$this->priority = $result->getValue("priority");
-			$this->name = stripslashes($result->getValue("name"));
-			$this->pic = $result->getValue("pic");
-			$this->category_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("category_ids")), PREG_GREP_INVERT);
-			$this->description = htmlspecialchars_decode(stripslashes($result->getValue("description")));
+			$this->option_id = (int) $result->getValue("option_id");
+			$this->priority = (int) $result->getValue("priority");
+			$this->name = stripslashes((string) $result->getValue("name"));
+			$this->pic = (string) $result->getValue("pic");
+			$category_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("category_ids")), PREG_GREP_INVERT);
+			$this->category_ids = is_array($category_ids) ? $category_ids : [];
+			$this->description = htmlspecialchars_decode(stripslashes((string) $result->getValue("description")));
 			if($result->getValue("translation_needs_update") !== "") {
-				$this->translation_needs_update = $result->getValue("translation_needs_update");
+				$this->translation_needs_update = (string) $result->getValue("translation_needs_update");
 			}
 			
-			if(\rex_addon::get('d2u_videos')->isAvailable() && $result->getValue("video_id") > 0) {
-				$this->video = new Video($result->getValue("video_id"), $clang_id);
+			if(\rex_addon::get('d2u_videos') instanceof rex_addon && \rex_addon::get('d2u_videos')->isAvailable() && $result->getValue("video_id") > 0) {
+				$this->video = new Video((int) $result->getValue("video_id"), $clang_id);
 			}
 		}
 	}
 	
 	/**
 	 * Deletes the object in all languages.
-	 * @param bool $delete_all If TRUE, all translations and main object are deleted. If 
-	 * FALSE, only this translation will be deleted.
+	 * @param bool $delete_all If true, all translations and main object are deleted. If 
+	 * false, only this translation will be deleted.
 	 */
 	public function delete($delete_all = true):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_options_lang "
@@ -111,7 +112,7 @@ class Option implements \D2U_Helper\ITranslationHelper {
 			$result->setQuery($query);
 
 			// reset priorities
-			$this->setPriority(TRUE);			
+			$this->setPriority(true);			
 		}
 	}
 	
@@ -135,7 +136,7 @@ class Option implements \D2U_Helper\ITranslationHelper {
 		
 		$options = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$options[$result->getValue("option_id")] = new Option($result->getValue("option_id"), $clang_id);
+			$options[$result->getValue("option_id")] = new Option((int) $result->getValue("option_id"), $clang_id);
 			$result->next();
 		}
 		return $options;
@@ -169,7 +170,7 @@ class Option implements \D2U_Helper\ITranslationHelper {
 		$query = 'SELECT option_id FROM '. \rex::getTablePrefix() .'d2u_machinery_options_lang '
 				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
 				.'ORDER BY name';
-		if($type == 'missing') {
+		if($type === 'missing') {
 			$query = 'SELECT main.option_id FROM '. \rex::getTablePrefix() .'d2u_machinery_options AS main '
 					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_options_lang AS target_lang '
 						.'ON main.option_id = target_lang.option_id AND target_lang.clang_id = '. $clang_id .' '
@@ -184,7 +185,7 @@ class Option implements \D2U_Helper\ITranslationHelper {
 
 		$objects = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$objects[] = new Option($result->getValue("option_id"), $clang_id);
+			$objects[] = new Option((int) $result->getValue("option_id"), $clang_id);
 			$result->next();
 		}
 		
@@ -196,7 +197,7 @@ class Option implements \D2U_Helper\ITranslationHelper {
 	 * @return boolean|Option[] Array with unused options
 	 */
 	public static function getUnused() {
-		$options = Option::getAll(rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId()));
+		$options = Option::getAll(intval(rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId())));
 		
 		foreach ($options as $option) {
 			if(count($option->getReferringMachines()) > 0) {
@@ -208,16 +209,16 @@ class Option implements \D2U_Helper\ITranslationHelper {
 			return $options;
 		}
 		else {
-			return FALSE;
+			return false;
 		}
 	}
 	
 	/**
 	 * Updates or inserts the object into database.
-	 * @return boolean TRUE if successful
+	 * @return boolean true if successful
 	 */
 	public function save() {
-		$error = FALSE;
+		$error = false;
 
 		// Save the not language specific part
 		$pre_save_option = new Option($this->option_id, $this->clang_id);
@@ -228,13 +229,13 @@ class Option implements \D2U_Helper\ITranslationHelper {
 		}
 		
 		// saving the rest
-		if($this->option_id == 0 || $pre_save_option !== $this) {
+		if($this->option_id === 0 || $pre_save_option !== $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_options SET "
 					."pic = '". $this->pic ."', "
 					."category_ids = '|". implode("|", $this->category_ids) ."|', "
 					."priority = ". $this->priority ." ";
-			if(\rex_addon::get('d2u_videos')->isAvailable() && $this->video !== FALSE) {
-				$query .= ", video_id = ". $this->video->video_id;
+			if(\rex_addon::get('d2u_videos') instanceof rex_addon && \rex_addon::get('d2u_videos')->isAvailable() && $this->video !== false) {
+				$query .= ", video_id = ". ($this->video instanceof Video ? $this->video->video_id : 0);
 			}
 			else {
 				$query .= ", video_id = NULL";
@@ -255,7 +256,7 @@ class Option implements \D2U_Helper\ITranslationHelper {
 			}
 		}
 		
-		if($error === FALSE) {
+		if($error === false) {
 			// Save the language specific part
 			$pre_save_option = new Option($this->option_id, $this->clang_id);
 			if($pre_save_option !== $this) {
@@ -293,7 +294,7 @@ class Option implements \D2U_Helper\ITranslationHelper {
 		
 		// When prio is too high or was deleted, simply add at end 
 		if($this->priority > $result->getRows() || $delete) {
-			$this->priority = $result->getRows() + 1;
+			$this->priority = intval($result->getRows()) + 1;
 		}
 
 		$options = [];
@@ -306,7 +307,7 @@ class Option implements \D2U_Helper\ITranslationHelper {
 		// Save all prios
 		foreach($options as $prio => $option_id) {
 			$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_options "
-					."SET priority = ". ($prio + 1) ." " // +1 because array_splice recounts at zero
+					."SET priority = ". (intval($prio) + 1) ." " // +1 because array_splice recounts at zero
 					."WHERE option_id = ". $option_id;
 			$result = \rex_sql::factory();
 			$result->setQuery($query);

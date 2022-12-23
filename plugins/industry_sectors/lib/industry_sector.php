@@ -120,8 +120,8 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Deletes the object in all languages.
-	 * @param bool $delete_all If TRUE, all translations and main object are deleted. If 
-	 * FALSE, only this translation will be deleted.
+	 * @param bool $delete_all If true, all translations and main object are deleted. If 
+	 * false, only this translation will be deleted.
 	 */
 	public function delete($delete_all = true):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang "
@@ -151,7 +151,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 				foreach(rex_clang::getAllIds() as $clang_id) {
 					$lang_object = new self($this->industry_sector_id, $clang_id);
 					$query_forward = "DELETE FROM ". \rex::getTablePrefix() ."yrewrite_forward "
-						."WHERE extern = '". $lang_object->getURL(TRUE) ."'";
+						."WHERE extern = '". $lang_object->getURL(true) ."'";
 					$result_forward = \rex_sql::factory();
 					$result_forward->setQuery($query_forward);
 				}
@@ -168,10 +168,10 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * Get all industry sectors.
 	 * @param int $clang_id Redaxo clang id.
-	 * @param boolean $online_only TRUE if only online objects should be returned.
+	 * @param boolean $online_only true if only online objects should be returned.
 	 * @return IndustrySector[] Array with IndustrySector objects.
 	 */
-	public static function getAll($clang_id, $online_only = FALSE) {
+	public static function getAll($clang_id, $online_only = false) {
 		$query = "SELECT lang.industry_sector_id FROM ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang AS lang "
 			."LEFT JOIN ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors AS sectors ON lang.industry_sector_id = sectors.industry_sector_id "
 			."WHERE clang_id = ". $clang_id ." ". ($online_only ? " AND online_status = 'online' " : "");
@@ -191,10 +191,10 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Gets the machines referring to this object.
-	 * @param boolean $online_only TRUE if only online machines should be returned.
+	 * @param boolean $online_only true if only online machines should be returned.
 	 * @return Machine[] Machines referring to this object.
 	 */
-	public function getMachines($online_only = FALSE) {
+	public function getMachines($online_only = false) {
 		$query = "SELECT machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
 			."WHERE industry_sector_ids LIKE '%|". $this->industry_sector_id ."|%'";
 		$result = \rex_sql::factory();
@@ -203,7 +203,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 		$machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$machine = new Machine((int) $result->getValue("machine_id"), $this->clang_id);
-			if($online_only === FALSE || ($online_only && $machine->online_status === "online")) {
+			if($online_only === false || ($online_only && $machine->online_status === "online")) {
 				$machines[] = $machine;
 			}
 			$result->next();
@@ -215,10 +215,10 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 	 * @api
 	 * Gets the production lines referring to this object. Plugin production_lines
 	 * needs to be installed.
-	 * @param boolean $online_only TRUE if only online production lines should be returned.
+	 * @param boolean $online_only true if only online production lines should be returned.
 	 * @return ProductionLine[] Production lines referring to this object.
 	 */
-	public function getProductionLines($online_only = FALSE) {
+	public function getProductionLines($online_only = false) {
 		$production_lines = [];
 		if(rex_plugin::get('d2u_machinery', 'production_lines')->isAvailable()) {
 			$query = "SELECT production_line_id FROM ". \rex::getTablePrefix() ."d2u_machinery_production_lines "
@@ -228,7 +228,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 
 			for($i = 0; $i < $result->getRows(); $i++) {
 				$production_line = new ProductionLine((int) $result->getValue("production_line_id"), $this->clang_id);
-				if($online_only === FALSE || ($online_only && $production_line->online_status === "online")) {
+				if($online_only === false || ($online_only && $production_line->online_status === "online")) {
 					$production_lines[] = $production_line;
 				}
 				$result->next();
@@ -271,7 +271,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Returns the URL of this object.
-	 * @param bool $including_domain TRUE if Domain name should be included
+	 * @param bool $including_domain true if Domain name should be included
 	 * @return string URL
 	 */
 	public function getURL($including_domain = false) {
@@ -300,7 +300,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 	 * @api
 	 * Detects if machines for this object exist
 	 * @param boolean $ignore_offlines Ignore offline machines, default is false
-	 * @return boolean TRUE if machines exist, otherwise FALSE
+	 * @return boolean true if machines exist, otherwise false
 	 */
 	public function hasMachines($ignore_offlines = false) {
 		$query = "SELECT lang.machine_id "
@@ -313,19 +313,19 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 		$result->setQuery($query);
 		
 		if($result->getRows() > 0) {
-			return TRUE;
+			return true;
 		}
 		else {
-			return FALSE;
+			return false;
 		}
 	}
 	
 	/**
 	 * Updates or inserts the object into database.
-	 * @return boolean TRUE if successful
+	 * @return boolean true if successful
 	 */
 	public function save() {
-		$error = FALSE;
+		$error = false;
 
 		// Save the not language specific part
 		$pre_save_object = new IndustrySector($this->industry_sector_id, $this->clang_id);
@@ -353,7 +353,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 		}
 		
 		$regenerate_urls = false;
-		if($error === FALSE) {
+		if($error === false) {
 			// Save the language specific part
 			$pre_save_object = new IndustrySector($this->industry_sector_id, $this->clang_id);
 			if($pre_save_object !== $this) {
