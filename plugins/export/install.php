@@ -26,7 +26,7 @@
 \rex_sql_table::get(\rex::getTable('d2u_machinery_export_machines'))
 	->ensureColumn(new rex_sql_column('used_machine_id', 'INT(11)', false))
     ->ensureColumn(new \rex_sql_column('provider_id', 'INT(11)', false))
-	->setPrimaryKey(['equipment_id', 'clang_id'])
+	->setPrimaryKey(['used_machine_id', 'provider_id'])
     ->ensureColumn(new \rex_sql_column('export_action', 'VARCHAR(10)'))
     ->ensureColumn(new \rex_sql_column('provider_import_id', 'VARCHAR(255)', true))
     ->ensureColumn(new \rex_sql_column('export_timestamp', 'DATETIME', true))

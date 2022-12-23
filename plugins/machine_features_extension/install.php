@@ -30,8 +30,8 @@
     ->alter();
 
 // Insert frontend translations
-if(!class_exists('machine_features_extension_lang_helper')) {
+if(!class_exists('d2u_machinery_machine_features_extension_lang_helper')) {
 	// Load class in case addon is deactivated
-	require_once 'lib/machine_features_extension_lang_helper.php';
+	require_once 'lib/d2u_machinery_machine_features_extension_lang_helper.php';
 }
 d2u_machinery_machine_features_extension_lang_helper::factory()->install();
