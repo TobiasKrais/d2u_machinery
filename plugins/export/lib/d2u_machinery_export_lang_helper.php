@@ -35,7 +35,7 @@ class d2u_machinery_export_lang_helper extends d2u_machinery_lang_helper {
 
 	/**
 	 * Factory method.
-	 * @return d2u_machinery_used_machines_lang_helper Object
+	 * @return d2u_machinery_export_lang_helper Object
 	 */
 	public static function factory() {
 		return new d2u_machinery_export_lang_helper();

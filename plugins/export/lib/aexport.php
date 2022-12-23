@@ -21,13 +21,13 @@ abstract class AExport {
 		$this->provider = $provider;
 		$this->exported_used_machines = ExportedUsedMachine::getAll($this->provider);
 	}
-
 	
 	/**
 	 * Converts HTML formatted string to string with new lines. Following HTML
 	 * tags are converted to new lines: </p>, <br>, </h1>, </h2>, </h3>, </h4>,
 	 * </h5>, </h6>, </li>
 	 * @param string $html HTML string
+	 * @return string Converted string
 	 */
 	static protected function convertToExportString($html) {
 		$html = str_replace("<br>", PHP_EOL, $html);
@@ -45,6 +45,7 @@ abstract class AExport {
 
 	/**
 	 * Export machines that are added to export list for the provider.
+	 * @return string error message - if no errors occured, empty string is returned.
 	 */
 	public abstract function export();
 	
@@ -75,14 +76,14 @@ abstract class AExport {
 	/**
 	 * Save export results.
 	 */
-	protected function saveExportedMachines() {
+	protected function saveExportedMachines():void {
 		foreach($this->exported_used_machines as $exported_used_machine) {
-			if($exported_used_machine->export_action == "add" || $exported_used_machine->export_action == "update") {
+			if($exported_used_machine->export_action === "add" || $exported_used_machine->export_action === "update") {
 				$exported_used_machine->export_timestamp = date("Y-m-d H:i:s");
 				$exported_used_machine->export_action = "";
 				$exported_used_machine->save();
 			}
-			else if ($exported_used_machine->export_action == "delete") {
+			else if ($exported_used_machine->export_action === "delete") {
 				$exported_used_machine->delete();
 			}
 		}

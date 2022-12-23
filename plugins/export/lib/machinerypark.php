@@ -68,9 +68,9 @@ class MachineryPark extends AFTPExport {
 		foreach($this->exported_used_machines as $exported_used_machine) {
 			$used_machine = new UsedMachine($exported_used_machine->used_machine_id, $this->provider->clang_id);
 			// deleted machines are not included
-			if($exported_used_machine->export_action == "add" || $exported_used_machine->export_action == "update") {
+			if($exported_used_machine->export_action === "add" || $exported_used_machine->export_action === "update") {
 				// Only take used machines with a machinerypark category
-				if($used_machine->category->export_machinerypark_category_id > 0) {
+				if($used_machine->category instanceof Category && $used_machine->category->export_machinerypark_category_id > 0) {
 					// prepare pics, maximum 6 are allowed
 					$pics = ["", "", "", "", "", ""];
 					$pics_counter = 0;
@@ -88,8 +88,8 @@ class MachineryPark extends AFTPExport {
 							"", // ZIP code
 							"", // Location
 							"", // Country
-							str_replace('"', "'", round($used_machine->price)),
-							str_replace('"', "'", $used_machine->year_built),
+							str_replace('"', "'", (string) round($used_machine->price)),
+							str_replace('"', "'", (string) $used_machine->year_built),
 							"", // Horse power
 							"", // KM
 							"", // BS

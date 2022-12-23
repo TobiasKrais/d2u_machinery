@@ -66,10 +66,10 @@ class USP implements \D2U_Helper\ITranslationHelper {
 	}
 	/**
 	 * Deletes the object in all languages.
-	 * @param int $delete_all If TRUE, all translations and main object are deleted. If 
+	 * @param bool $delete_all If TRUE, all translations and main object are deleted. If 
 	 * FALSE, only this translation will be deleted.
 	 */
-	public function delete($delete_all = TRUE) {
+	public function delete($delete_all = true):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_production_lines_usps_lang "
 			."WHERE usp_id = ". $this->usp_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
@@ -154,7 +154,7 @@ class USP implements \D2U_Helper\ITranslationHelper {
 						.'ON main.usp_id = default_lang.usp_id AND default_lang.clang_id = '. \rex_config::get('d2u_helper', 'default_lang') .' '
 					."WHERE target_lang.usp_id IS NULL "
 					.'ORDER BY default_lang.name';
-			$clang_id = \rex_config::get('d2u_helper', 'default_lang');
+			$clang_id = intval(\rex_config::get('d2u_helper', 'default_lang'));
 		}
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
@@ -183,7 +183,7 @@ class USP implements \D2U_Helper\ITranslationHelper {
 			$query = \rex::getTablePrefix() ."d2u_machinery_production_lines_usps SET "
 					."picture = '". $this->picture ."' ";
 
-			if($this->usp_id == 0) {
+			if($this->usp_id === 0) {
 				$query = "INSERT INTO ". $query;
 			}
 			else {
@@ -192,8 +192,8 @@ class USP implements \D2U_Helper\ITranslationHelper {
 
 			$result = \rex_sql::factory();
 			$result->setQuery($query);
-			if($this->usp_id == 0) {
-				$this->usp_id = $result->getLastId();
+			if($this->usp_id === 0) {
+				$this->usp_id = intval($result->getLastId());
 				$error = $result->hasError();
 			}
 		}

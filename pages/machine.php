@@ -10,13 +10,13 @@ if($message !== "") {
 
 // save settings
 if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(INPUT_POST, "btn_apply")) === 1) {
-	$form = (array) rex_post('form', 'array', []);
+	$form = rex_post('form', 'array', []);
 
 	// Media fields and links need special treatment
-	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', []);
-	$input_media_list = (array) rex_post('REX_INPUT_MEDIALIST', 'array', []);
-	$input_link = (array) rex_post('REX_INPUT_LINK', 'array', []);
-	$input_link_list = (array) rex_post('REX_INPUT_LINKLIST', 'array', []);
+	$input_media = rex_post('REX_INPUT_MEDIA', 'array', []);
+	$input_media_list = rex_post('REX_INPUT_MEDIALIST', 'array', []);
+	$input_link = rex_post('REX_INPUT_LINK', 'array', []);
+	$input_link_list = rex_post('REX_INPUT_LINKLIST', 'array', []);
 
 	$success = TRUE;
 	$machine = FALSE;
@@ -28,7 +28,8 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 			$machine->priority = $form['priority'];
 			$machine->name = $form['name'];
 			$machine->product_number = $form['product_number'];
-			$machine->pics = preg_grep('/^\s*$/s', explode(",", $input_media_list[1]), PREG_GREP_INVERT);
+			$pics = preg_grep('/^\s*$/s', explode(",", $input_media_list[1]), PREG_GREP_INVERT);
+			$machine->pics = is_array($pics) ? $pics : [];
 			if(isset($form['category_id'])) {
 				$machine->category = new Category($form['category_id'], $rex_clang->getId());
 			}
@@ -36,7 +37,8 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 			$machine->online_status = array_key_exists('online_status', $form) ? "online" : "offline";
 			$machine->article_id_service = $input_link['article_id_service'];
 			$machine->article_id_software = $input_link['article_id_software'];
-			$machine->article_ids_references = preg_grep('/^\s*$/s', explode(",", $input_link_list[1]), PREG_GREP_INVERT);
+			$article_ids_references = preg_grep('/^\s*$/s', explode(",", $input_link_list[1]), PREG_GREP_INVERT);
+			$machine->article_ids_references = is_array($article_ids_references) ? $article_ids_references : [];
 			$machine->engine_power = $form['engine_power'];
 			$machine->engine_power_frequency_controlled = array_key_exists('engine_power_frequency_controlled', $form);
 			$machine->length = $form['length'];
@@ -58,46 +60,47 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 				$machine->industry_sector_ids = isset($form['industry_sector_ids']) ? $form['industry_sector_ids'] : [];
 			}
 			if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable()) {
-				$machine->agitator_type_id = $form['agitator_type_id'] == '' ? 0 : $form['agitator_type_id'];
-				$machine->viscosity = $form['viscosity'] == '' ? 0 : $form['viscosity'];
+				$machine->agitator_type_id = intval($form['agitator_type_id']) === 0 ? 0 : intval($form['agitator_type_id']);
+				$machine->viscosity = intval($form['viscosity']) === 0 ? 0 : intval($form['viscosity']);
 			}
 			if(rex_plugin::get("d2u_machinery", "machine_certificates_extension")->isAvailable()) {
 				$machine->certificate_ids = isset($form['certificate_ids']) ? $form['certificate_ids'] : [];
 			}
 			if(rex_plugin::get("d2u_machinery", "machine_construction_equipment_extension")->isAvailable()) {
 				$machine->airless_hose_connection = $form['airless_hose_connection'];
-				$machine->airless_hose_diameter = $form['airless_hose_diameter'] == '' ? 0 : $form['airless_hose_diameter'];
-				$machine->airless_hose_length = $form['airless_hose_length'] == '' ? 0 : $form['airless_hose_length'];
+				$machine->airless_hose_diameter = intval($form['airless_hose_diameter']) === 0 ? 0 : $form['airless_hose_diameter'];
+				$machine->airless_hose_length = intval($form['airless_hose_length']) === 0 ? 0 : $form['airless_hose_length'];
 				$machine->airless_nozzle_size = $form['airless_nozzle_size'];
 				$machine->container_capacity = $form['container_capacity'];
 				$machine->container_mixing_performance = $form['container_mixing_performance'];
-				$machine->container_waterconnect_pressure = $form['container_waterconnect_pressure'] == '' ? 0 : $form['container_waterconnect_pressure'];
+				$machine->container_waterconnect_pressure = intval($form['container_waterconnect_pressure']) === 0 ? 0 : $form['container_waterconnect_pressure'];
 				$machine->container_waterconnect_diameter = $form['container_waterconnect_diameter'];
-				$machine->container_weight_empty = $form['container_weight_empty'] == '' ? 0 : $form['container_weight_empty'];
+				$machine->container_weight_empty = intval($form['container_weight_empty']) === 0 ? 0 : $form['container_weight_empty'];
 				$machine->cutters_cutting_depth = $form['cutters_cutting_depth'];
-				$machine->cutters_cutting_length = $form['cutters_cutting_length'] == '' ? 0 : $form['cutters_cutting_length'];
+				$machine->cutters_cutting_length = intval($form['cutters_cutting_length']) === 0 ? 0 : $form['cutters_cutting_length'];
 				$machine->cutters_rod_length = $form['cutters_rod_length'];
-				$machine->floor_beam_power_on_concrete = $form['floor_beam_power_on_concrete'] == '' ? 0 : $form['floor_beam_power_on_concrete'];
-				$machine->floor_dust_extraction_connection = $form['floor_dust_extraction_connection'] == '' ? 0 : $form['floor_dust_extraction_connection'];
+				$machine->floor_beam_power_on_concrete = intval($form['floor_beam_power_on_concrete']) === 0 ? 0 : $form['floor_beam_power_on_concrete'];
+				$machine->floor_dust_extraction_connection = intval($form['floor_dust_extraction_connection']) === 0 ? 0 : $form['floor_dust_extraction_connection'];
 				$machine->floor_feedrate = $form['floor_feedrate'];
 				$machine->floor_filter_connection = $form['floor_filter_connection'];
 				$machine->floor_rotations = $form['floor_rotations'];
 				$machine->floor_working_pressure = $form['floor_working_pressure'];
-				$machine->floor_working_width = $form['floor_working_width'] == '' ? 0 : $form['floor_working_width'];
-				$machine->grinder_grinding_plate = $form['grinder_grinding_plate'] == '' ? 0 : $form['grinder_grinding_plate'];
-				$machine->grinder_grinding_wheel = $form['grinder_grinding_wheel'] == '' ? 0 : $form['grinder_grinding_wheel'];
+				$machine->floor_working_width = intval($form['floor_working_width']) === 0 ? 0 : $form['floor_working_width'];
+				$machine->grinder_grinding_plate = intval($form['grinder_grinding_plate']) === 0 ? 0 : $form['grinder_grinding_plate'];
+				$machine->grinder_grinding_wheel = intval($form['grinder_grinding_wheel']) === 0 ? 0 : $form['grinder_grinding_wheel'];
 				$machine->grinder_rotational_frequency = $form['grinder_rotational_frequency'];
 				$machine->grinder_sanding = $form['grinder_sanding'];
-				$machine->grinder_vacuum_connection = $form['grinder_vacuum_connection'] == '' ? 0 : $form['grinder_vacuum_connection'];
+				$machine->grinder_vacuum_connection = intval($form['grinder_vacuum_connection']) === 0 ? 0 : $form['grinder_vacuum_connection'];
 				$machine->operating_pressure = $form['operating_pressure'];
-				$machine->pictures_delivery_set = preg_grep('/^\s*$/s', explode(",", $input_media_list[2]), PREG_GREP_INVERT);
-				$machine->pump_conveying_distance = $form['pump_conveying_distance'] == '' ? 0 : $form['pump_conveying_distance'];
-				$machine->pump_filling = $form['pump_filling'] == '' ? 0 : $form['pump_filling'];
+				$pictures_delivery_set = preg_grep('/^\s*$/s', explode(",", $input_media_list[2]), PREG_GREP_INVERT);
+				$machine->pictures_delivery_set = is_array($pictures_delivery_set) ? $pictures_delivery_set : [];
+				$machine->pump_conveying_distance = intval($form['pump_conveying_distance']) === 0 ? 0 : $form['pump_conveying_distance'];
+				$machine->pump_filling = intval($form['pump_filling']) === 0 ? 0 : $form['pump_filling'];
 				$machine->pump_flow_volume = $form['pump_flow_volume'];
 				$machine->pump_grain_size = $form['pump_grain_size'];
 				$machine->pump_material_container = $form['pump_material_container'];
-				$machine->pump_pressure_height = $form['pump_pressure_height'] == '' ? 0 : $form['pump_pressure_height'];
-				$machine->waste_water_capacity = $form['waste_water_capacity'] == '' ? 0 : $form['waste_water_capacity'];
+				$machine->pump_pressure_height = intval($form['pump_pressure_height']) === 0 ? 0 : $form['pump_pressure_height'];
+				$machine->waste_water_capacity = intval($form['waste_water_capacity']) === 0 ? 0 : $form['waste_water_capacity'];
 			}
 			if(rex_plugin::get("d2u_machinery", "service_options")->isAvailable()) {
 				$machine->service_option_ids = isset($form['service_option_ids']) ? $form['service_option_ids'] : [];
@@ -168,7 +171,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 				$machine->sheet_length = $form['sheet_length'];
 				$machine->sheet_thickness = $form['sheet_thickness'];
 				$machine->tool_changer_locations = $form['tool_changer_locations'];
-				$machine->drilling_unit_below = $form['drilling_unit_below'] == "" ? 0 : $form['drilling_unit_below'];
+				$machine->drilling_unit_below = intval($form['drilling_unit_below']) === 0 ? 0 : $form['drilling_unit_below'];
 				$machine->drilling_unit_vertical = $form['drilling_unit_vertical'];
 				$machine->drilling_unit_horizontal = $form['drilling_unit_horizontal'];
 				$machine->drilling_diameter = $form['drilling_diameter'];
@@ -180,11 +183,11 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 				$machine->saw_band_tilt = $form['saw_band_tilt'];
 				$machine->saw_cutting_speed = $form['saw_cutting_speed'];
 				$machine->saw_miter = $form['saw_miter'];
-				$machine->bevel_angle = $form['bevel_angle'] == "" ? 0 : $form['bevel_angle'];
+				$machine->bevel_angle = intval($form['bevel_angle']) === 0 ? 0 : $form['bevel_angle'];
 				$machine->punching_diameter = $form['punching_diameter'];
-				$machine->punching_power = $form['punching_power'] == "" ? 0 : $form['punching_power'];
+				$machine->punching_power = intval($form['punching_power']) === 0 ? 0 : $form['punching_power'];
 				$machine->punching_tools = $form['punching_tools'];
-				$machine->shaving_unit_angle_steel_single_cut = $form['shaving_unit_angle_steel_single_cut'] == "" ? 0 : $form['shaving_unit_angle_steel_single_cut'];
+				$machine->shaving_unit_angle_steel_single_cut = intval($form['shaving_unit_angle_steel_single_cut']) === 0 ? 0 : $form['shaving_unit_angle_steel_single_cut'];
 				$profile_ids = isset($form['profile_ids']) ? $form['profile_ids'] : [];
 				$machine->profiles = [];
 				foreach($profile_ids as $profile_id) {
@@ -194,11 +197,11 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 				}
 				$machine->carrier_width = $form['carrier_width'];
 				$machine->carrier_height = $form['carrier_height'];
-				$machine->carrier_weight = $form['carrier_weight'] == "" ? 0 : $form['carrier_weight'];
+				$machine->carrier_weight = intval($form['carrier_weight']) === 0 ? 0 : $form['carrier_weight'];
 				$machine->flange_thickness = $form['flange_thickness'];
 				$machine->web_thickness = $form['web_thickness'];
 				$machine->component_length = $form['component_length'];
-				$machine->component_weight = $form['component_weight'] == "" ? 0 : $form['component_weight'];
+				$machine->component_weight = intval($form['component_weight']) === 0 ? 0 : $form['component_weight'];
 				$welding_process_ids = isset($form['welding_process_ids']) ? $form['welding_process_ids'] : [];
 				$machine->weldings = [];
 				foreach($welding_process_ids as $welding_process_id) {
@@ -206,10 +209,10 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 						$machine->weldings[$welding_process_id] = new Welding($welding_process_id, intval(rex_config::get("d2u_helper", "default_lang")));
 					}
 				}
-				$machine->welding_thickness = $form['welding_thickness'] == "" ? 0 : $form['welding_thickness'];
+				$machine->welding_thickness = intval($form['welding_thickness']) === 0 ? 0 : $form['welding_thickness'];
 				$machine->welding_wire_thickness = $form['welding_wire_thickness'];
 				$machine->beam_continuous_opening = $form['beam_continuous_opening'];
-				$machine->beam_turbines = $form['beam_turbines'] == "" ? 0 : $form['beam_turbines'];
+				$machine->beam_turbines = intval($form['beam_turbines']) === 0 ? 0 : $form['beam_turbines'];
 				$machine->beam_turbine_power = $form['beam_turbine_power'];
 				$machine->beam_color_guns = $form['beam_color_guns'];
 			}
@@ -237,7 +240,8 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 		$machine->benefits_long = $form['lang'][$rex_clang->getId()]['benefits_long'];
 		$machine->benefits_short = $form['lang'][$rex_clang->getId()]['benefits_short'];
 		$machine->leaflet = $input_media['1'. $rex_clang->getId()];
-		$machine->pdfs = preg_grep('/^\s*$/s', explode(",", $input_media_list['1'. $rex_clang->getId()]), PREG_GREP_INVERT);
+		$pdfs = preg_grep('/^\s*$/s', explode(",", $input_media_list['1'. $rex_clang->getId()]), PREG_GREP_INVERT);
+		$machine->pdfs = is_array($pdfs) ? $pdfs : [];
 		if(rex_plugin::get("d2u_machinery", "machine_construction_equipment_extension")->isAvailable()) {
 			$machine->container_connection_port = $form['lang'][$rex_clang->getId()]['container_connection_port'];
 			$machine->container_conveying_wave = $form['lang'][$rex_clang->getId()]['container_conveying_wave'];
@@ -247,7 +251,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 			$machine->delivery_set_full = $form['lang'][$rex_clang->getId()]['delivery_set_full'];
 		}
 		
-		if($machine->translation_needs_update == "delete") {
+		if($machine->translation_needs_update === "delete") {
 			$machine->delete(FALSE);
 		}
 		else if($machine->save()){
@@ -266,19 +270,19 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	}
 	
 	// Redirect to make reload and thus double save impossible
-	if(filter_input(INPUT_POST, "btn_apply") == 1 && $machine !== FALSE) {
-		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$machine->machine_id, "func"=>'edit', "message"=>$message), FALSE));
+	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 && $machine instanceof Machine) {
+		header("Location: ". rex_url::currentBackendPage(["entry_id"=>$machine->machine_id, "func"=>'edit', "message"=>$message], FALSE));
 	}
 	else {
-		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), FALSE));
+		header("Location: ". rex_url::currentBackendPage(["message"=>$message], FALSE));
 	}
 	exit;
 }
 // Delete
-else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
+else if(intval(filter_input(INPUT_POST, "btn_delete", FILTER_VALIDATE_INT)) === 1 || $func === 'delete') {
 	$machine_id = $entry_id;
-	if($machine_id == 0) {
-		$form = (array) rex_post('form', 'array', []);
+	if($machine_id === 0) {
+		$form = rex_post('form', 'array', []);
 		$machine_id = $form['machine_id'];
 	}
 	$machine = new Machine($machine_id, intval(rex_config::get("d2u_helper", "default_lang")));
@@ -296,7 +300,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	}
 	
 	// If not used, delete
-	if(count($referring_machines) == 0 && count($referring_used_machines) == 0) {
+	if(count($referring_machines) === 0 && count($referring_used_machines) === 0) {
 		$machine->delete();
 	}
 	else {
@@ -324,7 +328,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$func = '';
 }
 // Change online status of machine
-else if($func == 'changestatus') {
+else if($func === 'changestatus') {
 	$machine = new Machine($entry_id, intval(rex_config::get("d2u_helper", "default_lang")));
 	$machine->machine_id = $entry_id; // Ensure correct ID in case language has no object
 	$machine->changeStatus();
@@ -334,14 +338,14 @@ else if($func == 'changestatus') {
 }
 
 // Eingabeformular
-if ($func == 'edit' || $func == 'clone' || $func == 'add') {
+if ($func === 'edit' || $func === 'clone' || $func === 'add') {
 	$machine = new Machine($entry_id, intval(rex_config::get("d2u_helper", "default_lang")));
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
 			<header class="panel-heading"><div class="panel-title"><?php print rex_i18n::msg('d2u_machinery_machine'); ?></div></header>
 			<div class="panel-body">
-				<input type="hidden" name="form[machine_id]" value="<?php echo ($func == 'edit' ? $entry_id : 0); ?>">
+				<input type="hidden" name="form[machine_id]" value="<?php echo ($func === 'edit' ? $entry_id : 0); ?>">
 				<fieldset>
 					<legend><?php echo rex_i18n::msg('d2u_helper_data_all_lang'); ?></legend>
 					<div class="panel-body-wrapper slide">
@@ -350,7 +354,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 							
 							d2u_addon_backend_helper::form_input('d2u_helper_name', "form[name]", $machine->name, TRUE, $readonly, "text");
 							d2u_addon_backend_helper::form_input('d2u_machinery_machine_product_number', "form[product_number]", $machine->product_number, FALSE, $readonly, "text");
-							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $machine->priority, TRUE, $readonly, 'number');
+							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', (string) $machine->priority, TRUE, $readonly, 'number');
 							d2u_addon_backend_helper::form_medialistfield('d2u_helper_picture', 1, $machine->pics, $readonly);
 							if(rex_plugin::get("d2u_machinery", "machine_construction_equipment_extension")->isAvailable()) {
 								d2u_addon_backend_helper::form_medialistfield('d2u_machinery_construction_equipment_picture_delivery_set', 2, $machine->pictures_delivery_set, $readonly);
@@ -361,15 +365,15 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 									$options[$category->category_id] = $category->name;
 								}
 							}
-							d2u_addon_backend_helper::form_select('d2u_helper_category', 'form[category_id]', $options, isset($machine->category->category_id) ? [$machine->category->category_id] : [], 1, FALSE, $readonly);
+							d2u_addon_backend_helper::form_select('d2u_helper_category', 'form[category_id]', $options, $machine->category instanceof Category? [(string) $machine->category->category_id] : [], 1, FALSE, $readonly);
 							if(rex_plugin::get("d2u_machinery", "contacts")->isAvailable()) {
 								$options_contacts = [0 => rex_i18n::msg('d2u_machinery_contacts_settings_contact')];
 								foreach(\D2U_Machinery\Contact::getAll() as $contact) {
-									if($contact->name) {
+									if($contact->name !== '') {
 										$options_contacts[$contact->contact_id] = $contact->name;
 									}
 								}
-								d2u_addon_backend_helper::form_select('d2u_machinery_contacts_contact', 'form[contact_id]', $options_contacts, [$machine->contact ? $machine->contact->contact_id : 0], 1, FALSE, $readonly);
+								d2u_addon_backend_helper::form_select('d2u_machinery_contacts_contact', 'form[contact_id]', $options_contacts, [$machine->contact instanceof \D2U_Machinery\Contact ? (string) $machine->contact->contact_id : ''], 1, FALSE, $readonly);
 							}
 							$options_alt_machines = [];
 							foreach(Machine::getAll(intval(rex_config::get("d2u_helper", "default_lang"))) as $alt_machine) {
@@ -378,7 +382,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 								}
 							}
 							d2u_addon_backend_helper::form_select('d2u_machinery_machine_alternatives', 'form[alternative_machine_ids][]', $options_alt_machines, $machine->alternative_machine_ids, 10, TRUE, $readonly);
-							d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', $machine->online_status == "online", $readonly);
+							d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', $machine->online_status === "online", $readonly);
 							d2u_addon_backend_helper::form_linkfield('d2u_machinery_machine_software', 'article_id_software', $machine->article_id_software, intval(rex_config::get("d2u_helper", "default_lang")), $readonly);
 							d2u_addon_backend_helper::form_linkfield('d2u_machinery_machine_service', 'article_id_service', $machine->article_id_service, intval(rex_config::get("d2u_helper", "default_lang")), $readonly);
 							d2u_addon_backend_helper::form_linklistfield('d2u_machinery_machine_references', 1, $machine->article_ids_references, intval(rex_config::get("d2u_helper", "default_lang")), $readonly);
@@ -409,7 +413,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						print '<legend><small><i class="rex-icon fa-plus"></i></small> '. rex_i18n::msg('d2u_machinery_equipments') .'</legend>';
 						print '<div class="panel-body-wrapper slide">';
 						$options_equipments = [];
-						foreach (Equipment::getAll(intval(rex_config::get("d2u_helper", "default_lang")), FALSE) as $equipments) {
+						foreach (Equipment::getAll(intval(rex_config::get("d2u_helper", "default_lang"))) as $equipments) {
 							$options_equipments[$equipments->equipment_id] = $equipments->name;
 						}
 						d2u_addon_backend_helper::form_select('d2u_machinery_equipments', 'form[equipment_ids][]', $options_equipments, $machine->equipment_ids, 10, TRUE, $readonly);
@@ -446,7 +450,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						print '<legend><small><i class="rex-icon fa-certificate"></i></small> '. rex_i18n::msg('d2u_machinery_certificates') .'</legend>';
 						print '<div class="panel-body-wrapper slide">';
 						$options_certificates = [];
-						foreach (Certificate::getAll(intval(rex_config::get("d2u_helper", "default_lang")), $machine->certificate_ids) as $certificate) {
+						foreach (Certificate::getAll(intval(rex_config::get("d2u_helper", "default_lang"))) as $certificate) {
 							$options_certificates[$certificate->certificate_id] = $certificate->name;
 						}
 						d2u_addon_backend_helper::form_select('d2u_machinery_certificates', 'form[certificate_ids][]', $options_certificates, $machine->certificate_ids, 10, TRUE, $readonly);
@@ -461,7 +465,6 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_airless_hose_diameter', 'form[airless_hose_diameter]', $machine->airless_hose_diameter, FALSE, $readonly, "number");
 						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_airless_hose_length', 'form[airless_hose_length]', $machine->airless_hose_length, FALSE, $readonly, "number");
 						d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_airless_nozzle_size', 'form[airless_nozzle_size]', $machine->airless_nozzle_size, FALSE, $readonly, "text");
-						$machine->airless_nozzle_size = $form['airless_nozzle_size'];
 						print '</div>';
 						print '</fieldset>';
 
@@ -700,7 +703,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						print '<legend><small><i class="rex-icon fa-codepen"></i></small> '. rex_i18n::msg('d2u_machinery_usage_areas') .'</legend>';
 						print '<div class="panel-body-wrapper slide">';
 						$options_usage_areas = [];
-						foreach (UsageArea::getAll(intval(rex_config::get("d2u_helper", "default_lang")), $machine->category->category_id) as $usage_area) {
+						foreach (UsageArea::getAll(intval(rex_config::get("d2u_helper", "default_lang")), $machine->category instanceof Category ? $machine->category->category_id : 0) as $usage_area) {
 							$options_usage_areas[$usage_area->usage_area_id] = $usage_area->name;
 						}
 						d2u_addon_backend_helper::form_select('d2u_machinery_usage_areas', 'form[usage_area_ids][]', $options_usage_areas, $machine->usage_area_ids, 10, TRUE, $readonly);
@@ -750,7 +753,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 									d2u_addon_backend_helper::form_textarea('d2u_helper_description', "form[lang][". $rex_clang->getId() ."][description]", $machine_lang->description, 5, FALSE, $readonly_lang, TRUE);
 									d2u_addon_backend_helper::form_textarea('d2u_machinery_benefits_long', "form[lang][". $rex_clang->getId() ."][benefits_long]", $machine_lang->benefits_long, 5, FALSE, $readonly_lang, TRUE);
 									d2u_addon_backend_helper::form_textarea('d2u_machinery_benefits_short', "form[lang][". $rex_clang->getId() ."][benefits_short]", $machine_lang->benefits_short, 5, FALSE, $readonly_lang, TRUE);
-									d2u_addon_backend_helper::form_medialistfield('d2u_machinery_machine_pdfs', '1'. $rex_clang->getId(), $machine_lang->pdfs, $readonly_lang);
+									d2u_addon_backend_helper::form_medialistfield('d2u_machinery_machine_pdfs', intval('1'. $rex_clang->getId()), $machine_lang->pdfs, $readonly_lang);
 									d2u_addon_backend_helper::form_mediafield('d2u_machinery_machine_leaflet', '1'. $rex_clang->getId(), $machine_lang->leaflet, $readonly_lang);
 									if(rex_plugin::get("d2u_machinery", "machine_construction_equipment_extension")->isAvailable()) {
 										d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_container_connection_port', "form[lang][". $rex_clang->getId() ."][container_connection_port]", $machine_lang->container_connection_port, FALSE, $readonly_lang, "text");
@@ -790,12 +793,12 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 		print d2u_addon_backend_helper::getJS();
 }
 
-if ($func == '') {
+if ($func === '') {
 	$query = 'SELECT machine.machine_id, machine.name, category.name AS categoryname, online_status, priority '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_machinery_machines AS machine '
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_categories_lang AS category '
 			. 'ON machine.category_id = category.category_id AND category.clang_id = '. intval(rex_config::get("d2u_helper", "default_lang")) .' ';
-	if($this->getConfig('default_machine_sort') == 'priority') {
+	if(rex_config::get('d2u_machinery', 'default_machine_sort') === 'priority') {
 		$query .= 'ORDER BY priority ASC';
 	}
 	else {

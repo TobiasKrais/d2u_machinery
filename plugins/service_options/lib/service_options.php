@@ -75,8 +75,8 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * Changes the online status.
 	 */
-	public function changeStatus() {
-		if($this->online_status == "online") {
+	public function changeStatus():void {
+		if($this->online_status === "online") {
 			if($this->service_option_id > 0) {
 				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_service_options "
 					."SET online_status = 'offline' "
@@ -100,10 +100,10 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Deletes the object in all languages.
-	 * @param int $delete_all If TRUE, all translations and main object are deleted. If 
+	 * @param bool $delete_all If TRUE, all translations and main object are deleted. If 
 	 * FALSE, only this translation will be deleted.
 	 */
-	public function delete($delete_all = TRUE) {
+	public function delete($delete_all = true):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_service_options_lang "
 			."WHERE service_option_id = ". $this->service_option_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
@@ -140,7 +140,7 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper {
 		$service_options = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$service_option = new ServiceOption($result->getValue("service_option_id"), $clang_id);
-			if($online_only && $service_option->online_status == "online") {
+			if($online_only && $service_option->online_status === "online") {
 				$service_options[] = $service_option;
 			}
 			else if($online_only === FALSE) {
@@ -164,8 +164,8 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper {
 		
 		$machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$machine = new Machine($result->getValue("machine_id"), $this->clang_id);
-			if($online_only === FALSE || ($online_only && $machine->online_status == "online")) {
+			$machine = new Machine((int) $result->getValue("machine_id"), $this->clang_id);
+			if($online_only === FALSE || ($online_only && $machine->online_status === "online")) {
 				$machines[] = $machine;
 			}
 			$result->next();
@@ -191,7 +191,7 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper {
 						.'ON main.service_option_id = default_lang.service_option_id AND default_lang.clang_id = '. \rex_config::get('d2u_helper', 'default_lang') .' '
 					."WHERE target_lang.service_option_id IS NULL "
 					.'ORDER BY default_lang.name';
-			$clang_id = \rex_config::get('d2u_helper', 'default_lang');
+			$clang_id = intval(\rex_config::get('d2u_helper', 'default_lang'));
 		}
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
@@ -221,7 +221,7 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper {
 					."online_status = '". $this->online_status ."', "
 					."picture = '". $this->picture ."' ";
 
-			if($this->service_option_id == 0) {
+			if($this->service_option_id === 0) {
 				$query = "INSERT INTO ". $query;
 			}
 			else {
@@ -230,8 +230,8 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper {
 
 			$result = \rex_sql::factory();
 			$result->setQuery($query);
-			if($this->service_option_id == 0) {
-				$this->service_option_id = $result->getLastId();
+			if($this->service_option_id === 0) {
+				$this->service_option_id = intval($result->getLastId());
 				$error = $result->hasError();
 			}
 		}

@@ -10,7 +10,7 @@ if($message !== "") {
 
 // save settings
 if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(INPUT_POST, "btn_apply")) === 1) {
-	$form = (array) rex_post('form', 'array', []);
+	$form = rex_post('form', 'array', []);
 
 	$success = TRUE;
 	$process = FALSE;
@@ -27,7 +27,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 		$process->name = $form['lang'][$rex_clang->getId()]['name'];
 		$process->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 
-		if($process->translation_needs_update == "delete") {
+		if($process->translation_needs_update === "delete") {
 			$process->delete(FALSE);
 		}
 		else if($process->save()){
@@ -46,7 +46,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	}
 	
 	// Redirect to make reload and thus double save impossible
-	if(filter_input(INPUT_POST, "btn_apply") == 1 && $process !== FALSE) {
+	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$process !== FALSE) {
 		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$process->process_id, "func"=>'edit', "message"=>$message), FALSE));
 	}
 	else {
@@ -55,10 +55,10 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	exit;
 }
 // Delete
-else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
+else if(intval(filter_input(INPUT_POST, "btn_delete", FILTER_VALIDATE_INT)) === 1 || $func === 'delete') {
 	$process_id = $entry_id;
-	if($process_id == 0) {
-		$form = (array) rex_post('form', 'array', []);
+	if($process_id === 0) {
+		$form = rex_post('form', 'array', []);
 		$process_id = $form['process_id'];
 	}
 	$process = new Process($process_id, intval(rex_config::get("d2u_helper", "default_lang")));
@@ -68,7 +68,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$referring_machines = $process->getReferringMachines();
 
 	// If not used, delete
-	if(count($referring_machines) == 0) {
+	if(count($referring_machines) === 0) {
 		$process->delete(TRUE);
 	}
 	else {
@@ -85,7 +85,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 }
 
 // Eingabeformular
-if ($func == 'edit' || $func == 'add') {
+if ($func === 'edit' || $func === 'add') {
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
@@ -176,7 +176,7 @@ if ($func == 'edit' || $func == 'add') {
 		print d2u_addon_backend_helper::getJSOpenAll();
 }
 
-if ($func == '') {
+if ($func === '') {
 	$query = 'SELECT processs.process_id, internal_name '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_machinery_steel_process AS processs '
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_steel_process_lang AS lang '

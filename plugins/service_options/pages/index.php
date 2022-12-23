@@ -10,7 +10,7 @@ if($message !== "") {
 
 // save settings
 if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(INPUT_POST, "btn_apply")) === 1) {
-	$form = (array) rex_post('form', 'array', []);
+	$form = rex_post('form', 'array', []);
 
 	// Media fields and links need special treatment
 	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', []);
@@ -31,7 +31,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 		$service_option->description = $form['lang'][$rex_clang->getId()]['description'];
 		$service_option->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 
-		if($service_option->translation_needs_update == "delete") {
+		if($service_option->translation_needs_update === "delete") {
 			$service_option->delete(FALSE);
 		}
 		else if($service_option->save()){
@@ -50,7 +50,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	}
 	
 	// Redirect to make reload and thus double save impossible
-	if(filter_input(INPUT_POST, "btn_apply") == 1 && $service_option !== FALSE) {
+	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$service_option !== FALSE) {
 		header("Location: ". rex_url::currentBackendPage(["entry_id"=>$service_option->service_option_id, "func"=>'edit', "message"=>$message], FALSE));
 	}
 	else {
@@ -59,10 +59,10 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	exit;
 }
 // Delete
-else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
+else if(intval(filter_input(INPUT_POST, "btn_delete", FILTER_VALIDATE_INT)) === 1 || $func === 'delete') {
 	$service_option_id = $entry_id;
-	if($service_option_id == 0) {
-		$form = (array) rex_post('form', 'array', []);
+	if($service_option_id === 0) {
+		$form = rex_post('form', 'array', []);
 		$service_option_id = $form['service_option_id'];
 	}
 	$service_option = new ServiceOption($service_option_id, intval(rex_config::get("d2u_helper", "default_lang")));
@@ -72,7 +72,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$referring_machines = $service_option->getReferringMachines();
 
 	// If not used, delete
-	if(count($referring_machines) == 0) {
+	if(count($referring_machines) === 0) {
 		$service_option->delete(TRUE);
 	}
 	else {
@@ -88,7 +88,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$func = '';
 }
 // Change online status of machine
-else if($func == 'changestatus') {
+else if($func === 'changestatus') {
 	$service_option = new ServiceOption($entry_id, intval(rex_config::get("d2u_helper", "default_lang")));
 	$service_option->service_option_id = $entry_id; // Ensure correct ID in case language has no object
 	$service_option->changeStatus();
@@ -98,7 +98,7 @@ else if($func == 'changestatus') {
 }
 
 // Eingabeformular
-if ($func == 'edit' || $func == 'add') {
+if ($func === 'edit' || $func === 'add') {
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
@@ -163,7 +163,7 @@ if ($func == 'edit' || $func == 'add') {
 								$readonly = FALSE;
 							}
 
-							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', 1, $service_option->picture, $readonly);
+							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', '1', $service_option->picture, $readonly);
 						?>
 					</div>
 				</fieldset>
@@ -190,7 +190,7 @@ if ($func == 'edit' || $func == 'add') {
 		print d2u_addon_backend_helper::getJS();
 }
 
-if ($func == '') {
+if ($func === '') {
 	$query = 'SELECT service_options.service_option_id, name, online_status '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_machinery_service_options AS service_options '
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_service_options_lang AS lang '

@@ -62,10 +62,10 @@ class Automation implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Deletes the object in all languages.
-	 * @param int $delete_all If TRUE, all translations and main object are deleted. If 
+	 * @param bool $delete_all If TRUE, all translations and main object are deleted. If 
 	 * FALSE, only this translation will be deleted.
 	 */
-	public function delete($delete_all = TRUE) {
+	public function delete($delete_all = true):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_steel_automation_lang "
 			."WHERE automation_id = ". $this->automation_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
@@ -118,7 +118,7 @@ class Automation implements \D2U_Helper\ITranslationHelper {
 		
 		$machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$machines[] = new Machine($result->getValue("machine_id"), $this->clang_id);
+			$machines[] = new Machine((int) $result->getValue("machine_id"), $this->clang_id);
 			$result->next();
 		}
 		return $machines;
@@ -142,7 +142,7 @@ class Automation implements \D2U_Helper\ITranslationHelper {
 						.'ON main.automation_id = default_lang.automation_id AND default_lang.clang_id = '. \rex_config::get('d2u_helper', 'default_lang') .' '
 					."WHERE target_lang.automation_id IS NULL "
 					.'ORDER BY default_lang.name';
-			$clang_id = \rex_config::get('d2u_helper', 'default_lang');
+			$clang_id = intval(\rex_config::get('d2u_helper', 'default_lang'));
 		}
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
@@ -170,7 +170,7 @@ class Automation implements \D2U_Helper\ITranslationHelper {
 		if($this->automation_id == 0 || $pre_save_automation !== $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_steel_automation SET "
 					."internal_name = '". $this->internal_name ."' ";
-			if($this->automation_id == 0) {
+			if($this->automation_id === 0) {
 				$query = "INSERT INTO ". $query;
 			}
 			else {
@@ -179,8 +179,8 @@ class Automation implements \D2U_Helper\ITranslationHelper {
 
 			$result = \rex_sql::factory();
 			$result->setQuery($query);
-			if($this->automation_id == 0) {
-				$this->automation_id = $result->getLastId();
+			if($this->automation_id === 0) {
+				$this->automation_id = intval($result->getLastId());
 				$error = $result->hasError();
 			}
 		}

@@ -12,29 +12,29 @@ class ExportedUsedMachine {
 	/**
 	 * @var int Database ID
 	 */
-	var $used_machine_id = 0;
+	public int $used_machine_id = 0;
 	
 	/**
-	 * @var Provider Export provider object
+	 * @var int Export provider id
 	 */
-	var $provider_id;
+	private int $provider_id;
 
 	/**
 	 * @var string Export status. Either "add", "update" or "delete"
 	 */
-	var $export_action = "";
+	public string $export_action = "";
 	
 	/**
 	 * @var string ID provider returned after import. Not all providers return
 	 * this value. But some so and it is needed for deleting the machines later
 	 * on provider website.
 	 */
-	var $provider_import_id = "";
+	public string $provider_import_id = "";
 	
 	/**
-	 * @var int Export timestamp.
+	 * @var string Export timestamp.
 	 */
-	var $export_timestamp = "";
+	public string $export_timestamp = "";
 
 	/**
 	 * Constructor. Fetches the object from database
@@ -52,10 +52,10 @@ class ExportedUsedMachine {
 		$this->used_machine_id = $used_machine_id;
 		$this->provider_id = $provider_id;
 		if ($num_rows > 0) {
-			$this->export_action = $result->getValue("export_action");
-			$this->provider_import_id = $result->getValue("provider_import_id");
+			$this->export_action = (string) $result->getValue("export_action");
+			$this->provider_import_id = (string) $result->getValue("provider_import_id");
 			if($result->getValue("export_timestamp") !== "") {
-				$this->export_timestamp = $result->getValue("export_timestamp");
+				$this->export_timestamp = (string) $result->getValue("export_timestamp");
 			}
 		}
 	}
@@ -63,11 +63,11 @@ class ExportedUsedMachine {
 	/**
 	 * Add used machine to export for this provider.
 	 */
-	public function addToExport() {
-		if($this->export_action == "") {
+	public function addToExport():void {
+		if($this->export_action === "") {
 			$this->export_action = "add";
 		}
-		else if($this->export_action == "add" || $this->export_action == "delete") {
+		else if($this->export_action === "add" || $this->export_action === "delete") {
 			$this->export_action = "update";
 		}
 		
@@ -78,15 +78,15 @@ class ExportedUsedMachine {
 	 * Add all machines to export for given provider.
 	 * @param int $provider_id Provider id
 	 */
-	public static function addAllToExport($provider_id) {
+	public static function addAllToExport($provider_id):void {
 		$provider = new Provider($provider_id);
 		$used_machines = UsedMachine::getAll($provider->clang_id, TRUE);
 		foreach($used_machines as $used_machine) {
 			$exported_used_machine = new ExportedUsedMachine($used_machine->used_machine_id, $provider_id);
-			if($exported_used_machine->export_action == "" && $exported_used_machine->export_timestamp == "") {
+			if($exported_used_machine->export_action === "" && $exported_used_machine->export_timestamp === "") {
 				$exported_used_machine->export_action = "add";
 			}
-			else if(($exported_used_machine->export_action == "" && $exported_used_machine->export_timestamp !== "") || $exported_used_machine->export_action == "delete") {
+			else if(($exported_used_machine->export_action === "" && $exported_used_machine->export_timestamp !== "") || $exported_used_machine->export_action === "delete") {
 				$exported_used_machine->export_action = "update";
 			}
 			$exported_used_machine->save();
@@ -96,7 +96,7 @@ class ExportedUsedMachine {
 	/**
 	 * Deletes the object.
 	 */
-	public function delete() {
+	public function delete():void {
 		$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_export_machines "
 			."WHERE used_machine_id = ". $this->used_machine_id ." AND provider_id = ". $this->provider_id;
 		$result_lang = \rex_sql::factory();
@@ -106,12 +106,12 @@ class ExportedUsedMachine {
 	
 	/**
 	 * Get all exported used machines.
-	 * @param Provider $provider Optional provider object
+	 * @param Provider|bool $provider Optional provider object
 	 * @return ExportedUsedMachine[] Array with ExportedUsedMachine objects.
 	 */
 	public static function getAll($provider = FALSE) {
 		$query = "SELECT used_machine_id, provider_id FROM ". \rex::getTablePrefix() ."d2u_machinery_export_machines AS export";
-		if ($provider !== FALSE && $provider->provider_id > 0) {
+		if ($provider instanceof Provider && $provider->provider_id > 0) {
 			$query .= " WHERE provider_id = ". $provider->provider_id;
 		}
 		$result = \rex_sql::factory();
@@ -119,7 +119,7 @@ class ExportedUsedMachine {
 
 		$exported_used_machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$exported_used_machines[] = new ExportedUsedMachine($result->getValue("used_machine_id"), $result->getValue("provider_id"));
+			$exported_used_machines[] = new ExportedUsedMachine((int) $result->getValue("used_machine_id"), (int) $result->getValue("provider_id"));
 			$result->next();
 		}
 		return $exported_used_machines;
@@ -130,7 +130,7 @@ class ExportedUsedMachine {
 	 * @return boolean TRUE if set, FALSE if not
 	 */
 	public function isSetForExport() {
-		if($this->export_action == "add" || $this->export_action == "update" || ($this->export_action == "" && $this->export_timestamp !== "")) {
+		if($this->export_action === "add" || $this->export_action === "update" || ($this->export_action === "" && $this->export_timestamp !== "")) {
 			return TRUE;
 		}
 		else {
@@ -141,7 +141,7 @@ class ExportedUsedMachine {
 	/**
 	 * Remove all machines to export for given provider.
 	 */
-	public static function removeAllDeletedFromExport() {
+	public static function removeAllDeletedFromExport():void {
 		$query= "SELECT exported_machines.used_machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_export_machines AS exported_machines "
 			."LEFT JOIN ". \rex::getTablePrefix() ."d2u_machinery_used_machines AS used_machines "
 				."ON exported_machines.used_machine_id = used_machines.used_machine_id "
@@ -165,7 +165,7 @@ class ExportedUsedMachine {
 	 * Remove all machines to export for given provider.
 	 * @param int $provider_id Provider id
 	 */
-	public static function removeAllFromExport($provider_id) {
+	public static function removeAllFromExport($provider_id):void {
 		$query_lang = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_export_machines "
 			."SET export_action = 'delete' "
 			."WHERE provider_id = ". $provider_id;
@@ -177,7 +177,7 @@ class ExportedUsedMachine {
 	 * Remove a machine from export of all providers.
 	 * @param int $used_machine_id Used machine id
 	 */
-	public static function removeMachineFromAllExports($used_machine_id) {
+	public static function removeMachineFromAllExports($used_machine_id):void {
 		$query_lang = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_export_machines "
 			."SET export_action = 'delete' "
 			."WHERE used_machine_id = ". $used_machine_id;
@@ -188,7 +188,7 @@ class ExportedUsedMachine {
 	/**
 	 * Remove from export list for this provider.
 	 */
-	public function removeFromExport() {
+	public function removeFromExport():void {
 		$this->export_action = "delete";
 		$this->save();
 	}

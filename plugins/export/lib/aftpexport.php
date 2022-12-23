@@ -27,7 +27,7 @@ abstract class AFTPExport extends AExport {
 		
 		// Set exported used machines without export action to action "update"
 		foreach($this->exported_used_machines as $exported_used_machine) {
-			if($exported_used_machine->export_action == "") {
+			if($exported_used_machine->export_action === "") {
 				$exported_used_machine->export_action = "update";
 				$exported_used_machine->save();
 			}
@@ -49,7 +49,7 @@ abstract class AFTPExport extends AExport {
 		if($this->provider->ftp_filename !== "") {
 			$this->zip_filename = $this->provider->ftp_filename;
 		}
-		else if($this->zip_filename == "") {
+		else if($this->zip_filename === "") {
 			$this->zip_filename = preg_replace("/[^a-zA-Z0-9]/", "", $this->provider->name) ."_"
 				. trim($this->provider->customer_number) ."_". $this->provider->type .".zip";
 		}
@@ -63,7 +63,7 @@ abstract class AFTPExport extends AExport {
 	 */
 	protected function preparePicture($pic) {
 		$cached_pic = parent::preparePicture($pic);
-		if(!in_array($cached_pic, $this->files_for_zip)) {
+		if(!in_array($cached_pic, $this->files_for_zip, true)) {
 			$this->files_for_zip[$pic] = $cached_pic;
 		}
 		return $cached_pic;
@@ -73,10 +73,10 @@ abstract class AFTPExport extends AExport {
 	 * Prepares all pictures for export.
 	 * @param int $max_pics Maximum number of pictures, default is 6
 	 */
-	protected function preparePictures($max_pics = 6) {
+	protected function preparePictures($max_pics = 6):void {
 		foreach($this->exported_used_machines as $exported_used_machine) {
 			$pics_counter = 0;
-			if($exported_used_machine->export_action == "add" || $exported_used_machine->export_action == "update") {
+			if($exported_used_machine->export_action === "add" || $exported_used_machine->export_action === "update") {
 				$used_machine = new UsedMachine($exported_used_machine->used_machine_id, $this->provider->clang_id);
 				foreach($used_machine->pics as $pic) {
 					if(strlen($pic) > 3 && $pics_counter < $max_pics) {
@@ -95,11 +95,13 @@ abstract class AFTPExport extends AExport {
 	protected function upload() {
 		// Establish connection and ...
 		$connection_id = ftp_connect($this->provider->ftp_server);
+		if(!$connection_id instanceof \FTP\Connection) {
+		   return rex_i18n::msg('d2u_machinery_export_ftp_error_connection');			
+		}
+
 		// ... login
 		$login_result = ftp_login($connection_id, $this->provider->ftp_username, $this->provider->ftp_password);
-
-		// Is connection not healthy: send error message
-		if ((!$connection_id) || (!$login_result)) {
+		if (!$login_result) {
 		   return rex_i18n::msg('d2u_machinery_export_ftp_error_connection');
 		}
 		// Passive mode
@@ -118,7 +120,7 @@ abstract class AFTPExport extends AExport {
 
 	/**
 	 * ZIPs pictures and machine filename.
-	 * @param type $filename
+	 * @param string $filename
 	 * @return string Error message or empty if no errors occur.
 	 */
 	protected function zip($filename) {
@@ -132,6 +134,6 @@ abstract class AFTPExport extends AExport {
 			$zip->addFile($cachefilename, $original_filename);
 		}
 		$zip->close();
-		return "";
+		return '';
    }
 }

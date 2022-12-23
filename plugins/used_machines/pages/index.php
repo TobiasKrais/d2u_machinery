@@ -10,7 +10,7 @@ if($message !== "") {
 
 // save settings
 if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(INPUT_POST, "btn_apply")) === 1) {
-	$form = (array) rex_post('form', 'array', []);
+	$form = rex_post('form', 'array', []);
 
 	// Media fields and links need special treatment
 	$input_media_list = (array) rex_post('REX_INPUT_MEDIALIST', 'array', array());
@@ -61,7 +61,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 		$used_machine->description = $form['lang'][$rex_clang->getId()]['description'];
 		$used_machine->downloads = preg_grep('/^\s*$/s', explode(",", $input_media_list[$rex_clang->getId() + 100]), PREG_GREP_INVERT);
 	
-		if($used_machine->translation_needs_update == "delete") {
+		if($used_machine->translation_needs_update === "delete") {
 			$used_machine->delete(FALSE);
 		}
 		else if($used_machine->save()){
@@ -80,7 +80,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	}
 
 	// Redirect to make reload and thus double save impossible
-	if(filter_input(INPUT_POST, "btn_apply") == 1 && $used_machine !== FALSE) {
+	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$used_machine !== FALSE) {
 		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$used_machine->used_machine_id, "func"=>'edit', "message"=>$message), FALSE));
 	}
 	else {
@@ -91,8 +91,8 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 // Delete
 else if (filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$used_machine_id = $entry_id;
-	if($used_machine_id == 0) {
-		$form = (array) rex_post('form', 'array', []);
+	if($used_machine_id === 0) {
+		$form = rex_post('form', 'array', []);
 		$used_machine_id = $form['used_machine_id'];
 	}
 	$used_machine = new UsedMachine($used_machine_id, intval(rex_config::get("d2u_helper", "default_lang")));
@@ -113,7 +113,7 @@ else if (filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$func = '';
 }
 // Change online status of machine
-else if($func == 'changestatus') {
+else if($func === 'changestatus') {
 	$used_machine = new UsedMachine($entry_id, intval(rex_config::get("d2u_helper", "default_lang")));
 	$used_machine->used_machine_id = $entry_id; // Ensure correct ID in case language has no object
 	$used_machine->changeStatus();
@@ -123,14 +123,14 @@ else if($func == 'changestatus') {
 }
 
 // Eingabeformular
-if ($func == 'edit' || $func == 'clone' || $func == 'add') {
+if ($func === 'edit' || $func === 'clone' || $func === 'add') {
 	$used_machine = new UsedMachine($entry_id, intval(rex_config::get("d2u_helper", "default_lang")));
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
 			<header class="panel-heading"><div class="panel-title"><?php print rex_i18n::msg('d2u_machinery_used_machines_machine'); ?></div></header>
 			<div class="panel-body">
-				<input type="hidden" name="form[used_machine_id]" value="<?php echo ($func == 'edit' ? $entry_id : 0); ?>">
+				<input type="hidden" name="form[used_machine_id]" value="<?php echo ($func === 'edit' ? $entry_id : 0); ?>">
 				<fieldset>
 					<legend><?php echo rex_i18n::msg('d2u_helper_data_all_lang'); ?></legend>
 					<div class="panel-body-wrapper slide">
@@ -164,7 +164,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_price', "form[price]", $used_machine->price, FALSE, $readonly, "number");
 							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_currency_code', "form[currency_code]", $used_machine->currency_code, FALSE, $readonly, "text");
 							d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_vat', "form[vat]", $used_machine->vat, FALSE, $readonly, "number");
-							d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', $used_machine->online_status == "online", $readonly);
+							d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', $used_machine->online_status === "online", $readonly);
 							d2u_addon_backend_helper::form_medialistfield('d2u_helper_picture', 1, $used_machine->pics, $readonly);
 							$options_machines = array(0 => rex_i18n::msg('d2u_machinery_no_selection'));
 							foreach(Machine::getAll(intval(rex_config::get("d2u_helper", "default_lang"))) as $machine) {
@@ -254,7 +254,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 		print d2u_addon_backend_helper::getJS();
 }
 
-if ($func == '') {
+if ($func === '') {
     $list = rex_list::factory('SELECT used_machine_id, manufacturer, machines.name AS machinename, year_built, product_number, categories.name AS categoryname, offer_type, online_status '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_machinery_used_machines AS machines '
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_categories_lang AS categories '

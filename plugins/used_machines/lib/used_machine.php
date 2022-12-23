@@ -207,8 +207,8 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * Changes the status of a machine
 	 */
-	public function changeStatus() {
-		if($this->online_status == "online") {
+	public function changeStatus():void {
+		if($this->online_status === "online") {
 			if($this->used_machine_id > 0) {
 				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_used_machines "
 					."SET online_status = 'offline' "
@@ -240,10 +240,10 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Deletes the object.
-	 * @param int $delete_all If TRUE, all translations and main object are deleted. If 
+	 * @param bool $delete_all If TRUE, all translations and main object are deleted. If 
 	 * FALSE, only this translation will be deleted.
 	 */
-	public function delete($delete_all = TRUE) {
+	public function delete($delete_all = true):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_used_machines_lang "
 			."WHERE used_machine_id = ". $this->used_machine_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
@@ -439,7 +439,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 						.'ON main.used_machine_id = default_lang.used_machine_id AND default_lang.clang_id = '. \rex_config::get('d2u_helper', 'default_lang') .' '
 					."WHERE target_lang.used_machine_id IS NULL "
 					.'ORDER BY manufacturer, name';
-			$clang_id = \rex_config::get('d2u_helper', 'default_lang');
+			$clang_id = intval(\rex_config::get('d2u_helper', 'default_lang'));
 		}
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
@@ -527,7 +527,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 				$query .= ", video_ids = '' ";
 			}
 
-			if($this->used_machine_id == 0) {
+			if($this->used_machine_id === 0) {
 				$query = "INSERT INTO ". $query;
 			}
 			else {
@@ -535,8 +535,8 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 			}
 			$result = \rex_sql::factory();
 			$result->setQuery($query);
-			if($this->used_machine_id == 0) {
-				$this->used_machine_id = $result->getLastId();
+			if($this->used_machine_id === 0) {
+				$this->used_machine_id = intval($result->getLastId());
 				$error = $result->hasError();
 			}
 			

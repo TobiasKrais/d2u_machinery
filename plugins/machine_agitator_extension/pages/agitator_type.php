@@ -10,10 +10,10 @@ if($message !== "") {
 
 // save settings
 if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(INPUT_POST, "btn_apply")) === 1) {
-	$form = (array) rex_post('form', 'array', []);
+	$form = rex_post('form', 'array', []);
 
 	// Media fields and links need special treatment
-	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', array());
+	$input_media = rex_post('REX_INPUT_MEDIA', 'array', []);
 
 	$success = TRUE;
 	$agitator_type = FALSE;
@@ -22,7 +22,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 		if($agitator_type === FALSE) {
 			$agitator_type = new AgitatorType($agitator_type_id, $rex_clang->getId());
 			$agitator_type->agitator_type_id = $agitator_type_id; // Ensure correct ID in case first language has no object
-			$agitator_type->agitator_ids = $form['agitator_ids'];
+			$agitator_type->agitator_ids = array_key_exists('agitator_ids', $form) ? $form['agitator_ids'] : [];
 			$agitator_type->pic = $input_media[1];
 		}
 		else {
@@ -31,7 +31,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 		$agitator_type->name = $form['lang'][$rex_clang->getId()]['name'];
 		$agitator_type->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 
-		if($agitator_type->translation_needs_update == "delete") {
+		if($agitator_type->translation_needs_update === "delete") {
 			$agitator_type->delete(FALSE);
 		}
 		else if($agitator_type->save()){
@@ -50,7 +50,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	}
 	
 	// Redirect to make reload and thus double save impossible
-	if(filter_input(INPUT_POST, "btn_apply") == 1 && $agitator_type !== FALSE) {
+	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$agitator_type !== FALSE) {
 		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$agitator_type->agitator_type_id, "func"=>'edit', "message"=>$message), FALSE));
 	}
 	else {
@@ -59,10 +59,10 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	exit;
 }
 // Delete
-else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
+else if(intval(filter_input(INPUT_POST, "btn_delete", FILTER_VALIDATE_INT)) === 1 || $func === 'delete') {
 	$agitator_type_id = $entry_id;
-	if($agitator_type_id == 0) {
-		$form = (array) rex_post('form', 'array', []);
+	if($agitator_type_id === 0) {
+		$form = rex_post('form', 'array', []);
 		$agitator_type_id = $form['agitator_type_id'];
 	}
 	$agitator_type = new AgitatorType($agitator_type_id, intval(rex_config::get("d2u_helper", "default_lang")));
@@ -72,7 +72,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$referring_machines = $agitator_type->getReferringMachines();
 
 	// If not used, delete
-	if(count($referring_machines) == 0) {
+	if(count($referring_machines) === 0) {
 		$agitator_type->delete(TRUE);
 	}
 	else {
@@ -89,7 +89,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 }
 
 // Eingabeformular
-if ($func == 'edit' || $func == 'add') {
+if ($func === 'edit' || $func === 'add') {
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
@@ -153,7 +153,7 @@ if ($func == 'edit' || $func == 'add') {
 								$readonly = FALSE;
 							}
 
-							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', 1, $agitator_type->pic, $readonly);
+							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', '1', $agitator_type->pic, $readonly);
 
 							$options_agitators = [];
 							foreach (Agitator::getAll(intval(rex_config::get("d2u_helper", "default_lang"))) as $agitator) {
@@ -185,7 +185,7 @@ if ($func == 'edit' || $func == 'add') {
 		print d2u_addon_backend_helper::getJS();
 }
 
-if ($func == '') {
+if ($func === '') {
 	$query = 'SELECT agitator_types.agitator_type_id, name '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_machinery_agitator_types AS agitator_types '
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_agitator_types_lang AS lang '

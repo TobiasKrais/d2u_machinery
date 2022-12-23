@@ -10,7 +10,7 @@ if($message !== "") {
 
 // save settings
 if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(INPUT_POST, "btn_apply")) === 1) {
-	$form = (array) rex_post('form', 'array', []);
+	$form = rex_post('form', 'array', []);
 
 	$provider = new Provider($form['provider_id']);
 	$provider->name = $form['name'];
@@ -30,7 +30,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	$provider->linkedin_email = $form['linkedin_email'];
 	$provider->linkedin_groupid = $form['linkedin_groupid'];
 
-	if($provider->save() == FALSE){
+	if($provider->save() === FALSE){
 		$message = 'form_save_error';
 	}
 	else {
@@ -38,7 +38,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	}
 	
 	// Redirect to make reload and thus double save impossible
-	if(filter_input(INPUT_POST, "btn_apply") == 1 && $message !== 'form_save_error') {
+	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$message !== 'form_save_error') {
 		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$provider->provider_id, "func"=>'edit', "message"=>$message), FALSE));
 	}
 	else {
@@ -47,10 +47,10 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	exit;
 }
 // Delete
-else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
+else if(intval(filter_input(INPUT_POST, "btn_delete", FILTER_VALIDATE_INT)) === 1 || $func === 'delete') {
 	$provider_id = $entry_id;
-	if($provider_id == 0) {
-		$form = (array) rex_post('form', 'array', []);
+	if($provider_id === 0) {
+		$form = rex_post('form', 'array', []);
 		$provider_id = $form['entry_id'];
 	}
 	if($provider_id > 0) {
@@ -60,7 +60,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$func = '';
 }
 // Change online status of machine
-else if($func == 'changestatus') {
+else if($func === 'changestatus') {
 	$provider = new Provider($entry_id);
 	$provider->changeStatus();
 	
@@ -69,7 +69,7 @@ else if($func == 'changestatus') {
 }
 
 // Eingabeformular
-if ($func == 'edit' || $func == 'add') {
+if ($func === 'edit' || $func === 'add') {
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
@@ -106,7 +106,7 @@ if ($func == 'edit' || $func == 'add') {
 								$media_sql->next();
 							}
 							d2u_addon_backend_helper::form_select('d2u_machinery_export_media_manager_type', 'form[media_manager_type]', $options_media, [$provider->media_manager_type]);
-							d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', $provider->online_status == "online", $readonly);
+							d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', $provider->online_status === "online", $readonly);
 						?>
 					</div>
 				</fieldset>
@@ -162,7 +162,7 @@ if ($func == 'edit' || $func == 'add') {
 		print d2u_addon_backend_helper::getJS();
 }
 
-if ($func == '') {
+if ($func === '') {
 	$query = 'SELECT provider_id, name, type, online_status '
 		.'FROM '. \rex::getTablePrefix() .'d2u_machinery_export_provider '
 		.'ORDER BY name';

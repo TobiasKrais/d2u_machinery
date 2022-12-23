@@ -10,10 +10,10 @@ if($message !== "") {
 
 // save settings
 if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(INPUT_POST, "btn_apply")) === 1) {
-	$form = (array) rex_post('form', 'array', []);
+	$form = rex_post('form', 'array', []);
 
 	// Media fields and links need special treatment
-	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', array());
+	$input_media = rex_post('REX_INPUT_MEDIA', 'array', []);
 
 	$success = TRUE;
 	$equipment_group = FALSE;
@@ -32,7 +32,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 		$equipment_group->description = $form['lang'][$rex_clang->getId()]['description'];
 		$equipment_group->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 
-		if($equipment_group->translation_needs_update == "delete") {
+		if($equipment_group->translation_needs_update === "delete") {
 			$equipment_group->delete(FALSE);
 		}
 		else if($equipment_group->save()){
@@ -51,7 +51,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	}
 	
 	// Redirect to make reload and thus double save impossible
-	if(filter_input(INPUT_POST, "btn_apply") == 1 && $equipment_group !== FALSE) {
+	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$equipment_group !== FALSE) {
 		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$equipment_group->group_id, "func"=>'edit', "message"=>$message), FALSE));
 	}
 	else {
@@ -60,10 +60,10 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	exit;
 }
 // Delete
-else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
+else if(intval(filter_input(INPUT_POST, "btn_delete", FILTER_VALIDATE_INT)) === 1 || $func === 'delete') {
 	$group_id = $entry_id;
-	if($group_id == 0) {
-		$form = (array) rex_post('form', 'array', []);
+	if($group_id === 0) {
+		$form = rex_post('form', 'array', []);
 		$group_id = $form['group_id'];
 	}
 	$equipment_group = new EquipmentGroup($group_id, intval(rex_config::get("d2u_helper", "default_lang")));
@@ -73,13 +73,13 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$referring_equipments = $equipment_group->getReferringEquipments();
 
 	// If not used, delete
-	if(count($referring_equipments) == 0) {
+	if(count($referring_equipments) === 0) {
 		$equipment_group->delete(TRUE);
 	}
 	else {
 		$message = '<ul>';
-		foreach($referring_equipments as $referring_equipments) {
-			$message .= '<li><a href="index.php?page=d2u_machinery/equipment/equipment&func=edit&entry_id='. $referring_equipments->equipment_id .'">'. $referring_equipments->name.'</a></li>';
+		foreach($referring_equipments as $referring_equipment) {
+			$message .= '<li><a href="index.php?page=d2u_machinery/equipment/equipment&func=edit&entry_id='. $referring_equipment->equipment_id .'">'. $referring_equipment->name.'</a></li>';
 		}
 		$message .= '</ul>';
 
@@ -90,7 +90,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 }
 
 // Eingabeformular
-if ($func == 'edit' || $func == 'add') {
+if ($func === 'edit' || $func === 'add') {
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
@@ -156,7 +156,7 @@ if ($func == 'edit' || $func == 'add') {
 							}
 
 							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $equipment_group->priority, TRUE, $readonly, 'number');
-							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', 1, $equipment_group->picture, $readonly);
+							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', '1', $equipment_group->picture, $readonly);
 						?>
 					</div>
 				</fieldset>
@@ -183,7 +183,7 @@ if ($func == 'edit' || $func == 'add') {
 		print d2u_addon_backend_helper::getJS();
 }
 
-if ($func == '') {
+if ($func === '') {
 	$query = 'SELECT equipment_groups.group_id, name, priority '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_machinery_equipment_groups AS equipment_groups '
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_equipment_groups_lang AS lang '

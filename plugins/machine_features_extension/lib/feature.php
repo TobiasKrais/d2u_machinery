@@ -89,10 +89,10 @@ class Feature implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Deletes the object in all languages.
-	 * @param int $delete_all If TRUE, all translations and main object are deleted. If 
+	 * @param bool $delete_all If TRUE, all translations and main object are deleted. If 
 	 * FALSE, only this translation will be deleted.
 	 */
-	public function delete($delete_all = TRUE) {
+	public function delete($delete_all = true):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_features_lang "
 			."WHERE feature_id = ". $this->feature_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
@@ -153,7 +153,7 @@ class Feature implements \D2U_Helper\ITranslationHelper {
 		
 		$machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$machines[] = new Machine($result->getValue("machine_id"), $this->clang_id);
+			$machines[] = new Machine((int) $result->getValue("machine_id"), $this->clang_id);
 			$result->next();
 		}
 		return $machines;
@@ -177,7 +177,7 @@ class Feature implements \D2U_Helper\ITranslationHelper {
 						.'ON main.feature_id = default_lang.feature_id AND default_lang.clang_id = '. \rex_config::get('d2u_helper', 'default_lang') .' '
 					."WHERE target_lang.feature_id IS NULL "
 					.'ORDER BY default_lang.name';
-			$clang_id = \rex_config::get('d2u_helper', 'default_lang');
+			$clang_id = intval(\rex_config::get('d2u_helper', 'default_lang'));
 		}
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
@@ -223,7 +223,7 @@ class Feature implements \D2U_Helper\ITranslationHelper {
 		$pre_save_feature = new Feature($this->feature_id, $this->clang_id);
 		
 		// save priority, but only if new or changed
-		if($this->priority !== $pre_save_feature->priority || $this->feature_id == 0) {
+		if($this->priority !== $pre_save_feature->priority || $this->feature_id === 0) {
 			$this->setPriority();
 		}
 		
@@ -240,7 +240,7 @@ class Feature implements \D2U_Helper\ITranslationHelper {
 				$query .= ", video_id = NULL";
 			}
 
-			if($this->feature_id == 0) {
+			if($this->feature_id === 0) {
 				$query = "INSERT INTO ". $query;
 			}
 			else {
@@ -249,8 +249,8 @@ class Feature implements \D2U_Helper\ITranslationHelper {
 
 			$result = \rex_sql::factory();
 			$result->setQuery($query);
-			if($this->feature_id == 0) {
-				$this->feature_id = $result->getLastId();
+			if($this->feature_id === 0) {
+				$this->feature_id = intval($result->getLastId());
 				$error = $result->hasError();
 			}
 		}
@@ -279,7 +279,7 @@ class Feature implements \D2U_Helper\ITranslationHelper {
 	 * Reassigns priorities in database.
 	 * @param boolean $delete Reorder priority after deletion
 	 */
-	private function setPriority($delete = FALSE) {
+	private function setPriority($delete = false):void {
 		// Pull priorities from database
 		$query = "SELECT feature_id, priority FROM ". \rex::getTablePrefix() ."d2u_machinery_features "
 			."WHERE feature_id <> ". $this->feature_id ." ORDER BY priority";

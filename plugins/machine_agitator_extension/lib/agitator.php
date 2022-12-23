@@ -12,32 +12,32 @@ class Agitator implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var int Database ID
 	 */
-	var $agitator_id = 0;
+	public int $agitator_id = 0;
 	
 	/**
 	 * @var int Redaxo clang id
 	 */
-	var $clang_id = 0;
+	public int $clang_id = 0;
 		
 	/**
 	 * @var string Name
 	 */
-	var $name = "";
+	public string $name = "";
 	
 	/**
 	 * @var string Name
 	 */
-	var $description = "";
+	public string $description = "";
 	
 	/**
 	 * @var string Preview picture file name 
 	 */
-	var $pic = "";
+	public string $pic = "";
 	
 	/**
 	 * @var string "yes" if translation needs update
 	 */
-	var $translation_needs_update = "delete";
+	public string $translation_needs_update = "delete";
 
 	/**
 	 * Constructor. Reads an agitator stored in database.
@@ -55,23 +55,23 @@ class Agitator implements \D2U_Helper\ITranslationHelper {
 		$result->setQuery($query);
 		$num_rows = $result->getRows();
 
-		if ($num_rows > 0) {
-			$this->agitator_id = $result->getValue("agitator_id");
-			$this->name = stripslashes($result->getValue("name"));
-			$this->pic = $result->getValue("pic");
-			$this->description = stripslashes(htmlspecialchars_decode($result->getValue("description")));
+		if (intval($num_rows) > 0) {
+			$this->agitator_id = (int) $result->getValue("agitator_id");
+			$this->name = stripslashes((string) $result->getValue("name"));
+			$this->pic = (string) $result->getValue("pic");
+			$this->description = stripslashes(htmlspecialchars_decode((string) $result->getValue("description")));
 			if($result->getValue("translation_needs_update") !== "") {
-				$this->translation_needs_update = $result->getValue("translation_needs_update");
+				$this->translation_needs_update = (string) $result->getValue("translation_needs_update");
 			}
 		}
 	}
 	
 	/**
 	 * Deletes the object.
-	 * @param int $delete_all If TRUE, all translations and main object are deleted. If 
+	 * @param bool $delete_all If TRUE, all translations and main object are deleted. If 
 	 * FALSE, only this translation will be deleted.
 	 */
-	public function delete($delete_all = TRUE) {
+	public function delete($delete_all = true):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_agitators_lang "
 			."WHERE agitator_id = ". $this->agitator_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
@@ -106,7 +106,7 @@ class Agitator implements \D2U_Helper\ITranslationHelper {
 		
 		$agitators = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$agitators[] = new Agitator($result->getValue("agitator_id"), $clang_id);
+			$agitators[] = new Agitator((int) $result->getValue("agitator_id"), $clang_id);
 			$result->next();
 		}
 		return $agitators;
@@ -124,7 +124,7 @@ class Agitator implements \D2U_Helper\ITranslationHelper {
 		
 		$agitator_types = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$agitator_types[] = new AgitatorType($result->getValue("agitator_type_id"), $this->clang_id);
+			$agitator_types[] = new AgitatorType((int) $result->getValue("agitator_type_id"), $this->clang_id);
 			$result->next();
 		}
 		return $agitator_types;
@@ -140,7 +140,7 @@ class Agitator implements \D2U_Helper\ITranslationHelper {
 		$query = 'SELECT agitator_id FROM '. \rex::getTablePrefix() .'d2u_machinery_agitators_lang '
 				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
 				.'ORDER BY name';
-		if($type == 'missing') {
+		if($type === 'missing') {
 			$query = 'SELECT main.agitator_id FROM '. \rex::getTablePrefix() .'d2u_machinery_agitators AS main '
 					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_agitators_lang AS target_lang '
 						.'ON main.agitator_id = target_lang.agitator_id AND target_lang.clang_id = '. $clang_id .' '
@@ -148,14 +148,14 @@ class Agitator implements \D2U_Helper\ITranslationHelper {
 						.'ON main.agitator_id = default_lang.agitator_id AND default_lang.clang_id = '. \rex_config::get('d2u_helper', 'default_lang') .' '
 					."WHERE target_lang.agitator_id IS NULL "
 					.'ORDER BY default_lang.name';
-			$clang_id = \rex_config::get('d2u_helper', 'default_lang');
+			$clang_id = intval(\rex_config::get('d2u_helper', 'default_lang'));
 		}
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
 
 		$objects = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$objects[] = new Agitator($result->getValue("agitator_id"), $clang_id);
+			$objects[] = new Agitator((int) $result->getValue("agitator_id"), $clang_id);
 			$result->next();
 		}
 		
@@ -173,11 +173,11 @@ class Agitator implements \D2U_Helper\ITranslationHelper {
 		$pre_save_agitator = new Agitator($this->agitator_id, $this->clang_id);
 		
 		// saving the rest
-		if($this->agitator_id == 0 || $pre_save_agitator !== $this) {
+		if($this->agitator_id === 0 || $pre_save_agitator !== $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_agitators SET "
 					."pic = '". $this->pic ."' ";
 
-			if($this->agitator_id == 0) {
+			if($this->agitator_id === 0) {
 				$query = "INSERT INTO ". $query;
 			}
 			else {
@@ -186,8 +186,8 @@ class Agitator implements \D2U_Helper\ITranslationHelper {
 
 			$result = \rex_sql::factory();
 			$result->setQuery($query);
-			if($this->agitator_id == 0) {
-				$this->agitator_id = $result->getLastId();
+			if($this->agitator_id === 0) {
+				$this->agitator_id = intval($result->getLastId());
 				$error = $result->hasError();
 			}
 		}

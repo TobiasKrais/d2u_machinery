@@ -22,7 +22,7 @@ function rex_d2u_machinery_export_clang_deleted(rex_extension_point $ep) {
 	// Correct providers
 	$providers = Provider::getAll();
 	foreach ($providers as $provider) {
-		if($provider->clang_id == $clang_id) {
+		if($provider->clang_id === $clang_id) {
 			$provider->clang_id = rex_clang::getStartId();
 			$provider->save();
 		}

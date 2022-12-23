@@ -10,10 +10,10 @@ if($message !== "") {
 
 // save settings
 if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(INPUT_POST, "btn_apply")) === 1) {
-	$form = (array) rex_post('form', 'array', []);
+	$form = rex_post('form', 'array', []);
 
 	// Media fields and links need special treatment
-	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', []);
+	$input_media = rex_post('REX_INPUT_MEDIA', 'array', []);
 
 	$success = TRUE;
 	$industry_sector = FALSE;
@@ -22,7 +22,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 		if($industry_sector === FALSE) {
 			$industry_sector = new IndustrySector($industry_sector_id, $rex_clang->getId());
 			$industry_sector->industry_sector_id = $industry_sector_id; // Ensure correct ID in case first language has no object
-			$industry_sector->online_status = $form['online_status'] == '' ? 'offline' : $form['online_status'];
+			$industry_sector->online_status = $form['online_status'] === '' ? 'offline' : $form['online_status'];
 			$industry_sector->icon = $input_media[2];
 			$industry_sector->pic = $input_media[1];
 		}
@@ -34,7 +34,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 		$industry_sector->description = $form['lang'][$rex_clang->getId()]['description'];
 		$industry_sector->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 
-		if($industry_sector->translation_needs_update == "delete") {
+		if($industry_sector->translation_needs_update === "delete") {
 			$industry_sector->delete(FALSE);
 		}
 		else if($industry_sector->save()) {
@@ -53,7 +53,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	}
 	
 	// Redirect to make reload and thus double save impossible
-	if(filter_input(INPUT_POST, "btn_apply") == 1 && $industry_sector !== FALSE) {
+	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$industry_sector !== FALSE) {
 		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$industry_sector->industry_sector_id, "func"=>'edit', "message"=>$message), FALSE));
 	}
 	else {
@@ -62,10 +62,10 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	exit;
 }
 // Delete
-else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
+else if(intval(filter_input(INPUT_POST, "btn_delete", FILTER_VALIDATE_INT)) === 1 || $func === 'delete') {
 	$industry_sector_id = $entry_id;
-	if($industry_sector_id == 0) {
-		$form = (array) rex_post('form', 'array', []);
+	if($industry_sector_id === 0) {
+		$form = rex_post('form', 'array', []);
 		$industry_sector_id = $form['industry_sector_id'];
 	}
 	$industry_sector = new IndustrySector($industry_sector_id, intval(rex_config::get("d2u_helper", "default_lang")));
@@ -75,7 +75,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$referring_machines = $industry_sector->getMachines();
 
 	// If not used, delete
-	if(count($referring_machines) == 0) {
+	if(count($referring_machines) === 0) {
 		$industry_sector->delete(TRUE);
 	}
 	else {
@@ -91,7 +91,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$func = '';
 }
 // Change online status of machine
-else if($func == 'changestatus') {
+else if($func === 'changestatus') {
 	$industry_sector = new IndustrySector($entry_id, intval(rex_config::get("d2u_helper", "default_lang")));
 	$industry_sector->industry_sector_id = $entry_id;
 	$industry_sector->changeStatus();
@@ -101,7 +101,7 @@ else if($func == 'changestatus') {
 }
 
 // Eingabeformular
-if ($func == 'edit' || $func == 'add') {
+if ($func === 'edit' || $func === 'add') {
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
@@ -167,9 +167,9 @@ if ($func == 'edit' || $func == 'add') {
 								$readonly = FALSE;
 							}
 
-							d2u_addon_backend_helper::form_mediafield('d2u_helper_icon', 2, $industry_sector->icon, $readonly);
-							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', 1, $industry_sector->pic, $readonly);
-							d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', $industry_sector->online_status == "online", $readonly);
+							d2u_addon_backend_helper::form_mediafield('d2u_helper_icon', '2', $industry_sector->icon, $readonly);
+							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', '1', $industry_sector->pic, $readonly);
+							d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', $industry_sector->online_status === "online", $readonly);
 						?>
 					</div>
 				</fieldset>
@@ -196,7 +196,7 @@ if ($func == 'edit' || $func == 'add') {
 		print d2u_addon_backend_helper::getJS();
 }
 
-if ($func == '') {
+if ($func === '') {
 	$query = 'SELECT industry_sectors.industry_sector_id, name, online_status '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_machinery_industry_sectors AS industry_sectors '
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_industry_sectors_lang AS lang '

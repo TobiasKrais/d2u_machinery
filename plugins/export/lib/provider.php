@@ -1,120 +1,111 @@
 <?php
 /**
  * Provider export configurations.
+ * @api
  */
 class Provider {
 	/**
-	 * @var string Database ID
+	 * @var int Database ID
 	 */
-	var $provider_id = "";
+	public int $provider_id = 0;
 
 	/**
 	 * @var string Provider name
 	 */
-	var $name = "";
+	public string $name = "";
 	
 	/**
 	 * @var string Provider interface name. Current implemented types are:
-	 * europemachinery, machinerypark, mascus, twitter and linkedin.
+	 * europemachinery, machinerypark, mascus and linkedin.
 	 */
-	var $type = "";
+	public string $type = "";
 		
 	/**
 	 * @var int Redaxo language id. Represents the language, the object should
 	 * be exported.
 	 */
-	var $clang_id = 0;
+	public int $clang_id = 0;
 
 	/**
 	 * @var string Company name (your company name)
 	 */
-	var $company_name = "";
+	public string $company_name = "";
 		
 	/**
 	 * @var string Company e-mail address (your e-mail address)
 	 */
-	var $company_email = "";
+	public string $company_email = "";
 	
 	/**
 	 * @var string Customer number (your customer number of the provider)
 	 */
-	var $customer_number = "";
+	public string $customer_number = "";
 	
 	/**
 	 * @var string FTP server address. Needed if transmission type is FTP.
 	 */
-	var $ftp_server = "";
+	public string $ftp_server = "";
 	
 	/**
 	 * @var string FTP server username
 	 */
-	var $ftp_username = "";
+	public string $ftp_username = "";
 	
 	/**
 	 * @var string FTP server password
 	 */
-	var $ftp_password = "";
+	public string $ftp_password = "";
 
 	/**
 	 * @var string FTP filename (including file type, normally .zip)
 	 */
-	var $ftp_filename = "";
+	public string $ftp_filename = "";
 
 	/**
 	 * @var string Media manager type for exporting pictures.
 	 */
-	var $media_manager_type = "d2u_machinery_list_tile";
-	
-	/**
-	 * @var string Path where attachments can be found.
-	 */
-	var $attachment_path = "";
+	public string $media_manager_type = "d2u_machinery_list_tile";
 	
 	/**
 	 * @var string App ID of social networks.
 	 */
-	var $social_app_id = "";	
+	public string $social_app_id = "";	
 
 	/**
 	 * @var string App Secret of social networks.
 	 */
-	var $social_app_secret = "";
+	public string $social_app_secret = "";
 
 	/**
-	 * @var string Twitter or LinkedIn OAuth Token. This token is valid until user revokes it.
+	 * @var string LinkedIn OAuth Token. This token is valid until user revokes it.
 	 */
-	var $social_oauth_token = "";
+	public string $social_oauth_token = "";
 
 	/**
-	 * @var string Twitter or LinkedIn OAuth Token Secret. This secret is valid until user
+	 * @var string LinkedIn OAuth Token Secret. This secret is valid until user
 	 * revokes it.
 	 */
-	var $social_oauth_token_secret = "";
+	public string $social_oauth_token_secret = "";
 
 	/**
-	 * @var string Twitter or LinkedIn OAuth Token Secret. Expiry time.
+	 * @var int LinkedIn OAuth Token Secret. Expiry time.
 	 */
-	var $social_oauth_token_valid_until = "";
+	public int $social_oauth_token_valid_until = 0;
 
 	/**
 	 * @var string Linkedin id.
 	 */
-	var $linkedin_email = "";
+	public string $linkedin_email = "";
 
 	/**
 	 * @var string Linkedin group id.
 	 */
-	var $linkedin_groupid = "";
-
-	/**
-	 * @var string Twitter id.
-	 */
-	var $twitter_id = "";
+	public string $linkedin_groupid = "";
 
 	/**
 	 * @var string Online status. Either "online" or "offline".
 	 */
-	var $online_status = "online";
+	public string $online_status = "online";
 
 	/**
 	 * Fetches the object from database.
@@ -129,27 +120,26 @@ class Provider {
 
 		if ($num_rows > 0) {
 			// Wenn Verbindung ueber Redaxo hergestellt wurde
-			$this->provider_id = $result->getValue("provider_id");
-			$this->name = $result->getValue("name");
-			$this->type = $result->getValue("type");
-			$this->clang_id = $result->getValue("clang_id");
-			$this->customer_number = $result->getValue("customer_number");
-			$this->ftp_server = $result->getValue("ftp_server");
-			$this->ftp_username = $result->getValue("ftp_username");
-			$this->ftp_password = $result->getValue("ftp_password");
-			$this->ftp_filename = $result->getValue("ftp_filename");
-			$this->company_name = $result->getValue("company_name");
-			$this->company_email = $result->getValue("company_email");
-			$this->media_manager_type = $result->getValue("media_manager_type");
-			$this->online_status = $result->getValue("online_status");
-			$this->social_app_id = $result->getValue("social_app_id");
-			$this->social_app_secret = $result->getValue("social_app_secret");
-			$this->social_oauth_token = $result->getValue("social_oauth_token");
-			$this->social_oauth_token_secret = $result->getValue("social_oauth_token_secret");
-			$this->social_oauth_token_valid_until = $result->getValue("social_oauth_token_valid_until");
-			$this->linkedin_email = $result->getValue("linkedin_email");
-			$this->linkedin_groupid = $result->getValue("linkedin_groupid");
-			$this->twitter_id = $result->getValue("twitter_id");
+			$this->provider_id = (int) $result->getValue("provider_id");
+			$this->name = (string) $result->getValue("name");
+			$this->type = (string) $result->getValue("type");
+			$this->clang_id = (int) $result->getValue("clang_id");
+			$this->customer_number = (string) $result->getValue("customer_number");
+			$this->ftp_server = (string) $result->getValue("ftp_server");
+			$this->ftp_username = (string) $result->getValue("ftp_username");
+			$this->ftp_password = (string) $result->getValue("ftp_password");
+			$this->ftp_filename = (string) $result->getValue("ftp_filename");
+			$this->company_name = (string) $result->getValue("company_name");
+			$this->company_email = (string) $result->getValue("company_email");
+			$this->media_manager_type = (string) $result->getValue("media_manager_type");
+			$this->online_status = (string) $result->getValue("online_status");
+			$this->social_app_id = (string) $result->getValue("social_app_id");
+			$this->social_app_secret = (string) $result->getValue("social_app_secret");
+			$this->social_oauth_token = (string) $result->getValue("social_oauth_token");
+			$this->social_oauth_token_secret = (string) $result->getValue("social_oauth_token_secret");
+			$this->social_oauth_token_valid_until = (int) $result->getValue("social_oauth_token_valid_until");
+			$this->linkedin_email = (string) $result->getValue("linkedin_email");
+			$this->linkedin_groupid = (string) $result->getValue("linkedin_groupid");
 		}
 	}
 
@@ -157,7 +147,7 @@ class Provider {
 	 * Exports used machines for provider types europemachinery, machinerypark
 	 * and mascus (ftp based exports). Export starts only, if changes were made
 	 * or last export is older than a week.
-	 * @return string HTML formatted string with success or failure message.
+	 * @return bool true if export was successful
 	 */
 	public static function autoexport() {
 		$providers = Provider::getAll();
@@ -167,7 +157,7 @@ class Provider {
 		
 		foreach($providers as $provider) {
 			if($provider->isExportNeeded() || $provider->getLastExportTimestamp() < strtotime("-1 week")) {
-				if($provider->type == "europemachinery") {
+				if($provider->type === "europemachinery") {
 					$europemachinery = new EuropeMachinery($provider);
 					$europemachinery_error = $europemachinery->export();
 					if($europemachinery_error !== "") {
@@ -179,7 +169,7 @@ class Provider {
 						$message[] = $provider->name .": ". rex_i18n::msg('d2u_machinery_export_success');
 					}
 				}
-				else if($provider->type == "machinerypark") {
+				else if($provider->type === "machinerypark") {
 					$machinerypark = new MachineryPark($provider);
 					$machinerypark_error = $machinerypark->export();
 					if($machinerypark_error !== "") {
@@ -191,7 +181,7 @@ class Provider {
 						$message[] = $provider->name .": ". rex_i18n::msg('d2u_machinery_export_success');
 					}
 				}
-				else if($provider->type == "mascus") {
+				else if($provider->type === "mascus") {
 					$mascus = new Mascus($provider);
 					$mascus_error = $mascus->export();
 					if($mascus_error !== "") {
@@ -203,11 +193,12 @@ class Provider {
 						$message[] = $provider->name .": ". rex_i18n::msg('d2u_machinery_export_success');
 					}
 				}
-				else if($provider->type == "linkedin") {
+				else if($provider->type === "linkedin") {
 					$linkedin = new SocialExportLinkedIn($provider);
+					$linkedin_error = $linkedin->export();
 					if($linkedin->hasAccessToken()) {
 						$linkedin_error = $linkedin->export();
-						if($mascus_error !== "") {
+						if($linkedin_error !== "") {
 							$message[] = $provider->name .": ". $linkedin_error;
 							print $provider->name .": ". $linkedin_error ."; ";
 							$error = TRUE;
@@ -224,12 +215,12 @@ class Provider {
 		$d2u_machinery = rex_addon::get("d2u_machinery");
 		if($d2u_machinery->hasConfig('export_failure_email') && $error) {
 			$mail = new rex_mailer();
-			$mail->IsHTML(true);
+			$mail->isHTML(true);
 			$mail->CharSet = "utf-8";
-			$mail->AddAddress(trim($d2u_machinery->getConfig('export_failure_email')));
+			$mail->addAddress(trim(strval($d2u_machinery->getConfig('export_failure_email'))));
 			$mail->Subject = rex_i18n::msg('d2u_machinery_export_failure_report');
 			$mail->Body = implode("<br>", $message);
-			$mail->Send();
+			$mail->send();
 		}
 		
 		if($error) {
@@ -244,8 +235,8 @@ class Provider {
 	/**
 	 * Changes the status
 	 */
-	public function changeStatus() {
-		if($this->online_status == "online") {
+	public function changeStatus():void {
+		if($this->online_status === "online") {
 			if($this->provider_id > 0) {
 				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_export_provider "
 					."SET online_status = 'offline' "
@@ -270,7 +261,7 @@ class Provider {
 	/**
 	 * Deletes the object.
 	 */
-	public function delete() {
+	public function delete():void {
 		// First delete exported used machines
 		$exported_used_machines = ExportedUsedMachine::getAll($this);
 		foreach($exported_used_machines as $exported_used_machine) {
@@ -286,21 +277,22 @@ class Provider {
 
 	/**
 	 * Exports objects for the provider.
+	 * @return string error message - if no errors occured, empty string is returned.
 	 */
 	public function export() {
-		if($this->type == "europemachinery") {
+		if($this->type === "europemachinery") {
 			$europemachinery = new EuropeMachinery($this);
 			return $europemachinery->export();
 		}
-		else if($this->type == "machinerypark") {
+		else if($this->type === "machinerypark") {
 			$machinerypark = new MachineryPark($this);
 			return $machinerypark->export();
 		}
-		else if($this->type == "mascus") {
+		else if($this->type === "mascus") {
 			$mascus = new Mascus($this);
 			return $mascus->export();
 		}
-		else if($this->type == "linkedin") {
+		else if($this->type === "linkedin") {
 			// Check requirements
 			if (!function_exists('curl_init')) {
 				return rex_i18n::msg('d2u_machinery_export_failure_curl');
@@ -311,10 +303,11 @@ class Provider {
 
 			$linkedin = new SocialExportLinkedIn($this);
 			if(!$linkedin->hasAccessToken()) {
-				if(!filter_input(INPUT_GET, 'oauth_verifier', FILTER_NULL_ON_FAILURE) && !isset($_SESSION['linkedin']['requesttoken'])) {
+				$session = rex_request::session('linkedin', 'array');
+				if(filter_input(INPUT_GET, 'oauth_verifier', FILTER_NULL_ON_FAILURE) !== null && !isset($session['requesttoken'])) {
 					// Verifier pin and Requesttoken not available? Login
 					$rt_error = $linkedin->getRequestToken();
-					if($rt_error == "") {
+					if($rt_error === "") {
 						// Forward to login URL
 						header("Location: ". $linkedin->getLoginURL());
 						exit;
@@ -323,15 +316,15 @@ class Provider {
 						return $rt_error;
 					}
 				}
-				else if(filter_input(INPUT_GET, 'oauth_verifier', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 && isset($_SESSION['linkedin']['requesttoken'])) {
+				else if(filter_input(INPUT_GET, 'oauth_verifier', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 && isset($session['requesttoken'])) {
 					// Logged in an verifiert pin available? Get access token and ...
-					$at_error = $linkedin->getAccessToken(filter_input(INPUT_GET, 'oauth_verifier', FILTER_VALIDATE_INT));
+					$at_error = $linkedin->getAccessToken(strval(filter_input(INPUT_GET, 'oauth_verifier', FILTER_VALIDATE_INT)));
 					if($at_error !== "") {
 						return $at_error;
 					}
 				}
 				// Fuer den Fall dass mehrere Profile da sind und Requesttoken schon geholt wurde.
-				else if (isset($_SESSION['linkedin']['requesttoken'])) {
+				else if (isset($session['requesttoken'])) {
 					// Login URL
 					header("Location: ". $linkedin->getLoginURL());
 					exit;
@@ -340,12 +333,12 @@ class Provider {
 			if($linkedin->hasAccessToken()) {
 				// set the access token so we can make authenticated requests
 				$is_logged_in = $linkedin->isUserLoggedIn();
-				if($is_logged_in === FALSE) {
+				if($is_logged_in === false) {
 					// Wrong user? Logout and inform user
 					$linkedin->logout();
-					return rex_i18n('d2u_machinery_export_linkedin_login_again');
+					return rex_i18n::msg('d2u_machinery_export_linkedin_login_again');
 				}
-				else if($is_logged_in === TRUE) {
+				else if($is_logged_in === true) {
 					// Correct user? Perform export
 					return $linkedin->export();
 				}
@@ -355,6 +348,7 @@ class Provider {
 				}
 			}
 		}
+		return '';
 	}
 	
 	/**
@@ -373,7 +367,7 @@ class Provider {
 		
 		$providers = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$providers[] = new Provider($result->getValue("provider_id"));
+			$providers[] = new Provider((int) $result->getValue("provider_id"));
 			$result->next();
 		}
 		return $providers;
@@ -383,7 +377,7 @@ class Provider {
 	 * Checks if an export is needed. This is the case if:
 	 * a) A machine needs to be deleted from export
 	 * b) A machine is updated after the last export
-	 * @return int Timestamp of latest machine update.
+	 * @return bool true if export is needed.
 	 */
 	private function isExportNeeded() {
 		$query = "SELECT export_action FROM ". \rex::getTablePrefix() ."d2u_machinery_export_machines "
@@ -411,7 +405,7 @@ class Provider {
 	/**
 	 * Checks if an export is possible. This is the case if there are objects
 	 * set for export.
-	 * @return int Timestamp of latest object update.
+	 * @return bool True if export is possible
 	 */
 	public function isExportPossible() {
 		$query = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_export_machines "
@@ -436,9 +430,9 @@ class Provider {
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
-		$time = "";
+		$time = 0;
 		if($result->getRows() > 0) {
-			$time = $result->getValue("export_timestamp");
+			$time = (int) $result->getValue("export_timestamp");
 		}
 		return $time;
 	}
@@ -452,7 +446,7 @@ class Provider {
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
-		return $result->getValue("number");
+		return (int) $result->getValue("number");
 	}
 	
 	/**
@@ -460,7 +454,7 @@ class Provider {
 	 * @return boolean TRUE if successful
 	 */
 	public function save() {
-		$this->clang_id = $this->clang_id == 0 ? rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId()) : $this->clang_id;
+		$this->clang_id = $this->clang_id === 0 ? intval(rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId())) : $this->clang_id;
 
 		$query = \rex::getTablePrefix() ."d2u_machinery_export_provider SET "
 				."name = '". $this->name ."', "
@@ -481,10 +475,9 @@ class Provider {
 				."social_oauth_token_secret = '". $this->social_oauth_token_secret ."', "
 				."social_oauth_token_valid_until = '". $this->social_oauth_token_valid_until ."', "
 				."linkedin_email = '". $this->linkedin_email ."', "
-				."linkedin_groupid = '". $this->linkedin_groupid ."', "
-				."twitter_id = '". $this->twitter_id ."' ";
+				."linkedin_groupid = '". $this->linkedin_groupid ."' ";
 
-		if($this->provider_id == 0) {
+		if($this->provider_id === 0) {
 			$query = "INSERT INTO ". $query;
 		}
 		else {
@@ -493,8 +486,8 @@ class Provider {
 
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
-		if($this->provider_id == 0) {
-			$this->provider_id = $result->getLastId();
+		if($this->provider_id === 0) {
+			$this->provider_id = intval($result->getLastId());
 		}
 
 		if($result->hasError()) {

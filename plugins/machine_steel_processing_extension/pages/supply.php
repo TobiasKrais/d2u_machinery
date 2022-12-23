@@ -10,7 +10,7 @@ if($message !== "") {
 
 // save settings
 if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(INPUT_POST, "btn_apply")) === 1) {
-	$form = (array) rex_post('form', 'array', []);
+	$form = rex_post('form', 'array', []);
 
 	// Media fields and links need special treatment
 	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', []);
@@ -39,7 +39,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 		$supply->description = $form['lang'][$rex_clang->getId()]['description'];
 		$supply->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 
-		if($supply->translation_needs_update == "delete") {
+		if($supply->translation_needs_update === "delete") {
 			$supply->delete(FALSE);
 		}
 		else if($supply->save()){
@@ -58,7 +58,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	}
 	
 	// Redirect to make reload and thus double save impossible
-	if(filter_input(INPUT_POST, "btn_apply") == 1 && $supply !== FALSE) {
+	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$supply !== FALSE) {
 		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$supply->supply_id, "func"=>'edit', "message"=>$message), FALSE));
 	}
 	else {
@@ -67,10 +67,10 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	exit;
 }
 // Delete
-else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
+else if(intval(filter_input(INPUT_POST, "btn_delete", FILTER_VALIDATE_INT)) === 1 || $func === 'delete') {
 	$supply_id = $entry_id;
-	if($supply_id == 0) {
-		$form = (array) rex_post('form', 'array', []);
+	if($supply_id === 0) {
+		$form = rex_post('form', 'array', []);
 		$supply_id = $form['supply_id'];
 	}
 	$supply = new Supply($supply_id, intval(rex_config::get("d2u_helper", "default_lang")));
@@ -80,7 +80,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$referring_machines = $supply->getReferringMachines();
 
 	// If not used, delete
-	if(count($referring_machines) == 0) {
+	if(count($referring_machines) === 0) {
 		$supply->delete();
 	}
 	else {
@@ -96,7 +96,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$func = '';
 }
 // Change online status of machine
-else if($func == 'changestatus') {
+else if($func === 'changestatus') {
 	$supply = new Supply($entry_id, intval(rex_config::get("d2u_helper", "default_lang")));
 	$supply->supply_id = $entry_id; // Ensure correct ID in case language has no object
 	$supply->changeStatus();
@@ -106,7 +106,7 @@ else if($func == 'changestatus') {
 }
 
 // Eingabeformular
-if ($func == 'edit' || $func == 'add') {
+if ($func === 'edit' || $func === 'add') {
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
@@ -123,7 +123,7 @@ if ($func == 'edit' || $func == 'add') {
 							if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
 								$readonly = FALSE;
 							}
-							d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', $supply->online_status == "online", $readonly);
+							d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', $supply->online_status === "online", $readonly);
 							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $supply->priority, TRUE, $readonly, 'number');
 							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', '1', $supply->pic, $readonly);
 							if(\rex_addon::get("d2u_videos")->isAvailable()) {
@@ -206,7 +206,7 @@ if ($func == 'edit' || $func == 'add') {
 		print d2u_addon_backend_helper::getJS();
 }
 
-if ($func == '') {
+if ($func === '') {
 	$query = 'SELECT supplys.supply_id, name, online_status, priority '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_machinery_steel_supply AS supplys '
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_steel_supply_lang AS lang '

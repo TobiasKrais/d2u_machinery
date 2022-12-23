@@ -10,7 +10,7 @@ if($message !== "") {
 
 // save settings
 if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(INPUT_POST, "btn_apply")) === 1) {
-	$form = (array) rex_post('form', 'array', []);
+	$form = rex_post('form', 'array', []);
 
 	// Media fields and links need special treatment
 	$input_media_list = (array) rex_post('REX_INPUT_MEDIALIST', 'array', []);
@@ -51,7 +51,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 		$production_line->teaser = $form['lang'][$rex_clang->getId()]['teaser'];
 		$production_line->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 
-		if($production_line->translation_needs_update == "delete") {
+		if($production_line->translation_needs_update === "delete") {
 			$production_line->delete(FALSE);
 		}
 		else if($production_line->save()) {
@@ -70,7 +70,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	}
 	
 	// Redirect to make reload and thus double save impossible
-	if(filter_input(INPUT_POST, "btn_apply") == 1 && $production_line !== FALSE) {
+	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$production_line !== FALSE) {
 		header("Location: ". rex_url::currentBackendPage(["entry_id"=>$production_line->production_line_id, "func"=>'edit', "message"=>$message], FALSE));
 	}
 	else {
@@ -79,10 +79,10 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	exit;
 }
 // Delete
-else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
+else if(intval(filter_input(INPUT_POST, "btn_delete", FILTER_VALIDATE_INT)) === 1 || $func === 'delete') {
 	$production_line_id = $entry_id;
-	if($production_line_id == 0) {
-		$form = (array) rex_post('form', 'array', []);
+	if($production_line_id === 0) {
+		$form = rex_post('form', 'array', []);
 		$production_line_id = $form['production_line_id'];
 	}
 	$production_line = new ProductionLine($production_line_id, intval(rex_config::get("d2u_helper", "default_lang")));
@@ -92,7 +92,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$func = '';
 }
 // Change online status of machine
-else if($func == 'changestatus') {
+else if($func === 'changestatus') {
 	$production_line = new ProductionLine($entry_id, intval(rex_config::get("d2u_helper", "default_lang")));
 	$production_line->production_line_id = $entry_id;
 	$production_line->changeStatus();
@@ -102,7 +102,7 @@ else if($func == 'changestatus') {
 }
 
 // Eingabeformular
-if ($func == 'edit' || $func == 'add') {
+if ($func === 'edit' || $func === 'add') {
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
@@ -155,7 +155,7 @@ if ($func == 'edit' || $func == 'add') {
 								$option_usps[$usp->usp_id] = $usp->name;
 							}
 							d2u_addon_backend_helper::form_select('d2u_machinery_production_lines_usp', 'form[usp_ids][]', $option_usps, $production_line->usp_ids, 10, TRUE, $readonly);
-							d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', $production_line->online_status == "online", $readonly);
+							d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', $production_line->online_status === "online", $readonly);
 						?>
 					</div>
 				</fieldset>
@@ -231,7 +231,7 @@ if ($func == 'edit' || $func == 'add') {
 		print d2u_addon_backend_helper::getJS();
 }
 
-if ($func == '') {
+if ($func === '') {
 	$query = 'SELECT production_lines.production_line_id, name, line_code, online_status '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_machinery_production_lines AS production_lines '
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_production_lines_lang AS lang '

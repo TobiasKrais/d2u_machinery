@@ -10,7 +10,7 @@ if($message !== "") {
 
 // save settings
 if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(INPUT_POST, "btn_apply")) === 1) {
-	$form = (array) rex_post('form', 'array', []);
+	$form = rex_post('form', 'array', []);
 
 	$success = TRUE;
 	$welding = FALSE;
@@ -27,7 +27,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 		$welding->name = $form['lang'][$rex_clang->getId()]['name'];
 		$welding->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 
-		if($welding->translation_needs_update == "delete") {
+		if($welding->translation_needs_update === "delete") {
 			$welding->delete(FALSE);
 		}
 		else if($welding->save()){
@@ -46,7 +46,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	}
 	
 	// Redirect to make reload and thus double save impossible
-	if(filter_input(INPUT_POST, "btn_apply") == 1 && $welding !== FALSE) {
+	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$welding !== FALSE) {
 		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$welding->welding_id, "func"=>'edit', "message"=>$message), FALSE));
 	}
 	else {
@@ -55,10 +55,10 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	exit;
 }
 // Delete
-else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
+else if(intval(filter_input(INPUT_POST, "btn_delete", FILTER_VALIDATE_INT)) === 1 || $func === 'delete') {
 	$welding_id = $entry_id;
-	if($welding_id == 0) {
-		$form = (array) rex_post('form', 'array', []);
+	if($welding_id === 0) {
+		$form = rex_post('form', 'array', []);
 		$welding_id = $form['welding_id'];
 	}
 	$welding = new Welding($welding_id, intval(rex_config::get("d2u_helper", "default_lang")));
@@ -67,7 +67,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	// Check if object is used
 
 	// If not used, delete
-	if(count($referring_machines) == 0) {
+	if(count($referring_machines) === 0) {
 		$welding->delete(TRUE);
 	}
 	else {
@@ -84,7 +84,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 }
 
 // Eingabeformular
-if ($func == 'edit' || $func == 'add') {
+if ($func === 'edit' || $func === 'add') {
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
@@ -175,7 +175,7 @@ if ($func == 'edit' || $func == 'add') {
 		print d2u_addon_backend_helper::getJSOpenAll();
 }
 
-if ($func == '') {
+if ($func === '') {
 	$query = 'SELECT weldings.welding_id, internal_name '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_machinery_steel_welding AS weldings '
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_steel_welding_lang AS lang '

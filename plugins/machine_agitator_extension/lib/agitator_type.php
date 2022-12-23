@@ -12,32 +12,33 @@ class AgitatorType implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var int Database ID
 	 */
-	var $agitator_type_id = 0;
+	public int $agitator_type_id = 0;
 	
 	/**
 	 * @var int Redaxo clang id
 	 */
-	var $clang_id = 0;
+	public int $clang_id = 0;
 	
 	/**
 	 * @var string Name
 	 */
-	var $name = "";
+	public string $name = "";
 	
 	/**
 	 * @var string Preview picture file name 
 	 */
-	var $pic = "";
+	public string $pic = "";
 	
 	/**
-	 * @var int[] Array with agitator_type_ids
+	 * @api
+	 * @var int[] Array with agitator_ids
 	 */
-	var $agitator_type_ids = [];
+	public array $agitator_ids = [];
 	
 	/**
 	 * @var string "yes" if translation needs update
 	 */
-	var $translation_needs_update = "delete";
+	public string $translation_needs_update = "delete";
 
 	/**
 	 * Constructor. Reads a agitator type from database.
@@ -56,22 +57,23 @@ class AgitatorType implements \D2U_Helper\ITranslationHelper {
 		$num_rows = $result->getRows();
 
 		if ($num_rows > 0) {
-			$this->agitator_type_id = $result->getValue("agitator_type_id");
-			$this->name = stripslashes($result->getValue("name"));
-			$this->pic = $result->getValue("pic");
-			$this->agitator_type_ids = preg_grep('/^\s*$/s', explode("|", $result->getValue("agitator_type_ids")), PREG_GREP_INVERT);
+			$this->agitator_type_id = (int) $result->getValue("agitator_type_id");
+			$this->name = stripslashes((string) $result->getValue("name"));
+			$this->pic = (string) $result->getValue("pic");
+			$agitator_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("agitator_ids")), PREG_GREP_INVERT);
+			$this->agitator_ids = is_array($agitator_ids) ? $agitator_ids : [];
 			if($result->getValue("translation_needs_update") !== "") {
-				$this->translation_needs_update = $result->getValue("translation_needs_update");
+				$this->translation_needs_update = (string) $result->getValue("translation_needs_update");
 			}
 		}
 	}
 	
 	/**
 	 * Deletes the object.
-	 * @param int $delete_all If TRUE, all translations and main object are deleted. If 
+	 * @param bool $delete_all If TRUE, all translations and main object are deleted. If 
 	 * FALSE, only this translation will be deleted.
 	 */
-	public function delete($delete_all = TRUE) {
+	public function delete($delete_all = true):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_agitator_types_lang "
 			."WHERE agitator_type_id = ". $this->agitator_type_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
@@ -97,7 +99,7 @@ class AgitatorType implements \D2U_Helper\ITranslationHelper {
 	 */
 	public function getAgitators() {
 		$agitators = [];
-		foreach($this->agitator_type_ids as $agitator_type_id) {
+		foreach($this->agitator_ids as $agitator_type_id) {
 			$agitators[] = new Agitator($agitator_type_id, $this->clang_id);
 		}
 		return $agitators;
@@ -118,7 +120,7 @@ class AgitatorType implements \D2U_Helper\ITranslationHelper {
 		
 		$agitator_types = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$agitator_types[] = new AgitatorType($result->getValue("agitator_type_id"), $clang_id);
+			$agitator_types[] = new AgitatorType((int) $result->getValue("agitator_type_id"), $clang_id);
 			$result->next();
 		}
 		return $agitator_types;
@@ -136,7 +138,7 @@ class AgitatorType implements \D2U_Helper\ITranslationHelper {
 		
 		$machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$machines[] = new Machine($result->getValue("machine_id"), $this->clang_id);
+			$machines[] = new Machine((int) $result->getValue("machine_id"), $this->clang_id);
 			$result->next();
 		}
 		return $machines;
@@ -152,7 +154,7 @@ class AgitatorType implements \D2U_Helper\ITranslationHelper {
 		$query = 'SELECT agitator_type_id FROM '. \rex::getTablePrefix() .'d2u_machinery_agitator_types_lang '
 				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
 				.'ORDER BY name';
-		if($type == 'missing') {
+		if($type === 'missing') {
 			$query = 'SELECT main.agitator_type_id FROM '. \rex::getTablePrefix() .'d2u_machinery_agitator_types AS main '
 					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_agitator_types_lang AS target_lang '
 						.'ON main.agitator_type_id = target_lang.agitator_type_id AND target_lang.clang_id = '. $clang_id .' '
@@ -160,14 +162,14 @@ class AgitatorType implements \D2U_Helper\ITranslationHelper {
 						.'ON main.agitator_type_id = default_lang.agitator_type_id AND default_lang.clang_id = '. \rex_config::get('d2u_helper', 'default_lang') .' '
 					."WHERE target_lang.agitator_type_id IS NULL "
 					.'ORDER BY default_lang.name';
-			$clang_id = \rex_config::get('d2u_helper', 'default_lang');
+			$clang_id = intval(\rex_config::get('d2u_helper', 'default_lang'));
 		}
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
 
 		$objects = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$objects[] = new AgitatorType($result->getValue("agitator_type_id"), $clang_id);
+			$objects[] = new AgitatorType((int) $result->getValue("agitator_type_id"), $clang_id);
 			$result->next();
 		}
 		
@@ -185,12 +187,12 @@ class AgitatorType implements \D2U_Helper\ITranslationHelper {
 		$pre_save_agitator_type = new AgitatorType($this->agitator_type_id, $this->clang_id);
 		
 		// saving the rest
-		if($this->agitator_type_id == 0 || $pre_save_agitator_type !== $this) {
+		if($this->agitator_type_id === 0 || $pre_save_agitator_type !== $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_agitator_types SET "
-					."agitator_type_ids = '|". implode("|", $this->agitator_type_ids) ."|', "
+					."agitator_ids = '|". implode("|", $this->agitator_ids) ."|', "
 					."pic = '". $this->pic ."' ";
 
-			if($this->agitator_type_id == 0) {
+			if($this->agitator_type_id === 0) {
 				$query = "INSERT INTO ". $query;
 			}
 			else {
@@ -199,8 +201,8 @@ class AgitatorType implements \D2U_Helper\ITranslationHelper {
 
 			$result = \rex_sql::factory();
 			$result->setQuery($query);
-			if($this->agitator_type_id == 0) {
-				$this->agitator_type_id = $result->getLastId();
+			if($this->agitator_type_id === 0) {
+				$this->agitator_type_id = intval($result->getLastId());
 				$error = $result->hasError();
 			}
 		}

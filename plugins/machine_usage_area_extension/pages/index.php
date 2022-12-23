@@ -10,7 +10,7 @@ if($message !== "") {
 
 // save settings
 if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(INPUT_POST, "btn_apply")) === 1) {
-	$form = (array) rex_post('form', 'array', []);
+	$form = rex_post('form', 'array', []);
 
 	$success = TRUE;
 	$usage_area = FALSE;
@@ -28,7 +28,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 		$usage_area->name = $form['lang'][$rex_clang->getId()]['name'];
 		$usage_area->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 
-		if($usage_area->translation_needs_update == "delete") {
+		if($usage_area->translation_needs_update === "delete") {
 			$usage_area->delete(FALSE);
 		}
 		else if($usage_area->save()){
@@ -47,7 +47,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	}
 	
 	// Redirect to make reload and thus double save impossible
-	if(filter_input(INPUT_POST, "btn_apply") == 1 && $usage_area !== FALSE) {
+	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$usage_area !== FALSE) {
 		header("Location: ". rex_url::currentBackendPage(["entry_id"=>$usage_area->usage_area_id, "func"=>'edit', "message"=>$message], FALSE));
 	}
 	else {
@@ -56,10 +56,10 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	exit;
 }
 // Delete
-else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
+else if(intval(filter_input(INPUT_POST, "btn_delete", FILTER_VALIDATE_INT)) === 1 || $func === 'delete') {
 	$usage_area_id = $entry_id;
-	if($usage_area_id == 0) {
-		$form = (array) rex_post('form', 'array', []);
+	if($usage_area_id === 0) {
+		$form = rex_post('form', 'array', []);
 		$usage_area_id = $form['usage_area_id'];
 	}
 	$usage_area = new UsageArea($usage_area_id, intval(rex_config::get("d2u_helper", "default_lang")));
@@ -69,7 +69,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$referring_machines = $usage_area->getMachines();
 
 	// If not used, delete
-	if(count($referring_machines) == 0) {
+	if(count($referring_machines) === 0) {
 		foreach(rex_clang::getAll() as $rex_clang) {
 			if($usage_area === FALSE) {
 				$usage_area = new UsageArea($usage_area_id, $rex_clang->getId());
@@ -96,7 +96,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 }
 
 // Eingabeformular
-if ($func == 'edit' || $func == 'add') {
+if ($func === 'edit' || $func === 'add') {
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
@@ -193,7 +193,7 @@ if ($func == 'edit' || $func == 'add') {
 		print d2u_addon_backend_helper::getJS();
 }
 
-if ($func == '') {
+if ($func === '') {
 	$query = 'SELECT usage_areas.usage_area_id, name, priority '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_machinery_usage_areas AS usage_areas '
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_usage_areas_lang AS lang '

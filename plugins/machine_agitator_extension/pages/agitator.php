@@ -10,10 +10,10 @@ if($message !== "") {
 
 // save settings
 if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(INPUT_POST, "btn_apply")) === 1) {
-	$form = (array) rex_post('form', 'array', []);
+	$form = rex_post('form', 'array', []);
 
 	// Media fields and links need special treatment
-	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', array());
+	$input_media = rex_post('REX_INPUT_MEDIA', 'array', []);
 
 	$success = TRUE;
 	$agitator = FALSE;
@@ -31,7 +31,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 		$agitator->description = $form['lang'][$rex_clang->getId()]['description'];
 		$agitator->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 
-		if($agitator->translation_needs_update == "delete") {
+		if($agitator->translation_needs_update === "delete") {
 			$agitator->delete(FALSE);
 		}
 		else if($agitator->save()){
@@ -50,7 +50,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	}
 	
 	// Redirect to make reload and thus double save impossible
-	if(filter_input(INPUT_POST, "btn_apply") == 1 && $agitator !== FALSE) {
+	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$agitator !== FALSE) {
 		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$agitator->agitator_id, "func"=>'edit', "message"=>$message), FALSE));
 	}
 	else {
@@ -59,10 +59,10 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	exit;
 }
 // Delete
-else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
+else if(intval(filter_input(INPUT_POST, "btn_delete", FILTER_VALIDATE_INT)) === 1 || $func === 'delete') {
 	$agitator_id = $entry_id;
-	if($agitator_id == 0) {
-		$form = (array) rex_post('form', 'array', []);
+	if($agitator_id === 0) {
+		$form = rex_post('form', 'array', []);
 		$agitator_id = $form['agitator_id'];
 	}
 	$agitator = new Agitator($agitator_id, intval(rex_config::get("d2u_helper", "default_lang")));
@@ -72,7 +72,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$referring_agitator_types = $agitator->getReferringAgitatorTypes();
 
 	// If not used, delete
-	if(count($referring_agitator_types) == 0) {
+	if(count($referring_agitator_types) === 0) {
 		$agitator->delete(TRUE);
 	}
 	else {
@@ -88,13 +88,13 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 }
 
 // Eingabeformular
-if ($func == 'edit' || $func == 'clone' || $func == 'add') {
+if ($func === 'edit' || $func === 'clone' || $func === 'add') {
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
 			<header class="panel-heading"><div class="panel-title"><?php print rex_i18n::msg('d2u_machinery_agitators'); ?></div></header>
 			<div class="panel-body">
-				<input type="hidden" name="form[agitator_id]" value="<?php echo ($func == 'edit' ? $entry_id : 0); ?>">
+				<input type="hidden" name="form[agitator_id]" value="<?php echo ($func === 'edit' ? $entry_id : 0); ?>">
 				<?php
 					foreach(rex_clang::getAll() as $rex_clang) {
 						$agitator = new Agitator($entry_id, $rex_clang->getId());
@@ -153,7 +153,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 								$readonly = FALSE;
 							}
 
-							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', 1, $agitator->pic, $readonly);
+							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', '1', $agitator->pic, $readonly);
 						?>
 					</div>
 				</fieldset>
@@ -179,7 +179,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 		print d2u_addon_backend_helper::getJS();
 }
 
-if ($func == '') {
+if ($func === '') {
 	$query = 'SELECT agitators.agitator_id, name '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_machinery_agitators AS agitators '
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_agitators_lang AS lang '

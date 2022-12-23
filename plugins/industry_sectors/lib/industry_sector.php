@@ -12,52 +12,52 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var int Database ID
 	 */
-	var $industry_sector_id = 0;
+	public int $industry_sector_id = 0;
 	
 	/**
 	 * @var int Redaxo clang id
 	 */
-	var $clang_id = 0;
+	public int $clang_id = 0;
 	
 	/**
 	 * @var string Name
 	 */
-	var $name = "";
+	public string $name = "";
 	
 	/**
 	 * @var string Teaser
 	 */
-	var $teaser = "";
+	public string $teaser = "";
 
 	/**
 	 * @var string Description
 	 */
-	var $description = "";
+	public string $description = "";
 
 	/**
 	 * @var string Icon file name
 	 */
-	var $icon = "";
+	public string $icon = "";
 	
 	/**
 	 * @var string Preview picture file name 
 	 */
-	var $pic = "";
+	public string $pic = "";
 	
 	/**
 	 * @var String Status. Either "online" or "offline".
 	 */
-	var $online_status = "offline";
+	public string $online_status = "offline";
 	
 	/**
 	 * @var string "yes" if translation needs update
 	 */
-	var $translation_needs_update = "delete";
+	public string $translation_needs_update = "delete";
 
 	/**
 	 * @var string URL
 	 */
-	private $url = "";
+	private string $url = "";
 	
 	/**
 	 * Constructor. Reads an Industry Sector stored in database.
@@ -76,15 +76,15 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 		$num_rows = $result->getRows();
 
 		if ($num_rows > 0) {
-			$this->industry_sector_id = $result->getValue("industry_sector_id");
-			$this->name = stripslashes($result->getValue("name"));
-			$this->teaser = stripslashes(htmlspecialchars_decode($result->getValue("teaser")));
-			$this->description = stripslashes(htmlspecialchars_decode($result->getValue("description")));
-			$this->icon = $result->getValue("icon");
-			$this->pic = $result->getValue("pic");
-			$this->online_status = $result->getValue("online_status");
-			if($result->getValue("translation_needs_update") !== "") {
-				$this->translation_needs_update = $result->getValue("translation_needs_update");
+			$this->industry_sector_id = (int) $result->getValue("industry_sector_id");
+			$this->name = stripslashes((string) $result->getValue("name"));
+			$this->teaser = stripslashes(htmlspecialchars_decode((string) $result->getValue("teaser")));
+			$this->description = stripslashes(htmlspecialchars_decode((string) $result->getValue("description")));
+			$this->icon = (string) $result->getValue("icon");
+			$this->pic = (string) $result->getValue("pic");
+			$this->online_status = (string) $result->getValue("online_status");
+			if((string) $result->getValue("translation_needs_update") !== "") {
+				$this->translation_needs_update = (string) $result->getValue("translation_needs_update");
 			}
 		}
 	}
@@ -92,8 +92,8 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * Changes the online status.
 	 */
-	public function changeStatus() {
-		if($this->online_status == "online") {
+	public function changeStatus():void {
+		if($this->online_status === "online") {
 			if($this->industry_sector_id > 0) {
 				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors "
 					."SET online_status = 'offline' "
@@ -120,10 +120,10 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Deletes the object in all languages.
-	 * @param int $delete_all If TRUE, all translations and main object are deleted. If 
+	 * @param bool $delete_all If TRUE, all translations and main object are deleted. If 
 	 * FALSE, only this translation will be deleted.
 	 */
-	public function delete($delete_all = TRUE) {
+	public function delete($delete_all = true):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_industry_sectors_lang "
 			."WHERE industry_sector_id = ". $this->industry_sector_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
@@ -158,7 +158,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 			}
 			else {
 				$query_forward = "DELETE FROM ". \rex::getTablePrefix() ."yrewrite_forward "
-					."WHERE extern = '". $this->getURL(TRUE) ."'";
+					."WHERE extern = '". $this->getURL(true) ."'";
 				$result_forward = \rex_sql::factory();
 				$result_forward->setQuery($query_forward);
 			}
@@ -182,7 +182,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 		
 		$industry_sectors = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$industry_sector = new IndustrySector($result->getValue("industry_sector_id"), $clang_id);
+			$industry_sector = new IndustrySector((int) $result->getValue("industry_sector_id"), $clang_id);
 			$industry_sectors[] = $industry_sector;
 			$result->next();
 		}
@@ -202,8 +202,8 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 		
 		$machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$machine = new Machine($result->getValue("machine_id"), $this->clang_id);
-			if($online_only === FALSE || ($online_only && $machine->online_status == "online")) {
+			$machine = new Machine((int) $result->getValue("machine_id"), $this->clang_id);
+			if($online_only === FALSE || ($online_only && $machine->online_status === "online")) {
 				$machines[] = $machine;
 			}
 			$result->next();
@@ -212,6 +212,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 	}
 	
 	/**
+	 * @api
 	 * Gets the production lines referring to this object. Plugin production_lines
 	 * needs to be installed.
 	 * @param boolean $online_only TRUE if only online production lines should be returned.
@@ -226,8 +227,8 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 			$result->setQuery($query);
 
 			for($i = 0; $i < $result->getRows(); $i++) {
-				$production_line = new ProductionLine($result->getValue("production_line_id"), $this->clang_id);
-				if($online_only === FALSE || ($online_only && $production_line->online_status == "online")) {
+				$production_line = new ProductionLine((int) $result->getValue("production_line_id"), $this->clang_id);
+				if($online_only === FALSE || ($online_only && $production_line->online_status === "online")) {
 					$production_lines[] = $production_line;
 				}
 				$result->next();
@@ -246,7 +247,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 		$query = 'SELECT industry_sector_id FROM '. \rex::getTablePrefix() .'d2u_machinery_industry_sectors_lang '
 				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
 				.'ORDER BY name';
-		if($type == 'missing') {
+		if($type === 'missing') {
 			$query = 'SELECT main.industry_sector_id FROM '. \rex::getTablePrefix() .'d2u_machinery_industry_sectors AS main '
 					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_industry_sectors_lang AS target_lang '
 						.'ON main.industry_sector_id = target_lang.industry_sector_id AND target_lang.clang_id = '. $clang_id .' '
@@ -254,14 +255,14 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 						.'ON main.industry_sector_id = default_lang.industry_sector_id AND default_lang.clang_id = '. \rex_config::get('d2u_helper', 'default_lang') .' '
 					."WHERE target_lang.industry_sector_id IS NULL "
 					.'ORDER BY default_lang.name';
-			$clang_id = \rex_config::get('d2u_helper', 'default_lang');
+			$clang_id = intval(\rex_config::get('d2u_helper', 'default_lang'));
 		}
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
 
 		$objects = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$objects[] = new IndustrySector($result->getValue("industry_sector_id"), $clang_id);
+			$objects[] = new IndustrySector((int) $result->getValue("industry_sector_id"), $clang_id);
 			$result->next();
 		}
 		
@@ -270,20 +271,20 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Returns the URL of this object.
-	 * @param string $including_domain TRUE if Domain name should be included
+	 * @param bool $including_domain TRUE if Domain name should be included
 	 * @return string URL
 	 */
-	public function getURL($including_domain = FALSE) {
-		if($this->url == "") {
+	public function getURL($including_domain = false) {
+		if($this->url === "") {
 			$d2u_machinery = rex_addon::get("d2u_machinery");
 				
 			$parameterArray = [];
 			$parameterArray['industry_sector_id'] = $this->industry_sector_id;
-			$this->url = rex_getUrl($d2u_machinery->getConfig('article_id'), $this->clang_id, $parameterArray, "&");
+			$this->url = rex_getUrl(intval($d2u_machinery->getConfig('article_id')), $this->clang_id, $parameterArray, "&");
 		}
 
 		if($including_domain) {
-			if(\rex_addon::get('yrewrite') && \rex_addon::get('yrewrite')->isAvailable())  {
+			if(\rex_addon::get('yrewrite') instanceof rex_addon && \rex_addon::get('yrewrite')->isAvailable())  {
 				return str_replace(\rex_yrewrite::getCurrentDomain()->getUrl() .'/', \rex_yrewrite::getCurrentDomain()->getUrl(), \rex_yrewrite::getCurrentDomain()->getUrl() . $this->url);
 			}
 			else {
@@ -296,6 +297,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 	}
 	
 	/**
+	 * @api
 	 * Detects if machines for this object exist
 	 * @param boolean $ignore_offlines Ignore offline machines, default is false
 	 * @return boolean TRUE if machines exist, otherwise FALSE
@@ -329,13 +331,13 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 		$pre_save_object = new IndustrySector($this->industry_sector_id, $this->clang_id);
 		
 		// saving the rest
-		if($this->industry_sector_id == 0 || $pre_save_object !== $this) {
+		if($this->industry_sector_id === 0 || $pre_save_object !== $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_industry_sectors SET "
 					."online_status = '". $this->online_status ."', "
 					."icon = '". $this->icon ."', "
 					."pic = '". $this->pic ."' ";
 
-			if($this->industry_sector_id == 0) {
+			if($this->industry_sector_id === 0) {
 				$query = "INSERT INTO ". $query;
 			}
 			else {
@@ -344,8 +346,8 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 
 			$result = \rex_sql::factory();
 			$result->setQuery($query);
-			if($this->industry_sector_id == 0) {
-				$this->industry_sector_id = $result->getLastId();
+			if($this->industry_sector_id === 0) {
+				$this->industry_sector_id = intval($result->getLastId());
 				$error = $result->hasError();
 			}
 		}
@@ -363,7 +365,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper {
 						."description = '". addslashes(htmlspecialchars($this->description)) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = CURRENT_TIMESTAMP, "
-						."updateuser = '". \rex::getUser()->getLogin() ."' ";
+						."updateuser = '". (\rex::getUser() instanceof rex_user ? \rex::getUser()->getLogin() : '') ."' ";
 
 				$result = \rex_sql::factory();
 				$result->setQuery($query);

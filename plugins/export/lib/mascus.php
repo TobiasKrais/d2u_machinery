@@ -59,15 +59,15 @@ class Mascus extends AFTPExport {
 		foreach($this->exported_used_machines as $exported_used_machine) {
 			$used_machine = new UsedMachine($exported_used_machine->used_machine_id, $this->provider->clang_id);
 			// deleted machines are not included
-			if($exported_used_machine->export_action == "add" || $exported_used_machine->export_action == "update") {
+			if($exported_used_machine->export_action === "add" || $exported_used_machine->export_action === "update") {
 				// Only take used machines with a mascus category
-				if($used_machine->category->export_mascus_category_name !== "") {
+				if($used_machine->category instanceof Category && $used_machine->category->export_mascus_category_name !== "") {
 					// <product>
 					$product = $xml->createElement("product");
 
 					// <DealerProductID>D40F3F35</DealerProductID>
 					$dealerProductID = $xml->createElement("DealerProductID");
-					$dealerProductID->appendChild($xml->createTextNode($used_machine->used_machine_id));
+					$dealerProductID->appendChild($xml->createTextNode((string) $used_machine->used_machine_id));
 					$product->appendChild($dealerProductID);
 
 					// <InternalStockNumber>2015</InternalStockNumber>
@@ -92,7 +92,7 @@ class Mascus extends AFTPExport {
 
 					// <PriceOriginal>50000</PriceOriginal>
 					$price = $xml->createElement("PriceOriginal");
-					$price->appendChild($xml->createTextNode($used_machine->price));
+					$price->appendChild($xml->createTextNode((string) $used_machine->price));
 					$product->appendChild($price);
 
 					// <PriceOriginalUnit>EUR</PriceOriginalUnit>
@@ -102,7 +102,7 @@ class Mascus extends AFTPExport {
 
 					// <YearOfManufacture>1999</YearOfManufacture>
 					$yearBuilt = $xml->createElement("YearOfManufacture");
-					$yearBuilt->appendChild($xml->createTextNode($used_machine->year_built));
+					$yearBuilt->appendChild($xml->createTextNode((string) $used_machine->year_built));
 					$product->appendChild($yearBuilt);
 
 					// <OtherInformation>bra maskin!</OtherInformation>

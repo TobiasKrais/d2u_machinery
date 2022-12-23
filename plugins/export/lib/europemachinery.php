@@ -67,13 +67,13 @@ class EuropeMachinery extends AFTPExport {
 		foreach($this->exported_used_machines as $exported_used_machine) {
 			$used_machine = new UsedMachine($exported_used_machine->used_machine_id, $this->provider->clang_id);
 			// deleted machines are not included
-			if($exported_used_machine->export_action == "add" || $exported_used_machine->export_action == "update") {
+			if($exported_used_machine->export_action === "add" || $exported_used_machine->export_action === "update") {
 				// Only take used machines with a europemachinery category
-				if($used_machine->category->export_europemachinery_category_id > 0) {
+				if($used_machine->category instanceof Category && $used_machine->category->export_europemachinery_category_id > 0) {
 					// <equipment id="1459">
 					$equipment = $xml->createElement("equipment");
 					$equipment_id = $xml->createAttribute("id");
-					$equipment_id->appendChild($xml->createTextNode($used_machine->used_machine_id));
+					$equipment_id->appendChild($xml->createTextNode((string) $used_machine->used_machine_id));
 					$equipment->appendChild($equipment_id);
 
 					// <stockid>D1459</stockid>
@@ -84,7 +84,7 @@ class EuropeMachinery extends AFTPExport {
 					// <category id="10">Dozer</category>
 					$category = $xml->createElement("category");
 					$category_id = $xml->createAttribute("id");
-					$category_id->appendChild($xml->createTextNode($used_machine->category->export_europemachinery_category_id));
+					$category_id->appendChild($xml->createTextNode((string) $used_machine->category->export_europemachinery_category_id));
 					$category->appendChild($category_id);
 					$category->appendChild($xml->createTextNode($used_machine->category->export_europemachinery_category_name));
 					$equipment->appendChild($category);
@@ -110,7 +110,7 @@ class EuropeMachinery extends AFTPExport {
 							$pics_counter ++;
 						}
 					}
-					if($pics_counter == 1) {
+					if($pics_counter === 1) {
 						// If there are no pics available: <picture></picture>
 						$picture = $xml->createElement("picture");
 						$pictures->appendChild($picture);
@@ -159,7 +159,7 @@ class EuropeMachinery extends AFTPExport {
 					$yearBuiltName->appendChild($xml->createTextNode("Baujahr"));
 					$yearBuilt->appendChild($yearBuiltName);
 
-					$yearBuilt->appendChild($xml->createTextNode($used_machine->year_built));
+					$yearBuilt->appendChild($xml->createTextNode((string) $used_machine->year_built));
 					$properties->appendChild($yearBuilt);
 
 					// <property id="6" name="Price">18960</property>
@@ -173,7 +173,7 @@ class EuropeMachinery extends AFTPExport {
 					$priceName->appendChild($xml->createTextNode("Preis"));
 					$price->appendChild($priceName);
 
-					$price->appendChild($xml->createTextNode($used_machine->price));
+					$price->appendChild($xml->createTextNode((string) $used_machine->price));
 					$properties->appendChild($price);
 
 					// </properties>

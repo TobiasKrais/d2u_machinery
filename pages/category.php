@@ -206,19 +206,19 @@ if ($func === 'edit' || $func === 'add') {
 							
 							$options = array("-1"=>rex_i18n::msg('d2u_machinery_category_parent_none'));
 							$selected_values = [];
-							foreach(Category::getAll(rex_config::get("d2u_helper", "default_lang")) as $parent_category) {
+							foreach(Category::getAll(intval(rex_config::get("d2u_helper", "default_lang"))) as $parent_category) {
 								if(!$parent_category->isChild() && $parent_category->category_id !== $category->category_id) {
 									$options[$parent_category->category_id] = $parent_category->name;
 								}
 							}
-							d2u_addon_backend_helper::form_select('d2u_machinery_category_parent', 'form[parent_category_id]', $options, ($category->parent_category === FALSE ? [] : [$category->parent_category->category_id]), 1, FALSE, $readonly);
-							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $category->priority, TRUE, $readonly, 'number');
+							d2u_addon_backend_helper::form_select('d2u_machinery_category_parent', 'form[parent_category_id]', $options, ($category->parent_category instanceof Category ? [(string) $category->parent_category->category_id] : []), 1, FALSE, $readonly);
+							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', (string) $category->priority, TRUE, $readonly, 'number');
 							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', '1', $category->pic, $readonly);
 							d2u_addon_backend_helper::form_mediafield('d2u_machinery_category_pic_usage', '2', $category->pic_usage, $readonly);
 
 							if(\rex_addon::get("d2u_videos")->isAvailable()) {
 								$options = [];
-								foreach(Video::getAll(rex_config::get("d2u_helper", "default_lang")) as $video) {
+								foreach(Video::getAll(intval(rex_config::get("d2u_helper", "default_lang"))) as $video) {
 									$options[$video->video_id] = $video->name;
 								}
 								d2u_addon_backend_helper::form_select('d2u_machinery_category_videos', 'form[video_ids][]', $options, array_keys($category->videos), 10, TRUE, $readonly);
@@ -233,8 +233,8 @@ if ($func === 'edit' || $func === 'add') {
 						<legend><?php echo rex_i18n::msg('d2u_machinery_category_export'); ?></legend>
 						<div class="panel-body-wrapper slide">
 							<?php
-								d2u_addon_backend_helper::form_input('d2u_machinery_category_export_machinerypark_category_id', "form[export_machinerypark_category_id]", $category->export_machinerypark_category_id, FALSE, $readonly, "number");
-								d2u_addon_backend_helper::form_input('d2u_machinery_category_export_europemachinery_category_id', "form[export_europemachinery_category_id]", $category->export_europemachinery_category_id, FALSE, $readonly, "number");
+								d2u_addon_backend_helper::form_input('d2u_machinery_category_export_machinerypark_category_id', "form[export_machinerypark_category_id]", (string) $category->export_machinerypark_category_id, FALSE, $readonly, "number");
+								d2u_addon_backend_helper::form_input('d2u_machinery_category_export_europemachinery_category_id', "form[export_europemachinery_category_id]", (string) $category->export_europemachinery_category_id, FALSE, $readonly, "number");
 								d2u_addon_backend_helper::form_input('d2u_machinery_category_export_europemachinery_category_name', "form[export_europemachinery_category_name]", $category->export_europemachinery_category_name, FALSE, $readonly, "text");
 								d2u_addon_backend_helper::form_input('d2u_machinery_category_export_mascus_category_name', "form[export_mascus_category_name]", $category->export_mascus_category_name, FALSE, $readonly, "text");
 							?>
@@ -250,7 +250,7 @@ if ($func === 'edit' || $func === 'add') {
 						<legend><small><i class="rex-icon fa-spoon"></i></small> <?php echo rex_i18n::msg('d2u_machinery_agitator_extension'); ?></legend>
 						<div class="panel-body-wrapper slide">
 							<?php
-								d2u_addon_backend_helper::form_checkbox('d2u_machinery_category_show_agitators', 'form[show_agitators]', 'show', $category->show_agitators == 'show');
+								d2u_addon_backend_helper::form_checkbox('d2u_machinery_category_show_agitators', 'form[show_agitators]', 'show', $category->show_agitators === 'show');
 							?>
 						</div>
 					</fieldset>
@@ -280,14 +280,14 @@ if ($func === 'edit' || $func === 'add') {
 		print d2u_addon_backend_helper::getJS();
 }
 
-if ($func == '') {
+if ($func === '') {
 	$query = 'SELECT categories.category_id, lang.name AS categoryname, parents_lang.name AS parentname, priority '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_machinery_categories AS categories '
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_categories_lang AS lang '
 			. 'ON categories.category_id = lang.category_id AND lang.clang_id = '. intval(rex_config::get("d2u_helper", "default_lang")) .' '
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_categories_lang AS parents_lang '
 			. 'ON categories.parent_category_id = parents_lang.category_id AND parents_lang.clang_id = '. intval(rex_config::get("d2u_helper", "default_lang")) .' ';
-	if($this->getConfig('default_category_sort') == 'priority') {
+	if(rex_config::get('d2u_machinery', 'default_category_sort') === 'priority') {
 		$query .= 'ORDER BY priority ASC';
 	}
 	else {

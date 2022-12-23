@@ -36,7 +36,7 @@ $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_machinery
 	WHERE clang.status = 1');
 
 if(\rex_addon::get('url')->isAvailable()) {
-	$clang_id = count(rex_clang::getAllIds()) == 1 ? rex_clang::getStartId() : 0;
+	$clang_id = count(rex_clang::getAllIds()) === 1 ? rex_clang::getStartId() : 0;
 	$article_id = rex_config::get('d2u_machinery', 'industry_sectors_article_id', rex_article::getSiteStartArticleId()); 
 
 	// Insert url schemes Version 2.x

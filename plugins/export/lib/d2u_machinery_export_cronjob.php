@@ -5,7 +5,7 @@
 class d2u_machinery_export_cronjob extends D2U_Helper\ACronJob  {
 	/**
 	 * Create a new instance of object
-	 * @return multinewsletter_cronjob_cleanup CronJob object
+	 * @return d2u_machinery_export_cronjob CronJob object
 	 */
 	public static function factory() {
 		$cronjob = new self();
@@ -16,7 +16,7 @@ class d2u_machinery_export_cronjob extends D2U_Helper\ACronJob  {
 	/**
 	 * Install CronJob. Its also activated.
 	 */
-	public function install() {
+	public function install():void {
 		$description = 'Exports used machines automatically to FTP based export providers';
 		$php_code = '<?php Provider::autoexport(); ?>';
 		$interval = '{\"minutes\":[0],\"hours\":[21],\"days\":\"all\",\"weekdays\":\"all\",\"months\":\"all\"}';

@@ -12,32 +12,32 @@ class Certificate implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var int Database ID
 	 */
-	var $certificate_id = 0;
+	public int $certificate_id = 0;
 	
 	/**
 	 * @var int Redaxo clang id
 	 */
-	var $clang_id = 0;
+	public int $clang_id = 0;
 	
 	/**
 	 * @var string Name
 	 */
-	var $name = "";
+	public string $name = "";
 	
 	/**
 	 * @var string Description
 	 */
-	var $description = "";
+	public string $description = "";
 	
 	/**
 	 * @var string Preview picture file name 
 	 */
-	var $pic = "";
+	public string $pic = "";
 	
 	/**
 	 * @var string "yes" if translation needs update
 	 */
-	var $translation_needs_update = "delete";
+	public string $translation_needs_update = "delete";
 
 	/**
 	 * Constructor. Reads an Certificate stored in database.
@@ -56,22 +56,22 @@ class Certificate implements \D2U_Helper\ITranslationHelper {
 		$num_rows = $result->getRows();
 
 		if ($num_rows > 0) {
-			$this->certificate_id = $result->getValue("certificate_id");
-			$this->name = stripslashes($result->getValue("name"));
-			$this->description = $result->getValue("description");
-			$this->pic = $result->getValue("pic");
+			$this->certificate_id = (int) $result->getValue("certificate_id");
+			$this->name = stripslashes((string) $result->getValue("name"));
+			$this->description = (string) $result->getValue("description");
+			$this->pic = (string) $result->getValue("pic");
 			if($result->getValue("translation_needs_update") !== "") {
-				$this->translation_needs_update = $result->getValue("translation_needs_update");
+				$this->translation_needs_update = (string) $result->getValue("translation_needs_update");
 			}
 		}
 	}
 
 	/**
 	 * Deletes the object in all languages.
-	 * @param int $delete_all If TRUE, all translations and main object are deleted. If 
+	 * @param bool $delete_all If TRUE, all translations and main object are deleted. If 
 	 * FALSE, only this translation will be deleted.
 	 */
-	public function delete($delete_all = TRUE) {
+	public function delete($delete_all = true):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_certificates_lang "
 			."WHERE certificate_id = ". $this->certificate_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
@@ -106,7 +106,7 @@ class Certificate implements \D2U_Helper\ITranslationHelper {
 		
 		$certificates = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$certificates[] = new Certificate($result->getValue("certificate_id"), $clang_id);
+			$certificates[] = new Certificate((int) $result->getValue("certificate_id"), $clang_id);
 			$result->next();
 		}
 		return $certificates;
@@ -124,7 +124,7 @@ class Certificate implements \D2U_Helper\ITranslationHelper {
 		
 		$machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$machines[] = new Machine($result->getValue("machine_id"), $this->clang_id);
+			$machines[] = new Machine((int) $result->getValue("machine_id"), $this->clang_id);
 			$result->next();
 		}
 		return $machines;
@@ -140,7 +140,7 @@ class Certificate implements \D2U_Helper\ITranslationHelper {
 		$query = 'SELECT certificate_id FROM '. \rex::getTablePrefix() .'d2u_machinery_certificates_lang '
 				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
 				.'ORDER BY name';
-		if($type == 'missing') {
+		if($type === 'missing') {
 			$query = 'SELECT main.certificate_id FROM '. \rex::getTablePrefix() .'d2u_machinery_certificates AS main '
 					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_certificates_lang AS target_lang '
 						.'ON main.certificate_id = target_lang.certificate_id AND target_lang.clang_id = '. $clang_id .' '
@@ -148,14 +148,14 @@ class Certificate implements \D2U_Helper\ITranslationHelper {
 						.'ON main.certificate_id = default_lang.certificate_id AND default_lang.clang_id = '. \rex_config::get('d2u_helper', 'default_lang') .' '
 					."WHERE target_lang.certificate_id IS NULL "
 					.'ORDER BY default_lang.name';
-			$clang_id = \rex_config::get('d2u_helper', 'default_lang');
+			$clang_id = intval(\rex_config::get('d2u_helper', 'default_lang'));
 		}
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
 
 		$objects = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$objects[] = new Certificate($result->getValue("certificate_id"), $clang_id);
+			$objects[] = new Certificate((int) $result->getValue("certificate_id"), $clang_id);
 			$result->next();
 		}
 		
@@ -173,11 +173,11 @@ class Certificate implements \D2U_Helper\ITranslationHelper {
 		$pre_save_certificate = new Certificate($this->certificate_id, $this->clang_id);
 		
 		// saving the rest
-		if($this->certificate_id == 0 || $pre_save_certificate !== $this) {
+		if($this->certificate_id === 0 || $pre_save_certificate !== $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_certificates SET "
 					."pic = '". $this->pic ."' ";
 
-			if($this->certificate_id == 0) {
+			if($this->certificate_id === 0) {
 				$query = "INSERT INTO ". $query;
 			}
 			else {
@@ -186,8 +186,8 @@ class Certificate implements \D2U_Helper\ITranslationHelper {
 
 			$result = \rex_sql::factory();
 			$result->setQuery($query);
-			if($this->certificate_id == 0) {
-				$this->certificate_id = $result->getLastId();
+			if($this->certificate_id === 0) {
+				$this->certificate_id = intval($result->getLastId());
 				$error = $result->hasError();
 			}
 		}

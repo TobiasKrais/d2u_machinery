@@ -6,8 +6,8 @@ class SocialExportLinkedIn extends AExport {
 	/**
 	 * @var OAuth LinkedIn OAuth object
 	 */
-	public $oauth;
-	
+	private OAuth $oauth;
+
 	/**
 	 * Constructor. Initializes variables
 	 * @param Provider $provider Export Provider
@@ -27,21 +27,21 @@ class SocialExportLinkedIn extends AExport {
 	 * Get callback URL
 	 * @return string callback URL
 	 */
-	public function getCallbackURL() {
-		return (\rex_addon::get('yrewrite') && \rex_addon::get('yrewrite')->isAvailable() ? \rex_yrewrite::getCurrentDomain()->getUrl() : \rex::getServer())
+	private function getCallbackURL() {
+		return (\rex_addon::get('yrewrite') instanceof rex_addon && \rex_addon::get('yrewrite')->isAvailable() ? \rex_yrewrite::getCurrentDomain()->getUrl() : \rex::getServer())
 			."redaxo/". rex_url::currentBackendPage(['func'=>'export', 'provider_id'=>$this->provider->provider_id], FALSE);
 	}
 
 	/**
 	 * Get and set access token
-	 * @param int $verifier_pin OAuth verifier pin
+	 * @param string $verifier_pin OAuth verifier pin
 	 * @return string error message
 	 */
 	public function getAccessToken($verifier_pin) {
-		$requesttoken = $_SESSION['linkedin']['requesttoken'];
-		$requesttoken_secret = $_SESSION['linkedin']['requesttoken_secret'];
-		unset($_SESSION['linkedin']['requesttoken']);
-		unset($_SESSION['linkedin']['requesttoken_secret']);
+		$session = rex_request::session('linkedin', 'array');
+		$requesttoken = $session['requesttoken'];
+		$requesttoken_secret = $session['requesttoken_secret'];
+		rex_request::setSession('linkedin', null);
 
 		try {
 			// now set the token so we can get our access token
@@ -50,13 +50,15 @@ class SocialExportLinkedIn extends AExport {
 			// get the access token now that we have the verifier pin
 			$at_info = $this->oauth->getAccessToken("https://api.linkedin.com/uas/oauth/accessToken", "", $verifier_pin);
 			// store in DB
-			$this->provider->social_oauth_token = $at_info["oauth_token"];
-			$this->provider->social_oauth_token_secret = $at_info["oauth_token_secret"];
-			$this->provider->social_oauth_token_valid_until =  time() + $at_info["oauth_expires_in"];
-			$this->provider->save();
+			if(is_array($at_info)) {
+				$this->provider->social_oauth_token = $at_info["oauth_token"];
+				$this->provider->social_oauth_token_secret = $at_info["oauth_token_secret"];
+				$this->provider->social_oauth_token_valid_until =  time() + $at_info["oauth_expires_in"];
+				$this->provider->save();
 
-			// set the access token so we can make authenticated requests
-			$this->oauth->setToken($this->provider->social_oauth_token, $this->provider->social_oauth_token_secret);
+				// set the access token so we can make authenticated requests
+				$this->oauth->setToken($this->provider->social_oauth_token, $this->provider->social_oauth_token_secret);
+			}
 		}
 		catch(OAuthException $e) {
 			return $e->getMessage();
@@ -69,7 +71,8 @@ class SocialExportLinkedIn extends AExport {
 	 * @return string Login url
 	 */
 	public function getLoginURL() {
-		return "https://www.linkedin.com/uas/oauth/authenticate?oauth_token=". $_SESSION['linkedin']['requesttoken'];
+		$session = rex_request::session('linkedin', 'array');
+		return "https://www.linkedin.com/uas/oauth/authenticate?oauth_token=". $session['requesttoken'];
 	}
 
 	/**
@@ -79,8 +82,9 @@ class SocialExportLinkedIn extends AExport {
 	public function getRequestToken() {
 		try {
 			$rt_info = $this->oauth->getRequestToken("https://api.linkedin.com/uas/oauth/requestToken?scope=r_basicprofile+r_emailaddress+w_share", $this->getCallbackURL());
-			$_SESSION['linkedin']['requesttoken'] = $rt_info["oauth_token"];
-			$_SESSION['linkedin']['requesttoken_secret'] = $rt_info["oauth_token_secret"];
+			if(is_array($rt_info)) {
+				rex_request::setSession('linkedin', ['requesttoken' => $rt_info["oauth_token"], 'requesttoken_secret' => $rt_info["oauth_token_secret"]]);
+			}
 		}
 		catch(OAuthException $e) {
 			return $e->getMessage();
@@ -109,13 +113,13 @@ class SocialExportLinkedIn extends AExport {
 
 	/**
 	 * Is user mentioned in provider logged in?
-	 * @return boolean TRUE id yes, FALSE if no or a string with error message
+	 * @return bool|string TRUE id yes, FALSE if no or a string with error message
 	 */
 	public function isUserLoggedIn() {
 		try {
 			// Fetch id from LinkedIn
 			$api_url = "https://api.linkedin.com/v1/people/~:(id,email-address)";
-			$this->oauth->fetch($api_url, null, OAUTH_HTTP_METHOD_GET);
+			$this->oauth->fetch($api_url, [], OAUTH_HTTP_METHOD_GET);
 			$response = $this->oauth->getLastResponse();
 
 			$linkedin_email = "";
@@ -123,14 +127,16 @@ class SocialExportLinkedIn extends AExport {
 			$xml->loadXML($response);
 			$persons = $xml->getElementsByTagName("person"); 
 			foreach($persons as $person) {
-				$email = $person->getElementsByTagName("email-address"); 
-				$linkedin_email = $email->item(0)->nodeValue;
+				$email = $person->getElementsByTagName("email-address");
+				if($email->item(0) !== null && $email->item(0)->nodeValue !== null) {
+					$linkedin_email = $email->item(0)->nodeValue;
+				}
 			}
-			if($linkedin_email == "") {
+			if($linkedin_email === "") {
 				return rex_i18n::msg('d2u_machinery_export_linkedin_mail_failed');
 			}
-			if(strtolower($linkedin_email) !== strtolower($this->provider->linkedin_email)) {
-				unset($_SESSION['linkedin']);
+			if(strtolower($linkedin_email) !== (strtolower($this->provider->linkedin_email))) {
+				rex_request::setSession('linkedin', null);
 				return rex_i18n::msg('d2u_machinery_export_linkedin_login_again');
 			}
 			else {
@@ -153,7 +159,7 @@ class SocialExportLinkedIn extends AExport {
 		foreach($this->exported_used_machines as $exported_used_machine) {
 			$used_machine = new UsedMachine($exported_used_machine->used_machine_id, $this->provider->clang_id);
 			// Delete from stream
-			if($exported_used_machine->export_action == "delete" || $exported_used_machine->export_action == "update") {
+			if($exported_used_machine->export_action === "delete" || $exported_used_machine->export_action === "update") {
 				// State April 2015: deleting is not supported
 				/*
 				if($exported_used_machine->provider_import_id !== "") {
@@ -165,7 +171,7 @@ class SocialExportLinkedIn extends AExport {
 				*/
 				
 				// delete in database
-				if($exported_used_machine->export_action == "delete") {
+				if($exported_used_machine->export_action === "delete") {
 					$exported_used_machine->delete();
 				}
 				else {
@@ -175,7 +181,7 @@ class SocialExportLinkedIn extends AExport {
 			}
 
 			// Post on wall
-			if($exported_used_machine->export_action == "add") {
+			if($exported_used_machine->export_action === "add") {
 				// Create XML for LinkedIn Social Stream
 				// Documentation: https://developer.linkedin.com/documents/share-api
 				// <?xml version="1.0" encoding="UTF-8">
@@ -183,7 +189,7 @@ class SocialExportLinkedIn extends AExport {
 				$xml->formatOutput = true;
 
 				// Post on Social Stream: prepare XML
-				if($this->provider->linkedin_groupid == "") {
+				if($this->provider->linkedin_groupid === "") {
 					// <share>
 					$share = $xml->createElement("share");
 
@@ -213,7 +219,7 @@ class SocialExportLinkedIn extends AExport {
 					// <submitted-image-url>http://www.meier-krantechnik.de/index.php?rex_img_type=d2u_baumaschinen_list&amp;rex_img_file=sjjdc_826.jpg</submitted-image-url>
 					if(count($used_machine->pics) > 0) {
 						$submitted_image_url = $xml->createElement("submitted-image-url");
-						$submitted_image_url->appendChild($xml->createTextNode((\rex_addon::get('yrewrite') && \rex_addon::get('yrewrite')->isAvailable() ? \rex_yrewrite::getCurrentDomain()->getUrl() : \rex::getServer())
+						$submitted_image_url->appendChild($xml->createTextNode((\rex_addon::get('yrewrite') instanceof rex_addon && \rex_addon::get('yrewrite')->isAvailable() ? \rex_yrewrite::getCurrentDomain()->getUrl() : \rex::getServer())
 							.'index.php?rex_media_type='. $this->provider->media_manager_type .'&rex_media_file='. $used_machine->pics[0]));
 						$content->appendChild($submitted_image_url);
 					}
@@ -238,7 +244,7 @@ class SocialExportLinkedIn extends AExport {
 				// Post on group stream: prepare XML
 				else {
 					$title_text = $this->provider->company_name ." ". Sprog\Wildcard::get('d2u_machinery_export_linkedin_offers', $this->provider->clang_id) .": "
-						. $used_machine->machine ." ". $used_machine->name;
+						. $used_machine->name;
 					$summary_text = \Sprog\Wildcard::get('d2u_machinery_export_linkedin_details', $this->provider->clang_id) ." ". $used_machine->getURL(TRUE) ;
 
 					// <post>
@@ -265,11 +271,11 @@ class SocialExportLinkedIn extends AExport {
 						$api_url = "https://api.linkedin.com/v1/groups/". $this->provider->linkedin_groupid ."/posts";
 					}
 
-					$this->oauth->fetch($api_url, $xml->saveXML(), OAUTH_HTTP_METHOD_POST, array("Content-Type"=>"text/xml"));
+					$this->oauth->fetch($api_url, [$xml->saveXML()], OAUTH_HTTP_METHOD_POST, ["Content-Type"=>"text/xml"]);
 
 					// Getting stream id
-					$response_headers = SocialExportLinkedIn::http_parse_headers($this->oauth->getLastResponseHeaders());
-					if($response_headers !== false) {
+					$response_headers = self::http_parse_headers(strval($this->oauth->getLastResponseHeaders()));
+					if(count($response_headers) > 0) {
 						if(isset($response_headers["Location"])) {
 							$exported_used_machine->provider_import_id = $response_headers["Location"];
 						}
@@ -290,15 +296,14 @@ class SocialExportLinkedIn extends AExport {
 	/**
 	 * Parses HTTP headers into an associative array.
 	 * @param String $r string containing HTTP headers
-	 * @return Returns an array on success or FALSE on failure.
+	 * @return string[] Returns an array on success or FALSE on failure.
 	 */
 	private static function http_parse_headers($r) {
 		$o = [];
-		$r = substr($r, stripos($r, "\r\n"));
-		$r = explode("\r\n", $r);
-		foreach ($r as $h) {
+		$s = explode("\r\n", substr($r, stripos($r, "\r\n") !== false ? stripos($r, "\r\n") : 0));
+		foreach ($s as $h) {
 			list($v, $val) = explode(": ", $h);
-			if ($v == null) { continue; }
+			if ($v === '') { continue; }
 			$o[$v] = $val;
 		}
 		return $o;
@@ -307,13 +312,10 @@ class SocialExportLinkedIn extends AExport {
 	/**
 	 * Logout by cleaning LinkedIn session vars and removing access token.
 	 */
-	public function logout() {
-		if(isset($_SESSION['linkedin'])) {
-			unset($_SESSION['linkedin']);
-		}
+	public function logout():void {
+		rex_request::setSession('linkedin', null);
 		
 		$this->provider->social_oauth_token = "";
 		$this->provider->social_oauth_token_secret = "";
-		$this->save();
 	}
 }

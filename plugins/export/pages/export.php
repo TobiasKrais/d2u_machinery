@@ -7,25 +7,25 @@ $used_machine_id = rex_request('used_machine_id', 'int');
 /*
  * Do actions
  */
-if ($func == 'online') {
+if ($func === 'online') {
 	// Add to next export
 	$export_used_machine = new ExportedUsedMachine($used_machine_id, $provider_id);
 	$export_used_machine->addToExport();
 }
-else if ($func == 'offline') {
+else if ($func === 'offline') {
 	// Remove to next export
 	$export_used_machine = new ExportedUsedMachine($used_machine_id, $provider_id);
 	$export_used_machine->removeFromExport();
 }
-else if ($func == 'all_online') {
+else if ($func === 'all_online') {
 	// Add all to next export
 	ExportedUsedMachine::addAllToExport($provider_id);
 }
-else if ($func == 'all_offline') {
+else if ($func === 'all_offline') {
 	// Remove all from next export
 	ExportedUsedMachine::removeAllFromExport($provider_id);
 }
-else if ($func == 'export') {
+else if ($func === 'export') {
 	// Export
 	$provider = new Provider($provider_id);
 	$error = $provider->export();
@@ -39,7 +39,7 @@ else if ($func == 'export') {
 
 // Fetch providers
 $providers = Provider::getAll();
-$used_machines = UsedMachine::getAll(rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId()), TRUE);
+$used_machines = UsedMachine::getAll(intval(rex_config::get("d2u_helper", "default_lang", rex_clang::getStartId())), TRUE);
 
 print '<table class="table table-striped table-hover">';
 if(count($providers) > 0) {
@@ -65,8 +65,8 @@ if(count($providers) > 0) {
 	print "<td><b>". rex_i18n::msg('d2u_machinery_export_last_export_date') ."</b></td>";
 	foreach ($providers as $provider) {
 		print "<td>";
-		if($provider->getLastExportTimestamp() !== "") {
-			print date("d.m.Y H:i", strtotime($provider->getLastExportTimestamp())) ." ". rex_i18n::msg('d2u_machinery_export_uhr');
+		if($provider->getLastExportTimestamp() > 0) {
+			print date("d.m.Y H:i", $provider->getLastExportTimestamp()) ." ". rex_i18n::msg('d2u_machinery_export_uhr');
 		}
 		print "</td>";
 	}
@@ -103,7 +103,7 @@ if(count($providers) > 0) {
 			print "<tr>";
 			print "<td>". $used_machine->manufacturer ." ". $used_machine->name ."</td>";
 			foreach ($providers as $provider) {
-				if($used_machine->offer_type == "rent" && ($provider->type == "europemachinery" || $provider->type == "machinerypark" || $provider->type == "mascus")) {
+				if($used_machine->offer_type === "rent" && ($provider->type === "europemachinery" || $provider->type === "machinerypark" || $provider->type === "mascus")) {
 					// Rental machines cannot be exported to these providers
 					print '<td class="rex-table-action"><i class="rex-icon rex-icon-offline"></i> '. rex_i18n::msg('status_offline') .'</td>';
 				}

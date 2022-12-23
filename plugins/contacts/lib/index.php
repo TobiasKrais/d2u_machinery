@@ -8,33 +8,33 @@ class Contact {
 	/**
 	 * @var int Database ID
 	 */
-	var $contact_id = 0;
+	public int $contact_id = 0;
 	
 	/**
 	 * @var string Name
 	 */
-	var $name = "";
+	public string $name = "";
 	
 	/**
 	 * @var string Picture
 	 */
-	var $picture = "";
+	public string $picture = "";
 	
 	/**
 	 * @var string Phone number
 	 */
-	var $phone = "";
+	public string $phone = "";
 	
 	/**
 	 * @var string E-Mail address
 	 */
-	var $email = "";
+	public string $email = "";
 	
 	/**
 	 * Constructor.
 	 * @param int $contact_id Contact ID.
 	 */
-	public function __construct($contact_id = 0) {
+	public function __construct($contact_id = 0):void {
 		if($contact_id > 0) {
 			$query = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_contacts "
 					."WHERE contact_id = ". $contact_id;
@@ -43,22 +43,19 @@ class Contact {
 			$num_rows = $result->getRows();
 
 			if ($num_rows > 0) {
-				$this->contact_id = $result->getValue("contact_id");
-				$this->name = stripslashes($result->getValue("name"));
-				$this->picture = $result->getValue("picture");
-				$this->phone = $result->getValue("phone");
-				$this->email = $result->getValue("email");
+				$this->contact_id = (int) $result->getValue("contact_id");
+				$this->name = stripslashes((string) $result->getValue("name"));
+				$this->picture = (string) $result->getValue("picture");
+				$this->phone = (string) $result->getValue("phone");
+				$this->email = (string) $result->getValue("email");
 			}
-		}
-		else {
-			return $this;
 		}
 	}
 		
 	/**
 	 * Deletes the object.
 	 */
-	public function delete() {
+	public function delete():void {
 		$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_contacts "
 				."WHERE contact_id = ". $this->contact_id;
 		$result = \rex_sql::factory();
@@ -84,7 +81,7 @@ class Contact {
 		
 		$contacts = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$contacts[$result->getValue("contact_id")] = new Contact($result->getValue("contact_id"));
+			$contacts[(int) $result->getValue("contact_id")] = new Contact((int) $result->getValue("contact_id"));
 			$result->next();
 		}
 		return $contacts;
@@ -93,6 +90,7 @@ class Contact {
 	/**
 	 * Get contact by e-mail address.
 	 * @param string $email E-Mail address
+	 * @return Contact|bool Contact object or false.
 	 */
 	public static function getByMail($email) {
 		$query = "SELECT contact_id FROM ". \rex::getTablePrefix() ."d2u_machinery_contacts "
@@ -102,10 +100,10 @@ class Contact {
 		$num_rows = $result->getRows();
 
 		if ($num_rows > 0) {
-			return new Contact($result->getValue("contact_id"));
+			return new Contact((int) $result->getValue("contact_id"));
 		}
 		else {
-			return FALSE;
+			return false;
 		}
 	}
 
@@ -114,7 +112,7 @@ class Contact {
 	 * @return \Machine[] Machines
 	 */
 	public function getMachines() {
-		$clang_id = \intval(rex_config::get("d2u_helper", "default_lang"));
+		$clang_id = \intval(\rex_config::get("d2u_helper", "default_lang"));
 		$query = "SELECT machine_id FROM ". \rex::getTablePrefix() ."d2u_machinery_machines "
 			."WHERE contact_id = ". $this->contact_id ." ";
 		$query .= 'ORDER BY name ASC';
@@ -123,7 +121,7 @@ class Contact {
 		
 		$machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$machines[] = new \Machine($result->getValue("machine_id"), $clang_id);
+			$machines[] = new \Machine((int) $result->getValue("machine_id"), $clang_id);
 			$result->next();
 		}
 		return $machines;
@@ -131,21 +129,21 @@ class Contact {
 	
 	/**
 	 * Updates or inserts the object into database.
-	 * @return in error code if error occurs
+	 * @return bool true if no error occurs
 	 */
 	public function save() {
-		$error = FALSE;
+		$saved = true;
 
 		$pre_save_contact = new Contact($this->contact_id);
 
-		if($this->contact_id == 0 || $pre_save_contact !== $this) {
+		if($this->contact_id === 0 || $pre_save_contact !== $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_contacts SET "
 					."email = '". $this->email ."', "
 					."name = '". addslashes($this->name) ."', "
 					."phone = '". $this->phone ."', "
 					."picture = '". (strpos($this->picture, "noavatar.jpg") !== FALSE ? '' : $this->picture) ."' ";
 
-			if($this->contact_id == 0) {
+			if($this->contact_id === 0) {
 				$query = "INSERT INTO ". $query;
 			}
 			else {
@@ -154,12 +152,12 @@ class Contact {
 
 			$result = \rex_sql::factory();
 			$result->setQuery($query);
-			if($this->contact_id == 0) {
-				$this->contact_id = $result->getLastId();
-				$error = $result->hasError();
+			if($this->contact_id === 0) {
+				$this->contact_id = intval($result->getLastId());
+				$saved = !$result->hasError();
 			}
 		}
 		
-		return $error;
+		return $saved;
 	}
 }

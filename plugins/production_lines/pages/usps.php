@@ -10,7 +10,7 @@ if($message !== "") {
 
 // save settings
 if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(INPUT_POST, "btn_apply")) === 1) {
-	$form = (array) rex_post('form', 'array', []);
+	$form = rex_post('form', 'array', []);
 
 	// Media fields and links need special treatment
 	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', []);
@@ -31,7 +31,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 		$usp->teaser = $form['lang'][$rex_clang->getId()]['teaser'];
 		$usp->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 
-		if($usp->translation_needs_update == "delete") {
+		if($usp->translation_needs_update === "delete") {
 			$usp->delete(FALSE);
 		}
 		else if($usp->save()) {
@@ -50,7 +50,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	}
 	
 	// Redirect to make reload and thus double save impossible
-	if(filter_input(INPUT_POST, "btn_apply") == 1 && $usp !== FALSE) {
+	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$usp !== FALSE) {
 		header("Location: ". rex_url::currentBackendPage(["entry_id"=>$usp->usp_id, "func"=>'edit', "message"=>$message], FALSE));
 	}
 	else {
@@ -59,10 +59,10 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	exit;
 }
 // Delete
-else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
+else if(intval(filter_input(INPUT_POST, "btn_delete", FILTER_VALIDATE_INT)) === 1 || $func === 'delete') {
 	$usp_id = $entry_id;
-	if($usp_id == 0) {
-		$form = (array) rex_post('form', 'array', []);
+	if($usp_id === 0) {
+		$form = rex_post('form', 'array', []);
 		$usp_id = $form['usp_id'];
 	}
 	$usp = new USP($usp_id, intval(rex_config::get("d2u_helper", "default_lang")));
@@ -89,7 +89,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 }
 
 // Eingabeformular
-if ($func == 'edit' || $func == 'add') {
+if ($func === 'edit' || $func === 'add') {
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
@@ -107,7 +107,7 @@ if ($func == 'edit' || $func == 'add') {
 								$readonly = FALSE;
 							}
 
-							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', 1, $usp->picture, $readonly);
+							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', '1', $usp->picture, $readonly);
 						?>
 					</div>
 				</fieldset>
@@ -181,7 +181,7 @@ if ($func == 'edit' || $func == 'add') {
 		print d2u_addon_backend_helper::getJS();
 }
 
-if ($func == '') {
+if ($func === '') {
 	$query = 'SELECT usps.usp_id, name '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_machinery_production_lines_usps AS usps '
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_production_lines_usps_lang AS lang '

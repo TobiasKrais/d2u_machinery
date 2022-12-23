@@ -10,7 +10,7 @@ if($message !== "") {
 
 // save settings
 if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(INPUT_POST, "btn_apply")) === 1) {
-	$form = (array) rex_post('form', 'array', []);
+	$form = rex_post('form', 'array', []);
 
 	$success = TRUE;
 	$automation = FALSE;
@@ -27,7 +27,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 		$automation->name = $form['lang'][$rex_clang->getId()]['name'];
 		$automation->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 
-		if($automation->translation_needs_update == "delete") {
+		if($automation->translation_needs_update === "delete") {
 			$automation->delete(FALSE);
 		}
 		else if($automation->save()){
@@ -46,7 +46,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	}
 	
 	// Redirect to make reload and thus double save impossible
-	if(filter_input(INPUT_POST, "btn_apply") == 1 && $automation !== FALSE) {
+	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$automation !== FALSE) {
 		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$automation->automation_id, "func"=>'edit', "message"=>$message), FALSE));
 	}
 	else {
@@ -55,10 +55,10 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	exit;
 }
 // Delete
-else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
+else if(intval(filter_input(INPUT_POST, "btn_delete", FILTER_VALIDATE_INT)) === 1 || $func === 'delete') {
 	$automation_id = $entry_id;
-	if($automation_id == 0) {
-		$form = (array) rex_post('form', 'array', []);
+	if($automation_id === 0) {
+		$form = rex_post('form', 'array', []);
 		$automation_id = $form['automation_id'];
 	}
 	$automation = new Automation($automation_id, intval(rex_config::get("d2u_helper", "default_lang")));
@@ -68,7 +68,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$referring_machines = $automation->getReferringMachines();
 
 	// If not used, delete
-	if(count($referring_machines) == 0) {
+	if(count($referring_machines) === 0) {
 		$automation->delete(TRUE);
 	}
 	else {
@@ -85,7 +85,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 }
 
 // Eingabeformular
-if ($func == 'edit' || $func == 'add') {
+if ($func === 'edit' || $func === 'add') {
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
@@ -176,7 +176,7 @@ if ($func == 'edit' || $func == 'add') {
 		print d2u_addon_backend_helper::getJSOpenAll();
 }
 
-if ($func == '') {
+if ($func === '') {
 	$query = 'SELECT automations.automation_id, internal_name '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_machinery_steel_automation AS automations '
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_steel_automation_lang AS lang '

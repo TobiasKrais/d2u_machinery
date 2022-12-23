@@ -10,7 +10,7 @@ if($message !== "") {
 
 // save settings
 if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(INPUT_POST, "btn_apply")) === 1) {
-	$form = (array) rex_post('form', 'array', []);
+	$form = rex_post('form', 'array', []);
 
 	$success = TRUE;
 	$equipment = FALSE;
@@ -31,7 +31,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 		$equipment->name = $form['lang'][$rex_clang->getId()]['name'];
 		$equipment->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 
-		if($equipment->translation_needs_update == "delete") {
+		if($equipment->translation_needs_update === "delete") {
 			$equipment->delete(FALSE);
 		}
 		else if($equipment->save()){
@@ -50,7 +50,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	}
 	
 	// Redirect to make reload and thus double save impossible
-	if(filter_input(INPUT_POST, "btn_apply") == 1 && $equipment !== FALSE) {
+	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 && $equipment !== FALSE) {
 		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$equipment->equipment_id, "func"=>'edit', "message"=>$message), FALSE));
 	}
 	else {
@@ -59,10 +59,10 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	exit;
 }
 // Delete
-else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
+else if(intval(filter_input(INPUT_POST, "btn_delete", FILTER_VALIDATE_INT)) === 1 || $func === 'delete') {
 	$equipment_id = $entry_id;
-	if($equipment_id == 0) {
-		$form = (array) rex_post('form', 'array', []);
+	if($equipment_id === 0) {
+		$form = rex_post('form', 'array', []);
 		$equipment_id = $form['equipment_id'];
 	}
 	$equipment = new Equipment($equipment_id, intval(rex_config::get("d2u_helper", "default_lang")));
@@ -72,7 +72,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$referring_machines = $equipment->getReferringMachines();
 
 	// If not used, delete
-	if(count($referring_machines) == 0) {
+	if(count($referring_machines) === 0) {
 		$equipment->delete(TRUE);
 	}
 	else {
@@ -87,7 +87,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$func = '';
 }
 // Change online status of machine
-else if($func == 'changestatus') {
+else if($func === 'changestatus') {
 	$equipment = new Equipment($entry_id, intval(rex_config::get("d2u_helper", "default_lang")));
 	$equipment->equipment_id = $entry_id; // Ensure correct ID in case language has no object
 	$equipment->changeStatus();
@@ -97,13 +97,13 @@ else if($func == 'changestatus') {
 }
 
 // Eingabeformular
-if ($func == 'edit' || $func == 'clone' || $func == 'add') {
+if ($func === 'edit' || $func === 'clone' || $func === 'add') {
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
 			<header class="panel-heading"><div class="panel-title"><?php print rex_i18n::msg('d2u_machinery_equipments'); ?></div></header>
 			<div class="panel-body">
-				<input type="hidden" name="form[equipment_id]" value="<?php echo ($func == 'edit' ? $entry_id : 0); ?>">
+				<input type="hidden" name="form[equipment_id]" value="<?php echo ($func === 'edit' ? $entry_id : 0); ?>">
 				<?php
 					foreach(rex_clang::getAll() as $rex_clang) {
 						$equipment = new Equipment($entry_id, $rex_clang->getId());
@@ -168,8 +168,8 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 									$options[$equipment_group->group_id] = $equipment_group->name;
 								}
 							}
-							d2u_addon_backend_helper::form_select('d2u_machinery_equipment_group', 'form[group_id]', $options, $equipment->group !== FALSE ? [$equipment->group->group_id] : [], 1, FALSE, $readonly);
-							d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', $equipment->online_status == "online", $readonly);
+							d2u_addon_backend_helper::form_select('d2u_machinery_equipment_group', 'form[group_id]', $options, $equipment->group instanceof EquipmentGroup ? [$equipment->group->group_id] : [], 1, FALSE, $readonly);
+							d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', $equipment->online_status === "online", $readonly);
 						?>
 					</div>
 				</fieldset>
@@ -196,7 +196,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 		print d2u_addon_backend_helper::getJS();
 }
 
-if ($func == '') {
+if ($func === '') {
 	$query = 'SELECT equipments.equipment_id, name, article_number, online_status '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_machinery_equipments AS equipments '
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_equipments_lang AS lang '

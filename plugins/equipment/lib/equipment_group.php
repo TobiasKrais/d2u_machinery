@@ -74,10 +74,10 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Deletes the object in all languages.
-	 * @param int $delete_all If TRUE, all translations and main object are deleted. If 
+	 * @param bool $delete_all If TRUE, all translations and main object are deleted. If 
 	 * FALSE, only this translation will be deleted.
 	 */
-	public function delete($delete_all = TRUE) {
+	public function delete($delete_all = true):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_equipment_groups_lang "
 			."WHERE group_id = ". $this->group_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
@@ -116,7 +116,7 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 		
 		$equipment_groups = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$equipment_groups[] = new EquipmentGroup($result->getValue("group_id"), $clang_id);
+			$equipment_groups[] = new EquipmentGroup((int) $result->getValue("group_id"), $clang_id);
 			$result->next();
 		}
 		return $equipment_groups;
@@ -134,7 +134,7 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 		
 		$equipments = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$equipments[] = new Equipment($result->getValue("equipment_id"), $this->clang_id);
+			$equipments[] = new Equipment((int) $result->getValue("equipment_id"), $this->clang_id);
 			$result->next();
 		}
 		return $equipments;
@@ -150,7 +150,7 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 		$query = 'SELECT group_id FROM '. \rex::getTablePrefix() .'d2u_machinery_equipment_groups_lang '
 				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
 				.'ORDER BY name';
-		if($type == 'missing') {
+		if($type === 'missing') {
 			$query = 'SELECT main.group_id FROM '. \rex::getTablePrefix() .'d2u_machinery_equipment_groups AS main '
 					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_equipment_groups_lang AS target_lang '
 						.'ON main.group_id = target_lang.group_id AND target_lang.clang_id = '. $clang_id .' '
@@ -158,14 +158,14 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 						.'ON main.group_id = default_lang.group_id AND default_lang.clang_id = '. \rex_config::get('d2u_helper', 'default_lang') .' '
 					."WHERE target_lang.group_id IS NULL "
 					.'ORDER BY default_lang.name';
-			$clang_id = \rex_config::get('d2u_helper', 'default_lang');
+			$clang_id = intval(\rex_config::get('d2u_helper', 'default_lang'));
 		}
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
 
 		$objects = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$objects[] = new EquipmentGroup($result->getValue("group_id"), $clang_id);
+			$objects[] = new EquipmentGroup((int) $result->getValue("group_id"), $clang_id);
 			$result->next();
 		}
 		
@@ -183,17 +183,17 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 		$pre_save_object = new EquipmentGroup($this->group_id, $this->clang_id);
 		
 		// save priority, but only if new or changed
-		if($this->priority !== $pre_save_object->priority || $this->group_id == 0) {
+		if($this->priority !== $pre_save_object->priority || $this->group_id === 0) {
 			$this->setPriority();
 		}
 		
 		// saving the rest
-		if($this->group_id == 0 || $pre_save_object !== $this) {
+		if($this->group_id === 0 || $pre_save_object !== $this) {
 			$query = \rex::getTablePrefix() ."d2u_machinery_equipment_groups SET "
 					."picture = '". $this->picture ."', "
 					."priority = '". $this->priority ."' ";
 
-			if($this->group_id == 0) {
+			if($this->group_id === 0) {
 				$query = "INSERT INTO ". $query;
 			}
 			else {
@@ -202,8 +202,8 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 
 			$result = \rex_sql::factory();
 			$result->setQuery($query);
-			if($this->group_id == 0) {
-				$this->group_id = $result->getLastId();
+			if($this->group_id === 0) {
+				$this->group_id = intval($result->getLastId());
 				$error = $result->hasError();
 			}
 		}
@@ -232,7 +232,7 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 	 * Reassigns priorities in database.
 	 * @param boolean $delete Reorder priority after deletion
 	 */
-	private function setPriority($delete = FALSE) {
+	private function setPriority($delete = false):void {
 		// Pull priorities from database
 		$query = "SELECT group_id, priority FROM ". \rex::getTablePrefix() ."d2u_machinery_equipment_groups "
 			."WHERE group_id <> ". $this->group_id ." ORDER BY priority";
@@ -246,7 +246,7 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 		
 		// When prio is too high or was deleted, simply add at end 
 		if($this->priority > $result->getRows() || $delete) {
-			$this->priority = $result->getRows() + 1;
+			$this->priority = intval($result->getRows()) + 1;
 		}
 
 		$equipment_groups = [];
@@ -259,7 +259,7 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper {
 		// Save all prios
 		foreach($equipment_groups as $prio => $group_id) {
 			$query = "UPDATE ". \rex::getTablePrefix() ."d2u_machinery_equipment_groups "
-					."SET priority = ". ($prio + 1) ." " // +1 because array_splice recounts at zero
+					."SET priority = ". ((int) $prio + 1) ." " // +1 because array_splice recounts at zero
 					."WHERE group_id = ". $group_id;
 			$result = \rex_sql::factory();
 			$result->setQuery($query);

@@ -68,10 +68,10 @@ class UsageArea implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Deletes the object in all languages.
-	 * @param int $delete_all If TRUE, all translations and main object are deleted. If 
+	 * @param bool $delete_all If TRUE, all translations and main object are deleted. If 
 	 * FALSE, only this translation will be deleted.
 	 */
-	public function delete($delete_all = TRUE) {
+	public function delete($delete_all = true):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_machinery_usage_areas_lang "
 			."WHERE usage_area_id = ". $this->usage_area_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
@@ -133,7 +133,7 @@ class UsageArea implements \D2U_Helper\ITranslationHelper {
 		
 		$machines = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$machines[] = new Machine($result->getValue("machine_id"), $this->clang_id);
+			$machines[] = new Machine((int) $result->getValue("machine_id"), $this->clang_id);
 			$result->next();
 		}
 		return $machines;
@@ -157,7 +157,7 @@ class UsageArea implements \D2U_Helper\ITranslationHelper {
 						.'ON main.usage_area_id = default_lang.usage_area_id AND default_lang.clang_id = '. \rex_config::get('d2u_helper', 'default_lang') .' '
 					."WHERE target_lang.usage_area_id IS NULL "
 					.'ORDER BY default_lang.name';
-			$clang_id = \rex_config::get('d2u_helper', 'default_lang');
+			$clang_id = intval(\rex_config::get('d2u_helper', 'default_lang'));
 		}
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
@@ -182,7 +182,7 @@ class UsageArea implements \D2U_Helper\ITranslationHelper {
 		$pre_save_usage_area = new UsageArea($this->usage_area_id, $this->clang_id);
 		
 		// save priority, but only if new or changed
-		if($this->priority !== $pre_save_usage_area->priority || $this->usage_area_id == 0) {
+		if($this->priority !== $pre_save_usage_area->priority || $this->usage_area_id === 0) {
 			$this->setPriority();
 		}
 
@@ -191,7 +191,7 @@ class UsageArea implements \D2U_Helper\ITranslationHelper {
 					."category_ids = '|". implode("|", $this->category_ids) ."|', "
 					."priority = '". $this->priority ."' ";
 
-			if($this->usage_area_id == 0) {
+			if($this->usage_area_id === 0) {
 				$query = "INSERT INTO ". $query;
 			}
 			else {
@@ -200,8 +200,8 @@ class UsageArea implements \D2U_Helper\ITranslationHelper {
 
 			$result = \rex_sql::factory();
 			$result->setQuery($query);
-			if($this->usage_area_id == 0) {
-				$this->usage_area_id = $result->getLastId();
+			if($this->usage_area_id === 0) {
+				$this->usage_area_id = intval($result->getLastId());
 				$error = $result->hasError();
 			}
 		}
@@ -229,7 +229,7 @@ class UsageArea implements \D2U_Helper\ITranslationHelper {
 	 * Reassigns priorities in database.
 	 * @param boolean $delete Reorder priority after deletion
 	 */
-	private function setPriority($delete = FALSE) {
+	private function setPriority($delete = false):void {
 		// Pull prios from database
 		$query = "SELECT usage_area_id, priority FROM ". \rex::getTablePrefix() ."d2u_machinery_usage_areas "
 			."WHERE usage_area_id <> ". $this->usage_area_id ." ORDER BY priority";
