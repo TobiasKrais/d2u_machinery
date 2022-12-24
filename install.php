@@ -49,7 +49,6 @@
 	->setPrimaryKey('category_id')
 	->ensureColumn(new \rex_sql_column('priority', 'INT(11)', true))
     ->ensureColumn(new \rex_sql_column('parent_category_id', 'INT(11)', true))
-    ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
     ->ensureColumn(new \rex_sql_column('pic', 'VARCHAR(255)', true))
     ->ensureColumn(new \rex_sql_column('pic_usage', 'VARCHAR(255)', true))
     ->ensureColumn(new \rex_sql_column('video_ids', 'TEXT', true))

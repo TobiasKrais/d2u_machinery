@@ -35,7 +35,7 @@ class Contact {
 	 * Constructor.
 	 * @param int $contact_id Contact ID.
 	 */
-	public function __construct($contact_id = 0):void {
+	public function __construct($contact_id = 0) {
 		if($contact_id > 0) {
 			$query = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_machinery_contacts "
 					."WHERE contact_id = ". $contact_id;

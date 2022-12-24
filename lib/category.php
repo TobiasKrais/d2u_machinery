@@ -137,7 +137,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 			if($result->getValue("parent_category_id") > 0) {
 				$this->parent_category = new Category((int) $result->getValue("parent_category_id"), $clang_id);
 			}
-			$this->name = stripslashes(htmlspecialchars_decode((string) $result->getValue("name")));
+			$this->name = stripslashes(htmlspecialchars_decode((string) $result->getValue("lang.name")));
 			$this->teaser = stripslashes(htmlspecialchars_decode((string) $result->getValue("teaser")));
 			$this->description = stripslashes(htmlspecialchars_decode((string) $result->getValue("description")));
 			$this->usage_area = stripslashes(htmlspecialchars_decode((string) $result->getValue("usage_area")));
