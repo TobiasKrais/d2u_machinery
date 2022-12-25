@@ -23,7 +23,6 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 			$supply = new Supply($supply_id, $rex_clang->getId());
 			$supply->supply_id = $supply_id; // Ensure correct ID in case first language has no object
 			$supply->priority = $form['priority'];
-			$supply->name = $form['name'];
 			$supply->pic = $input_media[1];
 			if(\rex_addon::get("d2u_videos")->isAvailable() && isset($form['video_id']) && $form['video_id'] > 0) {
 				$supply->video = new Video($form['video_id'], intval(rex_config::get("d2u_helper", "default_lang")));

@@ -214,7 +214,7 @@ if ($func === '') {
 	$list->setNoRowsMessage(rex_i18n::msg('d2u_machinery_steel_procedure_no_procedures_found'));
 
     $fragment = new rex_fragment();
-    $fragment->setVar('title', rex_i18n::msg('d2u_machinery_steel_processes'), false);
+    $fragment->setVar('title', rex_i18n::msg('d2u_machinery_steel_procedures'), false);
     $fragment->setVar('content', $list->get(), false);
     echo $fragment->parse('core/page/section.php');
 }
