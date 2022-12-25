@@ -828,7 +828,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 				print '<div class="col-12">';
 				print '<div class="block-box"><b>'. $current_equipment->name .'</b>';
 				if($current_equipment->article_number !== '') {
-					print '('. $tag_open .'d2u_machinery_equipment_artno'. $tag_close .' '. $current_equipment->article_number .')';
+					print ' ('. $tag_open .'d2u_machinery_equipment_artno'. $tag_close .' '. $current_equipment->article_number .')';
 				}
 				print '</div>';
 				print '</div>';

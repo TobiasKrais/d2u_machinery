@@ -1197,9 +1197,9 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 		// Max. viscosity
 		if(rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable() && $this->viscosity > 0) {
 			$tech_data[] = [
-				"description" => $tag_open . "d2u_machinery_machines_viscosity" . $tag_close,
+				"description" => $tag_open . "d2u_machinery_agitators_viscosity" . $tag_close,
 				"value" => $this->viscosity,
-				"unit" => $tag_open . "d2u_machinery_machines_mpas" . $tag_close
+				"unit" => $tag_open . "d2u_machinery_agitators_mpas" . $tag_close
 			];
 		}
 
