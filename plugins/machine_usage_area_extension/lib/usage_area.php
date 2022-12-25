@@ -60,7 +60,7 @@ class UsageArea implements \D2U_Helper\ITranslationHelper {
 			$this->name = stripslashes((string) $result->getValue("name"));
 			$this->priority = (int) $result->getValue("priority");
 			$category_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("category_ids")), PREG_GREP_INVERT);
-			$this->category_ids = is_array($category_ids) ? $category_ids : [];
+			$this->category_ids = is_array($category_ids) ? array_map('intval', $category_ids) : [];
 			if($result->getValue("translation_needs_update") !== "") {
 				$this->translation_needs_update = (string) $result->getValue("translation_needs_update");
 			}

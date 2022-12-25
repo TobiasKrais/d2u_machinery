@@ -22,7 +22,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 		if($feature === false) {
 			$feature = new Feature($feature_id, $rex_clang->getId());
 			$feature->feature_id = $feature_id; // Ensure correct ID in case first language has no object
-			$feature->category_ids = array_map('intval', is_array($form['category_ids']) ? $form['category_ids'] : []);
+			$feature->category_ids = is_array($form['category_ids']) ? array_map('intval', $form['category_ids']) : [];
 			$feature->priority = $form['priority'];
 			$feature->pic = $input_media[1];
 			if(\rex_addon::get("d2u_videos")->isAvailable() && isset($form['video_id']) && $form['video_id'] > 0) {

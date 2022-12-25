@@ -360,7 +360,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 	public function getUsageAreaMatrix() {
 		$usage_areas = UsageArea::getAll($this->clang_id, $this->category_id);
 		$machines = $this->getMachines(true);
-		
+
 		$matrix = [];
 		foreach($usage_areas as $usage_area) {
 			$values = [];

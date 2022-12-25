@@ -250,6 +250,7 @@ if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['d
 				}
 				print '</tr></thead>';
 				print '<tbody>';
+				
 				foreach($usage_area_matrix as $key => $machine_ids) {
 					/** @var int[] $machine_ids */
 					print '<tr><td class="inactive-cell usage-area-name">'. $key .'</td>';
@@ -801,7 +802,6 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 			}
 		}
 		ksort($equipment_groups);
-
 		foreach($equipment_groups as $equipment_group) {
 			print '<div class="row">';
 			print '<div class="col-12 col-sm-4 col-md-3 col-lg-2">';

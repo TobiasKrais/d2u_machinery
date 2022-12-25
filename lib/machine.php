@@ -718,7 +718,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 			$this->pics = is_array($pics) ? $pics : [];
 			$this->category = new Category((int)$result->getValue("category_id"), $clang_id);
 			$alternative_machine_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("alternative_machine_ids")), PREG_GREP_INVERT);
-			$this->alternative_machine_ids = is_array($alternative_machine_ids) ? $alternative_machine_ids : [];
+			$this->alternative_machine_ids = is_array($alternative_machine_ids) ? array_map('intval', $alternative_machine_ids) : [];
 			$this->product_number = (string) $result->getValue("product_number");
 			$this->article_id_software = (int) $result->getValue("article_id_software");
 			$this->article_id_service = (int) $result->getValue("article_id_service");
@@ -756,12 +756,12 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 
 			if(rex_plugin::get("d2u_machinery", "contacts") instanceof rex_plugin && rex_plugin::get("d2u_machinery", "equipment")->isAvailable()) {
 				$equipment_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("equipment_ids")), PREG_GREP_INVERT);
-				$this->equipment_ids = is_array($equipment_ids) ? $equipment_ids : [];
+				$this->equipment_ids = is_array($equipment_ids) ? array_map('intval', $equipment_ids) : [];
 			}
 
 			if(rex_plugin::get("d2u_machinery", "contacts") instanceof rex_plugin && rex_plugin::get("d2u_machinery", "industry_sectors")->isAvailable()) {
 				$industry_sector_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("industry_sector_ids")), PREG_GREP_INVERT);
-				$this->industry_sector_ids = is_array($industry_sector_ids) ? $industry_sector_ids : [];
+				$this->industry_sector_ids = is_array($industry_sector_ids) ? array_map('intval', $industry_sector_ids) : [];
 			}
 
 			if(rex_plugin::get("d2u_machinery", "contacts") instanceof rex_plugin && rex_plugin::get("d2u_machinery", "machine_agitator_extension")->isAvailable()) {
@@ -771,7 +771,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 
 			if(rex_plugin::get("d2u_machinery", "contacts") instanceof rex_plugin && rex_plugin::get("d2u_machinery", "machine_certificates_extension")->isAvailable()) {
 				$certificate_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("certificate_ids")), PREG_GREP_INVERT);
-				$this->certificate_ids = is_array($certificate_ids) ? $certificate_ids : [];
+				$this->certificate_ids = is_array($certificate_ids) ? array_map('intval', $certificate_ids) : [];
 			}
 
 			if(rex_plugin::get("d2u_machinery", "contacts") instanceof rex_plugin && rex_plugin::get("d2u_machinery", "machine_construction_equipment_extension")->isAvailable()) {
@@ -819,17 +819,17 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 
 			if(rex_plugin::get("d2u_machinery", "contacts") instanceof rex_plugin && rex_plugin::get("d2u_machinery", "service_options")->isAvailable()) {
 				$service_option_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("service_option_ids")), PREG_GREP_INVERT);
-				$this->service_option_ids = is_array($service_option_ids) ? $service_option_ids : [];
+				$this->service_option_ids = is_array($service_option_ids) ? array_map('intval', $service_option_ids) : [];
 			}
 
 			if(rex_plugin::get("d2u_machinery", "contacts") instanceof rex_plugin && rex_plugin::get("d2u_machinery", "machine_features_extension")->isAvailable()) {
 				$feature_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("feature_ids")), PREG_GREP_INVERT);
-				$this->feature_ids = is_array($feature_ids) ? $feature_ids : [];
+				$this->feature_ids = is_array($feature_ids) ? array_map('intval', $feature_ids) : [];
 			}
 
 			if(rex_plugin::get("d2u_machinery", "contacts") instanceof rex_plugin && rex_plugin::get("d2u_machinery", "machine_options_extension")->isAvailable()) {
 				$option_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("option_ids")), PREG_GREP_INVERT);
-				$this->option_ids = is_array($option_ids) ? $option_ids : [];
+				$this->option_ids = is_array($option_ids) ? array_map('intval', $option_ids) : [];
 			}
 
 			if(rex_plugin::get("d2u_machinery", "contacts") instanceof rex_plugin && rex_plugin::get("d2u_machinery", "machine_steel_processing_extension")->isAvailable()) {
@@ -869,7 +869,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 					}
 				}
 				$automation_supply_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("automation_supply_ids")), PREG_GREP_INVERT);
-				$this->automation_supply_ids = is_array($automation_supply_ids) ? $automation_supply_ids : [];
+				$this->automation_supply_ids = is_array($automation_supply_ids) ? array_map('intval', $automation_supply_ids) : [];
 				$this->workspace = (string) $result->getValue("workspace");
 				$this->workspace_square = (string) $result->getValue("workspace_square");
 				$this->workspace_flat = (string) $result->getValue("workspace_flat");
@@ -928,7 +928,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 
 			if(rex_plugin::get("d2u_machinery", "contacts") instanceof rex_plugin && rex_plugin::get("d2u_machinery", "machine_usage_area_extension")->isAvailable()) {
 				$usage_area_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("usage_area_ids")), PREG_GREP_INVERT);
-				$this->usage_area_ids = is_array($usage_area_ids) ? $usage_area_ids : [];
+				$this->usage_area_ids = is_array($usage_area_ids) ? array_map('intval', $usage_area_ids) : [];
 			}
 			
 			// Videos

@@ -23,7 +23,8 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 			$service_option = new ServiceOption($service_option_id, $rex_clang->getId());
 			$service_option->service_option_id = $service_option_id; // Ensure correct ID in case first language has no object
 			$service_option->picture = $input_media[1];
-		}
+			$service_option->online_status = array_key_exists('online_status', $form) ? "online" : "offline";
+}
 		else {
 			$service_option->clang_id = $rex_clang->getId();
 		}
@@ -164,6 +165,7 @@ if ($func === 'edit' || $func === 'add') {
 							}
 
 							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', '1', $service_option->picture, $readonly);
+							d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', $service_option->online_status === "online", $readonly);
 						?>
 					</div>
 				</fieldset>

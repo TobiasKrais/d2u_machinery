@@ -61,7 +61,7 @@ class AgitatorType implements \D2U_Helper\ITranslationHelper {
 			$this->name = stripslashes((string) $result->getValue("name"));
 			$this->pic = (string) $result->getValue("pic");
 			$agitator_ids = preg_grep('/^\s*$/s', explode("|", (string) $result->getValue("agitator_ids")), PREG_GREP_INVERT);
-			$this->agitator_ids = is_array($agitator_ids) ? $agitator_ids : [];
+			$this->agitator_ids = is_array($agitator_ids) ? array_map('intval', $agitator_ids) : [];
 			if($result->getValue("translation_needs_update") !== "") {
 				$this->translation_needs_update = (string) $result->getValue("translation_needs_update");
 			}
