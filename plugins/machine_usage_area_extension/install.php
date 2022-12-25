@@ -3,7 +3,7 @@
 	->ensureColumn(new rex_sql_column('usage_area_id', 'INT(11) unsigned', false, null, 'auto_increment'))
 	->setPrimaryKey('usage_area_id')
 	->ensureColumn(new \rex_sql_column('priority', 'INT(11)', true))
-    ->ensureColumn(new \rex_sql_column('category_ids', 'INT(11)', true))
+    ->ensureColumn(new \rex_sql_column('category_ids', 'VARCHAR(255)', true))
     ->ensure();
 \rex_sql_table::get(\rex::getTable('d2u_machinery_usage_areas_lang'))
 	->ensureColumn(new rex_sql_column('usage_area_id', 'INT(11)', false))
