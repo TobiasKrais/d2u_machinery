@@ -1,5 +1,5 @@
 <?php
-if(!function_exists('print_used_machines')) {
+if(!function_exists('print_used_machines_top_offers')) {
 	/**
 	 * Prints machines.
 	 * @param UsedMachine[] $used_machines Used Machines.
@@ -45,8 +45,9 @@ $tag_close = $sprog->getConfig('wildcard_close_tag');
 $url_namespace = d2u_addon_frontend_helper::getUrlNamespace();
 $url_id = d2u_addon_frontend_helper::getUrlId();
 
+$offer_type = "REX_VALUE[2]"; /** @phpstan-ignore-line */
 
-$used_machines = UsedMachine::getAll(rex_clang::getCurrentId(), true);
+$used_machines = UsedMachine::getAll(rex_clang::getCurrentId(), true, $offer_type);
 shuffle($used_machines);
 
 print '<div class="col-12">';
