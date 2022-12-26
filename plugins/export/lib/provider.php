@@ -432,7 +432,7 @@ class Provider {
 		
 		$time = 0;
 		if($result->getRows() > 0) {
-			$time = (int) $result->getValue("export_timestamp");
+			$time = (string) $result->getValue("export_timestamp");
 		}
 		return $time;
 	}
