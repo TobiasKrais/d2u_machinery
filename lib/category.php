@@ -104,7 +104,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 	/**
 	 * @var string For used machines: offer type. Either "rent" or "sale".
 	 */
-	private string $offer_type;
+	private string $offer_type = '';
 	
 	/**
 	 * @var string "yes" if translation needs update
