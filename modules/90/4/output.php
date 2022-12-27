@@ -15,7 +15,7 @@ if(!function_exists('print_used_machine_categories')) {
 			if($offer_type !== "") {
 				$category->setOfferType($offer_type);
 			}
-			if(count($category->getUsedMachines(true)) > 0) {
+			if($category->hasUsedMachines(true)) {
 				print '<div class="col-sm-6 col-md-4'. ($number_offers_row == 4 ? ' col-lg-3' : '') .' abstand">'; /** @phpstan-ignore-line */
 				print '<a href="'. $category->getURL() .'">';
 				print '<div class="box" data-height-watch>';
