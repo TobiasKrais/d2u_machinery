@@ -46,7 +46,7 @@ $d2u_module_manager->showManagerList();
 	</form>
 </fieldset>
 <h2>Changelog</h2>
-<p>1.4.0-DEV:</p>
+<p>1.4.0:</p>
 <ul>
 	<li>.github Verzeichnis aus Installer Action ausgeschlossen.</li>
 	<li>Über 2.500 rexstan Hinweise korrigiert.</li>

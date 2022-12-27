@@ -194,7 +194,7 @@ if(class_exists("D2UModuleManager")) {
 	if(rex_plugin::get('d2u_machinery', 'industry_sectors')->isAvailable()) {
 		$modules[] = new D2UModule("90-2",
 			"D2U Machinery Addon - Branchen",
-			1);
+			2);
 	}
 	$modules[] = new D2UModule("90-3",
 		"D2U Machinery Addon - Kategorien",
@@ -206,7 +206,7 @@ if(class_exists("D2UModuleManager")) {
 	}
 	$modules[] = new D2UModule("90-5",
 		"D2U Machinery Addon - Box Beratungshinweis",
-		1);
+		2);
 	if(rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
 		$modules[] = new D2UModule("90-6",
 			"D2U Machinery Addon - Gebrauchtmaschinen Topangebote",
