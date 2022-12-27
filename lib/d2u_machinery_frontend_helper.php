@@ -286,16 +286,18 @@ class d2u_machinery_frontend_helper {
 			// Navi
 			$categories = Category::getAll(rex_clang::getCurrentId());
 			foreach ($categories as $category) {
-				print '<li'. ($category->category_id === $current_category_id ? ' class="current"' : '') .'><a href="'. $category->getURL() .'">'. $category->name .'</a>';
-				if(strval(rex_config::get('d2u_machinery', 'show_machines_navi', 'hide')) === 'show') {
-					print '<ul>';
-					print '<li><a href="'. $category->getURL() .'" title="'. $category->name .'">'. strtoupper($category->name) .'</a></li>';
-					$machines = $category->getMachines(true);
-					foreach ($machines as $machine) {
-						print '<li'. ($machine->machine_id === $current_machine_id ? ' class="current"' : '') .'><a href="'. $machine->getURL() .'" title="'. $machine->name .'">'. $machine->name .'</a></li>';
+				if($category->hasMachines()){
+					print '<li'. ($category->category_id === $current_category_id ? ' class="current"' : '') .'><a href="'. $category->getURL() .'">'. $category->name .'</a>';
+					if(strval(rex_config::get('d2u_machinery', 'show_machines_navi', 'hide')) === 'show') {
+						print '<ul>';
+						print '<li><a href="'. $category->getURL() .'" title="'. $category->name .'">'. strtoupper($category->name) .'</a></li>';
+						$machines = $category->getMachines(true);
+						foreach ($machines as $machine) {
+							print '<li'. ($machine->machine_id === $current_machine_id ? ' class="current"' : '') .'><a href="'. $machine->getURL() .'" title="'. $machine->name .'">'. $machine->name .'</a></li>';
+						}
+						print '</ul>';
+						print '</li>';
 					}
-					print '</ul>';
-					print '</li>';
 				}
 			}
 		}
