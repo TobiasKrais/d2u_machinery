@@ -4,10 +4,10 @@
  */
 class d2u_machinery_used_machines_lang_helper extends d2u_machinery_lang_helper {
 	/**
-	 * @var string[] Array with englisch replacements. Key is the wildcard,
+	 * @var array<string, string> Array with englisch replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_english = [
+	protected array $replacements_english = [
 		'd2u_machinery_used_machines' => 'Used machines',
 		'd2u_machinery_used_machines_availability' => 'Available',
 		'd2u_machinery_used_machines_availible_from' => 'Available from',
@@ -29,10 +29,10 @@ class d2u_machinery_used_machines_lang_helper extends d2u_machinery_lang_helper 
 		];
 
 	/**
-	 * @var string[] Array with german replacements. Key is the wildcard,
+	 * @var array<string, string> Array with german replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_german = [
+	protected array $replacements_german = [
 		'd2u_machinery_used_machines' => 'Gebrauchtmaschinen',
 		'd2u_machinery_used_machines_availability' => 'Sofort verfügbar',
 		'd2u_machinery_used_machines_availible_from' => 'Verfügbar ab',
@@ -54,10 +54,10 @@ class d2u_machinery_used_machines_lang_helper extends d2u_machinery_lang_helper 
 	];
 
 	/**
-	 * @var string[] Array with french replacements. Key is the wildcard,
+	 * @var array<string, string> Array with french replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_french = [
+	protected array $replacements_french = [
 		'd2u_machinery_used_machines' => 'Machines d\'occasion',
 		'd2u_machinery_used_machines_availability' => 'Disponible dès maintenant',
 		'd2u_machinery_used_machines_availible_from' => 'Disponible à partir',
@@ -79,10 +79,10 @@ class d2u_machinery_used_machines_lang_helper extends d2u_machinery_lang_helper 
 	];
 
 	/**
-	 * @var string[] Array with spanish replacements. Key is the wildcard,
+	 * @var array<string, string> Array with spanish replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_spanish = [
+	protected array $replacements_spanish = [
 		'd2u_machinery_used_machines' => 'Maquinaria usada',
 		'd2u_machinery_used_machines_availability' => 'Ya disponible',
 		'd2u_machinery_used_machines_availible_from' => 'Disponible a partir de',
@@ -104,10 +104,10 @@ class d2u_machinery_used_machines_lang_helper extends d2u_machinery_lang_helper 
 	];
 	
 	/**
-	 * @var string[] Array with dutch replacements. Key is the wildcard,
+	 * @var array<string, string> Array with dutch replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_dutch = [
+	protected array $replacements_dutch = [
 		'd2u_machinery_used_machines' => 'translation missing: d2u_machinery_used_machines',
 		'd2u_machinery_used_machines_availability' => 'Nu beschikbaar',
 		'd2u_machinery_used_machines_availible_from' => 'Beschikbaar vanaf',
@@ -129,10 +129,10 @@ class d2u_machinery_used_machines_lang_helper extends d2u_machinery_lang_helper 
 	];
 
 	/**
-	 * @var string[] Array with russian replacements. Key is the wildcard,
+	 * @var array<string, string> Array with russian replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_russian = [
+	protected array $replacements_russian = [
 		'd2u_machinery_used_machines' => 'б/у оборудование',
 		'd2u_machinery_used_machines_availability' => 'в наличии',
 		'd2u_machinery_used_machines_availible_from' => 'Доступна с',
@@ -154,10 +154,10 @@ class d2u_machinery_used_machines_lang_helper extends d2u_machinery_lang_helper 
 	];
 
 	/**
-	 * @var string[] Array with portuguese replacements. Key is the wildcard,
+	 * @var array<string, string> Array with portuguese replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_portuguese = [
+	protected array $replacements_portuguese = [
 		'd2u_machinery_used_machines' => 'translation missing: d2u_machinery_used_machines',
 		'd2u_machinery_used_machines_availability' => 'Disponível agora',
 		'd2u_machinery_used_machines_availible_from' => 'Disponível a partir de',
@@ -179,10 +179,10 @@ class d2u_machinery_used_machines_lang_helper extends d2u_machinery_lang_helper 
 	];
 
 	/**
-	 * @var string[] Array with chinese replacements. Key is the wildcard,
+	 * @var array<string, string> Array with chinese replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_chinese = [
+	protected array $replacements_chinese = [
 		'd2u_machinery_used_machines' => '二手机器',
 		'd2u_machinery_used_machines_availability' => '现已上市',
 		'd2u_machinery_used_machines_availible_from' => '从可用',

@@ -4,26 +4,26 @@
  */
 class d2u_machinery_service_options_lang_helper extends d2u_machinery_lang_helper {
 	/**
-	 * @var string[] Array with englisch replacements. Key is the wildcard,
+	 * @var array<string, string> Array with englisch replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_english = [
+	protected array $replacements_english = [
 		'd2u_machinery_construction_equipment_service' => 'Service',
 	];
 
 	/**
-	 * @var string[] Array with german replacements. Key is the wildcard,
+	 * @var array<string, string> Array with german replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_german = [
+	protected array $replacements_german = [
 		'd2u_machinery_construction_equipment_service' => 'Service',
 	];
 
 	/**
-	 * @var string[] Array with french replacements. Key is the wildcard,
+	 * @var array<string, string> Array with french replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_french = [
+	protected array $replacements_french = [
 		'd2u_machinery_construction_equipment_service' => 'Service',
 	];
 	

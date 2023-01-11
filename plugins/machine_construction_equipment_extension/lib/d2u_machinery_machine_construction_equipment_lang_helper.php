@@ -4,10 +4,10 @@
  */
 class d2u_machinery_machine_construction_equipment_extension_lang_helper extends d2u_machinery_lang_helper {
 	/**
-	 * @var string[] Array with englisch replacements. Key is the wildcard,
+	 * @var array<string, string> Array with englisch replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_english = [
+	protected array $replacements_english = [
 		'd2u_machinery_construction_equipment_airless_hose_connection' => 'Hose connection',
 		'd2u_machinery_construction_equipment_airless_hose_diameter' => 'Hose diameter',
 		'd2u_machinery_construction_equipment_airless_hose_length' => 'Hose length',
@@ -49,10 +49,10 @@ class d2u_machinery_machine_construction_equipment_extension_lang_helper extends
 	];
 
 	/**
-	 * @var string[] Array with german replacements. Key is the wildcard,
+	 * @var array<string, string> Array with german replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_german = [
+	protected array $replacements_german = [
 		'd2u_machinery_construction_equipment_airless_hose_connection' => 'Schlauchanschluss',
 		'd2u_machinery_construction_equipment_airless_hose_diameter' => 'Schlauchdurchmesser',
 		'd2u_machinery_construction_equipment_airless_hose_length' => 'Schlauchlänge',
@@ -94,10 +94,10 @@ class d2u_machinery_machine_construction_equipment_extension_lang_helper extends
 	];
 
 	/**
-	 * @var string[] Array with french replacements. Key is the wildcard,
+	 * @var array<string, string> Array with french replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_french = [
+	protected array $replacements_french = [
 		'd2u_machinery_construction_equipment_airless_hose_connection' => 'Raccord de tuyau',
 		'd2u_machinery_construction_equipment_airless_hose_diameter' => 'Diamètre du tuyau',
 		'd2u_machinery_construction_equipment_airless_hose_length' => 'Longueur du tuyau',

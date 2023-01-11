@@ -4,66 +4,66 @@
  */
 class d2u_machinery_machine_options_extension_lang_helper extends d2u_machinery_lang_helper {
 	/**
-	 * @var string[] Array with englisch replacements. Key is the wildcard,
+	 * @var array<string, string> Array with englisch replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_english = [
+	protected array $replacements_english = [
 		'd2u_machinery_options' => 'Options'
 	];
 
 	/**
-	 * @var string[] Array with german replacements. Key is the wildcard,
+	 * @var array<string, string> Array with german replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_german = [
+	protected array $replacements_german = [
 		'd2u_machinery_options' => 'Options',
 	];
 
 	/**
-	 * @var string[] Array with french replacements. Key is the wildcard,
+	 * @var array<string, string> Array with french replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_french = [
+	protected array $replacements_french = [
 		'd2u_machinery_options' => 'Options',
 	];
 
 	/**
-	 * @var string[] Array with spanish replacements. Key is the wildcard,
+	 * @var array<string, string> Array with spanish replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_spanish = [
+	protected array $replacements_spanish = [
 		'd2u_machinery_options' => 'Opciones',
 	];
 
 	/**
-	 * @var string[] Array with dutch replacements. Key is the wildcard,
+	 * @var array<string, string> Array with dutch replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_dutch = [
+	protected array $replacements_dutch = [
 		'd2u_machinery_options' => 'Opties',
 	];
 
 	/**
-	 * @var string[] Array with russian replacements. Key is the wildcard,
+	 * @var array<string, string> Array with russian replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_russian = [
+	protected array $replacements_russian = [
 		'd2u_machinery_options' => 'Параметры',
 	];
 
 	/**
-	 * @var string[] Array with portuguese replacements. Key is the wildcard,
+	 * @var array<string, string> Array with portuguese replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_portuguese = [
+	protected array $replacements_portuguese = [
 		'd2u_machinery_options' => 'Opções',
 	];
 
 	/**
-	 * @var string[] Array with chinese replacements. Key is the wildcard,
+	 * @var array<string, string> Array with chinese replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_chinese = [
+	protected array $replacements_chinese = [
 		'd2u_machinery_options' => '选项',
 	];
 

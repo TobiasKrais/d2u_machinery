@@ -4,10 +4,10 @@
  */
 class d2u_machinery_machine_steel_processing_extension_lang_helper extends d2u_machinery_lang_helper {
 	/**
-	 * @var string[] Array with englisch replacements. Key is the wildcard,
+	 * @var array<string, string> Array with englisch replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_english = [
+	protected array $replacements_english = [
 		'd2u_machinery_steel_automation_automationgrades' => 'Degree of Automation',
 		'd2u_machinery_steel_automation_feedrate' => 'Feedrate',
 		'd2u_machinery_steel_automation_feedrate_sawblade' => 'Sawblade feedrate',
@@ -66,10 +66,10 @@ class d2u_machinery_machine_steel_processing_extension_lang_helper extends d2u_m
 	];
 
 	/**
-	 * @var string[] Array with german replacements. Key is the wildcard,
+	 * @var array<string, string> Array with german replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_german = [
+	protected array $replacements_german = [
 		'd2u_machinery_steel_automation_automationgrades' => 'Automatisierungsgrad',
 		'd2u_machinery_steel_automation_feedrate' => 'Vorschub',
 		'd2u_machinery_steel_automation_feedrate_sawblade' => 'Sägeblatt-Vorschub',
@@ -128,10 +128,10 @@ class d2u_machinery_machine_steel_processing_extension_lang_helper extends d2u_m
 	];
 
 	/**
-	 * @var string[] Array with french replacements. Key is the wildcard,
+	 * @var array<string, string> Array with french replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_french = [
+	protected array $replacements_french = [
 		'd2u_machinery_steel_automation_automationgrades' => 'Degré d\'automatisation',
 		'd2u_machinery_steel_automation_feedrate' => 'Avance',
 		'd2u_machinery_steel_automation_feedrate_sawblade' => "d'avance de la lame de scie",
@@ -190,10 +190,10 @@ class d2u_machinery_machine_steel_processing_extension_lang_helper extends d2u_m
 	];
 
 	/**
-	 * @var string[] Array with spanish replacements. Key is the wildcard,
+	 * @var array<string, string> Array with spanish replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_spanish = [
+	protected array $replacements_spanish = [
 		'd2u_machinery_steel_automation_automationgrades' => 'Grado de automatización',
 		'd2u_machinery_steel_automation_feedrate' => 'Avance',
 		'd2u_machinery_steel_automation_feedrate_sawblade' => 'Avance disco de corte',
@@ -252,10 +252,10 @@ class d2u_machinery_machine_steel_processing_extension_lang_helper extends d2u_m
 	];
 	
 	/**
-	 * @var string[] Array with dutch replacements. Key is the wildcard,
+	 * @var array<string, string> Array with dutch replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_dutch = [
+	protected array $replacements_dutch = [
 		'd2u_machinery_steel_automation_automationgrades' => 'Automatiseringsgraad',
 		'd2u_machinery_steel_automation_feedrate' => 'Voeding',
 		'd2u_machinery_steel_automation_feedrate_sawblade' => 'Zaagblad doorvoersnelheid',
@@ -314,10 +314,10 @@ class d2u_machinery_machine_steel_processing_extension_lang_helper extends d2u_m
 	];
 
 	/**
-	 * @var string[] Array with russian replacements. Key is the wildcard,
+	 * @var array<string, string> Array with russian replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_russian = [
+	protected array $replacements_russian = [
 		'd2u_machinery_steel_automation_automationgrades' => 'Степень автоматизации',
 		'd2u_machinery_steel_automation_feedrate' => 'Сторона загрузки',
 		'd2u_machinery_steel_automation_feedrate_sawblade' => 'Скорость подачи пилы',
@@ -376,10 +376,10 @@ class d2u_machinery_machine_steel_processing_extension_lang_helper extends d2u_m
 	];
 
 	/**
-	 * @var string[] Array with portuguese replacements. Key is the wildcard,
+	 * @var array<string, string> Array with portuguese replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_portuguese = [
+	protected array $replacements_portuguese = [
 		'd2u_machinery_steel_automation_automationgrades' => 'Nível de automação',
 		'd2u_machinery_steel_automation_feedrate' => 'Avanço',
 		'd2u_machinery_steel_automation_feedrate_sawblade' => 'Taxa de alimentação da lâmina de serra',
@@ -438,10 +438,10 @@ class d2u_machinery_machine_steel_processing_extension_lang_helper extends d2u_m
 	];
 
 	/**
-	 * @var string[] Array with chinese replacements. Key is the wildcard,
+	 * @var array<string, string> Array with chinese replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_chinese = [
+	protected array $replacements_chinese = [
 		'd2u_machinery_steel_automation_automationgrades' => '自动化程度',
 		'd2u_machinery_steel_automation_feedrate' => '喂料',
 		'd2u_machinery_steel_automation_feedrate_sawblade' => '锯片进给速度',

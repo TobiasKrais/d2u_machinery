@@ -4,10 +4,10 @@
  */
 class d2u_machinery_lang_helper extends \D2U_Helper\ALangHelper {
 	/**
-	 * @var string[] Array with englisch replacements. Key is the wildcard,
+	 * @var array<string, string> Array with englisch replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_english = [
+	protected array $replacements_english = [
 		'd2u_machinery_advantages' => 'Benefits at a glance',
 		'd2u_machinery_alternative_machines' => 'Alternative Machines',
 		'd2u_machinery_back_machine_list' => 'Go back to machine list',
@@ -68,10 +68,10 @@ class d2u_machinery_lang_helper extends \D2U_Helper\ALangHelper {
 	];
 
 	/**
-	 * @var string[] Array with german replacements. Key is the wildcard,
+	 * @var array<string, string> Array with german replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_german = [
+	protected array $replacements_german = [
 		'd2u_machinery_advantages' => 'Vorteile auf einen Blick',
 		'd2u_machinery_alternative_machines' => 'Alternative Maschinen',
 		'd2u_machinery_back_machine_list' => 'Zurück zur Maschinenliste',
@@ -132,10 +132,10 @@ class d2u_machinery_lang_helper extends \D2U_Helper\ALangHelper {
 	];
 
 	/**
-	 * @var string[] Array with french replacements. Key is the wildcard,
+	 * @var array<string, string> Array with french replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_french = [
+	protected array $replacements_french = [
 		'd2u_machinery_advantages' => 'Les avantages en un coup d\'œil',
 		'd2u_machinery_alternative_machines' => 'Machines alternatives',
 		'd2u_machinery_back_machine_list' => 'Retour à la liste des machines',
@@ -196,10 +196,10 @@ class d2u_machinery_lang_helper extends \D2U_Helper\ALangHelper {
 	];
 
 	/**
-	 * @var string[] Array with spanish replacements. Key is the wildcard,
+	 * @var array<string, string> Array with spanish replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_spanish = [
+	protected array $replacements_spanish = [
 		'd2u_machinery_advantages' => 'Ventajas de un vistazo',
 		'd2u_machinery_alternative_machines' => 'Máquinas alternativas',
 		'd2u_machinery_back_machine_list' => 'Volver a la lista de máquinas',
@@ -259,10 +259,10 @@ class d2u_machinery_lang_helper extends \D2U_Helper\ALangHelper {
 	];
 	
 	/**
-	 * @var string[] Array with dutch replacements. Key is the wildcard,
+	 * @var array<string, string> Array with dutch replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_dutch = [
+	protected array $replacements_dutch = [
 		'd2u_machinery_advantages' => 'Voordelen in een oogopslag',
 		'd2u_machinery_alternative_machines' => 'Alternatieve machines',
 		'd2u_machinery_back_machine_list' => 'Terug naar de machinelijst',
@@ -322,10 +322,10 @@ class d2u_machinery_lang_helper extends \D2U_Helper\ALangHelper {
 	];
 
 	/**
-	 * @var string[] Array with russian replacements. Key is the wildcard,
+	 * @var array<string, string> Array with russian replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_russian = [
+	protected array $replacements_russian = [
 		'd2u_machinery_advantages' => 'Основные преимущества',
 		'd2u_machinery_alternative_machines' => 'Альтернативные станки',
 		'd2u_machinery_back_machine_list' => 'Вернуться к списку оборудования',
@@ -386,10 +386,10 @@ class d2u_machinery_lang_helper extends \D2U_Helper\ALangHelper {
 	];
 
 	/**
-	 * @var string[] Array with portuguese replacements. Key is the wildcard,
+	 * @var array<string, string> Array with portuguese replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_portuguese = [
+	protected array $replacements_portuguese = [
 		'd2u_machinery_advantages' => 'Resumo das vantagens',
 		'd2u_machinery_alternative_machines' => 'Máquinas alternativas',
 		'd2u_machinery_back_machine_list' => 'De volta à lista de máquinas',
@@ -449,10 +449,10 @@ class d2u_machinery_lang_helper extends \D2U_Helper\ALangHelper {
 	];
 
 	/**
-	 * @var string[] Array with chinese replacements. Key is the wildcard,
+	 * @var array<string, string> Array with chinese replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_chinese = [
+	protected array $replacements_chinese = [
 		'd2u_machinery_advantages' => '显而易见的优势',
 		'd2u_machinery_alternative_machines' => '替代机器',
 		'd2u_machinery_back_machine_list' => '回到機器列表',
