@@ -7,7 +7,7 @@ class d2u_machinery_lang_helper extends \D2U_Helper\ALangHelper {
 	 * @var array<string, string> Array with englisch replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected array $replacements_english = [
+	var $replacements_english = [
 		'd2u_machinery_advantages' => 'Benefits at a glance',
 		'd2u_machinery_alternative_machines' => 'Alternative Machines',
 		'd2u_machinery_back_machine_list' => 'Go back to machine list',

@@ -421,7 +421,7 @@ class Provider {
 	
 	/**
 	 * Get last export timestamp.
-	 * @return int Timestamp of last successful export.
+	 * @return string Timestamp of last successful export.
 	 */
 	public function getLastExportTimestamp() {
 		$query = "SELECT export_timestamp FROM ". \rex::getTablePrefix() ."d2u_machinery_export_machines "
@@ -430,7 +430,7 @@ class Provider {
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
-		$time = 0;
+		$time = '';
 		if($result->getRows() > 0) {
 			$time = (string) $result->getValue("export_timestamp");
 		}

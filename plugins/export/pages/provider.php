@@ -4,7 +4,7 @@ $entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
 
 // Print message
-if($message !== "") {
+if($message !== '') {
 	print rex_view::success(rex_i18n::msg($message));
 }
 
@@ -42,7 +42,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$provider->provider_id, "func"=>'edit', "message"=>$message), false));
 	}
 	else {
-		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), false));
+		header("Location: ". rex_url::currentBackendPage(["message"=>$message], false));
 	}
 	exit;
 }
@@ -102,7 +102,7 @@ if ($func === 'edit' || $func === 'add') {
 							$media_sql = \rex_sql::factory();
 							$media_sql->setQuery("SELECT name FROM ". \rex::getTablePrefix() ."media_manager_type");
 							for($i = 0; $i < $media_sql->getRows(); $i++) {
-								$options_media[$media_sql->getValue("name")] = $media_sql->getValue("name");
+								$options_media[(string) $media_sql->getValue("name")] = (string) $media_sql->getValue("name");
 								$media_sql->next();
 							}
 							d2u_addon_backend_helper::form_select('d2u_machinery_export_media_manager_type', 'form[media_manager_type]', $options_media, [$provider->media_manager_type]);

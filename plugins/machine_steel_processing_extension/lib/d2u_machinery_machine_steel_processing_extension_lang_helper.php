@@ -7,7 +7,7 @@ class d2u_machinery_machine_steel_processing_extension_lang_helper extends d2u_m
 	 * @var array<string, string> Array with englisch replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected array $replacements_english = [
+	var $replacements_english = [
 		'd2u_machinery_steel_automation_automationgrades' => 'Degree of Automation',
 		'd2u_machinery_steel_automation_feedrate' => 'Feedrate',
 		'd2u_machinery_steel_automation_feedrate_sawblade' => 'Sawblade feedrate',

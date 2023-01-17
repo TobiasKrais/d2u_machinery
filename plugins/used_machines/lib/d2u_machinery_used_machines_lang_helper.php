@@ -7,7 +7,7 @@ class d2u_machinery_used_machines_lang_helper extends d2u_machinery_lang_helper 
 	 * @var array<string, string> Array with englisch replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected array $replacements_english = [
+	var $replacements_english = [
 		'd2u_machinery_used_machines' => 'Used machines',
 		'd2u_machinery_used_machines_availability' => 'Available',
 		'd2u_machinery_used_machines_availible_from' => 'Available from',

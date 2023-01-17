@@ -7,7 +7,7 @@ class d2u_machinery_industry_sectors_lang_helper extends d2u_machinery_lang_help
 	 * @var array<string, string> Array with englisch replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected array $replacements_english = ['d2u_machinery_industry_sectors' => 'At Home in Your Industries'
+	var $replacements_english = ['d2u_machinery_industry_sectors' => 'At Home in Your Industries'
 		];
 
 	/**

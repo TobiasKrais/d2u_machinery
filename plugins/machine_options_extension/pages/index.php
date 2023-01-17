@@ -4,7 +4,7 @@ $entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
 
 // messages
-if($message !== "") {
+if($message !== '') {
 	print rex_view::success(rex_i18n::msg($message));
 }
 
@@ -62,7 +62,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$option->option_id, "func"=>'edit', "message"=>$message), false));
 	}
 	else {
-		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), false));
+		header("Location: ". rex_url::currentBackendPage(["message"=>$message], false));
 	}
 	exit;
 }

@@ -7,7 +7,7 @@ class d2u_machinery_machine_construction_equipment_extension_lang_helper extends
 	 * @var array<string, string> Array with englisch replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected array $replacements_english = [
+	var $replacements_english = [
 		'd2u_machinery_construction_equipment_airless_hose_connection' => 'Hose connection',
 		'd2u_machinery_construction_equipment_airless_hose_diameter' => 'Hose diameter',
 		'd2u_machinery_construction_equipment_airless_hose_length' => 'Hose length',

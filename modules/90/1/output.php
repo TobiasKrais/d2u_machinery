@@ -293,7 +293,7 @@ if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['d
 		print '</tr></thead>';
 		print '<tbody>';
 		foreach($tech_data_matrix as $wildcard => $values) {
-			/** @var string[] $values */
+			/** @var array<string> $values */
 			print '<tr>';
 			print '<td class="inactive-cell"><b>'. $wildcard .'</b></td>';
 			print '<td class="inactive-cell unit"><b>'. $values['unit'] .'</b></td>';
@@ -606,7 +606,7 @@ else if(filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' =>
 		print '<div class="col-12">';
 		print '<table class="techdata">';
 		foreach ($tech_datas as $tech_data) {
-			/** @var string[] $tech_data */
+			/** @var array<string> $tech_data */
 			print '<tr>';
 			print '<td class="description">'. $tech_data["description"] .'</td>';
 			print '<td class="unit">'. $tech_data["unit"] .'</td>';

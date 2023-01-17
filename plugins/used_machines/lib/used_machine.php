@@ -81,7 +81,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 	public string $online_status = "online";
 	
 	/**
-	 * @var string[] Picture filenames
+	 * @var array<string> Picture filenames
 	 */
 	public array $pics = [];
 	
@@ -111,7 +111,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper {
 	public string $description = "";
 
 	/**
-	 * @var string[] Download filenames
+	 * @var array<string> Download filenames
 	 */
 	public array $downloads = [];
 

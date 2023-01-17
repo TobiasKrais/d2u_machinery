@@ -74,10 +74,10 @@ function rex_d2u_machinery_article_is_in_use(rex_extension_point $ep) {
 /**
  * Deletes language specific configurations and objects
  * @param rex_extension_point<string> $ep Redaxo extension point
- * @return string[] Warning message as array
+ * @return array<string> Warning message as array
  */
 function rex_d2u_machinery_clang_deleted(rex_extension_point $ep) {
-	/** @var string[] $warning */
+	/** @var array<string> $warning */
 	$warning = $ep->getSubject();
 	$params = $ep->getParams();
 	$clang_id = $params['id'];
@@ -105,10 +105,10 @@ function rex_d2u_machinery_clang_deleted(rex_extension_point $ep) {
 /**
  * Checks if media is used by this addon
  * @param rex_extension_point<string> $ep Redaxo extension point
- * @return string[] Warning message as array
+ * @return array<string> Warning message as array
  */
 function rex_d2u_machinery_media_is_in_use(rex_extension_point $ep) {
-	/** @var string[] $warning */
+	/** @var array<string> $warning */
 	$warning = $ep->getSubject();
 	$params = $ep->getParams();
 	$filename = addslashes($params['filename']);
@@ -249,7 +249,7 @@ function rex_d2u_machinery_url_shortener(rex_extension_point $ep) {
  * @return string[] updated sitemap entries
  */
 function rex_d2u_machinery_video_sitemap(rex_extension_point $ep) {
-	/** @var string[] $sitemap_entries */
+	/** @var array<string> $sitemap_entries */
 	$sitemap_entries = $ep->getSubject();
 
 	foreach(rex_clang::getAllIds(true) as $clang_id) {

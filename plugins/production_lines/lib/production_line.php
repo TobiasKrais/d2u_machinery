@@ -46,7 +46,7 @@ class ProductionLine implements \D2U_Helper\ITranslationHelper {
 	public array $automation_supply_ids = [];
 
 	/**
-	 * @var string[] Picture file names 
+	 * @var array<string> Picture file names 
 	 */
 	public array $pictures = [];
 

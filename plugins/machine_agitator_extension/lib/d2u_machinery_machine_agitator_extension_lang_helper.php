@@ -7,7 +7,7 @@ class d2u_machinery_machine_agitator_extension_lang_helper extends d2u_machinery
 	 * @var array<string, string> Array with englisch replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected array $replacements_english = ['d2u_machinery_agitator' => 'Agitator',
+	var $replacements_english = ['d2u_machinery_agitator' => 'Agitator',
 		'd2u_machinery_agitators_mpas' => 'mPas',
 		'd2u_machinery_agitators_viscosity' => 'Viscosity up to'
 	   ];

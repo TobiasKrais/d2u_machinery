@@ -25,7 +25,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	public string $name = "";
 
 	/**
-	 * @var string[] Machine pictures
+	 * @var array<string> Machine pictures
 	 */
 	public array $pics = [];
 
@@ -460,7 +460,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	public string $benefits_short = "";
 
 	/**
-	 * @var string[] File names of PDF files for the machine
+	 * @var array<string> File names of PDF files for the machine
 	 */
 	public array $pdfs = [];
 
@@ -662,7 +662,7 @@ class Machine implements \D2U_Helper\ITranslationHelper {
 	public string $description_technical = "";
 
 	/**
-	 * @var string[] Delivery set picture name
+	 * @var array<string> Delivery set picture name
 	 */
 	public array $pictures_delivery_set = [];
 

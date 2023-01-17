@@ -56,7 +56,7 @@ $d2u_module_manager->showManagerList();
 	<li>Über 2.500 rexstan Hinweise korrigiert.</li>
 	<li>install.php und update.php auf Redaxo Art umgestellt und vereinfacht.</li>
 	<li>Wenn D2U Videomanager installiert ist, werden Videos von Maschinen und Kategorien in der Sitemap hinzugefügt.</li>
-	<li>Bugfix used_achines Plugin: Wenn in den Einstellungen der gleiche Artikel für Maschinen, Gebrauchtmaschinen (Verkauf oder Miete) eingestellt wird, erfolg ein Warnhinweis.</li>
+	<li>Bugfix used_machines Plugin: Wenn in den Einstellungen der gleiche Artikel für Maschinen, Gebrauchtmaschinen (Verkauf oder Miete) eingestellt wird, erfolgt ein Warnhinweis.</li>
 	<li>Bugfix machine_construction_equipment_extension Plugin: Einheit für Arbeitsdruck von Bodenschleifmaschinen auf kg/cm² korrigiert.</li>
 	<li>Bugfix production_lines Plugin: Breadcrumbs werden nun korrekt ausgegeben.</li>
 	<li>Modul "90-1 D2U Machinery Addon - Hauptausgabe": Unterstützt bei installiertem D2U Videomanager nun die Ausgabe der Videos mit Plyr.</li>

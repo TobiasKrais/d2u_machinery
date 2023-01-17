@@ -87,7 +87,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 	public string $show_agitators = "hide";
 
 	/**
-	 * @var string[] Array with PDF file names.
+	 * @var array<string> Array with PDF file names.
 	 */
 	var $pdfs = [];
 	
@@ -329,7 +329,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 		// Get wildcards
 		foreach($tech_data_arrays as $tech_data_array) {
 			foreach($tech_data_array as $tech_data) {
-				/** @var string[] $tech_data */
+				/** @var array<string> $tech_data */
 				$tech_data_wildcards[$tech_data['description']] = $tech_data['unit'];
 			}
 		}
@@ -341,7 +341,7 @@ class Category implements \D2U_Helper\ITranslationHelper{
 				$tech_data_array = $tech_data_arrays[$machine->machine_id];
 				$matrix[$wildcard]['machine_ids'][$machine->machine_id] = "";
 				foreach($tech_data_array as $techdata) {
-					/** @var string[] $techdata */
+					/** @var array<string> $techdata */
 					if($techdata['description'] === $wildcard) {
 						$matrix[$wildcard]['machine_ids'][$machine->machine_id] = $techdata['value'];
 						break;

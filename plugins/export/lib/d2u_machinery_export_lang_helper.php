@@ -7,7 +7,7 @@ class d2u_machinery_export_lang_helper extends d2u_machinery_lang_helper {
 	 * @var array<string, string> Array with englisch replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected array $replacements_english = [
+	var $replacements_english = [
 		'd2u_machinery_export_linkedin_comment_text' => 'Check out our latest offer. For further information click on the picture.',
 		'd2u_machinery_export_linkedin_details' => 'More information can be found on our website.',
 		'd2u_machinery_export_linkedin_offers' => 'offers'
