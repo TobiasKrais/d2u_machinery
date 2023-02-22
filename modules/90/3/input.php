@@ -11,7 +11,7 @@
 	</div>
 </div>
 <?php
-if(rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
+if (rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
 ?>
 <div class="row"><div class="col-xs-12">&nbsp;</div></div>
 <div class="row">
@@ -21,16 +21,16 @@ if(rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
 	<div class="col-xs-8">
 		<select name="REX_INPUT_VALUE[3]" class="form-control">
 		<?php
-		$values = ['machines'=>'Maschinen', 'used_machines_sale'=>'Gebrauchtmaschinen Verkaufsangebote', 'used_machines_rent'=>'Gebrauchtmaschinen Mietangebote'];
-		foreach($values as $key => $value) {
-			echo '<option value="'. $key .'" ';
-	
-			if ("REX_VALUE[3]" === $key) { /** @phpstan-ignore-line */
-				echo 'selected="selected" ';
-			}
-			echo '>'. $value .'</option>';
-		}
-		?>
+        $values = ['machines' => 'Maschinen', 'used_machines_sale' => 'Gebrauchtmaschinen Verkaufsangebote', 'used_machines_rent' => 'Gebrauchtmaschinen Mietangebote'];
+        foreach ($values as $key => $value) {
+            echo '<option value="'. $key .'" ';
+
+            if ('REX_VALUE[3]' === $key) { /** @phpstan-ignore-line */
+                echo 'selected="selected" ';
+            }
+            echo '>'. $value .'</option>';
+        }
+        ?>
 		</select>
 	</div>
 </div>
@@ -42,17 +42,17 @@ if(rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
 	<div class="col-xs-4">Anzahl Kategorien / Zeile</div>
 	<div class="col-xs-8">
 		<?php
-			print '<select name="REX_INPUT_VALUE[4]" class="form-control">';
-			print '<option value="3" '. (intval("REX_VALUE[4]") === 3 ? 'selected="selected" ' : '') .'>3</option>'; /** @phpstan-ignore-line */
-			print '<option value="4" '. (intval("REX_VALUE[4]") === 4 ? 'selected="selected" ' : '') .'>4</option>'; /** @phpstan-ignore-line */
-			print '</select>';
-		?>
+            echo '<select name="REX_INPUT_VALUE[4]" class="form-control">';
+            echo '<option value="3" '. (3 === (int) 'REX_VALUE[4]' ? 'selected="selected" ' : '') .'>3</option>'; /** @phpstan-ignore-line */
+            echo '<option value="4" '. (4 === (int) 'REX_VALUE[4]' ? 'selected="selected" ' : '') .'>4</option>'; /** @phpstan-ignore-line */
+            echo '</select>';
+        ?>
 	</div>
 </div>
 <div class="row"><div class="col-xs-12">&nbsp;</div></div>
 <div class="row">
 	<div class="col-xs-12">Text unter Kategorienliste:</div>
 	<div class="col-xs-12">
-		<textarea name="REX_INPUT_VALUE[2]" class="form-control <?php print d2u_addon_backend_helper::getWYSIWYGEditorClass(); ?>">REX_VALUE[2]</textarea>
+		<textarea name="REX_INPUT_VALUE[2]" class="form-control <?= d2u_addon_backend_helper::getWYSIWYGEditorClass() ?>">REX_VALUE[2]</textarea>
 	</div>
 </div>

@@ -1,112 +1,113 @@
 <?php
+
 \rex_sql_table::get(\rex::getTable('d2u_machinery_steel_automation'))
-	->ensureColumn(new rex_sql_column('automation_id', 'INT(11) unsigned', false, null, 'auto_increment'))
-	->setPrimaryKey('automation_id')
+    ->ensureColumn(new rex_sql_column('automation_id', 'INT(11) unsigned', false, null, 'auto_increment'))
+    ->setPrimaryKey('automation_id')
     ->ensureColumn(new \rex_sql_column('internal_name', 'VARCHAR(255)', true))
     ->ensure();
 \rex_sql_table::get(\rex::getTable('d2u_machinery_steel_automation_lang'))
-	->ensureColumn(new rex_sql_column('automation_id', 'INT(11)'))
+    ->ensureColumn(new rex_sql_column('automation_id', 'INT(11)'))
     ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
-	->setPrimaryKey(['automation_id', 'clang_id'])
+    ->setPrimaryKey(['automation_id', 'clang_id'])
     ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
     ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)'))
     ->ensure();
 
 \rex_sql_table::get(\rex::getTable('d2u_machinery_steel_material'))
-	->ensureColumn(new rex_sql_column('material_id', 'INT(11) unsigned', false, null, 'auto_increment'))
-	->setPrimaryKey('material_id')
+    ->ensureColumn(new rex_sql_column('material_id', 'INT(11) unsigned', false, null, 'auto_increment'))
+    ->setPrimaryKey('material_id')
     ->ensureColumn(new \rex_sql_column('internal_name', 'VARCHAR(255)', true))
     ->ensure();
 \rex_sql_table::get(\rex::getTable('d2u_machinery_steel_material_lang'))
-	->ensureColumn(new rex_sql_column('material_id', 'INT(11)'))
+    ->ensureColumn(new rex_sql_column('material_id', 'INT(11)'))
     ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
-	->setPrimaryKey(['material_id', 'clang_id'])
+    ->setPrimaryKey(['material_id', 'clang_id'])
     ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
     ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)'))
     ->ensure();
 
 \rex_sql_table::get(\rex::getTable('d2u_machinery_steel_process'))
-	->ensureColumn(new rex_sql_column('process_id', 'INT(11) unsigned', false, null, 'auto_increment'))
-	->setPrimaryKey('process_id')
+    ->ensureColumn(new rex_sql_column('process_id', 'INT(11) unsigned', false, null, 'auto_increment'))
+    ->setPrimaryKey('process_id')
     ->ensureColumn(new \rex_sql_column('internal_name', 'VARCHAR(255)', true))
     ->ensure();
 \rex_sql_table::get(\rex::getTable('d2u_machinery_steel_process_lang'))
-	->ensureColumn(new rex_sql_column('process_id', 'INT(11)'))
+    ->ensureColumn(new rex_sql_column('process_id', 'INT(11)'))
     ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
-	->setPrimaryKey(['process_id', 'clang_id'])
+    ->setPrimaryKey(['process_id', 'clang_id'])
     ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
     ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)'))
     ->ensure();
 
 \rex_sql_table::get(\rex::getTable('d2u_machinery_steel_procedure'))
-	->ensureColumn(new rex_sql_column('procedure_id', 'INT(11) unsigned', false, null, 'auto_increment'))
-	->setPrimaryKey('procedure_id')
+    ->ensureColumn(new rex_sql_column('procedure_id', 'INT(11) unsigned', false, null, 'auto_increment'))
+    ->setPrimaryKey('procedure_id')
     ->ensureColumn(new \rex_sql_column('internal_name', 'VARCHAR(255)', true))
     ->ensure();
 \rex_sql_table::get(\rex::getTable('d2u_machinery_steel_procedure_lang'))
-	->ensureColumn(new rex_sql_column('procedure_id', 'INT(11)'))
+    ->ensureColumn(new rex_sql_column('procedure_id', 'INT(11)'))
     ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
-	->setPrimaryKey(['procedure_id', 'clang_id'])
+    ->setPrimaryKey(['procedure_id', 'clang_id'])
     ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
     ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)'))
     ->ensure();
 
 \rex_sql_table::get(\rex::getTable('d2u_machinery_steel_profile'))
-	->ensureColumn(new rex_sql_column('profile_id', 'INT(11) unsigned', false, null, 'auto_increment'))
-	->setPrimaryKey('profile_id')
+    ->ensureColumn(new rex_sql_column('profile_id', 'INT(11) unsigned', false, null, 'auto_increment'))
+    ->setPrimaryKey('profile_id')
     ->ensureColumn(new \rex_sql_column('internal_name', 'VARCHAR(255)', true))
     ->ensure();
 \rex_sql_table::get(\rex::getTable('d2u_machinery_steel_profile_lang'))
-	->ensureColumn(new rex_sql_column('profile_id', 'INT(11)'))
+    ->ensureColumn(new rex_sql_column('profile_id', 'INT(11)'))
     ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
-	->setPrimaryKey(['profile_id', 'clang_id'])
+    ->setPrimaryKey(['profile_id', 'clang_id'])
     ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
     ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)'))
     ->ensure();
 
 \rex_sql_table::get(\rex::getTable('d2u_machinery_steel_supply'))
-	->ensureColumn(new rex_sql_column('supply_id', 'INT(11) unsigned', false, null, 'auto_increment'))
-	->setPrimaryKey('supply_id')
+    ->ensureColumn(new rex_sql_column('supply_id', 'INT(11) unsigned', false, null, 'auto_increment'))
+    ->setPrimaryKey('supply_id')
     ->ensureColumn(new \rex_sql_column('priority', 'INT(10)', true))
     ->ensureColumn(new \rex_sql_column('online_status', 'VARCHAR(10)', true))
     ->ensureColumn(new \rex_sql_column('pic', 'VARCHAR(255)', true))
     ->ensureColumn(new \rex_sql_column('video_id', 'INT(11)', true))
     ->ensure();
 \rex_sql_table::get(\rex::getTable('d2u_machinery_steel_supply_lang'))
-	->ensureColumn(new rex_sql_column('supply_id', 'INT(11)'))
+    ->ensureColumn(new rex_sql_column('supply_id', 'INT(11)'))
     ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
-	->setPrimaryKey(['supply_id', 'clang_id'])
+    ->setPrimaryKey(['supply_id', 'clang_id'])
     ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
     ->ensureColumn(new \rex_sql_column('description', 'TEXT'))
     ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)'))
     ->ensure();
 \rex_sql_table::get(
     \rex::getTable('d2u_machinery_steel_supply_lang'))
-	->removeColumn('title')
+    ->removeColumn('title')
     ->alter();
 
 \rex_sql_table::get(\rex::getTable('d2u_machinery_steel_tool'))
-	->ensureColumn(new rex_sql_column('tool_id', 'INT(11) unsigned', false, null, 'auto_increment'))
-	->setPrimaryKey('tool_id')
+    ->ensureColumn(new rex_sql_column('tool_id', 'INT(11) unsigned', false, null, 'auto_increment'))
+    ->setPrimaryKey('tool_id')
     ->ensureColumn(new \rex_sql_column('internal_name', 'VARCHAR(255)', true))
     ->ensure();
 \rex_sql_table::get(\rex::getTable('d2u_machinery_steel_tool_lang'))
-	->ensureColumn(new rex_sql_column('tool_id', 'INT(11)'))
+    ->ensureColumn(new rex_sql_column('tool_id', 'INT(11)'))
     ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
-	->setPrimaryKey(['tool_id', 'clang_id'])
+    ->setPrimaryKey(['tool_id', 'clang_id'])
     ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
     ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)'))
     ->ensure();
 
 \rex_sql_table::get(\rex::getTable('d2u_machinery_steel_welding'))
-	->ensureColumn(new rex_sql_column('welding_id', 'INT(11) unsigned', false, null, 'auto_increment'))
-	->setPrimaryKey('welding_id')
+    ->ensureColumn(new rex_sql_column('welding_id', 'INT(11) unsigned', false, null, 'auto_increment'))
+    ->setPrimaryKey('welding_id')
     ->ensureColumn(new \rex_sql_column('internal_name', 'VARCHAR(255)', true))
     ->ensure();
 \rex_sql_table::get(\rex::getTable('d2u_machinery_steel_welding_lang'))
-	->ensureColumn(new rex_sql_column('welding_id', 'INT(11)'))
+    ->ensureColumn(new rex_sql_column('welding_id', 'INT(11)'))
     ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
-	->setPrimaryKey(['welding_id', 'clang_id'])
+    ->setPrimaryKey(['welding_id', 'clang_id'])
     ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
     ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)'))
     ->ensure();
@@ -173,15 +174,15 @@
 
 \rex_sql_table::get(
     \rex::getTable('d2u_machinery_categories_lang'))
-	->removeColumn('steel_processing_saw_cutting_range_file')
-	->removeColumn('steel_processing_saw_cutting_range_title')
+    ->removeColumn('steel_processing_saw_cutting_range_file')
+    ->removeColumn('steel_processing_saw_cutting_range_title')
     ->alter();
 
 // Insert frontend translations
-if(!class_exists('d2u_machinery_machine_steel_processing_extension_lang_helper')) {
-	// Load class in case addon is deactivated
-	require_once 'lib/d2u_machinery_machine_steel_processing_extension_lang_helper.php';
+if (!class_exists('d2u_machinery_machine_steel_processing_extension_lang_helper')) {
+    // Load class in case addon is deactivated
+    require_once 'lib/d2u_machinery_machine_steel_processing_extension_lang_helper.php';
 }
-if(class_exists('d2u_machinery_machine_steel_processing_extension_lang_helper')) {
-	d2u_machinery_machine_steel_processing_extension_lang_helper::factory()->install();
+if (class_exists('d2u_machinery_machine_steel_processing_extension_lang_helper')) {
+    d2u_machinery_machine_steel_processing_extension_lang_helper::factory()->install();
 }

@@ -1,10 +1,11 @@
 <?php
+
 \rex_sql_table::get(\rex::getTable('d2u_machinery_export_provider'))
-	->ensureColumn(new rex_sql_column('provider_id', 'INT(11) unsigned', false, null, 'auto_increment'))
-	->setPrimaryKey('provider_id')
+    ->ensureColumn(new rex_sql_column('provider_id', 'INT(11) unsigned', false, null, 'auto_increment'))
+    ->setPrimaryKey('provider_id')
     ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(50)'))
     ->ensureColumn(new \rex_sql_column('type', 'VARCHAR(50)', true))
-	->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', true))
+    ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', true))
     ->ensureColumn(new \rex_sql_column('company_name', 'VARCHAR(100)', true))
     ->ensureColumn(new \rex_sql_column('company_email', 'VARCHAR(255)', true))
     ->ensureColumn(new \rex_sql_column('customer_number', 'VARCHAR(50)', true))
@@ -24,9 +25,9 @@
     ->ensure();
 
 \rex_sql_table::get(\rex::getTable('d2u_machinery_export_machines'))
-	->ensureColumn(new rex_sql_column('used_machine_id', 'INT(11)', false))
+    ->ensureColumn(new rex_sql_column('used_machine_id', 'INT(11)', false))
     ->ensureColumn(new \rex_sql_column('provider_id', 'INT(11)', false))
-	->setPrimaryKey(['used_machine_id', 'provider_id'])
+    ->setPrimaryKey(['used_machine_id', 'provider_id'])
     ->ensureColumn(new \rex_sql_column('export_action', 'VARCHAR(10)'))
     ->ensureColumn(new \rex_sql_column('provider_import_id', 'VARCHAR(255)', true))
     ->ensureColumn(new \rex_sql_column('export_timestamp', 'DATETIME', true))
