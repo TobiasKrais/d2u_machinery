@@ -48,6 +48,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.4.1-DEV:</p>
 <ul>
+	<li>PHP-CS-Fixer Code Verbesserungen.</li>
 	<li>Weitere rexstan Verbesserungen.</li>
 </ul>
 <p>1.4.0:</p>
