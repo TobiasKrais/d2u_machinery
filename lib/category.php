@@ -212,13 +212,13 @@ class Category implements \D2U_Helper\ITranslationHelper
                 foreach (rex_clang::getAllIds() as $clang_id) {
                     $lang_object = new self($this->category_id, $clang_id);
                     $query_forward = 'DELETE FROM '. \rex::getTablePrefix() .'yrewrite_forward '
-                        ."WHERE extern = '". $lang_object->getURL(true) ."'";
+                        ."WHERE extern = '". $lang_object->getUrl(true) ."'";
                     $result_forward = \rex_sql::factory();
                     $result_forward->setQuery($query_forward);
                 }
             } else {
                 $query_forward = 'DELETE FROM '. \rex::getTablePrefix() .'yrewrite_forward '
-                    ."WHERE extern = '". $this->getURL(true) ."'";
+                    ."WHERE extern = '". $this->getUrl(true) ."'";
                 $result_forward = \rex_sql::factory();
                 $result_forward->setQuery($query_forward);
             }
@@ -443,7 +443,7 @@ class Category implements \D2U_Helper\ITranslationHelper
      * backward compatible.
      * @return string URL
      */
-    public function getURL($including_domain = false, $current_article_id = 0)
+    public function getUrl($including_domain = false, $current_article_id = 0)
     {
         if ('' === $this->url) {
             $d2u_machinery = rex_addon::get('d2u_machinery');

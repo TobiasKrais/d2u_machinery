@@ -18,7 +18,7 @@ if (!function_exists('print_used_machine_categories')) {
             }
             if ($category->hasUsedMachines(true)) {
                 echo '<div class="col-sm-6 col-md-4'. (4 == $number_offers_row ? ' col-lg-3' : '') .' abstand">'; /** @phpstan-ignore-line */
-                echo '<a href="'. $category->getURL() .'">';
+                echo '<a href="'. $category->getUrl() .'">';
                 echo '<div class="box" data-height-watch>';
                 if ('' !== $category->pic || '' !== $category->pic_lang) {
                     echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', '' !== $category->pic_lang ? $category->pic_lang : $category->pic)
@@ -83,7 +83,7 @@ if (!function_exists('print_used_machines')) {
                 continue;
             }
             echo '<div class="col-sm-6 col-md-4'. (4 == $number_offers_row ? ' col-lg-3' : '') .' abstand">'; /** @phpstan-ignore-line */
-            echo '<a href="'. $used_machine->getURL(false) .'">';
+            echo '<a href="'. $used_machine->getUrl(false) .'">';
             echo '<div class="box" data-height-watch>';
             if (count($used_machine->pics) > 0 && '' !== $used_machine->pics[0]) {
                 echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $used_machine->pics[0])	 .'" alt="'. $used_machine->name .'">';
@@ -102,7 +102,7 @@ if (!function_exists('print_used_machines')) {
         if (1 === $counter) {
             foreach ($used_machines as $used_machine) {
                 if ('online' === $used_machine->online_status) {
-                    header('Location: '. $used_machine->getURL(false));
+                    header('Location: '. $used_machine->getUrl(false));
                     exit;
                 }
             }
@@ -282,7 +282,7 @@ if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['opti
     if ($used_machine->machine instanceof Machine) {
         echo '<div class="col-12">';
         echo '<p><b>'. $tag_open .'d2u_machinery_used_machines_link_machine'. $tag_close .':</b>';
-        echo '<a href="'. $used_machine->machine->getURL() .'">'. $used_machine->machine->name .'</a></p>';
+        echo '<a href="'. $used_machine->machine->getUrl() .'">'. $used_machine->machine->name .'</a></p>';
         echo '</div>';
     }
     // Availability
@@ -459,7 +459,7 @@ if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['opti
 
     $yform = new rex_yform();
     $yform->setFormData(trim($form_data));
-    $yform->setObjectparams('form_action', $used_machine->getURL());
+    $yform->setObjectparams('form_action', $used_machine->getUrl());
     $yform->setObjectparams('form_anchor', 'tab_request');
     $yform->setObjectparams('Error-occured', $tag_open .'d2u_helper_module_form_validate_title'. $tag_close);
     $yform->setObjectparams('real_field_names', true);

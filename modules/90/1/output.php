@@ -13,7 +13,7 @@ if (!function_exists('print_categories')) {
             // Only use used categories
             if (count($category->getMachines()) > 0) {
                 echo '<div class="col-6 col-md-4'. (3 === (int) 'REX_VALUE[1]' ? '' : ' col-lg-3') .' mr-auto ml-auto abstand">'; /** @phpstan-ignore-line */
-                echo '<a href="'. $category->getURL() .'" class="bluebox">';
+                echo '<a href="'. $category->getUrl() .'" class="bluebox">';
                 echo '<div class="box" data-height-watch>';
                 if ('' !== $category->pic || '' !== $category->pic_lang) {
                     echo '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
@@ -89,7 +89,7 @@ if (!function_exists('print_industry_sectors')) {
         foreach (IndustrySector::getAll(rex_clang::getCurrentId()) as $industry_sector) {
             if ('online' === $industry_sector->online_status && count($industry_sector->getMachines()) > 0) {
                 echo '<div class="col-sm-6 col-md-4'. (3 === (int) 'REX_VALUE[1]' ? '' : ' col-lg-3') .' mr-auto ml-auto abstand">'; /** @phpstan-ignore-line */
-                echo '<a href="'. $industry_sector->getURL() .'" class="bluebox">';
+                echo '<a href="'. $industry_sector->getUrl() .'" class="bluebox">';
                 echo '<div class="box" data-height-watch>';
                 if ('' !== $industry_sector->pic) {
                     echo '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
@@ -129,7 +129,7 @@ if (!function_exists('print_machines')) {
                 } else {
                     echo '<div class="col-sm-6 col-md-4'. (3 === (int) 'REX_VALUE[1]' ? '' : ' col-lg-3') .' mr-auto ml-auto abstand" data-height-watch>'; /** @phpstan-ignore-line */
                 }
-                echo '<a href="'. $machine->getURL() .'" class="bluebox">';
+                echo '<a href="'. $machine->getUrl() .'" class="bluebox">';
                 echo '<div class="box" data-height-watch>';
                 if (count($machine->pics) > 0 && '' !== $machine->pics[0]) {
                     echo '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
@@ -152,7 +152,7 @@ if (!function_exists('print_machines')) {
         if (1 === $counter) {
             foreach ($machines as $machine) {
                 if ('online' === $machine->online_status) {
-                    header('Location: '. $machine->getURL(false));
+                    header('Location: '. $machine->getUrl(false));
                     exit;
                 }
             }
@@ -211,7 +211,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
                 echo '<tbody>';
                 foreach ($machines as $machine) {
                     echo '<tr><td>';
-                    echo '<a href="'. $machine->getURL() .'"><div class="comparison-header">';
+                    echo '<a href="'. $machine->getUrl() .'"><div class="comparison-header">';
                     if (count($machine->pics) > 0 && '' !== $machine->pics[0]) {
                         echo '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.	$machine->pics[0] .'" alt='. ('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'>';
                     } else {
@@ -235,7 +235,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
                 echo '<thead><tr><td></td>';
                 foreach ($machines as $machine) {
                     echo '<td valign="bottom" align="center">';
-                    echo '<a href="'. $machine->getURL() .'"><div class="comparison-header">';
+                    echo '<a href="'. $machine->getUrl() .'"><div class="comparison-header">';
                     if (count($machine->pics) > 0 && '' !== $machine->pics[0]) {
                         echo '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.	$machine->pics[0] .'" alt='. ('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'>';
                     } else {
@@ -275,7 +275,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '<thead><tr><td></td><td></td>';
         foreach ($machines as $machine) {
             echo '<td valign="bottom" align="center">';
-            echo '<a href="'. $machine->getURL() .'"><div class="comparison-header">';
+            echo '<a href="'. $machine->getUrl() .'"><div class="comparison-header">';
             if (count($machine->pics) > 0 && '' !== $machine->pics[0]) {
                 echo '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.	$machine->pics[0] .'" alt='. ('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'>';
             } else {
@@ -444,7 +444,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '<div class="col-12 col-md-6">';
             echo '<h3>'. $tag_open .'d2u_machinery_alternative_machines'. $tag_close .'</h3>';
             foreach ($alternative_machines as $alternative_machine) {
-                echo '<a href="'. $alternative_machine->getURL() .'"><div class="downloads">'. ('' === $alternative_machine->lang_name ? $alternative_machine->name : $alternative_machine->lang_name) .'</div></a>';
+                echo '<a href="'. $alternative_machine->getUrl() .'"><div class="downloads">'. ('' === $alternative_machine->lang_name ? $alternative_machine->name : $alternative_machine->lang_name) .'</div></a>';
             }
             echo '</div>';
         }
@@ -619,7 +619,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '<thead><tr>';
         echo '<td></td>';
         echo '<td valign="bottom" align="center">';
-        echo '<a href="'. $machine->getURL() .'"><div class="comparison-header">';
+        echo '<a href="'. $machine->getUrl() .'"><div class="comparison-header">';
         if (count($machine->pics) > 0 && '' !== $machine->pics[0]) {
             echo '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.	$machine->pics[0] .'" alt='. ('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'>';
         }
@@ -886,7 +886,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
 
     $yform = new rex_yform();
     $yform->setFormData(trim($form_data));
-    $yform->setObjectparams('form_action', $machine->getURL());
+    $yform->setObjectparams('form_action', $machine->getUrl());
     $yform->setObjectparams('form_anchor', 'tab_request');
     $yform->setObjectparams('Error-occured', $tag_open .'d2u_helper_module_form_validate_title'. $tag_close);
     $yform->setObjectparams('real_field_names', true);
@@ -925,7 +925,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
     echo '<div class="col-12">';
     echo '<div class="back-list">';
     if ($machine->category instanceof Category) {
-        echo '<a href="'. $machine->category->getURL() .'">';
+        echo '<a href="'. $machine->category->getUrl() .'">';
         echo '<span class="fa-icon fa-back"></span>&nbsp;'. $tag_open .'d2u_machinery_back_machine_list'. $tag_close;
         echo '</a>';
     }

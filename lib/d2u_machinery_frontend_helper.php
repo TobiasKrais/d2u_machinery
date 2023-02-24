@@ -27,7 +27,7 @@ class d2u_machinery_frontend_helper
                 foreach (rex_clang::getAllIds(true) as $this_lang_key) {
                     $lang_machine = new Machine($machine_id, $this_lang_key);
                     if ('delete' !== $lang_machine->translation_needs_update) {
-                        $alternate_URLs[$this_lang_key] = $lang_machine->getURL();
+                        $alternate_URLs[$this_lang_key] = $lang_machine->getUrl();
                     }
                 }
             }
@@ -62,7 +62,7 @@ class d2u_machinery_frontend_helper
                     $lang_category = new Category($category_id, $this_lang_key);
                     $lang_category->setOfferType($offer_type);
                     if ('delete' !== $lang_category->translation_needs_update) {
-                        $alternate_URLs[$this_lang_key] = $lang_category->getURL();
+                        $alternate_URLs[$this_lang_key] = $lang_category->getUrl();
                     }
                 }
             }
@@ -76,7 +76,7 @@ class d2u_machinery_frontend_helper
                 foreach (rex_clang::getAllIds(true) as $this_lang_key) {
                     $lang_industry_sector = new IndustrySector($industry_sector_id, $this_lang_key);
                     if ('delete' !== $lang_industry_sector->translation_needs_update) {
-                        $alternate_URLs[$this_lang_key] = $lang_industry_sector->getURL();
+                        $alternate_URLs[$this_lang_key] = $lang_industry_sector->getUrl();
                     }
                 }
             }
@@ -91,7 +91,7 @@ class d2u_machinery_frontend_helper
                 foreach (rex_clang::getAllIds(true) as $this_lang_key) {
                     $lang_used_machine = new UsedMachine($used_machine_id, $this_lang_key);
                     if ('delete' !== $lang_used_machine->translation_needs_update) {
-                        $alternate_URLs[$this_lang_key] = $lang_used_machine->getURL();
+                        $alternate_URLs[$this_lang_key] = $lang_used_machine->getUrl();
                     }
                 }
             }
@@ -167,15 +167,15 @@ class d2u_machinery_frontend_helper
         // Breadcrumbs
         if ($category instanceof Category) {
             if ($category->parent_category instanceof Category) {
-                $breadcrumbs[] = '<a href="' . $category->parent_category->getURL() . '">' . $category->parent_category->name . '</a>';
+                $breadcrumbs[] = '<a href="' . $category->parent_category->getUrl() . '">' . $category->parent_category->name . '</a>';
             }
-            $breadcrumbs[] = '<a href="' . $category->getURL() . '">' . $category->name . '</a>';
+            $breadcrumbs[] = '<a href="' . $category->getUrl() . '">' . $category->name . '</a>';
         }
         if (false !== $machine) {
-            $breadcrumbs[] = '<a href="' . $machine->getURL() . '">' . ('' === $machine->lang_name ? $machine->name : $machine->lang_name) . '</a>';
+            $breadcrumbs[] = '<a href="' . $machine->getUrl() . '">' . ('' === $machine->lang_name ? $machine->name : $machine->lang_name) . '</a>';
         }
         if (false !== $used_machine) {
-            $breadcrumbs[] = '<a href="' . $used_machine->getURL() . '">' . $used_machine->manufacturer .' '. $used_machine->name . '</a>';
+            $breadcrumbs[] = '<a href="' . $used_machine->getUrl() . '">' . $used_machine->manufacturer .' '. $used_machine->name . '</a>';
         }
 
         // Industry sectors
@@ -185,7 +185,7 @@ class d2u_machinery_frontend_helper
                 $industry_sector_id = $url_id;
             }
             $industry_sector = new IndustrySector($industry_sector_id, rex_clang::getCurrentId());
-            $breadcrumbs[] = '<a href="' . $industry_sector->getURL() . '">' . $industry_sector->name . '</a>';
+            $breadcrumbs[] = '<a href="' . $industry_sector->getUrl() . '">' . $industry_sector->name . '</a>';
         }
 
         // Production lines
@@ -195,7 +195,7 @@ class d2u_machinery_frontend_helper
                 $production_line_id = $url_id;
             }
             $production_line = new ProductionLine($production_line_id, rex_clang::getCurrentId());
-            $breadcrumbs[] = '<a href="' . $production_line->getURL() . '">' . $production_line->name . '</a>';
+            $breadcrumbs[] = '<a href="' . $production_line->getUrl() . '">' . $production_line->name . '</a>';
         }
 
         return $breadcrumbs;
@@ -235,14 +235,14 @@ class d2u_machinery_frontend_helper
             // Navi
             $categories = Category::getAll(rex_clang::getCurrentId());
             foreach ($categories as $category) {
-                echo '<li'. ($category->category_id === $current_category_id ? ' class="current"' : '') .'><a href="'. $category->getURL() .'">'. $category->name .'</a>';
+                echo '<li'. ($category->category_id === $current_category_id ? ' class="current"' : '') .'><a href="'. $category->getUrl() .'">'. $category->name .'</a>';
                 if ('show' === (string) rex_config::get('d2u_machinery', 'show_machines_navi', 'hide')) {
                     echo '<ul class="dl-submenu">';
                     echo '<li class="dl-back"><a href="#">&nbsp;</a></li>';
-                    echo '<li><a href="'. $category->getURL() .'" title="'. $category->name .'">'. strtoupper($category->name) .'</a></li>';
+                    echo '<li><a href="'. $category->getUrl() .'" title="'. $category->name .'">'. strtoupper($category->name) .'</a></li>';
                     $machines = $category->getMachines(true);
                     foreach ($machines as $machine) {
-                        echo '<li'. ($machine->machine_id === $current_machine_id ? ' class="current"' : '') .'><a href="'. $machine->getURL() .'" title="'. $machine->name .'">'. $machine->name .'</a></li>';
+                        echo '<li'. ($machine->machine_id === $current_machine_id ? ' class="current"' : '') .'><a href="'. $machine->getUrl() .'" title="'. $machine->name .'">'. $machine->name .'</a></li>';
                     }
                     echo '</ul>';
                     echo '</li>';
@@ -286,13 +286,13 @@ class d2u_machinery_frontend_helper
             $categories = Category::getAll(rex_clang::getCurrentId());
             foreach ($categories as $category) {
                 if ($category->hasMachines()) {
-                    echo '<li'. ($category->category_id === $current_category_id ? ' class="current"' : '') .'><a href="'. $category->getURL() .'">'. $category->name .'</a>';
+                    echo '<li'. ($category->category_id === $current_category_id ? ' class="current"' : '') .'><a href="'. $category->getUrl() .'">'. $category->name .'</a>';
                     if ('show' === (string) rex_config::get('d2u_machinery', 'show_machines_navi', 'hide')) {
                         echo '<ul>';
-                        echo '<li><a href="'. $category->getURL() .'" title="'. $category->name .'">'. strtoupper($category->name) .'</a></li>';
+                        echo '<li><a href="'. $category->getUrl() .'" title="'. $category->name .'">'. strtoupper($category->name) .'</a></li>';
                         $machines = $category->getMachines(true);
                         foreach ($machines as $machine) {
-                            echo '<li'. ($machine->machine_id === $current_machine_id ? ' class="current"' : '') .'><a href="'. $machine->getURL() .'" title="'. $machine->name .'">'. $machine->name .'</a></li>';
+                            echo '<li'. ($machine->machine_id === $current_machine_id ? ' class="current"' : '') .'><a href="'. $machine->getUrl() .'" title="'. $machine->name .'">'. $machine->name .'</a></li>';
                         }
                         echo '</ul>';
                         echo '</li>';

@@ -15,7 +15,7 @@ if (!function_exists('print_used_machines_top_offers')) {
                 continue;
             }
             echo '<div class="col-sm-6 col-md-4'. (4 === $number_offers_row ? ' col-lg-3' : '') .' abstand">'; /** @phpstan-ignore-line */
-            echo '<a href="'. $used_machine->getURL(false) .'">';
+            echo '<a href="'. $used_machine->getUrl(false) .'">';
             echo '<div class="box" data-height-watch>';
             if (count($used_machine->pics) > 0 && '' !== $used_machine->pics[0]) {
                 echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $used_machine->pics[0])	 .'" alt="'. $used_machine->name .'">';

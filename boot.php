@@ -264,7 +264,7 @@ function rex_d2u_machinery_video_sitemap(rex_extension_point $ep)
             }
             // insert into sitemap
             foreach ($sitemap_entries as $sitemap_key => $sitemap_entry) {
-                if (str_contains($sitemap_entry, $machine->getURL() .'</loc>')) {
+                if (str_contains($sitemap_entry, $machine->getUrl() .'</loc>')) {
                     $sitemap_entries[$sitemap_key] = str_replace('</url>', $video_entry .'</url>', $sitemap_entry);
                 }
             }
@@ -280,7 +280,7 @@ function rex_d2u_machinery_video_sitemap(rex_extension_point $ep)
             }
             // insert into sitemap
             foreach ($sitemap_entries as $sitemap_key => $sitemap_entry) {
-                if (str_contains($sitemap_entry, $category->getURL() .'</loc>')) {
+                if (str_contains($sitemap_entry, $category->getUrl() .'</loc>')) {
                     $sitemap_entries[$sitemap_key] = str_replace('</url>', $video_entry .'</url>', $sitemap_entry);
                 }
             }

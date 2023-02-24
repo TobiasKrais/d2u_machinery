@@ -10,7 +10,7 @@
     foreach (IndustrySector::getAll(rex_clang::getCurrentId()) as $industry_sector) {
         if ('online' === $industry_sector->online_status && count($industry_sector->getMachines()) > 0) {
             echo '<div class="col-sm-6 col-md-4 col-lg-3 abstand">';
-            echo '<a href="'. $industry_sector->getURL() .'" class="bluebox">';
+            echo '<a href="'. $industry_sector->getUrl() .'" class="bluebox">';
             echo '<div class="box same-height">';
             if ('' !== $industry_sector->pic) {
                 echo '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.

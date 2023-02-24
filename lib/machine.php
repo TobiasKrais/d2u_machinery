@@ -744,13 +744,13 @@ class Machine implements \D2U_Helper\ITranslationHelper
                 foreach (rex_clang::getAllIds() as $clang_id) {
                     $lang_object = new self($this->machine_id, $clang_id);
                     $query_forward = 'DELETE FROM '. \rex::getTablePrefix() .'yrewrite_forward '
-                        ."WHERE extern = '". $lang_object->getURL(true) ."'";
+                        ."WHERE extern = '". $lang_object->getUrl(true) ."'";
                     $result_forward = \rex_sql::factory();
                     $result_forward->setQuery($query_forward);
                 }
             } else {
                 $query_forward = 'DELETE FROM '. \rex::getTablePrefix() .'yrewrite_forward '
-                    ."WHERE extern = '". $this->getURL(true) ."'";
+                    ."WHERE extern = '". $this->getUrl(true) ."'";
                 $result_forward = \rex_sql::factory();
                 $result_forward->setQuery($query_forward);
             }
@@ -1205,7 +1205,7 @@ class Machine implements \D2U_Helper\ITranslationHelper
             if (false !== $this->category) {
                 $tech_data[] = [
                     'description' => $tag_open . 'd2u_machinery_construction_equipment_machine_technique' . $tag_close,
-                    'value' => '<a href="'. $this->category->getURL() .'">'. $this->category->name .'</a>',
+                    'value' => '<a href="'. $this->category->getUrl() .'">'. $this->category->name .'</a>',
                     'unit' => '',
                 ];
             }
@@ -1881,7 +1881,7 @@ class Machine implements \D2U_Helper\ITranslationHelper
      * @param bool $including_domain true if Domain name should be included
      * @return string URL
      */
-    public function getURL($including_domain = false)
+    public function getUrl($including_domain = false)
     {
         if ('' === $this->url) {
             $parameterArray = [];

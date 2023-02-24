@@ -47,7 +47,7 @@ foreach (Category::getAll(rex_clang::getCurrentId()) as $category) {
     }
 
     echo '<div class="col-6 col-md-4'. (3 === $box_per_line ? '' : ' col-lg-3') .' mr-auto ml-auto abstand">'; /** @phpstan-ignore-line */
-    echo '<a href="'. $category->getURL(false, $article_id_link) .'" class="bluebox">';
+    echo '<a href="'. $category->getUrl(false, $article_id_link) .'" class="bluebox">';
     echo '<div class="box same-height">';
     if ('' !== $category->pic || '' !== $category->pic_lang) {
         echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', '' !== $category->pic_lang ? $category->pic_lang : $category->pic) .'" alt="'. $category->name .'">';
