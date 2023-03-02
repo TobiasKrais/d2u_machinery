@@ -246,7 +246,7 @@ class SocialExportLinkedIn extends AExport
                 }
                 // Post on group stream: prepare XML
                 else {
-                    $title_text = $this->provider->company_name .' '. Sprog\Wildcard::get('d2u_machinery_export_linkedin_offers', $this->provider->clang_id) .': '
+                    $title_text = $this->provider->company_name .' '. \Sprog\Wildcard::get('d2u_machinery_export_linkedin_offers', $this->provider->clang_id) .': '
                         . $used_machine->name;
                     $summary_text = \Sprog\Wildcard::get('d2u_machinery_export_linkedin_details', $this->provider->clang_id) .' '. $used_machine->getUrl(true);
 
