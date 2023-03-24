@@ -463,6 +463,7 @@ if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['opti
     $yform->setObjectparams('form_anchor', 'tab_request');
     $yform->setObjectparams('Error-occured', $tag_open .'d2u_helper_module_form_validate_title'. $tag_close);
     $yform->setObjectparams('real_field_names', true);
+    $yform->setObjectparams('form_name', 'd2u_machinery_module_90_4_'. random_int(1, 100));
 
     // action - showtext
     $yform->setActionField('showtext', [$tag_open .'d2u_helper_module_form_thanks'. $tag_close]);

@@ -46,10 +46,12 @@ $d2u_module_manager->showManagerList();
 	</form>
 </fieldset>
 <h2>Changelog</h2>
-<p>1.4.1-DEV:</p>
+<p>1.4.1:</p>
 <ul>
 	<li>PHP-CS-Fixer Code Verbesserungen.</li>
 	<li>Weitere rexstan Verbesserungen.</li>
+	<li>Modul "90-1 D2U Machinery Addon - Hauptausgabe": Anfrageformular mit Formularnamen versehen um bessere YForm Spamprotection Kompatibilität bei mehreren Formularen auf einer Seite herzustellen.</li>
+	<li>Modul "90-4 D2U Machinery Addon - Gebrauchtmaschinen": Anfrageformular mit Formularnamen versehen um bessere YForm Spamprotection Kompatibilität bei mehreren Formularen auf einer Seite herzustellen.</li>
 </ul>
 <p>1.4.0:</p>
 <ul>
