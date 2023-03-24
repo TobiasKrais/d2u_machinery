@@ -46,6 +46,10 @@ $d2u_module_manager->showManagerList();
 	</form>
 </fieldset>
 <h2>Changelog</h2>
+<p>1.4.2-DEV:</p>
+<ul>
+	<li>...</li>
+</ul>
 <p>1.4.1:</p>
 <ul>
 	<li>PHP-CS-Fixer Code Verbesserungen.</li>
