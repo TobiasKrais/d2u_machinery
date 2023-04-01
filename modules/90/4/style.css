@@ -35,7 +35,7 @@
 }
 .pdf:before {
 	color: darkred;
-	content: "f016";
+	content: "\f016";
 }
 .fa-back:before {
 	content: "\f190";
