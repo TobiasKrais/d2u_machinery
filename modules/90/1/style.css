@@ -54,6 +54,9 @@
     padding: 0 15px;
 }
 
+#d2u_machinery_module_90_1 .nav-pills .nav-link.active, #d2u_machinery_module_90_1 .nav-pills .show > .nav-link {
+    background-color: transparent;
+}
 .techdata td, .downloads, .inactive-cell, .consultation, .deliverybox, .block-box {
 	background-color: article_color_box;
 	border: 1px solid white;

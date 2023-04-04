@@ -48,7 +48,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.4.2-DEV:</p>
 <ul>
-	<li>...</li>
+<li>Modul "90-1 D2U Machinery Addon - Hauptausgabe": CSS für Nav-Pills für Modul isoliert, so dass sie das CSS für andere Addons nicht beeinflusst.</li>
 </ul>
 <p>1.4.1:</p>
 <ul>
