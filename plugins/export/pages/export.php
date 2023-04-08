@@ -1,7 +1,7 @@
 <?php
 
 $func = rex_request('func', 'string');
-$provider_id = rex_request('provider_id', 'int');
+$provider_id = (int) rex_request('provider_id', 'int');
 $used_machine_id = rex_request('used_machine_id', 'int');
 
 /*

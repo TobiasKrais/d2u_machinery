@@ -245,7 +245,7 @@ if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['opti
 
             if (count($used_machine->videos) > 1) {
                 // Multiple Videos
-                if (rex_config::get('d2u_videos', 'player', 'ultimate') === (string) 'plyr' && rex_addon::get('plyr')->isAvailable()) {
+                if (rex_config::get('d2u_videos', 'player', 'ultimate') === 'plyr' && rex_addon::get('plyr')->isAvailable()) {
                     $media_filenames = [];
                     $ld_json = '';
                     foreach ($used_machine->videos as $video) {

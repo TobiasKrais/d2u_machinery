@@ -1,5 +1,6 @@
 <?php
 /**
+ * @api
  * Offers helper functions for language issues.
  */
 class d2u_machinery_used_machines_lang_helper extends d2u_machinery_lang_helper

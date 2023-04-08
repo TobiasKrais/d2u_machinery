@@ -403,7 +403,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
 
             if (count($videos) > 1) {
                 // Multiple Videos
-                if ((string) rex_config::get('d2u_videos', 'player', 'ultimate') === (string) 'plyr' && rex_addon::get('plyr')->isAvailable()) {
+                if ((string) rex_config::get('d2u_videos', 'player', 'ultimate') === 'plyr' && rex_addon::get('plyr')->isAvailable()) {
                     $media_filenames = [];
                     $ld_json = '';
                     foreach ($videos as $video) {

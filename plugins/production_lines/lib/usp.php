@@ -122,7 +122,7 @@ class USP implements \D2U_Helper\ITranslationHelper
         $production_lines = [];
         for ($i = 0; $i < $result->getRows(); ++$i) {
             $production_line = new ProductionLine((int) $result->getValue('production_line_id'), $this->clang_id);
-            if (false === $online_only || (true === $online_only && $production_line->isOnline())) {
+            if (false === $online_only || ($production_line->isOnline())) {
                 $production_lines[] = $production_line;
             }
             $result->next();

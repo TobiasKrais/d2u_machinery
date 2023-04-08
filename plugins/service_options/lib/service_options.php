@@ -155,7 +155,7 @@ class ServiceOption implements \D2U_Helper\ITranslationHelper
         $machines = [];
         for ($i = 0; $i < $result->getRows(); ++$i) {
             $machine = new Machine((int) $result->getValue('machine_id'), $this->clang_id);
-            if (false === $online_only || ($online_only && 'online' === $machine->online_status)) {
+            if (false === $online_only || ('online' === $machine->online_status)) {
                 $machines[] = $machine;
             }
             $result->next();

@@ -231,7 +231,7 @@ class ProductionLine implements \D2U_Helper\ITranslationHelper
         $machines = [];
         foreach ($this->machine_ids as $machine_id) {
             $machine = new Machine($machine_id, $this->clang_id);
-            if (false === $online_only || ($online_only && 'online' === $machine->online_status)) {
+            if (false === $online_only || ('online' === $machine->online_status)) {
                 $machines[] = $machine;
             }
         }

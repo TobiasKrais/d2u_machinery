@@ -187,7 +187,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper
         $machines = [];
         for ($i = 0; $i < $result->getRows(); ++$i) {
             $machine = new Machine((int) $result->getValue('machine_id'), $this->clang_id);
-            if (false === $online_only || ($online_only && 'online' === $machine->online_status)) {
+            if (false === $online_only || ('online' === $machine->online_status)) {
                 $machines[] = $machine;
             }
             $result->next();
@@ -213,7 +213,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper
 
             for ($i = 0; $i < $result->getRows(); ++$i) {
                 $production_line = new ProductionLine((int) $result->getValue('production_line_id'), $this->clang_id);
-                if (false === $online_only || ($online_only && 'online' === $production_line->online_status)) {
+                if (false === $online_only || ('online' === $production_line->online_status)) {
                     $production_lines[] = $production_line;
                 }
                 $result->next();
