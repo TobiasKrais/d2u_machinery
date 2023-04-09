@@ -41,9 +41,11 @@ class SocialExportLinkedIn extends AExport
     public function getAccessToken($verifier_pin)
     {
         $session = rex_request::session('linkedin', 'array');
-        $requesttoken = $session['requesttoken'];
-        $requesttoken_secret = $session['requesttoken_secret'];
-        rex_request::setSession('linkedin', null);
+        if (array_key_exists('requesttoken', $session) && array_key_exists('requesttoken_secret', $session)) {
+            $requesttoken = $session['requesttoken'];
+            $requesttoken_secret = $session['requesttoken_secret'];
+            rex_request::setSession('linkedin', null);
+        }
 
         try {
             // now set the token so we can get our access token

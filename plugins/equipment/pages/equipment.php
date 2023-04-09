@@ -113,7 +113,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 						<legend><?= rex_i18n::msg('d2u_helper_text_lang') .' "'. $rex_clang->getName() .'"' ?></legend>
 						<div class="panel-body-wrapper slide">
 							<?php
-                                if ($rex_clang->getId() !== (int) ((int) rex_config::get('d2u_helper', 'default_lang'))) {
+                                if ($rex_clang->getId() !== (int) rex_config::get('d2u_helper', 'default_lang')) {
                                     $options_translations = [];
                                     $options_translations['yes'] = rex_i18n::msg('d2u_helper_translation_needs_update');
                                     $options_translations['no'] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
