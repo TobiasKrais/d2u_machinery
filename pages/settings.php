@@ -6,7 +6,7 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
     // Linkmap Link and media needs special treatment
     $link_ids = filter_input_array(INPUT_POST, ['REX_INPUT_LINK' => ['filter' => FILTER_VALIDATE_INT, 'flags' => FILTER_REQUIRE_ARRAY]]);
 
-    $settings['article_id'] = is_array($link_ids) ? $link_ids['REX_INPUT_LINK'][1] : 0;
+    $settings['article_id'] = is_array($link_ids['REX_INPUT_LINK']) ? $link_ids['REX_INPUT_LINK'][1] : 0;
 
     $input_media = rex_post('REX_INPUT_MEDIA', 'array', []);
     $input_media_list = rex_post('REX_INPUT_MEDIALIST', 'array', []);
@@ -15,17 +15,17 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
     $settings['consultation_pic'] = is_array($consultation_pics) && array_key_exists(0, $consultation_pics) ? $consultation_pics[0] : ''; // backward compatibility
     $settings['consultation_pics'] = $input_media_list[1];
 
-    $settings['consultation_article_id'] = is_array($link_ids) ? $link_ids['REX_INPUT_LINK'][2] : 0;
+    $settings['consultation_article_id'] = is_array($link_ids['REX_INPUT_LINK']) ? $link_ids['REX_INPUT_LINK'][2] : 0;
 
     if (rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
-        $settings['used_machine_article_id_rent'] = is_array($link_ids) ? $link_ids['REX_INPUT_LINK'][3] : 0;
-        $settings['used_machine_article_id_sale'] = is_array($link_ids) ? $link_ids['REX_INPUT_LINK'][4] : 0;
+        $settings['used_machine_article_id_rent'] = is_array($link_ids['REX_INPUT_LINK']) ? $link_ids['REX_INPUT_LINK'][3] : 0;
+        $settings['used_machine_article_id_sale'] = is_array($link_ids['REX_INPUT_LINK']) ? $link_ids['REX_INPUT_LINK'][4] : 0;
     }
     if (rex_plugin::get('d2u_machinery', 'industry_sectors')->isAvailable()) {
-        $settings['industry_sectors_article_id'] = is_array($link_ids) ? $link_ids['REX_INPUT_LINK'][5] : 0;
+        $settings['industry_sectors_article_id'] = is_array($link_ids['REX_INPUT_LINK']) ? $link_ids['REX_INPUT_LINK'][5] : 0;
     }
     if (rex_plugin::get('d2u_machinery', 'production_lines')->isAvailable()) {
-        $settings['production_lines_article_id'] = is_array($link_ids) ? $link_ids['REX_INPUT_LINK'][6] : 0;
+        $settings['production_lines_article_id'] = is_array($link_ids['REX_INPUT_LINK']) ? $link_ids['REX_INPUT_LINK'][6] : 0;
     }
 
     // Checkbox also need special treatment if empty

@@ -100,12 +100,11 @@ function rex_d2u_machinery_used_machines_media_is_in_use(rex_extension_point $ep
 
 /**
  * Adds videos to sitemap.
- * @param rex_extension_point<string> $ep Redaxo extension point
- * @return string[] updated sitemap entries
+ * @param rex_extension_point<array<string>> $ep Redaxo extension point
+ * @return array<string> updated sitemap entries
  */
 function rex_d2u_machinery_used_machines_video_sitemap(rex_extension_point $ep)
 {
-    /** @var array<string> $sitemap_entries */
     $sitemap_entries = $ep->getSubject();
 
     foreach (rex_clang::getAllIds(true) as $clang_id) {

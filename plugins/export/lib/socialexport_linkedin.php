@@ -41,30 +41,30 @@ class SocialExportLinkedIn extends AExport
     public function getAccessToken($verifier_pin)
     {
         $session = rex_request::session('linkedin', 'array');
-        if (array_key_exists('requesttoken', $session) && array_key_exists('requesttoken_secret', $session)) {
+        if (is_array($session) && array_key_exists('requesttoken', $session) && array_key_exists('requesttoken_secret', $session)) {
             $requesttoken = $session['requesttoken'];
             $requesttoken_secret = $session['requesttoken_secret'];
             rex_request::setSession('linkedin', null);
-        }
 
-        try {
-            // now set the token so we can get our access token
-            $this->oauth->setToken($requesttoken, $requesttoken_secret);
+            try {
+                // now set the token so we can get our access token
+                $this->oauth->setToken($requesttoken, $requesttoken_secret);
 
-            // get the access token now that we have the verifier pin
-            $at_info = $this->oauth->getAccessToken('https://api.linkedin.com/uas/oauth/accessToken', '', $verifier_pin);
-            // store in DB
-            if (is_array($at_info)) {
-                $this->provider->social_oauth_token = $at_info['oauth_token'];
-                $this->provider->social_oauth_token_secret = $at_info['oauth_token_secret'];
-                $this->provider->social_oauth_token_valid_until = time() + $at_info['oauth_expires_in'];
-                $this->provider->save();
+                // get the access token now that we have the verifier pin
+                $at_info = $this->oauth->getAccessToken('https://api.linkedin.com/uas/oauth/accessToken', '', $verifier_pin);
+                // store in DB
+                if (is_array($at_info)) {
+                    $this->provider->social_oauth_token = $at_info['oauth_token'];
+                    $this->provider->social_oauth_token_secret = $at_info['oauth_token_secret'];
+                    $this->provider->social_oauth_token_valid_until = time() + $at_info['oauth_expires_in'];
+                    $this->provider->save();
 
-                // set the access token so we can make authenticated requests
-                $this->oauth->setToken($this->provider->social_oauth_token, $this->provider->social_oauth_token_secret);
+                    // set the access token so we can make authenticated requests
+                    $this->oauth->setToken($this->provider->social_oauth_token, $this->provider->social_oauth_token_secret);
+                }
+            } catch (OAuthException $e) {
+                return $e->getMessage();
             }
-        } catch (OAuthException $e) {
-            return $e->getMessage();
         }
         return '';
     }
@@ -76,7 +76,10 @@ class SocialExportLinkedIn extends AExport
     public function getLoginURL()
     {
         $session = rex_request::session('linkedin', 'array');
-        return 'https://www.linkedin.com/uas/oauth/authenticate?oauth_token='. $session['requesttoken'];
+        if (is_array($session) && array_key_exists('requesttoken', $session)) {
+            return 'https://www.linkedin.com/uas/oauth/authenticate?oauth_token='. $session['requesttoken'];
+        }
+        return '';
     }
 
     /**
