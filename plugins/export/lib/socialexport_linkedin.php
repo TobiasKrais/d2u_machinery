@@ -42,8 +42,8 @@ class SocialExportLinkedIn extends AExport
     {
         $session = rex_request::session('linkedin', 'array');
         if (is_array($session) && array_key_exists('requesttoken', $session) && array_key_exists('requesttoken_secret', $session)) {
-            $requesttoken = $session['requesttoken'];
-            $requesttoken_secret = $session['requesttoken_secret'];
+            $requesttoken = (string) $session['requesttoken'];
+            $requesttoken_secret = (string) $session['requesttoken_secret'];
             rex_request::setSession('linkedin', null);
 
             try {
