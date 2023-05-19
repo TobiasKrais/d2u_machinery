@@ -46,7 +46,7 @@ class Automation implements \D2U_Helper\ITranslationHelper
             $this->automation_id = (int) $result->getValue('automation_id');
             $this->internal_name = (string) $result->getValue('internal_name');
             $this->name = stripslashes((string) $result->getValue('name'));
-            if ('' !== $result->getValue('translation_needs_update')) {
+            if ('' !== $result->getValue('translation_needs_update') && null !== $result->getValue('translation_needs_update')) {
                 $this->translation_needs_update = (string) $result->getValue('translation_needs_update');
             }
         }

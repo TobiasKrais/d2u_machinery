@@ -50,7 +50,7 @@ class Agitator implements \D2U_Helper\ITranslationHelper
             $this->name = stripslashes((string) $result->getValue('name'));
             $this->pic = (string) $result->getValue('pic');
             $this->description = stripslashes(htmlspecialchars_decode((string) $result->getValue('description')));
-            if ('' !== $result->getValue('translation_needs_update')) {
+            if ('' !== $result->getValue('translation_needs_update') && null !== $result->getValue('translation_needs_update')) {
                 $this->translation_needs_update = (string) $result->getValue('translation_needs_update');
             }
         }

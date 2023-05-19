@@ -105,7 +105,7 @@ class ProductionLine implements \D2U_Helper\ITranslationHelper
             $this->pictures = is_array($pictures) ? $pictures : [];
             $this->link_picture = (string) $result->getValue('link_picture');
             $this->teaser = stripslashes((string) $result->getValue('teaser'));
-            if ('' !== $result->getValue('translation_needs_update')) {
+            if ('' !== $result->getValue('translation_needs_update') && null !== $result->getValue('translation_needs_update')) {
                 $this->translation_needs_update = (string) $result->getValue('translation_needs_update');
             }
             $usp_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('usp_ids')), PREG_GREP_INVERT);

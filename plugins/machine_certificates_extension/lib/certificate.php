@@ -50,7 +50,7 @@ class Certificate implements \D2U_Helper\ITranslationHelper
             $this->name = stripslashes((string) $result->getValue('name'));
             $this->description = (string) $result->getValue('description');
             $this->pic = (string) $result->getValue('pic');
-            if ('' !== $result->getValue('translation_needs_update')) {
+            if ('' !== $result->getValue('translation_needs_update') && null !== $result->getValue('translation_needs_update')) {
                 $this->translation_needs_update = (string) $result->getValue('translation_needs_update');
             }
         }
