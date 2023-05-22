@@ -891,10 +891,9 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
 
     $yform = new rex_yform();
     $yform->setFormData(trim($form_data));
-    $yform->setObjectparams('csrf_protection', false);
     $yform->setObjectparams('form_action', $machine->getUrl());
     $yform->setObjectparams('form_anchor', 'tab_request');
-    $yform->setObjectparams('form_name', 'd2u_machinery_module_90_1_'. random_int(1, 100));
+    $yform->setObjectparams('form_name', 'd2u_machinery_module_90_1_'. $this->getCurrentSlice()->getId()); /** @phpstan-ignore-line */
     $yform->setObjectparams('Error-occured', $tag_open .'d2u_helper_module_form_validate_title'. $tag_close);
     $yform->setObjectparams('real_field_names', true);
 
