@@ -11,6 +11,17 @@
 .subhead-nav .nav-item {
     padding: 0 15px;
 }
+.subhead-nav .nav-pills .active, .subhead-nav .nav-pills .show > .nav-link {
+    background-color: transparent;
+}
+.subhead-nav a.active div.active-navi-pill {
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 3px solid transparent;
+	border-bottom: 12px navi_color_hover_font solid;
+    margin: 0 auto;
+    width: 30px;
+}
 
 .download-list {
 	padding: 0;

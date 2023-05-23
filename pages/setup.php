@@ -46,7 +46,7 @@ $d2u_module_manager->showManagerList();
 	</form>
 </fieldset>
 <h2>Changelog</h2>
-<p>1.4.2-DEV:</p>
+<p>1.4.2:</p>
 <ul>
 	<li>Modul "90-1 D2U Machinery Addon - Hauptausgabe": CSS für Nav-Pills für Modul isoliert, so dass sie das CSS für andere Addons nicht beeinflusst.</li>
 	<li>Modul "90-1 D2U Machinery Addon - Hauptausgabe": Fehler im Spamschutz / CSRF Schutz behoben.</li>

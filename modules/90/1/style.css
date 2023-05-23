@@ -54,7 +54,15 @@
     padding: 0 15px;
 }
 
-#d2u_machinery_module_90_1 .nav-pills .nav-link.active, #d2u_machinery_module_90_1 .nav-pills .show > .nav-link {
+.subhead-nav a.active div.active-navi-pill {
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 3px solid transparent;
+	border-bottom: 12px navi_color_hover_font solid;
+    margin: 0 auto;
+    width: 30px;
+}
+.subhead-nav .nav-pills .active, .subhead-nav .nav-pills .show > .nav-link {
     background-color: transparent;
 }
 .techdata td, .downloads, .inactive-cell, .consultation, .deliverybox, .block-box {
