@@ -36,8 +36,8 @@ $d2u_module_manager->showManagerList();
 	sind alle nötigen Änderungen integriert.</p>
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_machinery" target="_blank">GitHub Repository</a> melden.</p>
-<fieldset style='background-color: white; padding: 1em; border: 1px solid #dfe3e9;'>
-	<p style="margin-bottom: 0.5em;">Sag einfach Danke oder unterstütze die Weiterentwicklung durch eine Spende:</p>
+<fieldset style='padding: 1em; border: 1px solid #dfe3e9;'>
+	<p style="margin-bottom: 0.5em;">SSag einfach Danke und unterstütze die Weiterentwicklung durch deine Spende:</p>
 	<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
 		<input type="hidden" name="cmd" value="_s-xclick" />
 		<input type="hidden" name="hosted_button_id" value="CB7B6QTLM76N6" />
