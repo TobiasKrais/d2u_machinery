@@ -1,5 +1,6 @@
-<b>D2U Maschinen Package: Maschinen Optionen</b>
-
-<br /><br />
-<p>Ähnlich wie Features werden Maschinen durch Optionen erweitert. Diese sind allerdings nicht fest verbaut, sondern können Optional hinzugefügt werden.</p>
-<p>Maschinen können mit diesem Plugin ein oder mehrere Optionen zugeordnet werden.</p>
+<?php
+$readmePath = rex_path::addon('d2u_machinery', 'README.md');
+$readmeContent = rex_file::get($readmePath);
+if(null !== $readmeContent) {
+    echo rex_markdown::factory()->parse($readmeContent);
+}

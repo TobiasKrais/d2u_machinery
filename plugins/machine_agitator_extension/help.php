@@ -1,5 +1,6 @@
-<b>D2U Maschinen Package: Rührwerke Erweiterung</b>
-
-<br /><br />
-<p>Machinen können mit diesem Plugin Rührwerke erweitert werden. Auch ein
-	mechanischer Aufbau der Rührwerke kann zugeordnet werden.</p>
+<?php
+$readmePath = rex_path::addon('d2u_machinery', 'README.md');
+$readmeContent = rex_file::get($readmePath);
+if(null !== $readmeContent) {
+    echo rex_markdown::factory()->parse($readmeContent);
+}

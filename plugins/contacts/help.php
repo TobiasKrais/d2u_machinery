@@ -1,4 +1,6 @@
-<b>D2U Maschinen Addon - Kontakte Plugin</b>
-
-<br /><br />
-<p>Stellt für Maschinen und Gebrauchtmaschinen Kontakte zur Verfügung.</p>
+<?php
+$readmePath = rex_path::addon('d2u_machinery', 'README.md');
+$readmeContent = rex_file::get($readmePath);
+if(null !== $readmeContent) {
+    echo rex_markdown::factory()->parse($readmeContent);
+}

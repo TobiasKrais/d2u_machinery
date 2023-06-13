@@ -1,5 +1,6 @@
-<b>D2U Maschinen Package: Anwendungsgebiete</b>
-
-<br /><br />
-<p>Fügt den Maschinen ein Feld hinzu, in dem Anwendungsgebiete angezeigt werden.
-	Das ermöglicht den Vergleich der Maschinen auf Kategorieebene.</p>
+<?php
+$readmePath = rex_path::addon('d2u_machinery', 'README.md');
+$readmeContent = rex_file::get($readmePath);
+if(null !== $readmeContent) {
+    echo rex_markdown::factory()->parse($readmeContent);
+}

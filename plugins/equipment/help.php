@@ -1,5 +1,6 @@
-<b>D2U Maschinen Package: Zubehör Plugin</b>
-
-<br /><br />
-<p>Zubehör für Maschinen kann hinzugefügt werden. Einzelnen Maschinen kann
-	Zubehör zugeordnet werden.</p>
+<?php
+$readmePath = rex_path::addon('d2u_machinery', 'README.md');
+$readmeContent = rex_file::get($readmePath);
+if(null !== $readmeContent) {
+    echo rex_markdown::factory()->parse($readmeContent);
+}

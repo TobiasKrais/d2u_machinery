@@ -138,6 +138,46 @@ if ('edit' === $func || 'add' === $func) {
 					</div>
 				</fieldset>
 			</div>
+            <script>
+                function type_changer(value) {
+                    if (value === "linkedin") {
+                        $("dl[id='form[customer_number]']").hide();
+                        $("dl[id='form[social_app_id]']").parent().parent().fadeIn();
+                        $("input[name='form[social_app_id]']").prop('required', true);
+                        $("input[name='form[social_app_secret]']").prop('required', true);
+                        $("dl[id='form[linkedin_email]']").parent().parent().fadeIn();
+                        $("input[name='form[linkedin_email]").prop('required', true);
+                        $("dl[id='form[ftp_server]']").parent().parent().hide();
+                        $("input[name='form[ftp_server]']").removeAttr('required');
+                        $("input[name='form[ftp_username]']").removeAttr('required');
+                        $("input[name='form[ftp_password]']").removeAttr('required');
+                        $("input[name='form[ftp_filename]']").removeAttr('required');
+                    }
+                    else {
+                        $("dl[id='form[customer_number]']").fadeIn();
+                        $("dl[id='form[social_app_id]']").parent().parent().hide();
+                        $("input[name='form[social_app_id]']").removeAttr('required');
+                        $("input[name='form[social_app_secret]']").removeAttr('required');
+                        $("dl[id='form[linkedin_email]']").parent().parent().hide();
+                        $("input[name='form[linkedin_email]").removeAttr('required');
+                        $("dl[id='form[ftp_server]']").parent().parent().fadeIn();
+                        $("input[name='form[ftp_server]']").prop('required', true);
+                        $("input[name='form[ftp_username]']").prop('required', true);
+                        $("input[name='form[ftp_password]']").prop('required', true);
+                        $("input[name='form[ftp_filename]']").prop('required', true);
+                    }
+                }
+
+                // Hide on document load
+                $(document).ready(function() {
+                    type_changer($("select[name='form[type]']").val());
+                });
+
+                // Hide on selection change
+                $("select[name='form[type]']").on('change', function(e) {
+                    type_changer($(this).val());
+                });
+            </script>
 			<footer class="panel-footer">
 				<div class="rex-form-panel-footer">
 					<div class="btn-toolbar">
@@ -197,7 +237,7 @@ if ('' === $func) {
     $list->setNoRowsMessage(rex_i18n::msg('d2u_machinery_export_no_providers_found'));
 
     $fragment = new rex_fragment();
-    $fragment->setVar('title', rex_i18n::msg('d2u_machinery_export'), false);
+    $fragment->setVar('title', rex_i18n::msg('d2u_machinery_export_provider'), false);
     $fragment->setVar('content', $list->get(), false);
     echo $fragment->parse('core/page/section.php');
 }
