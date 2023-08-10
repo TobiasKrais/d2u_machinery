@@ -11,11 +11,15 @@
 </fieldset>
 
 <h2>Changelog</h2>
-<p>1.4.3-DEV:</p>
+<p>1.5.0-DEV:</p>
+<ul>
+	<li>...</li>
+</ul>
+<p>1.4.3:</p>
 <ul>
 	<li>Nutzt das neue Bilderliste Feld mit Vorschaufunktion der Bilder.</li>
 	<li>README mit Addon und Pluginbeschreibung, sowie Installationsanweisungen hinzugefügt.</li>
-	<li>Hilfe, Changelog, Einstellungen und Setup jetzt als Unterüunkte im Menüpunkt Einstellungen verfügbar.</li>
+	<li>Hilfe, Changelog, Einstellungen und Setup jetzt als Unterpunkte im Menüpunkt Einstellungen verfügbar.</li>
 	<li>Modul "90-4 D2U Machinery Addon - Gebrauchtmaschinen": fehlende ")" hinzugefügt.</li>
 </ul>
 <p>1.4.2:</p>
