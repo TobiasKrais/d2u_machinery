@@ -138,7 +138,7 @@ if (rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable() && ((int) r
                         d2u_addon_backend_helper::form_input('d2u_machinery_settings_request_form_email', 'settings[request_form_email]', (string) rex_config::get('d2u_machinery', 'request_form_email'), true, false, 'email');
                         d2u_addon_backend_helper::form_input('d2u_machinery_settings_contact_phone', 'settings[contact_phone]', (string) rex_config::get('d2u_machinery', 'contact_phone'), true, false);
                         $consultation_pics = '' !== rex_config::get('d2u_machinery', 'consultation_pics', '') ? preg_grep('/^\s*$/s', explode(',', (string) rex_config::get('d2u_machinery', 'consultation_pics')), PREG_GREP_INVERT) : ('' !== rex_config::get('d2u_machinery', 'consultation_pic', '') ? [rex_config::get('d2u_machinery', 'consultation_pic')] : []);
-                        d2u_addon_backend_helper::form_medialistfield('d2u_machinery_settings_consultation_pics', 1, is_array($consultation_pics) ? $consultation_pics : [], false);
+                        d2u_addon_backend_helper::form_imagelistfield('d2u_machinery_settings_consultation_pics', 1, is_array($consultation_pics) ? $consultation_pics : [], false);
                         d2u_addon_backend_helper::form_linkfield('d2u_machinery_settings_consultation_article', '2', (int) rex_config::get('d2u_machinery', 'consultation_article_id'), (int) rex_config::get('d2u_helper', 'default_lang', rex_clang::getStartId()));
                         if (rex_addon::get('url')->isAvailable()) {
                             d2u_addon_backend_helper::form_checkbox('d2u_machinery_settings_short_urls', 'settings[short_urls]', 'true', 'true' === rex_config::get('d2u_machinery', 'short_urls'));

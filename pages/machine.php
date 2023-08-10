@@ -350,17 +350,17 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                             d2u_addon_backend_helper::form_input('d2u_helper_name', 'form[name]', $machine->name, true, $readonly, 'text');
                             d2u_addon_backend_helper::form_input('d2u_machinery_machine_product_number', 'form[product_number]', $machine->product_number, false, $readonly, 'text');
                             d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', (string) $machine->priority, true, $readonly, 'number');
-                            d2u_addon_backend_helper::form_medialistfield('d2u_helper_picture', 1, $machine->pics, $readonly);
+                            d2u_addon_backend_helper::form_imagelistfield('d2u_helper_picture', 1, $machine->pics, $readonly);
                             if (rex_plugin::get('d2u_machinery', 'machine_construction_equipment_extension')->isAvailable()) {
-                                d2u_addon_backend_helper::form_medialistfield('d2u_machinery_construction_equipment_picture_delivery_set', 2, $machine->pictures_delivery_set, $readonly);
+                                d2u_addon_backend_helper::form_imagelistfield('d2u_machinery_construction_equipment_picture_delivery_set', 2, $machine->pictures_delivery_set, $readonly);
                             }
                             $options = [];
                             foreach (Category::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $category) {
                                 if ('' !== $category->name) {
                                     $options[$category->category_id] = $category->name;
                                 }
-                            }
-                            d2u_addon_backend_helper::form_select('d2u_helper_category', 'form[category_id]', $options, $machine->category instanceof Category ? [(string) $machine->category->category_id] : [], 1, false, $readonly);
+                            }                
+                            d2u_addon_backend_helper::form_select('d2u_helper_category', 'form[category_id]', $options, $machine->category instanceof Category ? [$machine->category->category_id] : [], 1, false, $readonly);
                             if (rex_plugin::get('d2u_machinery', 'contacts')->isAvailable()) {
                                 $options_contacts = [0 => rex_i18n::msg('d2u_machinery_contacts_settings_contact')];
                                 foreach (\D2U_Machinery\Contact::getAll() as $contact) {

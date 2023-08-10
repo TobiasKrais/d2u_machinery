@@ -135,7 +135,7 @@ class ExportedUsedMachine
     }
 
     /**
-     * Remove all machines to export for given provider.
+     * Set 'delete' flag for used machines that have been deleted.
      */
     public static function removeAllDeletedFromExport(): void
     {
@@ -159,7 +159,7 @@ class ExportedUsedMachine
     }
 
     /**
-     * Remove all machines to export for given provider.
+     * Set 'delete' flag for all machines of a given provider.
      * @param int $provider_id Provider id
      */
     public static function removeAllFromExport($provider_id): void

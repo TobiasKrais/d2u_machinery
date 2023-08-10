@@ -118,7 +118,7 @@ if ('edit' === $func || 'add' === $func) {
                             }
 
                             d2u_addon_backend_helper::form_input('d2u_machinery_production_lines_line_code', 'form[line_code]', $production_line->line_code, false, $readonly, 'text');
-                            d2u_addon_backend_helper::form_medialistfield('d2u_helper_pictures', 1, $production_line->pictures, $readonly);
+                            d2u_addon_backend_helper::form_imagelistfield('d2u_helper_pictures', 1, $production_line->pictures, $readonly);
                             d2u_addon_backend_helper::form_mediafield('d2u_machinery_production_lines_link_picture', '1', $production_line->link_picture, $readonly);
                             if (\rex_addon::get('d2u_videos')->isAvailable()) {
                                 $options = [];

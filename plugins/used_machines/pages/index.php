@@ -156,7 +156,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                             d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_currency_code', 'form[currency_code]', $used_machine->currency_code, false, $readonly, 'text');
                             d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_vat', 'form[vat]', $used_machine->vat, false, $readonly, 'number');
                             d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', 'online' === $used_machine->online_status, $readonly);
-                            d2u_addon_backend_helper::form_medialistfield('d2u_helper_picture', 1, $used_machine->pics, $readonly);
+                            d2u_addon_backend_helper::form_imagelistfield('d2u_helper_picture', 1, $used_machine->pics, $readonly);
                             $options_machines = [0 => rex_i18n::msg('d2u_machinery_no_selection')];
                             foreach (Machine::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $machine) {
                                 $options_machines[$machine->machine_id] = $machine->name;

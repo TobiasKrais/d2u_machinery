@@ -360,7 +360,7 @@ if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['opti
                         echo '<span class="icon file"></span> ';
                     }
                     echo '<a href="'. rex_url::media($document) .'" target="_blank">'.
-                            $rex_document->getTitle() .' <span>('. $filetype .($filesize > 0 ? ', '. $filesize .' MB' : '') .'</span></a></li>';
+                            $rex_document->getTitle() .' <span>('. $filetype .($filesize > 0 ? ', '. $filesize .' MB' : '') .')</span></a></li>';
                 }
             }
         }
