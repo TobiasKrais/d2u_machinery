@@ -32,7 +32,7 @@ $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_machinery
 	FROM '. \rex::getTablePrefix() .'d2u_machinery_industry_sectors_lang AS lang
 	LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_industry_sectors AS industries ON lang.industry_sector_id = industries.industry_sector_id
 	LEFT JOIN '. \rex::getTablePrefix() .'clang AS clang ON lang.clang_id = clang.id
-	WHERE clang.status = 1');
+	WHERE clang.`status` = 1');
 
 if (\rex_addon::get('url')->isAvailable()) {
     $clang_id = 1 === count(rex_clang::getAllIds()) ? rex_clang::getStartId() : 0;
