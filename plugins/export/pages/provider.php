@@ -27,8 +27,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
     $provider->ftp_filename = $form['ftp_filename'];
     $provider->social_app_id = $form['social_app_id'];
     $provider->social_app_secret = $form['social_app_secret'];
-    $provider->linkedin_email = $form['linkedin_email'];
-    $provider->linkedin_groupid = $form['linkedin_groupid'];
+    $provider->linkedin_id = $form['linkedin_id'];
 
     if (false === $provider->save()) {
         $message = 'form_save_error';
@@ -132,8 +131,8 @@ if ('edit' === $func || 'add' === $func) {
 					<legend><?= rex_i18n::msg('d2u_machinery_export_social_settings_linkedin') ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-                            d2u_addon_backend_helper::form_input('d2u_machinery_export_login_email', 'form[linkedin_email]', $provider->linkedin_email, false, $readonly, 'text');
-                            d2u_addon_backend_helper::form_input('d2u_machinery_export_linkedin_groupid', 'form[linkedin_groupid]', $provider->linkedin_groupid, false, $readonly, 'text');
+                            d2u_addon_backend_helper::form_input('d2u_machinery_export_linkedin_id', 'form[linkedin_id]', $provider->linkedin_id, false, $readonly, 'text');
+                            d2u_addon_backend_helper::form_infotext('d2u_machinery_export_linkedin_id_hint', 'linkedin_id_hint');
                         ?>
 					</div>
 				</fieldset>
@@ -145,8 +144,7 @@ if ('edit' === $func || 'add' === $func) {
                         $("dl[id='form[social_app_id]']").parent().parent().fadeIn();
                         $("input[name='form[social_app_id]']").prop('required', true);
                         $("input[name='form[social_app_secret]']").prop('required', true);
-                        $("dl[id='form[linkedin_email]']").parent().parent().fadeIn();
-                        $("input[name='form[linkedin_email]").prop('required', true);
+                        $("dl[id='form[linkedin_id]']").parent().parent().fadeIn();
                         $("dl[id='form[ftp_server]']").parent().parent().hide();
                         $("input[name='form[ftp_server]']").removeAttr('required');
                         $("input[name='form[ftp_username]']").removeAttr('required');
@@ -158,8 +156,7 @@ if ('edit' === $func || 'add' === $func) {
                         $("dl[id='form[social_app_id]']").parent().parent().hide();
                         $("input[name='form[social_app_id]']").removeAttr('required');
                         $("input[name='form[social_app_secret]']").removeAttr('required');
-                        $("dl[id='form[linkedin_email]']").parent().parent().hide();
-                        $("input[name='form[linkedin_email]").removeAttr('required');
+                        $("dl[id='form[linkedin_id]']").parent().parent().hide();
                         $("dl[id='form[ftp_server]']").parent().parent().fadeIn();
                         $("input[name='form[ftp_server]']").prop('required', true);
                         $("input[name='form[ftp_username]']").prop('required', true);
@@ -198,6 +195,7 @@ if ('edit' === $func || 'add' === $func) {
 	<?php
         echo d2u_addon_backend_helper::getCSS();
         echo d2u_addon_backend_helper::getJS();
+        echo d2u_addon_backend_helper::getJSOpenAll();
 }
 
 if ('' === $func) {

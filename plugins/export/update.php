@@ -10,12 +10,3 @@ if (rex_plugin::get('d2u_machinery', 'export') instanceof rex_plugin && rex_vers
     $sql->setQuery('ALTER TABLE '. \rex::getTablePrefix() .'d2u_machinery_export_machines DROP export_timestamp;');
     $sql->setQuery('ALTER TABLE '. \rex::getTablePrefix() .'d2u_machinery_export_machines CHANGE `export_timestamp_new` `export_timestamp` DATETIME NOT NULL;');
 }
-
-// 1.3.2 remove Facebook/Twitter support
-\rex_sql_table::get(
-    \rex::getTable('d2u_machinery_export_provider'))
-    ->removeColumn('facebook_email')
-    ->removeColumn('facebook_pageid')
-    ->removeColumn('twitter_id')
-    ->ensure();
-$sql->setQuery('DELETE FROM `'. rex::getTablePrefix() ."d2u_machinery_export_provider` WHERE type = 'facebook';");

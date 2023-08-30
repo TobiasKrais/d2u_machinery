@@ -11,16 +11,10 @@ class Provider
     /** @var string Provider name */
     public string $name = '';
 
-    /**
-     * @var string Provider interface name. Current implemented types are:
-     * europemachinery, machinerypark, mascus and linkedin.
-     */
+    /** @var string Provider interface name. Current implemented types are: europemachinery, machinerypark, mascus and linkedin. */
     public string $type = '';
 
-    /**
-     * @var int Redaxo language id. Represents the language, the object should
-     * be exported.
-     */
+    /** @var int Redaxo language id. Represents the language, the object should be exported. */
     public int $clang_id = 0;
 
     /** @var string Company name (your company name) */
@@ -53,23 +47,14 @@ class Provider
     /** @var string app Secret of social networks */
     public string $social_app_secret = '';
 
-    /** @var string LinkedIn OAuth Token. This token is valid until user revokes it. */
-    public string $social_oauth_token = '';
+    /** @var string Access Token */
+    public string $social_access_token = '';
 
-    /**
-     * @var string LinkedIn OAuth Token Secret. This secret is valid until user
-     * revokes it.
-     */
-    public string $social_oauth_token_secret = '';
-
-    /** @var int LinkedIn OAuth Token Secret. Expiry time. */
-    public int $social_oauth_token_valid_until = 0;
+    /** @var int Access token expiry unix time. */
+    public int $social_access_token_valid_until = 0;
 
     /** @var string linkedin id */
-    public string $linkedin_email = '';
-
-    /** @var string linkedin group id */
-    public string $linkedin_groupid = '';
+    public string $linkedin_id = '';
 
     /** @var string Online status. Either "online" or "offline". */
     public string $online_status = 'online';
@@ -103,11 +88,9 @@ class Provider
             $this->online_status = (string) $result->getValue('online_status');
             $this->social_app_id = (string) $result->getValue('social_app_id');
             $this->social_app_secret = (string) $result->getValue('social_app_secret');
-            $this->social_oauth_token = (string) $result->getValue('social_oauth_token');
-            $this->social_oauth_token_secret = (string) $result->getValue('social_oauth_token_secret');
-            $this->social_oauth_token_valid_until = (int) $result->getValue('social_oauth_token_valid_until');
-            $this->linkedin_email = (string) $result->getValue('linkedin_email');
-            $this->linkedin_groupid = (string) $result->getValue('linkedin_groupid');
+            $this->social_access_token = (string) $result->getValue('social_access_token');
+            $this->social_access_token_valid_until = (int) $result->getValue('social_access_token_valid_until');
+            $this->linkedin_id = (string) $result->getValue('linkedin_id');
         }
     }
 
@@ -158,29 +141,26 @@ class Provider
                     }
                 } elseif ('linkedin' === $provider->type) {
                     $linkedin = new SocialExportLinkedIn($provider);
-                    $linkedin_error = $linkedin->export();
                     if ($linkedin->hasAccessToken()) {
-                        $linkedin_error = $linkedin->export();
-                        if ('' !== $linkedin_error) {
-                            $message[] = $provider->name .': '. $linkedin_error;
-                            echo $provider->name .': '. $linkedin_error .'; ';
-                            $error = true;
-                        } else {
+                        if ($linkedin->export()) {
                             $message[] = $provider->name .': '. rex_i18n::msg('d2u_machinery_export_success');
+                        } else {
+                            $error = true;
                         }
                     }
+                    $linkedin->sendImportLog();
                 }
             }
         }
 
         // Send report
         $d2u_machinery = rex_addon::get('d2u_machinery');
-        if ($d2u_machinery->hasConfig('export_failure_email') && $error) {
+        if ($d2u_machinery->hasConfig('export_failure_email') && $error && 'linkedin' !== $provider->type) {
             $mail = new rex_mailer();
             $mail->isHTML(true);
             $mail->CharSet = 'utf-8';
             $mail->addAddress(trim((string) $d2u_machinery->getConfig('export_failure_email')));
-            $mail->Subject = rex_i18n::msg('d2u_machinery_export_failure_report');
+            $mail->Subject = rex_i18n::msg('d2u_machinery_export_report');
             $mail->Body = implode('<br>', $message);
             $mail->send();
         }
@@ -261,55 +241,25 @@ class Provider
             if (!function_exists('curl_init')) {
                 return rex_i18n::msg('d2u_machinery_export_failure_curl');
             }
-            if (!class_exists('oauth')) {
-                return rex_i18n::msg('d2u_machinery_export_failure_oauth');
-            }
 
             $linkedin = new SocialExportLinkedIn($this);
             if (!$linkedin->hasAccessToken()) {
-                $session = rex_request::session('linkedin', 'array');
-                if (null !== filter_input(INPUT_GET, 'oauth_verifier', FILTER_NULL_ON_FAILURE) && !isset($session['requesttoken'])) {
-                    // Verifier pin and Requesttoken not available? Login
-                    $rt_error = $linkedin->getRequestToken();
-                    if ('' === $rt_error) {
-                        // Forward to login URL
-                        header('Location: '. $linkedin->getLoginURL());
-                        exit;
-                    }
-
-                    return $rt_error;
-
-                }
-                if (filter_input(INPUT_GET, 'oauth_verifier', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0 && isset($session['requesttoken'])) {
-                    // Logged in an verifiert pin available? Get access token and ...
-                    $at_error = $linkedin->getAccessToken((string) filter_input(INPUT_GET, 'oauth_verifier', FILTER_VALIDATE_INT));
-                    if ('' !== $at_error) {
-                        return $at_error;
-                    }
-                }
-                // Fuer den Fall dass mehrere Profile da sind und Requesttoken schon geholt wurde.
-                elseif (isset($session['requesttoken'])) {
-                    // Login URL
+                if (null === filter_input(INPUT_GET, 'code')) {
+                    // Forward to login URL
                     header('Location: '. $linkedin->getLoginURL());
                     exit;
                 }
+                
+                if (null !== filter_input(INPUT_GET, 'code')) {
+                    // Logged in? Get access token ...
+                    $linkedin->getAccessToken((string) filter_input(INPUT_GET, 'code', FILTER_NULL_ON_FAILURE));
+                }
             }
             if ($linkedin->hasAccessToken()) {
-                // set the access token so we can make authenticated requests
-                $is_logged_in = $linkedin->isUserLoggedIn();
-                if (false === $is_logged_in) {
-                    // Wrong user? Logout and inform user
-                    $linkedin->logout();
-                    return rex_i18n::msg('d2u_machinery_export_linkedin_login_again');
+                $success = $linkedin->export();
+                if(!$success) {
+                    return rex_i18n::msg('d2u_machinery_export_linkedin_failure');
                 }
-                if (true === $is_logged_in) {
-                    // Correct user? Perform export
-                    return $linkedin->export();
-                }
-
-                // Login error occured: inform user
-                return $is_logged_in;
-
             }
         }
         return '';
@@ -441,11 +391,9 @@ class Provider
                 ."ftp_filename = '". $this->ftp_filename ."', "
                 ."social_app_id = '". $this->social_app_id ."', "
                 ."social_app_secret = '". $this->social_app_secret ."', "
-                ."social_oauth_token = '". $this->social_oauth_token ."', "
-                ."social_oauth_token_secret = '". $this->social_oauth_token_secret ."', "
-                ."social_oauth_token_valid_until = '". $this->social_oauth_token_valid_until ."', "
-                ."linkedin_email = '". $this->linkedin_email ."', "
-                ."linkedin_groupid = '". $this->linkedin_groupid ."' ";
+                ."social_access_token = '". $this->social_access_token ."', "
+                ."social_access_token_valid_until = '". $this->social_access_token_valid_until ."', "
+                ."linkedin_id = '". $this->linkedin_id ."' ";
 
         if (0 === $this->provider_id) {
             $query = 'INSERT INTO '. $query;

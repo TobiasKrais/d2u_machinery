@@ -4,8 +4,8 @@
  */
 class SocialExportLinkedIn extends AExport
 {
-    /** @var OAuth LinkedIn OAuth object */
-    private OAuth $oauth;
+    /** @var string Linkedin API version */
+    public string $linkedin_version = '202306';
 
     /**
      * Constructor. Initializes variables.
@@ -16,57 +16,82 @@ class SocialExportLinkedIn extends AExport
         parent::__construct($provider);
 
         $this->exported_used_machines = ExportedUsedMachine::getAll($provider);
-        $this->oauth = new OAuth($provider->social_app_id, $provider->social_app_secret);
+    }
 
-        if ($this->hasAccessToken()) {
-            $this->oauth->setToken($provider->social_oauth_token, $provider->social_oauth_token_secret);
+    /**
+     * Deletes old log files. Keep latest 10 log files.
+     * @return bool true if deletion was successful, false if failure for at least one file occured
+     */
+    private function cleanUp()
+    {
+        $this->log('Cleaning up old log files.');
+        $return = true;
+        // keep only the 10 latest logfiles in addon data folder, delete older ones
+        $log_files = glob(rex_path::pluginData('d2u_machinery', 'export') .'*'. $this->provider->type .'.log');
+        if (is_array($log_files) && count($log_files) > 10) {
+            for ($i = 0; $i < count($log_files) - 10; ++$i) {
+                if (false === unlink($log_files[$i])) {
+                    $return = false;
+                    $this->log('Could not delete old file "'. $log_files[$i] .'".');
+                }
+            }
         }
+        return $return;
     }
 
     /**
      * Get callback URL.
      * @return string callback URL
      */
-    private function getCallbackURL()
+    public function getCallbackURL()
     {
         return (\rex_addon::get('yrewrite') instanceof rex_addon && \rex_addon::get('yrewrite')->isAvailable() ? \rex_yrewrite::getCurrentDomain()->getUrl() : \rex::getServer())
             .'redaxo/'. rex_url::currentBackendPage(['func' => 'export', 'provider_id' => $this->provider->provider_id], false);
     }
 
     /**
-     * Get and set access token.
-     * @param string $verifier_pin OAuth verifier pin
-     * @return string error message
+     * Get and store access token.
+     * @param string $code authorization code
+     * @return bool true if access token is received correctly
      */
-    public function getAccessToken($verifier_pin)
+    public function getAccessToken($code)
     {
-        $session = rex_request::session('linkedin', 'array');
-        if (is_array($session) && array_key_exists('requesttoken', $session) && array_key_exists('requesttoken_secret', $session)) {
-            $requesttoken = (string) $session['requesttoken'];
-            $requesttoken_secret = (string) $session['requesttoken_secret'];
-            rex_request::setSession('linkedin', null);
+        $code = $_GET['code'];
 
-            try {
-                // now set the token so we can get our access token
-                $this->oauth->setToken($requesttoken, $requesttoken_secret);
+        $accessTokenUrl = 'https://www.linkedin.com/oauth/v2/accessToken';
+        $accessTokenParams = [
+            'grant_type' => 'authorization_code',
+            'client_id' => $this->provider->social_app_id,
+            'client_secret' => $this->provider->social_app_secret,
+            'code' => $code,
+            'redirect_uri' => $this->getCallbackURL(),
+        ];
+    
+        $ch = curl_init($accessTokenUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($accessTokenParams));
+    
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    
+        curl_close($ch);
+    
+        if ($httpCode === 200) {
+            $accessTokenData = json_decode($response, true);
+    
+            // get access token
+            $accessToken = 
+            $this->provider->social_access_token = $accessTokenData['access_token'];
+            $this->provider->social_access_token_valid_until = time() + $accessTokenData['expires_in'];
+            $this->provider->save();
 
-                // get the access token now that we have the verifier pin
-                $at_info = $this->oauth->getAccessToken('https://api.linkedin.com/uas/oauth/accessToken', '', $verifier_pin);
-                // store in DB
-                if (is_array($at_info)) {
-                    $this->provider->social_oauth_token = $at_info['oauth_token'];
-                    $this->provider->social_oauth_token_secret = $at_info['oauth_token_secret'];
-                    $this->provider->social_oauth_token_valid_until = time() + $at_info['oauth_expires_in'];
-                    $this->provider->save();
-
-                    // set the access token so we can make authenticated requests
-                    $this->oauth->setToken($this->provider->social_oauth_token, $this->provider->social_oauth_token_secret);
-                }
-            } catch (OAuthException $e) {
-                return $e->getMessage();
-            }
+            $this->log('Access token received. Valid until '. date('d.m.Y H:i:s', $this->provider->social_access_token_valid_until) .'.');
+            return true;
+        } else {
+            $this->log('Error receiving access token: ' . $response);
         }
-        return '';
+        return false;
     }
 
     /**
@@ -75,259 +100,273 @@ class SocialExportLinkedIn extends AExport
      */
     public function getLoginURL()
     {
-        $session = rex_request::session('linkedin', 'array');
-        if (is_array($session) && array_key_exists('requesttoken', $session)) {
-            return 'https://www.linkedin.com/uas/oauth/authenticate?oauth_token='. $session['requesttoken'];
-        }
-        return '';
+        $callback_url = $this->getCallbackURL();
+        return 'https://www.linkedin.com/oauth/v2/authorization?' . http_build_query([
+            'response_type' => 'code',
+            'client_id' => $this->provider->social_app_id,
+            'redirect_uri' => $callback_url,
+            'scope' => 'r_liteprofile w_member_social' //rw_organization_admin for company streams
+        ]);
     }
 
     /**
-     * Get and set request token.
-     * @return string error message
-     */
-    public function getRequestToken()
-    {
-        try {
-            $rt_info = $this->oauth->getRequestToken('https://api.linkedin.com/uas/oauth/requestToken?scope=r_basicprofile+r_emailaddress+w_share', $this->getCallbackURL());
-            if (is_array($rt_info)) {
-                rex_request::setSession('linkedin', ['requesttoken' => $rt_info['oauth_token'], 'requesttoken_secret' => $rt_info['oauth_token_secret']]);
-            }
-        } catch (OAuthException $e) {
-            return $e->getMessage();
-        }
-        return '';
-    }
-
-    /**
-     * Check if access token is set.
+     * Check if access token is set and valid.
      * @return bool true if yes, otherwise false
      */
     public function hasAccessToken()
     {
-        if ('' !== $this->provider->social_oauth_token && '' !== $this->provider->social_oauth_token_secret) {
-            if ($this->provider->social_oauth_token_valid_until > time()) {
+        if ('' !== $this->provider->social_access_token && $this->provider->social_access_token_valid_until > time()) {
+            // get linkedin stream id
+            $apiUrl = 'https://api.linkedin.com/v2/me';
+            $headers = [
+                'Authorization: Bearer ' . $this->provider->social_access_token,
+                'Linkedin-Version: '. $this->linkedin_version,
+                'Content-Type: application/json',
+                'x-li-format: json'
+            ];
+
+            $ch = curl_init($apiUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+            curl_close($ch);
+
+            if ($httpCode === 200) {
+                if('' === $this->provider->linkedin_id) {
+                    // No Linkedin id set? fetch default id
+                    $responseData = json_decode($response, true);
+                    $this->provider->linkedin_id = $responseData['id'];
+                    $this->provider->save();
+                    $this->log($this->provider->name .': Linkedin ID retrieved. It is: '. $this->provider->linkedin_id);
+                }
+
+                // Access token is valid
+                $this->log($this->provider->name .': Access token checked. Token is valid.');
+
                 return true;
             }
-
-            $this->provider->social_oauth_token = '';
-            $this->provider->social_oauth_token_secret = '';
-            $this->provider->social_oauth_token_valid_until = 0;
-            $this->provider->save();
-
+            else {
+                // Access token is invalid
+                $this->log($this->provider->name .': Access token checked. Token is invalid: '. $response);
+            }
         }
+        $this->provider->social_access_token = '';
+        $this->provider->social_access_token_valid_until = 0;
+        $this->provider->save();
+
         return false;
     }
 
     /**
-     * Is user mentioned in provider logged in?
-     * @return bool|string true id yes, false if no or a string with error message
-     */
-    public function isUserLoggedIn()
-    {
-        try {
-            // Fetch id from LinkedIn
-            $api_url = 'https://api.linkedin.com/v1/people/~:(id,email-address)';
-            $this->oauth->fetch($api_url, [], OAUTH_HTTP_METHOD_GET);
-            $response = $this->oauth->getLastResponse();
-
-            $linkedin_email = '';
-            $xml = new DOMDocument();
-            $xml->loadXML($response);
-            $persons = $xml->getElementsByTagName('person');
-            foreach ($persons as $person) {
-                $email = $person->getElementsByTagName('email-address');
-                if (null !== $email->item(0) && null !== $email->item(0)->nodeValue) {
-                    $linkedin_email = $email->item(0)->nodeValue;
-                }
-            }
-            if ('' === $linkedin_email) {
-                return rex_i18n::msg('d2u_machinery_export_linkedin_mail_failed');
-            }
-            if (strtolower($linkedin_email) !== strtolower($this->provider->linkedin_email)) {
-                rex_request::setSession('linkedin', null);
-                return rex_i18n::msg('d2u_machinery_export_linkedin_login_again');
-            }
-
-            return true;
-
-        } catch (OAuthException $e) {
-            return 'Error: '. $e->getMessage() .'<br />';
-        }
-    }
-
-    /**
-     * Export used machines.
-     * @return string Error message, empty if no error occured
+     * Export used machines. For result see log file
+     * @return false if at least one failure occured, true if complete export was successful
      */
     public function export()
     {
-        // First remove all deleted
+        $return = true;
+        
+        // First set 'delete' flag for all deleted machines
         ExportedUsedMachine::removeAllDeletedFromExport();
 
         foreach ($this->exported_used_machines as $exported_used_machine) {
             $used_machine = new UsedMachine($exported_used_machine->used_machine_id, $this->provider->clang_id);
             // Delete from stream
             if ('delete' === $exported_used_machine->export_action || 'update' === $exported_used_machine->export_action) {
-                // State April 2015: deleting is not supported
-                /*
-                if($exported_used_machine->provider_import_id !== "") {
-                    try {
-                        $this->oauth->fetch($exported_used_machine->provider_import_id, false, OAUTH_HTTP_METHOD_DELETE);
-                    } catch (OAuthException $e) {
+                if ('' !== $exported_used_machine->provider_import_id) {
+                    $deleteUrl = 'https://api.linkedin.com/rest/posts/' . $exported_used_machine->provider_import_id;
+
+                    $headers = [
+                        'Authorization: Bearer '. $this->provider->social_access_token,
+                        'Content-Type: application/json',
+                        'Linkedin-Version: '. $this->linkedin_version,
+                        'x-li-format: json'
+                    ];
+                    
+                    $ch = curl_init($deleteUrl);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                    
+                    $response = curl_exec($ch);
+                    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                    
+                    curl_close($ch);
+                    
+                    if ($httpCode === 204) {
+                        // Deleted post from stream
+                        $this->log('Deleted post for "'. trim($used_machine->manufacturer .' '. $used_machine->name) .'" from '. $this->provider->linkedin_id .' Linkedin stream.');
+                    } else {
+                        // Failure deleting
+                        $this->log('Failure deleting post for "'. trim($used_machine->manufacturer .' '. $used_machine->name) .'" from '. $this->provider->linkedin_id .' Linkedin stream: '. $response);
+                        $return = false;
                     }
                 }
-                */
 
                 // delete in database
                 if ('delete' === $exported_used_machine->export_action) {
                     $exported_used_machine->delete();
                 } else {
+                    // Export action 'update' means delete first and then add again
                     $exported_used_machine->export_action = 'add';
                     $exported_used_machine->provider_import_id = '';
+                    $exported_used_machine->save();
                 }
             }
 
-            // Post on wall
+            // Post on stream
             if ('add' === $exported_used_machine->export_action) {
-                // Create XML for LinkedIn Social Stream
-                // Documentation: https://developer.linkedin.com/documents/share-api
-                // <?xml version="1.0" encoding="UTF-8">
-                $xml = new DOMDocument('1.0', 'UTF-8');
-                $xml->formatOutput = true;
+                // upload image
+                $uploadUrl = 'https://api.linkedin.com/rest/images?action=initializeUpload';
+                $requestData = [
+                    'initializeUploadRequest' => [
+                        'owner' => 'urn:li:person:'. $this->provider->linkedin_id,
+                    ],
+                ];
+                
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $uploadUrl);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_POST, true);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($requestData));
+                curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                    'Authorization: Bearer ' . $this->provider->social_access_token,
+                    'Linkedin-Version: '. $this->linkedin_version,
+                    'Content-Type: application/json',
+                ]);
+                $response = curl_exec($ch);
 
-                // Post on Social Stream: prepare XML
-                if ('' === $this->provider->linkedin_groupid) {
-                    // <share>
-                    $share = $xml->createElement('share');
+                // get asset id
+                $responseArray = json_decode($response, true);
+                $assetId = $responseArray['value']['image'];
 
-                    // <comment>Bester Kran auf dem Markt</comment>
-                    $comment = $xml->createElement('comment');
-                    $comment->appendChild($xml->createTextNode(\Sprog\Wildcard::get('d2u_machinery_export_linkedin_comment_text', $this->provider->clang_id)));
-                    $share->appendChild($comment);
+                $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                curl_close($ch);
 
-                    // <content>
-                    $content = $xml->createElement('content');
+                if ($httpCode == 200) {
+                    // upload picture to url received in response
+                    $imagePath = rex_path::media($used_machine->pics[0]);
 
-                    // <title>Potain IGO 32</title>
-                    $title = $xml->createElement('title');
-                    $title->appendChild($xml->createTextNode($used_machine->manufacturer .' '. $used_machine->name));
-                    $content->appendChild($title);
+                    $uploadUrl = $responseArray['value']['uploadUrl'];
+                    $ch = curl_init();
+                    curl_setopt($ch, CURLOPT_URL, $uploadUrl);
+                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, file_get_contents($imagePath));
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                        'Authorization: Bearer ' . $this->provider->social_access_token,
+                        'Content-Type: '. mime_content_type($imagePath),
+                    ]);
+                    $response = curl_exec($ch);
 
-                    // <description>Price: on request; ... </description>
-                    $description = $xml->createElement('description');
-                    $description->appendChild($xml->createTextNode($used_machine->getExtendedTeaser()));
-                    $content->appendChild($description);
+                    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-                    // <submitted-url>http://www.meier-krantechnik.de/de/produkte/gebrauchte-krane?action=detail&item=13</submitted-url>
-                    $submitted_url = $xml->createElement('submitted-url');
-                    $submitted_url->appendChild($xml->createTextNode($used_machine->getUrl(true)));
-                    $content->appendChild($submitted_url);
-
-                    // <submitted-image-url>http://www.meier-krantechnik.de/index.php?rex_img_type=d2u_baumaschinen_list&amp;rex_img_file=sjjdc_826.jpg</submitted-image-url>
-                    if (count($used_machine->pics) > 0) {
-                        $submitted_image_url = $xml->createElement('submitted-image-url');
-                        $submitted_image_url->appendChild($xml->createTextNode((\rex_addon::get('yrewrite') instanceof rex_addon && \rex_addon::get('yrewrite')->isAvailable() ? \rex_yrewrite::getCurrentDomain()->getUrl() : \rex::getServer())
-                            .'index.php?rex_media_type='. $this->provider->media_manager_type .'&rex_media_file='. $used_machine->pics[0]));
-                        $content->appendChild($submitted_image_url);
+                    curl_close($ch);
+                    
+                    if ($httpCode == 201) {
+                        $this->log('Image "'. $used_machine->pics[0].'" for used machine "'. trim($used_machine->manufacturer .' '. $used_machine->name) .'" uploded. Asset ID: '. $assetId);
+                    } else {
+                        // failure uploading image
+                        $this->log('Failure uploading image "'. $used_machine->pics[0].'" for used machine "'. trim($used_machine->manufacturer .' '. $used_machine->name) .'". API answer: '. $response);
+                        $return = false;
                     }
-
-                    // </content>
-                    $share->appendChild($content);
-
-                    // <visibility>
-                    $visibility = $xml->createElement('visibility');
-
-                    // <code>anyone</code>
-                    $code = $xml->createElement('code');
-                    $code->appendChild($xml->createTextNode('anyone'));
-                    $visibility->appendChild($code);
-
-                    // </visibility>
-                    $share->appendChild($visibility);
-
-                    // </share>
-                    $xml->appendChild($share);
-                }
-                // Post on group stream: prepare XML
-                else {
-                    $title_text = $this->provider->company_name .' '. \Sprog\Wildcard::get('d2u_machinery_export_linkedin_offers', $this->provider->clang_id) .': '
-                        . $used_machine->name;
-                    $summary_text = \Sprog\Wildcard::get('d2u_machinery_export_linkedin_details', $this->provider->clang_id) .' '. $used_machine->getUrl(true);
-
-                    // <post>
-                    $post = $xml->createElement('post');
-
-                    // <title>Potain IGO 32</title>
-                    $title = $xml->createElement('title');
-                    $title->appendChild($xml->createTextNode($title_text));
-                    $post->appendChild($title);
-
-                    // <summary>Price: on request; ... </summary>
-                    $summary = $xml->createElement('summary');
-                    $summary->appendChild($xml->createTextNode($summary_text));
-                    $post->appendChild($summary);
-
-                    // </share>
-                    $xml->appendChild($post);
                 }
 
-                // Let's post it
-                try {
-                    $api_url = 'https://api.linkedin.com/v1/people/~/shares';
-                    if ('' !== $this->provider->linkedin_groupid) {
-                        $api_url = 'https://api.linkedin.com/v1/groups/'. $this->provider->linkedin_groupid .'/posts';
-                    }
+                // upload post
+                if($assetId !== '') {
+                    $postUrl = 'https://api.linkedin.com/rest/posts';
+                    $postData = [
+                        'author' => 'urn:li:person:'. $this->provider->linkedin_id,
+                        'commentary' => $used_machine->manufacturer .' '. $used_machine->name .': '. \Sprog\Wildcard::get('d2u_machinery_export_linkedin_details', $this->provider->clang_id),
+                        'contentLandingPage' => $used_machine->getUrl(true),
+                        'visibility' => 'PUBLIC',
+                        'distribution' => [
+                            'feedDistribution' => 'MAIN_FEED',
+                            'targetEntities' => [],
+                            'thirdPartyDistributionChannels' => []
+                        ],
+                        'content' => [
+                            'article' => [
+                                'source' => $used_machine->getUrl(true),
+                                'thumbnail' => $assetId,
+                                'title' => $used_machine->manufacturer .' '. $used_machine->name,
+                                'description' => $used_machine->teaser
+                            ]
+                        ],
+                        'lifecycleState' => 'PUBLISHED',
+                        'isReshareDisabledByAuthor' => false
+                    ];
 
-                    $this->oauth->fetch($api_url, [$xml->saveXML()], OAUTH_HTTP_METHOD_POST, ['Content-Type' => 'text/xml']);
+                    $headers = [
+                        'Authorization: Bearer '. $this->provider->social_access_token,
+                        'X-Restli-Protocol-Version: 2.0.0',
+                        'Linkedin-Version: '. $this->linkedin_version,
+                        'Content-Type: application/json',
+                    ];
+            
+                    $ch = curl_init($postUrl);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($ch, CURLOPT_POST, true);
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            
+                    $response = curl_exec($ch);
+                    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                    curl_close($ch);
 
-                    // Getting stream id
-                    $response_headers = self::http_parse_headers((string) $this->oauth->getLastResponseHeaders());
-                    if (count($response_headers) > 0) {
-                        if (isset($response_headers['Location'])) {
-                            $exported_used_machine->provider_import_id = $response_headers['Location'];
-                        }
-                        // Save results
+                    if ($httpCode === 201) {
+                        // Published successfully
                         $exported_used_machine->export_action = '';
                         $exported_used_machine->export_timestamp = date('Y-m-d H:i:s');
-                        $exported_used_machine->save();
+
+                        // Get post id
+
+                        if (false) {
+                            $exported_used_machine->provider_import_id = $response['id'];
+                            $exported_used_machine->save();
+                        }
+
+                        $this->log('Post for used machine "'. trim($used_machine->manufacturer .' '. $used_machine->name) .'" on stream of '. $this->provider->linkedin_id .' published (post id: '. $xRestliId .')');
+                    } else {
+                        // Failure publishing post
+                        $this->log('Failure posting used machine "'. trim($used_machine->manufacturer .' '. $used_machine->name) .'" on stream of '. $this->provider->linkedin_id .': '. $response);
+                        $return = false;
                     }
-                } catch (OAuthException $e) {
-                    return rex_i18n::msg('d2u_machinery_export_linkedin_upload_failed') .' '. $e;
                 }
             }
         }
 
-        return '';
+        // Clean old logs
+        $this->cleanUp();
+
+        return $return;
     }
 
     /**
-     * Parses HTTP headers into an associative array.
-     * @param string $r string containing HTTP headers
-     * @return string[] returns an array on success or false on failure
+     * Send log file. Recipient is set in addon settings.
+     * @return bool true if email was sent, otherwise false
      */
-    private static function http_parse_headers($r)
+    public function sendImportLog()
     {
-        $o = [];
-        $s = explode("\r\n", substr($r, false !== stripos($r, "\r\n") ? stripos($r, "\r\n") : 0));
-        foreach ($s as $h) {
-            [$v, $val] = explode(': ', $h);
-            if ('' === $v) {
-                continue;
+        $mail = new rex_mailer();
+        $mail->isHTML(false);
+        $mail->CharSet = 'utf-8';
+        $mail->addAddress((string) rex_config::get('d2u_machinery', 'export_failure_email'));
+
+        $mail->Subject = 'D2U Machinery Linkedin Exportbericht';
+
+        $log_content = file_exists($this->log_file) ? file_get_contents($this->log_file) : '';
+        if (false !== $log_content) {
+            $mail->Body = $log_content;
+            try {
+                return $mail->send();
+            } catch (Exception $e) {
+                $this->log('Error sending log file via email: '. $e->getMessage());
             }
-            $o[$v] = $val;
         }
-        return $o;
-    }
 
-    /**
-     * Logout by cleaning LinkedIn session vars and removing access token.
-     */
-    public function logout(): void
-    {
-        rex_request::setSession('linkedin', null);
-
-        $this->provider->social_oauth_token = '';
-        $this->provider->social_oauth_token_secret = '';
+        return false;
     }
 }

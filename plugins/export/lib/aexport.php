@@ -4,11 +4,14 @@
  */
 abstract class AExport
 {
-    /** @var ExportedUsedMachine[] that need to be exported */
-    protected $exported_used_machines = [];
+    /** @var array<ExportedUsedMachine> Used machines that need to be exported */
+    protected array $exported_used_machines = [];
+
+    /** @var string complete file name including parent folders containing log file */
+    public string $log_file = '';
 
     /** @var Provider export provider object */
-    protected $provider;
+    protected Provider $provider;
 
     /**
      * Constructor. Initializes variables.
@@ -18,6 +21,11 @@ abstract class AExport
     {
         $this->provider = $provider;
         $this->exported_used_machines = ExportedUsedMachine::getAll($provider);
+
+        if (!file_exists(rex_path::pluginData('d2u_machinery', 'export'))) {
+            rex_dir::create(rex_path::pluginData('d2u_machinery', 'export'));
+        }
+        $this->log_file = rex_path::pluginData('d2u_machinery', 'export', 'export_'. date('Y-m-d_H-i-s', time()) .'_'. $this->provider->type .'.log');
     }
 
     /**
@@ -47,6 +55,21 @@ abstract class AExport
      * @return string error message - if no errors occured, empty string is returned
      */
     abstract public function export();
+
+    /**
+     * Logs message.
+     * @param string $message Message to be logged
+     */
+    protected function log($message): void
+    {
+        $log = file_exists($this->log_file) ? file_get_contents($this->log_file) : '';
+
+        $microtime = microtime(true);
+        $log .= date('d.m.Y H:i:s', time()) .'.'. sprintf('%03d', ($microtime - floor($microtime)) * 1000) .': '. $message . PHP_EOL;
+
+        // Write to log
+        file_put_contents($this->log_file, $log);
+    }
 
     /**
      * Creates the scaled image if it does not already exist.

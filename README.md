@@ -40,6 +40,10 @@ Nach der Installation sollten zuerst die Einstellungen festgelegt und dann die P
 
 Zur Einrichtung eines Linkedin Exports sind weitere Schritte nötig. Richten Sie zuerst unter <https://www.linkedin.com/developers/> eine eigene App ein. Legen Sie im Export Plugin unter Portale ein neues Portal vom Typ "linkedin" an. Im Abschnitt "Einstellungen für alle sozialen Netzwerke" tragen Sie dann die App Client ID und das Client Secret der Linkedin App ein.
 
+Der Linkedin App muss im Reiter "Auth" im Bereich "OAuth 2.0 settings" unter "Authorized redirect URLs for your app" die URL der Redaxo index.php eingetragen werden, also z.B. "https://www.meine-domain.de/redaxo/index.php". Unter "Products" muss das Recht "Share on LinkedIn" und "Sign In with LinkedIn" hinzugefügt werden.
+
+Auch an der Redaxo Konfiguration muss eine Anpassung vorgenommen werden. In der config.yml muss unter "session:", "backend:", dann "cookie:" der Wert für "samesite:" auf "Lax" eingestellt werden. Wird diese Anpassung nicht vorgenommen, zeigt Redaxo nach der Rückkehr von Linkedin den Redaxo Anmeldebildschirm anstatt die Seite des Export Plugins. Würde man diese Seite einfach nochmals neu laden, erfolgt die Anzeige der gewünschten Seite des Eport Plugins.
+
 ### Branchen (industry_sectors)
 
 Dieses Plugin ermöglicht Branchen zu erstellen, in denen Maschinen eingesetzt werden. Eine Maschine kann Branchen zugeordnet werden. Für jede Branche wird eine eigene URL generiert. Nach der Installation sollten zuerst die Einstellungen festegelegt, danach die Branchen eingegeben und zuletzt die Maschinen den Branchen zugeordnet werden. Das Plugin stellt das Beispielmodul "90-2 D2U Machinery Addon - Branchen" zur Verfügung.

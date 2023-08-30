@@ -1,5 +1,4 @@
 <?php
-
 $func = rex_request('func', 'string');
 $provider_id = (int) rex_request('provider_id', 'int');
 $used_machine_id = (int) rex_request('used_machine_id', 'int');
@@ -21,7 +20,7 @@ if ('online' === $func) {
 } elseif ('all_offline' === $func) {
     // Remove all from next export
     ExportedUsedMachine::removeAllFromExport($provider_id);
-} elseif ('export' === $func) {
+} elseif ('export' === $func) {  
     // Export
     $provider = new Provider($provider_id);
     $error = $provider->export();
@@ -29,6 +28,32 @@ if ('online' === $func) {
         echo rex_view::error($provider->name .': '. $error);
     } else {
         echo rex_view::success($provider->name .': '. rex_i18n::msg('d2u_machinery_export_success'));
+    }
+
+    // show log file for 
+    if('linkedin' === $provider->type) {
+        $log_files = glob(rex_path::pluginData('d2u_machinery', 'export') .'*'. $provider->type .'.log');
+        $last_log_file = '';
+        $last_log_content = '';
+        if (is_array($log_files)) {
+            $last_log_file = end($log_files);
+            $last_log_content = file_get_contents($last_log_file);
+        }
+        if ('' !== $last_log_content) {
+            $last_lgo_file_pathinfo = pathinfo($last_log_file);
+    ?>
+        <div class="panel panel-edit">
+            <div class="panel-body">
+                <fieldset>
+                    <legend><?= $last_lgo_file_pathinfo['basename'] ?></legend>
+                    <div class="panel-body-wrapper slide">
+                        <?= '<pre>'. $last_log_content .'</pre>' ?>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    <?php
+        }
     }
 }
 
