@@ -308,6 +308,7 @@ class SocialExportLinkedIn extends AExport
             
                     $ch = curl_init($postUrl);
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($ch, CURLOPT_HEADER, true);
                     curl_setopt($ch, CURLOPT_POST, true);
                     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
                     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -322,13 +323,20 @@ class SocialExportLinkedIn extends AExport
                         $exported_used_machine->export_timestamp = date('Y-m-d H:i:s');
 
                         // Get post id
-
-                        if (false) {
-                            $exported_used_machine->provider_import_id = $response['id'];
-                            $exported_used_machine->save();
+                        $headerLines = explode("\r\n", $response);
+                        $xRestliId = null;
+                        foreach ($headerLines as $headerLine) {
+                            if (0 === strpos($headerLine, 'x-restli-id:')) {
+                                $xRestliId = trim(substr($headerLine, 12));
+                                break;
+                            }
                         }
+                        if (null !== $xRestliId) {
+                            $exported_used_machine->provider_import_id = $xRestliId;
+                        }
+                        $exported_used_machine->save();
 
-                        $this->log('Post for used machine "'. trim($used_machine->manufacturer .' '. $used_machine->name) .'" on stream of '. $this->provider->linkedin_id .' published (post id: '. $xRestliId .')');
+                        $this->log('Post for used machine "'. trim($used_machine->manufacturer .' '. $used_machine->name) .'" on stream of '. $this->provider->linkedin_id .' published'. (null !== $xRestliId ? ' (post id: '. $xRestliId .')' : '.'));
                     } else {
                         // Failure publishing post
                         $this->log('Failure posting used machine "'. trim($used_machine->manufacturer .' '. $used_machine->name) .'" on stream of '. $this->provider->linkedin_id .': '. $response);
