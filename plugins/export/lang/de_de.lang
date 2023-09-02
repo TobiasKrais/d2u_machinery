@@ -23,6 +23,7 @@ d2u_machinery_export_ftp_username = FTP Benutzername
 d2u_machinery_export_image_too_large = Bilddatei ist zu groß um für den Export vorbereitet zu werden. Bitte ersetzen Sie das Bild im Medienpool mit einer verkleinerten Version.
 d2u_machinery_export_last_export_date = Letzter Export am
 d2u_machinery_export_linkedin = Linkedin
+d2u_machinery_export_linkedin_autoexport_missing_requirements = Access Token oder Linkedin ID nicht vorhanden. Bitte erstellen Sie einen manuellen Export.
 d2u_machinery_export_linkedin_failure = Export fehlgeschlagen. Für Details siehe Logdatei.
 d2u_machinery_export_linkedin_id = Linkedin ID
 d2u_machinery_export_linkedin_id_hint = Wird keine ID eingegeben, liest der Export die URN ID der Person, bzw. des ersten Unternehmens aus, für die die Person Rechte besitzt und postet darauf.

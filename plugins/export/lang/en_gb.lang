@@ -23,6 +23,7 @@ d2u_machinery_export_ftp_username = FTP user name
 d2u_machinery_export_image_too_large = Picutre file is too large, to be resized for export. Please replace in lower size.
 d2u_machinery_export_last_export_date = Last export date
 d2u_machinery_export_linkedin = Linkedin
+d2u_machinery_export_linkedin_autoexport_missing_requirements = Access Token or Linkedin ID not available. Please log in manually.
 d2u_machinery_export_linkedin_failure = Export failed. For details see logfile.
 d2u_machinery_export_linkedin_id = Linkedin ID
 d2u_machinery_export_linkedin_id_hint = In case no id ist set, the default person urn id, or the first company urn id, the person has access to will be automatically selected.

@@ -145,28 +145,31 @@ class Provider
                     }
                 } elseif ('linkedin' === $provider->type) {
                     $linkedin = new SocialExportLinkedIn($provider);
-                    if ($linkedin->hasAccessToken()) {
-                        if ($linkedin->export()) {
+                    if ($linkedin->hasAccessToken() && $linkedin->hasLinkedinId()) {
+                        if ('' === $linkedin->export()) {
                             $message[] = $provider->name .': '. rex_i18n::msg('d2u_machinery_export_success');
                         } else {
                             $error = true;
                         }
+                    } else {
+                        $message[] = rex_i18n::msg('d2u_machinery_export_linkedin_autoexport_missing_requirements');
+                        $error = true;
                     }
                     $linkedin->sendImportLog();
                 }
             }
-        }
 
-        // Send report
-        $d2u_machinery = rex_addon::get('d2u_machinery');
-        if ($d2u_machinery->hasConfig('export_failure_email') && $error && 'linkedin' !== $provider->type) {
-            $mail = new rex_mailer();
-            $mail->isHTML(true);
-            $mail->CharSet = 'utf-8';
-            $mail->addAddress(trim((string) $d2u_machinery->getConfig('export_failure_email')));
-            $mail->Subject = rex_i18n::msg('d2u_machinery_export_report');
-            $mail->Body = implode('<br>', $message);
-            $mail->send();
+            // Send report
+            $d2u_machinery = rex_addon::get('d2u_machinery');
+            if ($d2u_machinery->hasConfig('export_failure_email') && $error && 'linkedin' !== $provider->type) {
+                $mail = new rex_mailer();
+                $mail->isHTML(true);
+                $mail->CharSet = 'utf-8';
+                $mail->addAddress(trim((string) $d2u_machinery->getConfig('export_failure_email')));
+                $mail->Subject = rex_i18n::msg('d2u_machinery_export_report');
+                $mail->Body = implode('<br>', $message);
+                $mail->send();
+            }
         }
 
         if ($error) {
@@ -253,17 +256,24 @@ class Provider
                     header('Location: '. $linkedin->getLoginURL());
                     exit;
                 }
-                
-                if (null !== filter_input(INPUT_GET, 'code')) {
-                    // Logged in? Get access token ...
-                    $linkedin->getAccessToken((string) filter_input(INPUT_GET, 'code', FILTER_NULL_ON_FAILURE));
-                }
+
+                // Logged in? Get access token ...
+                $linkedin->getAccessToken((string) filter_input(INPUT_GET, 'code', FILTER_NULL_ON_FAILURE));
+
             }
-            if ($linkedin->hasAccessToken()) {
-                $success = $linkedin->export();
-                if(!$success) {
+
+            // check if Linkedin ID is available
+            if (!$linkedin->hasLinkedinId()) {
+                $linkedin->receiveLinkedinID();
+            }
+
+            // Export
+            if ($linkedin->hasAccessToken() && $linkedin->hasLinkedinId() && $linkedin->validateAccessToken()) {
+                if ('' !== $linkedin->export()) {
                     return rex_i18n::msg('d2u_machinery_export_linkedin_failure');
                 }
+            } else {
+                return rex_i18n::msg('d2u_machinery_export_linkedin_failure');
             }
         }
         return '';

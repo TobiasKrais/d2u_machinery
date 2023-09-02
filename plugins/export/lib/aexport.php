@@ -8,7 +8,7 @@ abstract class AExport
     protected array $exported_used_machines = [];
 
     /** @var string complete file name including parent folders containing log file */
-    public string $log_file = '';
+    protected string $log_file = '';
 
     /** @var Provider export provider object */
     protected Provider $provider;
