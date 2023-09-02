@@ -51,6 +51,7 @@ class SocialExportLinkedIn extends AExport
 
     /**
      * Get and store access token.
+     * @link https://learn.microsoft.com/en-us/linkedin/shared/authentication/authorization-code-flow
      * @param string $code authorization code
      * @return bool true if access token is received correctly
      */
@@ -79,14 +80,14 @@ class SocialExportLinkedIn extends AExport
     
         if ($httpCode === 200) {
             $accessTokenData = json_decode($response, true);
-    
+
             // get access token
-            $accessToken = 
             $this->provider->social_access_token = $accessTokenData['access_token'];
             $this->provider->social_access_token_valid_until = time() + $accessTokenData['expires_in'];
             $this->provider->save();
 
             $this->log('Access token received. Valid until '. date('d.m.Y H:i:s', $this->provider->social_access_token_valid_until) .'.');
+            sleep(15);
             return true;
         } else {
             $this->log('Error receiving access token: ' . $response);
@@ -96,17 +97,29 @@ class SocialExportLinkedIn extends AExport
 
     /**
      * Get login URL.
+     * @link https://learn.microsoft.com/en-us/linkedin/shared/authentication/authorization-code-flow
      * @return string Login url
      */
     public function getLoginURL()
     {
         $callback_url = $this->getCallbackURL();
-        return 'https://www.linkedin.com/oauth/v2/authorization?' . http_build_query([
-            'response_type' => 'code',
-            'client_id' => $this->provider->social_app_id,
-            'redirect_uri' => $callback_url,
-            'scope' => 'r_liteprofile w_member_social' //rw_organization_admin for company streams
-        ]);
+        if('company' === $this->provider->linkedin_type) {
+            return 'https://www.linkedin.com/oauth/v2/authorization?' . http_build_query([
+                'response_type' => 'code',
+                'client_id' => $this->provider->social_app_id,
+                'redirect_uri' => $callback_url,
+                'scope' => 'r_liteprofile w_member_social rw_organization_admin w_organization_social'
+            ]);
+    
+        }
+        else {
+            return 'https://www.linkedin.com/oauth/v2/authorization?' . http_build_query([
+                'response_type' => 'code',
+                'client_id' => $this->provider->social_app_id,
+                'redirect_uri' => $callback_url,
+                'scope' => 'r_liteprofile w_member_social'
+            ]);
+        }
     }
 
     /**
@@ -116,7 +129,7 @@ class SocialExportLinkedIn extends AExport
     public function hasAccessToken()
     {
         if ('' !== $this->provider->social_access_token && $this->provider->social_access_token_valid_until > time()) {
-            // get linkedin stream id
+            // get linkedin stream id, see https://learn.microsoft.com/en-us/linkedin/shared/integrations/people/profile-api
             $apiUrl = 'https://api.linkedin.com/v2/me';
             $headers = [
                 'Authorization: Bearer ' . $this->provider->social_access_token,
@@ -124,6 +137,15 @@ class SocialExportLinkedIn extends AExport
                 'Content-Type: application/json',
                 'x-li-format: json'
             ];
+            if('company' === $this->provider->linkedin_type) {
+                // see https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-access-control-by-role?
+                $apiUrl = 'https://api.linkedin.com/rest/organizationAcls?q=roleAssignee';
+                $headers = [
+                    'Authorization: Bearer ' . $this->provider->social_access_token,
+                    'Linkedin-Version: '. $this->linkedin_version,
+                    'X-Restli-Protocol-Version: 2.0.0'
+                ];
+            }
 
             $ch = curl_init($apiUrl);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -136,9 +158,19 @@ class SocialExportLinkedIn extends AExport
 
             if ($httpCode === 200) {
                 if('' === $this->provider->linkedin_id) {
-                    // No Linkedin id set? fetch default id
+                    // No Linkedin urn id set? fetch default person id or first company id
                     $responseData = json_decode($response, true);
-                    $this->provider->linkedin_id = $responseData['id'];
+                    if('company' === $this->provider->linkedin_type) {
+                        if(array_key_exists(0, $responseData['elements']) && array_key_exists('organization', $responseData['elements'][0])) {
+                            $this->provider->linkedin_id = $responseData['elements'][0]['organization'];
+                        }
+                        else {
+                            $this->log($this->provider->name .': User has no company rights.');
+                        }
+                    }
+                    else {
+                        $this->provider->linkedin_id = 'urn:li:person:'. $responseData['id'];
+                    }
                     $this->provider->save();
                     $this->log($this->provider->name .': Linkedin ID retrieved. It is: '. $this->provider->linkedin_id);
                 }
@@ -173,7 +205,7 @@ class SocialExportLinkedIn extends AExport
 
         foreach ($this->exported_used_machines as $exported_used_machine) {
             $used_machine = new UsedMachine($exported_used_machine->used_machine_id, $this->provider->clang_id);
-            // Delete from stream
+            // Delete, see https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/posts-api?view=li-lms-2023-08&tabs=http#delete-posts
             if ('delete' === $exported_used_machine->export_action || 'update' === $exported_used_machine->export_action) {
                 if ('' !== $exported_used_machine->provider_import_id) {
                     $deleteUrl = 'https://api.linkedin.com/rest/posts/' . $exported_used_machine->provider_import_id;
@@ -196,7 +228,7 @@ class SocialExportLinkedIn extends AExport
                     curl_close($ch);
                     
                     if ($httpCode === 204) {
-                        // Deleted post from stream
+                        // Deleted post
                         $this->log('Deleted post for "'. trim($used_machine->manufacturer .' '. $used_machine->name) .'" from '. $this->provider->linkedin_id .' Linkedin stream.');
                     } else {
                         // Failure deleting
@@ -216,16 +248,16 @@ class SocialExportLinkedIn extends AExport
                 }
             }
 
-            // Post on stream
+            // Post
             if ('add' === $exported_used_machine->export_action) {
-                // upload image
+                // upload image, see https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/images-api
                 $uploadUrl = 'https://api.linkedin.com/rest/images?action=initializeUpload';
                 $requestData = [
                     'initializeUploadRequest' => [
-                        'owner' => 'urn:li:person:'. $this->provider->linkedin_id,
+                        'owner' => $this->provider->linkedin_id,
                     ],
                 ];
-                
+
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, $uploadUrl);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -274,11 +306,11 @@ class SocialExportLinkedIn extends AExport
                     }
                 }
 
-                // upload post
-                if($assetId !== '') {
+                // upload post, see https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/posts-api
+                if($assetId !== null) {
                     $postUrl = 'https://api.linkedin.com/rest/posts';
                     $postData = [
-                        'author' => 'urn:li:person:'. $this->provider->linkedin_id,
+                        'author' => $this->provider->linkedin_id,
                         'commentary' => $used_machine->manufacturer .' '. $used_machine->name .': '. \Sprog\Wildcard::get('d2u_machinery_export_linkedin_details', $this->provider->clang_id),
                         'contentLandingPage' => $used_machine->getUrl(true),
                         'visibility' => 'PUBLIC',

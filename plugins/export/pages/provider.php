@@ -27,6 +27,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
     $provider->ftp_filename = $form['ftp_filename'];
     $provider->social_app_id = $form['social_app_id'];
     $provider->social_app_secret = $form['social_app_secret'];
+    $provider->linkedin_type = $form['linkedin_type'];
     $provider->linkedin_id = $form['linkedin_id'];
 
     if (false === $provider->save()) {
@@ -131,6 +132,9 @@ if ('edit' === $func || 'add' === $func) {
 					<legend><?= rex_i18n::msg('d2u_machinery_export_social_settings_linkedin') ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
+                            $options = ['person' => rex_i18n::msg('d2u_machinery_export_linkedin_type_person'),
+                                'company' => rex_i18n::msg('d2u_machinery_export_linkedin_type_company')];
+                            d2u_addon_backend_helper::form_select('d2u_machinery_export_linkedin_type', 'form[linkedin_type]', $options, [$provider->linkedin_type], 1, false, $readonly);
                             d2u_addon_backend_helper::form_input('d2u_machinery_export_linkedin_id', 'form[linkedin_id]', $provider->linkedin_id, false, $readonly, 'text');
                             d2u_addon_backend_helper::form_infotext('d2u_machinery_export_linkedin_id_hint', 'linkedin_id_hint');
                         ?>

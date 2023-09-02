@@ -56,6 +56,9 @@ class Provider
     /** @var string linkedin id */
     public string $linkedin_id = '';
 
+    /** @var string linkedin type, either 'person' or 'company' */
+    public string $linkedin_type = 'person';
+
     /** @var string Online status. Either "online" or "offline". */
     public string $online_status = 'online';
 
@@ -90,6 +93,7 @@ class Provider
             $this->social_app_secret = (string) $result->getValue('social_app_secret');
             $this->social_access_token = (string) $result->getValue('social_access_token');
             $this->social_access_token_valid_until = (int) $result->getValue('social_access_token_valid_until');
+            $this->linkedin_type = (string) $result->getValue('linkedin_type');
             $this->linkedin_id = (string) $result->getValue('linkedin_id');
         }
     }
@@ -393,6 +397,7 @@ class Provider
                 ."social_app_secret = '". $this->social_app_secret ."', "
                 ."social_access_token = '". $this->social_access_token ."', "
                 ."social_access_token_valid_until = '". $this->social_access_token_valid_until ."', "
+                ."linkedin_type = '". $this->linkedin_type ."', "
                 ."linkedin_id = '". $this->linkedin_id ."' ";
 
         if (0 === $this->provider_id) {
