@@ -37,7 +37,7 @@ if ('online' === $func) {
         $last_log_content = '';
         if (is_array($log_files)) {
             $last_log_file = end($log_files);
-            if(false !== $last_log_file) {
+            if (false !== $last_log_file) {
                 $last_log_content = file_get_contents($last_log_file);
             }
         }

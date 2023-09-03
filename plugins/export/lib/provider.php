@@ -53,6 +53,12 @@ class Provider
     /** @var int Access token expiry unix time. */
     public int $social_access_token_valid_until = 0;
 
+    /** @var string Refresh Token */
+    public string $social_refresh_token = '';
+
+    /** @var int Refresh token expiry unix time. */
+    public int $social_refresh_token_valid_until = 0;
+
     /** @var string linkedin id */
     public string $linkedin_id = '';
 
@@ -93,6 +99,8 @@ class Provider
             $this->social_app_secret = (string) $result->getValue('social_app_secret');
             $this->social_access_token = (string) $result->getValue('social_access_token');
             $this->social_access_token_valid_until = (int) $result->getValue('social_access_token_valid_until');
+            $this->social_refresh_token = (string) $result->getValue('social_refresh_token');
+            $this->social_refresh_token_valid_until = (int) $result->getValue('social_refresh_token_valid_until');
             $this->linkedin_type = (string) $result->getValue('linkedin_type');
             $this->linkedin_id = (string) $result->getValue('linkedin_id');
         }
@@ -112,7 +120,7 @@ class Provider
         $error = false;
 
         foreach ($providers as $provider) {
-            if ($provider->isExportNeeded() || $provider->getLastExportTimestamp() < strtotime('-1 week')) {
+            if ($provider->isExportNeeded()) {
                 if ('europemachinery' === $provider->type) {
                     $europemachinery = new EuropeMachinery($provider);
                     $europemachinery_error = $europemachinery->export();
@@ -146,29 +154,35 @@ class Provider
                 } elseif ('linkedin' === $provider->type) {
                     $linkedin = new SocialExportLinkedIn($provider);
                     if ($linkedin->hasAccessToken() && $linkedin->hasLinkedinId()) {
-                        if ('' === $linkedin->export()) {
+                        if (!$linkedin->validateAccessToken()) {
+                            if (!$linkedin->refreshTokens()) {
+                                $error = true;
+                            }
+                        }
+
+                        if (!$error && '' === $linkedin->export()) {
                             $message[] = $provider->name .': '. rex_i18n::msg('d2u_machinery_export_success');
                         } else {
                             $error = true;
                         }
                     } else {
-                        $message[] = rex_i18n::msg('d2u_machinery_export_linkedin_autoexport_missing_requirements');
+                        $message[] = $provider->name .': '. rex_i18n::msg('d2u_machinery_export_linkedin_autoexport_missing_requirements');
                         $error = true;
                     }
                     $linkedin->sendImportLog();
                 }
-            }
 
-            // Send report
-            $d2u_machinery = rex_addon::get('d2u_machinery');
-            if ($d2u_machinery->hasConfig('export_failure_email') && $error && 'linkedin' !== $provider->type) {
-                $mail = new rex_mailer();
-                $mail->isHTML(true);
-                $mail->CharSet = 'utf-8';
-                $mail->addAddress(trim((string) $d2u_machinery->getConfig('export_failure_email')));
-                $mail->Subject = rex_i18n::msg('d2u_machinery_export_report');
-                $mail->Body = implode('<br>', $message);
-                $mail->send();
+                // Send report
+                $d2u_machinery = rex_addon::get('d2u_machinery');
+                if ($d2u_machinery->hasConfig('export_failure_email') && $error && 'linkedin' !== $provider->type) {
+                    $mail = new rex_mailer();
+                    $mail->isHTML(true);
+                    $mail->CharSet = 'utf-8';
+                    $mail->addAddress(trim((string) $d2u_machinery->getConfig('export_failure_email')));
+                    $mail->Subject = rex_i18n::msg('d2u_machinery_export_report');
+                    $mail->Body = implode('<br>', $message);
+                    $mail->send();
+                }
             }
         }
 
@@ -178,7 +192,6 @@ class Provider
 
         echo rex_i18n::msg('d2u_machinery_export_success');
         return true;
-
     }
 
     /**
@@ -268,7 +281,13 @@ class Provider
             }
 
             // Export
-            if ($linkedin->hasAccessToken() && $linkedin->hasLinkedinId() && $linkedin->validateAccessToken()) {
+            if ($linkedin->hasAccessToken() && $linkedin->hasLinkedinId()) {
+                if (!$linkedin->validateAccessToken()) {
+                    if (!$linkedin->refreshTokens()) {
+                        return rex_i18n::msg('d2u_machinery_export_linkedin_failure');
+                    }
+                }
+
                 if ('' !== $linkedin->export()) {
                     return rex_i18n::msg('d2u_machinery_export_linkedin_failure');
                 }
@@ -407,6 +426,8 @@ class Provider
                 ."social_app_secret = '". $this->social_app_secret ."', "
                 ."social_access_token = '". $this->social_access_token ."', "
                 ."social_access_token_valid_until = '". $this->social_access_token_valid_until ."', "
+                ."social_refresh_token = '". $this->social_refresh_token ."', "
+                ."social_refresh_token_valid_until = '". $this->social_refresh_token_valid_until ."', "
                 ."linkedin_type = '". $this->linkedin_type ."', "
                 ."linkedin_id = '". $this->linkedin_id ."' ";
 
@@ -421,6 +442,35 @@ class Provider
         if (0 === $this->provider_id) {
             $this->provider_id = (int) $result->getLastId();
         }
+
+        if ($result->hasError()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Set access token. The same access token is set for the same user with same client.
+     * You should use this function instead of save(), because Linkedin allows only one valid
+     * access token.
+     * @param string $social_access_token Access token
+     * @param string $social_access_token_valid_until Unix time until access token is valid
+     * @param string $social_refresh_token Refresh token
+     * @param string $social_refresh_token_valid_until Unix time until refresh token is valid
+     * @return bool true if successful
+     */
+    public function setTokens($social_access_token, $social_access_token_valid_until, $social_refresh_token, $social_refresh_token_valid_until)
+    {
+        $query = 'UPDATE '. \rex::getTablePrefix() .'d2u_machinery_export_provider SET '
+                ."social_access_token = '". $social_access_token ."', "
+                ."social_access_token_valid_until = '". $social_access_token_valid_until ."', "
+                ."social_refresh_token = '". $social_refresh_token ."', "
+                ."social_refresh_token_valid_until = '". $social_refresh_token_valid_until ."' "
+                ."WHERE company_email = '". $this->company_email ."' "
+                ."AND social_app_id = '". $this->social_app_id ."' ";
+        $result = \rex_sql::factory();
+        $result->setQuery($query);
 
         if ($result->hasError()) {
             return false;

@@ -24,7 +24,6 @@ class SocialExportLinkedIn extends AExport
      */
     private function cleanUp()
     {
-        $this->log('Cleaning up old log files.');
         $return = true;
         // keep only the 10 latest logfiles in addon data folder, delete older ones
         $log_files = glob(rex_path::pluginData('d2u_machinery', 'export') .'*'. $this->provider->type .'.log');
@@ -80,15 +79,16 @@ class SocialExportLinkedIn extends AExport
             curl_close($ch);
 
             if (200 === $httpCode && is_string($response)) {
-                $accessTokenData = json_decode($response, true);
-
+                $tokenData = json_decode($response, true);
                 // get access token
-                if (is_array($accessTokenData) && array_key_exists('access_token', $accessTokenData) && array_key_exists('expires_in', $accessTokenData)) {
-                    $this->provider->social_access_token = (string) $accessTokenData['access_token'];
-                    $this->provider->social_access_token_valid_until = time() + (int) $accessTokenData['expires_in'];
-                    $this->provider->save();
+                if (is_array($tokenData) && array_key_exists('access_token', $tokenData) && array_key_exists('expires_in', $tokenData)) {
+                    $social_access_token = (string) $tokenData['access_token'];
+                    $social_access_token_valid_until = time() + (int) $tokenData['expires_in'];
+                    $social_refresh_token = (string) $tokenData['refresh_token'];
+                    $social_refresh_token_valid_until = time() + (int) $tokenData['refresh_token_expires_in'];
+                    $this->provider->setTokens($social_access_token, $social_access_token_valid_until, $social_refresh_token, $social_refresh_token_valid_until);
 
-                    $this->log('Access token received. Valid until '. date('d.m.Y H:i:s', $this->provider->social_access_token_valid_until) .'.');
+                    $this->log('Access token received. Valid until '. date('d.m.Y H:i:s', $social_access_token_valid_until) .'.');
                     sleep(15);
                     return true;
                 }
@@ -107,23 +107,13 @@ class SocialExportLinkedIn extends AExport
     public function getLoginURL()
     {
         $callback_url = $this->getCallbackURL();
-        if ('company' === $this->provider->linkedin_type) {
-            return 'https://www.linkedin.com/oauth/v2/authorization?' . http_build_query([
-                'response_type' => 'code',
-                'client_id' => $this->provider->social_app_id,
-                'redirect_uri' => $callback_url,
-                'scope' => 'rw_organization_admin w_organization_social',
-            ]);
-
-        }
 
         return 'https://www.linkedin.com/oauth/v2/authorization?' . http_build_query([
             'response_type' => 'code',
             'client_id' => $this->provider->social_app_id,
             'redirect_uri' => $callback_url,
-            'scope' => 'r_liteprofile w_member_social',
+            'scope' => 'r_liteprofile w_member_social rw_organization_admin w_organization_social',
         ]);
-
     }
 
     /**
@@ -132,7 +122,7 @@ class SocialExportLinkedIn extends AExport
      */
     public function hasAccessToken()
     {
-        if ('' !== $this->provider->social_access_token && $this->provider->social_access_token_valid_until > time()) {
+        if ('' !== $this->provider->social_access_token) {
             return true;
         }
 
@@ -154,7 +144,7 @@ class SocialExportLinkedIn extends AExport
 
     /**
      * Export used machines. For result see log file.
-     * @return string Empty string if no error occured.
+     * @return string empty string if no error occured
      */
     public function export()
     {
@@ -178,7 +168,7 @@ class SocialExportLinkedIn extends AExport
                     ];
 
                     $ch = curl_init($deleteUrl);
-                    if($ch instanceof CurlHandle) {
+                    if ($ch instanceof CurlHandle) {
                         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
                         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -190,10 +180,10 @@ class SocialExportLinkedIn extends AExport
 
                         if (204 === $httpCode) {
                             // Deleted post
-                            $this->log('Deleted post for "'. trim($used_machine->manufacturer .' '. $used_machine->name) .'" from '. $this->provider->linkedin_id .' Linkedin stream.');
+                            $this->log('Deleted post for "'. trim($used_machine->manufacturer .' '. $used_machine->name) .'" from '. $this->provider->name .' ('. $this->provider->linkedin_id .')');
                         } else {
                             // Failure deleting
-                            $message = 'Failure deleting post for "'. trim($used_machine->manufacturer .' '. $used_machine->name) .'" from '. $this->provider->linkedin_id .' Linkedin stream: '. $response;
+                            $message = 'Failure deleting post for "'. trim($used_machine->manufacturer .' '. $used_machine->name) .'" from '. $this->provider->name .' ('. $this->provider->linkedin_id .'). API Response: '. $response;
                             $this->log($message);
                             $return = $message;
                         }
@@ -235,7 +225,7 @@ class SocialExportLinkedIn extends AExport
 
                 // get asset id
                 $assetId = null;
-                if(is_string($response)) {
+                if (is_string($response)) {
                     $responseArray = json_decode($response, true);
                     if (is_array($responseArray) && array_key_exists('value', $responseArray) && is_array($responseArray['value']) && array_key_exists('image', $responseArray['value'])) {
                         $assetId = $responseArray['value']['image'];
@@ -249,7 +239,7 @@ class SocialExportLinkedIn extends AExport
 
                             $uploadUrl = (string) $responseArray['value']['uploadUrl'];
                             $imageContent = file_get_contents($imagePath);
-                            if('' !== $uploadUrl && is_string($imageContent)) {
+                            if ('' !== $uploadUrl && is_string($imageContent)) {
                                 $ch = curl_init();
                                 curl_setopt($ch, CURLOPT_URL, $uploadUrl);
                                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
@@ -271,7 +261,7 @@ class SocialExportLinkedIn extends AExport
                                     // failure uploading image
                                     $message = 'Failure uploading image "'. $used_machine->pics[0].'" for used machine "'. trim($used_machine->manufacturer .' '. $used_machine->name) .'". API answer: '. $response;
                                     $this->log($message);
-                                    
+
                                     $return = $message;
                                 }
                             }
@@ -312,7 +302,7 @@ class SocialExportLinkedIn extends AExport
                     ];
 
                     $ch = curl_init($postUrl);
-                    if($ch instanceof CurlHandle) {
+                    if ($ch instanceof CurlHandle) {
                         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                         curl_setopt($ch, CURLOPT_HEADER, true);
                         curl_setopt($ch, CURLOPT_POST, true);
@@ -343,11 +333,11 @@ class SocialExportLinkedIn extends AExport
                                 }
                                 $exported_used_machine->save();
 
-                                $this->log('Post for used machine "'. trim($used_machine->manufacturer .' '. $used_machine->name) .'" on stream of '. $this->provider->linkedin_id .' published'. (null !== $xRestliId ? ' (post id: '. $xRestliId .')' : '.'));
+                                $this->log('Post for used machine "'. trim($used_machine->manufacturer .' '. $used_machine->name) .'" on '. $this->provider->name .' ('. $this->provider->linkedin_id .') published'. (null !== $xRestliId ? ' (post id: '. $xRestliId .')' : '.'));
                             }
                         } else {
                             // Failure publishing post
-                            $message = 'Failure posting used machine "'. trim($used_machine->manufacturer .' '. $used_machine->name) .'" on stream of '. $this->provider->linkedin_id .': '. $response;
+                            $message = 'Failure posting used machine "'. trim($used_machine->manufacturer .' '. $used_machine->name) .'" on '. $this->provider->name .' ('. $this->provider->linkedin_id .'): '. $response;
                             $this->log($message);
                             $return = $message;
                         }
@@ -368,7 +358,7 @@ class SocialExportLinkedIn extends AExport
      */
     public function receiveLinkedinID()
     {
-        // get linkedin stream id, see https://learn.microsoft.com/en-us/linkedin/shared/integrations/people/profile-api
+        // get linkedin urn id, see https://learn.microsoft.com/en-us/linkedin/shared/integrations/people/profile-api
         $apiUrl = 'https://api.linkedin.com/v2/me';
         $headers = [
             'Authorization: Bearer ' . $this->provider->social_access_token,
@@ -387,7 +377,7 @@ class SocialExportLinkedIn extends AExport
         }
 
         $ch = curl_init($apiUrl);
-        if($ch instanceof CurlHandle) {
+        if ($ch instanceof CurlHandle) {
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
@@ -399,7 +389,7 @@ class SocialExportLinkedIn extends AExport
             if (200 === $httpCode && is_string($response)) {
                 // No Linkedin urn id set? fetch default person id or first company id
                 $responseData = json_decode($response, true);
-                if(is_array($responseData)) {
+                if (is_array($responseData)) {
                     if ('company' === $this->provider->linkedin_type) {
                         if (is_array($responseData['elements']) && array_key_exists(0, $responseData['elements']) && is_array($responseData['elements'][0]) && array_key_exists('organization', $responseData['elements'][0])) {
                             $this->provider->linkedin_id = (string) $responseData['elements'][0]['organization'];
@@ -414,8 +404,7 @@ class SocialExportLinkedIn extends AExport
                     $this->log($this->provider->name .': Linkedin ID set. It is: '. $this->provider->linkedin_id);
                     return true;
                 }
-            }
-            else {
+            } else {
                 // Access token is invalid
                 $this->log($this->provider->name .': Cannot get Linkedin ID: '. $response);
             }
@@ -423,6 +412,50 @@ class SocialExportLinkedIn extends AExport
 
         return false;
 
+    }
+
+    /**
+     * Refresh access token.
+     * @return bool true if new access token was received
+     */
+    public function refreshTokens()
+    {
+        // see https://learn.microsoft.com/en-us/linkedin/shared/authentication/programmatic-refresh-tokens
+        $apiUrl = 'https://www.linkedin.com/oauth/v2/accessToken';
+        $accessTokenParams = [
+            'client_id' => $this->provider->social_app_id,
+            'client_secret' => $this->provider->social_app_secret,
+            'grant_type' => 'refresh_token',
+            'refresh_token' => $this->provider->social_refresh_token,
+        ];
+
+        $ch = curl_init($apiUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($accessTokenParams));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/x-www-form-urlencoded',
+        ]);
+
+        $tokenData = json_decode(curl_exec($ch), true);
+        curl_close($ch);
+
+        if (is_array($tokenData) && array_key_exists('access_token', $tokenData) && array_key_exists('expires_in', $tokenData) && array_key_exists('refresh_token', $tokenData) && array_key_exists('refresh_token_expires_in', $tokenData)) {
+            $social_access_token = (string) $tokenData['access_token'];
+            $social_access_token_valid_until = time() + (int) $tokenData['expires_in'];
+            $social_refresh_token = (string) $tokenData['refresh_token'];
+            $social_refresh_token_valid_until = time() + (int) $tokenData['refresh_token_expires_in'];
+            $this->provider->setTokens($social_access_token, $social_access_token_valid_until, $social_refresh_token, $social_refresh_token_valid_until);
+
+            $this->log('Tokens refreshed.');
+            return true;
+        }
+
+        $this->log('Refreshing tokens failed. Please export manually in Redaxo backend.');
+        $this->provider->social_access_token = '';
+        $this->provider->social_access_token_valid_until = 0;
+        $this->provider->save();
+        return false;
     }
 
     /**
@@ -439,7 +472,7 @@ class SocialExportLinkedIn extends AExport
         $mail->Subject = 'D2U Machinery Linkedin Exportbericht';
 
         $log_content = file_exists($this->log_file) ? file_get_contents($this->log_file) : '';
-        if (false !== $log_content) {
+        if (false !== $log_content && '' === $log_content) {
             $mail->Body = $log_content;
             try {
                 return $mail->send();
@@ -465,27 +498,23 @@ class SocialExportLinkedIn extends AExport
             'token' => $this->provider->social_access_token,
         ];
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $apiUrl);
+        $ch = curl_init($apiUrl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($accessTokenParams));
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/x-www-form-urlencoded',
         ]);
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        $response = json_decode(curl_exec($ch), true);
         curl_close($ch);
 
-        if (200 === $httpCode) {
-            $this->log($this->provider->name .': Access token is valid.');
+        if (is_array($response) && array_key_exists('active', $response) && $response['active']) {
+            $this->log('Access token is valid.');
             return true;
         }
 
-        if (is_string($response)) {
-            $this->log($this->provider->name .': '. json_decode($response));
-        }
-        $this->log($this->provider->name .': Access token is invalid. Please retry export.');
+        $this->log('Access token is invalid.');
         $this->provider->social_access_token = '';
         $this->provider->social_access_token_valid_until = 0;
         $this->provider->save();

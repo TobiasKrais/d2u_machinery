@@ -17,8 +17,10 @@
     ->ensureColumn(new \rex_sql_column('ftp_filename', 'VARCHAR(50)', true))
     ->ensureColumn(new \rex_sql_column('social_app_id', 'VARCHAR(191)', true))
     ->ensureColumn(new \rex_sql_column('social_app_secret', 'VARCHAR(191)', true))
-    ->ensureColumn(new \rex_sql_column('social_access_token', 'VARCHAR(191)', true))
+    ->ensureColumn(new \rex_sql_column('social_access_token', 'TEXT', true))
     ->ensureColumn(new \rex_sql_column('social_access_token_valid_until', 'INT(11)', true))
+    ->ensureColumn(new \rex_sql_column('social_refresh_token', 'TEXT', true))
+    ->ensureColumn(new \rex_sql_column('social_refresh_token_valid_until', 'INT(11)', true))
     ->ensureColumn(new \rex_sql_column('linkedin_type', 'VARCHAR(10)', true))
     ->ensureColumn(new \rex_sql_column('linkedin_id', 'VARCHAR(40)', true))
     ->ensure();
