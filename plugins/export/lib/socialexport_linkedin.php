@@ -467,7 +467,7 @@ class SocialExportLinkedIn extends AExport
         $mail = new rex_mailer();
         $mail->isHTML(false);
         $mail->CharSet = 'utf-8';
-        $mail->addAddress((string) rex_config::get('d2u_machinery', 'export_failure_email'));
+        $mail->addAddress($this->provider->company_email);
 
         $mail->Subject = 'D2U Machinery Linkedin Exportbericht';
 

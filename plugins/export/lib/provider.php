@@ -121,37 +121,7 @@ class Provider
 
         foreach ($providers as $provider) {
             if ($provider->isExportNeeded()) {
-                if ('europemachinery' === $provider->type) {
-                    $europemachinery = new EuropeMachinery($provider);
-                    $europemachinery_error = $europemachinery->export();
-                    if ('' !== $europemachinery_error) {
-                        $message[] = $provider->name .': '. $europemachinery_error;
-                        echo $provider->name .': '. $europemachinery_error .'; ';
-                        $error = true;
-                    } else {
-                        $message[] = $provider->name .': '. rex_i18n::msg('d2u_machinery_export_success');
-                    }
-                } elseif ('machinerypark' === $provider->type) {
-                    $machinerypark = new MachineryPark($provider);
-                    $machinerypark_error = $machinerypark->export();
-                    if ('' !== $machinerypark_error) {
-                        $message[] = $provider->name .': '. $machinerypark_error;
-                        echo $provider->name .': '. $machinerypark_error .'; ';
-                        $error = true;
-                    } else {
-                        $message[] = $provider->name .': '. rex_i18n::msg('d2u_machinery_export_success');
-                    }
-                } elseif ('mascus' === $provider->type) {
-                    $mascus = new Mascus($provider);
-                    $mascus_error = $mascus->export();
-                    if ('' !== $mascus_error) {
-                        $message[] = $provider->name .': '. $mascus_error;
-                        echo $provider->name .': '. $mascus_error .'; ';
-                        $error = true;
-                    } else {
-                        $message[] = $provider->name .': '. rex_i18n::msg('d2u_machinery_export_success');
-                    }
-                } elseif ('linkedin' === $provider->type) {
+                if ('linkedin' === $provider->type) {
                     $linkedin = new SocialExportLinkedIn($provider);
                     if ($linkedin->hasAccessToken() && $linkedin->hasLinkedinId()) {
                         if (!$linkedin->validateAccessToken()) {
@@ -171,17 +141,49 @@ class Provider
                     }
                     $linkedin->sendImportLog();
                 }
+                else {
+                    if ('europemachinery' === $provider->type) {
+                        $europemachinery = new EuropeMachinery($provider);
+                        $europemachinery_error = $europemachinery->export();
+                        if ('' !== $europemachinery_error) {
+                            $message[] = $provider->name .': '. $europemachinery_error;
+                            echo $provider->name .': '. $europemachinery_error .'; ';
+                            $error = true;
+                        } else {
+                            $message[] = $provider->name .': '. rex_i18n::msg('d2u_machinery_export_success');
+                        }
+                    } elseif ('machinerypark' === $provider->type) {
+                        $machinerypark = new MachineryPark($provider);
+                        $machinerypark_error = $machinerypark->export();
+                        if ('' !== $machinerypark_error) {
+                            $message[] = $provider->name .': '. $machinerypark_error;
+                            echo $provider->name .': '. $machinerypark_error .'; ';
+                            $error = true;
+                        } else {
+                            $message[] = $provider->name .': '. rex_i18n::msg('d2u_machinery_export_success');
+                        }
+                    } elseif ('mascus' === $provider->type) {
+                        $mascus = new Mascus($provider);
+                        $mascus_error = $mascus->export();
+                        if ('' !== $mascus_error) {
+                            $message[] = $provider->name .': '. $mascus_error;
+                            echo $provider->name .': '. $mascus_error .'; ';
+                            $error = true;
+                        } else {
+                            $message[] = $provider->name .': '. rex_i18n::msg('d2u_machinery_export_success');
+                        }
+                    }
 
-                // Send report
-                $d2u_machinery = rex_addon::get('d2u_machinery');
-                if ($d2u_machinery->hasConfig('export_failure_email') && $error && 'linkedin' !== $provider->type) {
-                    $mail = new rex_mailer();
-                    $mail->isHTML(true);
-                    $mail->CharSet = 'utf-8';
-                    $mail->addAddress(trim((string) $d2u_machinery->getConfig('export_failure_email')));
-                    $mail->Subject = rex_i18n::msg('d2u_machinery_export_report');
-                    $mail->Body = implode('<br>', $message);
-                    $mail->send();
+                    // Send error report
+                    if ($error) {
+                        $mail = new rex_mailer();
+                        $mail->isHTML(true);
+                        $mail->CharSet = 'utf-8';
+                        $mail->addAddress($provider->company_email);
+                        $mail->Subject = rex_i18n::msg('d2u_machinery_export_report');
+                        $mail->Body = implode('<br>', $message);
+                        $mail->send();
+                    }
                 }
             }
         }
