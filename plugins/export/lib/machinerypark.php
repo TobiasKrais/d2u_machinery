@@ -83,9 +83,9 @@ class MachineryPark extends AFTPExport
 
                     $list[] = [$used_machine->used_machine_id,
                         $used_machine->category->export_machinerypark_category_id,
-                        mb_convert_encoding(str_replace('"', "'", $used_machine->manufacturer), 'ISO-8859-1'),
-                        mb_convert_encoding(str_replace('"', "'", $used_machine->name), 'ISO-8859-1'),
-                        mb_convert_encoding(str_replace("\n", ' ', str_replace(';', ',', str_replace('"', "'", AExport::convertToExportString($used_machine->description)))), 'ISO-8859-1'),
+                        mb_convert_encoding(str_replace('"', "'", $used_machine->manufacturer), 'ISO-8859-1', 'auto'),
+                        mb_convert_encoding(str_replace('"', "'", $used_machine->name), 'ISO-8859-1', 'auto'),
+                        mb_convert_encoding(str_replace("\n", ' ', str_replace(';', ',', str_replace('"', "'", AExport::convertToExportString($used_machine->description)))), 'ISO-8859-1', 'auto'),
                         '', // ZIP code
                         '', // Location
                         '', // Country
