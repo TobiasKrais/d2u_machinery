@@ -181,7 +181,7 @@ if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['opti
             for ($i = 0; $i < count($used_machine->pics); ++$i) {
                 echo '<li data-target="#machineCarousel" data-slide-to="'. $i .'"';
                 if (0 === $i) {
-                    echo 'class="active"';
+                    echo ' class="active"';
                 }
                 echo '></li>';
             }
