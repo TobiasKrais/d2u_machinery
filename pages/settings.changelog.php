@@ -14,6 +14,7 @@
 <p>1.5.0-DEV:</p>
 <ul>
 	<li>Export Plugin: kann Gebrauchtmaschinen nun wieder auf Beiträgen von Personen und Unternehmen posten und diese beim Löschen des Angebots entfernen (Linkedin Rest API Version 202306).</li>
+	<li>Bugfix: wenn ein Artikellink entfernt wurde, gab es beim Speichern einen Fehler.</li>
 </ul>
 <p>1.4.3:</p>
 <ul>

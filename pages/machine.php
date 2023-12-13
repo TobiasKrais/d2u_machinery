@@ -35,8 +35,8 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
             }
             $machine->alternative_machine_ids = $form['alternative_machine_ids'] ?? [];
             $machine->online_status = array_key_exists('online_status', $form) ? 'online' : 'offline';
-            $machine->article_id_service = $input_link['article_id_service'];
-            $machine->article_id_software = $input_link['article_id_software'];
+            $machine->article_id_service = (int) $input_link['article_id_service'];
+            $machine->article_id_software = (int) $input_link['article_id_software'];
             $article_ids_references = preg_grep('/^\s*$/s', explode(',', $input_link_list[1]), PREG_GREP_INVERT);
             $machine->article_ids_references = is_array($article_ids_references) ? $article_ids_references : [];
             $machine->engine_power = $form['engine_power'];
