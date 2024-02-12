@@ -5,7 +5,7 @@
 class SocialExportLinkedIn extends AExport
 {
     /** @var string Linkedin API version */
-    private string $linkedin_version = '202306';
+    private string $linkedin_version = '202401';
 
     /**
      * Constructor. Initializes variables.
@@ -155,7 +155,7 @@ class SocialExportLinkedIn extends AExport
 
         foreach ($this->exported_used_machines as $exported_used_machine) {
             $used_machine = new UsedMachine($exported_used_machine->used_machine_id, $this->provider->clang_id);
-            // Delete, see https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/posts-api?view=li-lms-2023-08&tabs=http#delete-posts
+            // Delete, see https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/shares/posts-api#delete-posts
             if ('delete' === $exported_used_machine->export_action || 'update' === $exported_used_machine->export_action) {
                 if ('' !== $exported_used_machine->provider_import_id) {
                     $deleteUrl = 'https://api.linkedin.com/rest/posts/' . $exported_used_machine->provider_import_id;
@@ -367,7 +367,7 @@ class SocialExportLinkedIn extends AExport
             'x-li-format: json',
         ];
         if ('company' === $this->provider->linkedin_type) {
-            // see https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-access-control-by-role?
+            // see https://learn.microsoft.com/en-us/linkedin/marketing/integrations/community-management/organizations/organization-access-control-by-role
             $apiUrl = 'https://api.linkedin.com/rest/organizationAcls?q=roleAssignee';
             $headers = [
                 'Authorization: Bearer ' . $this->provider->social_access_token,
