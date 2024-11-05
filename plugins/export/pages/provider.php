@@ -1,6 +1,6 @@
 <?php
 $func = rex_request('func', 'string');
-$entry_id = (int) rex_request('entry_id', 'int');
+$entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
 
 // Print message
@@ -81,21 +81,21 @@ if ('edit' === $func || 'add' === $func) {
                             $provider = new Provider($entry_id);
                             $readonly = false;
 
-                            d2u_addon_backend_helper::form_input('d2u_helper_name', 'form[name]', $provider->name, true, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_helper_name', 'form[name]', $provider->name, true, $readonly, 'text');
                             $options = ['europemachinery' => rex_i18n::msg('d2u_machinery_export_europemachinery'),
                                 'linkedin' => rex_i18n::msg('d2u_machinery_export_linkedin'),
                                 'machinerypark' => rex_i18n::msg('d2u_machinery_export_machinerypark'),
                                 'mascus' => rex_i18n::msg('d2u_machinery_export_mascus')];
-                            d2u_addon_backend_helper::form_select('d2u_machinery_export_type', 'form[type]', $options, [$provider->type], 1, false, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_export_type', 'form[type]', $options, [$provider->type], 1, false, $readonly);
 
                             $options_lang = [];
                             foreach (rex_clang::getAll() as $rex_clang) {
                                 $options_lang[$rex_clang->getId()] = $rex_clang->getName();
                             }
-                            d2u_addon_backend_helper::form_select('d2u_machinery_export_clang', 'form[clang_id]', $options_lang, [$provider->clang_id]);
-                            d2u_addon_backend_helper::form_input('d2u_machinery_export_company_name', 'form[company_name]', $provider->company_name, true, $readonly, 'text');
-                            d2u_addon_backend_helper::form_input('d2u_machinery_export_company_email', 'form[company_email]', $provider->company_email, true, $readonly, 'email');
-                            d2u_addon_backend_helper::form_input('d2u_machinery_export_customer_number', 'form[customer_number]', $provider->customer_number, false, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_export_clang', 'form[clang_id]', $options_lang, [$provider->clang_id]);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_export_company_name', 'form[company_name]', $provider->company_name, true, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_export_company_email', 'form[company_email]', $provider->company_email, true, $readonly, 'email');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_export_customer_number', 'form[customer_number]', $provider->customer_number, false, $readonly, 'text');
                             $options_media = [];
                             $media_sql = \rex_sql::factory();
                             $media_sql->setQuery('SELECT name FROM '. \rex::getTablePrefix() .'media_manager_type');
@@ -103,8 +103,8 @@ if ('edit' === $func || 'add' === $func) {
                                 $options_media[(string) $media_sql->getValue('name')] = (string) $media_sql->getValue('name');
                                 $media_sql->next();
                             }
-                            d2u_addon_backend_helper::form_select('d2u_machinery_export_media_manager_type', 'form[media_manager_type]', $options_media, [$provider->media_manager_type]);
-                            d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', 'online' === $provider->online_status, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_export_media_manager_type', 'form[media_manager_type]', $options_media, [$provider->media_manager_type]);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', 'online' === $provider->online_status, $readonly);
                         ?>
 					</div>
 				</fieldset>
@@ -112,10 +112,10 @@ if ('edit' === $func || 'add' === $func) {
 					<legend><?= rex_i18n::msg('d2u_machinery_export_ftp_settings') ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-                            d2u_addon_backend_helper::form_input('d2u_machinery_export_ftp_server', 'form[ftp_server]', $provider->ftp_server, false, $readonly, 'text');
-                            d2u_addon_backend_helper::form_input('d2u_machinery_export_ftp_username', 'form[ftp_username]', $provider->ftp_username, false, $readonly, 'text');
-                            d2u_addon_backend_helper::form_input('d2u_machinery_export_ftp_password', 'form[ftp_password]', $provider->ftp_password, false, $readonly, 'text');
-                            d2u_addon_backend_helper::form_input('d2u_machinery_export_ftp_filename', 'form[ftp_filename]', $provider->ftp_filename, false, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_export_ftp_server', 'form[ftp_server]', $provider->ftp_server, false, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_export_ftp_username', 'form[ftp_username]', $provider->ftp_username, false, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_export_ftp_password', 'form[ftp_password]', $provider->ftp_password, false, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_export_ftp_filename', 'form[ftp_filename]', $provider->ftp_filename, false, $readonly, 'text');
                         ?>
 					</div>
 				</fieldset>
@@ -123,8 +123,8 @@ if ('edit' === $func || 'add' === $func) {
 					<legend><?= rex_i18n::msg('d2u_machinery_export_social_settings') ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-                            d2u_addon_backend_helper::form_input('d2u_machinery_export_social_app_id', 'form[social_app_id]', $provider->social_app_id, false, $readonly, 'text');
-                            d2u_addon_backend_helper::form_input('d2u_machinery_export_social_app_secret', 'form[social_app_secret]', $provider->social_app_secret, false, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_export_social_app_id', 'form[social_app_id]', $provider->social_app_id, false, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_export_social_app_secret', 'form[social_app_secret]', $provider->social_app_secret, false, $readonly, 'text');
                         ?>
 					</div>
 				</fieldset>
@@ -134,9 +134,9 @@ if ('edit' === $func || 'add' === $func) {
 						<?php
                             $options = ['person' => rex_i18n::msg('d2u_machinery_export_linkedin_type_person'),
                                 'company' => rex_i18n::msg('d2u_machinery_export_linkedin_type_company')];
-                            d2u_addon_backend_helper::form_select('d2u_machinery_export_linkedin_type', 'form[linkedin_type]', $options, [$provider->linkedin_type], 1, false, $readonly);
-                            d2u_addon_backend_helper::form_input('d2u_machinery_export_linkedin_id', 'form[linkedin_id]', $provider->linkedin_id, false, $readonly, 'text');
-                            d2u_addon_backend_helper::form_infotext('d2u_machinery_export_linkedin_id_hint', 'linkedin_id_hint');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_export_linkedin_type', 'form[linkedin_type]', $options, [$provider->linkedin_type], 1, false, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_export_linkedin_id', 'form[linkedin_id]', $provider->linkedin_id, false, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_infotext('d2u_machinery_export_linkedin_id_hint', 'linkedin_id_hint');
                         ?>
 					</div>
 				</fieldset>
@@ -197,9 +197,9 @@ if ('edit' === $func || 'add' === $func) {
 	</form>
 	<br>
 	<?php
-        echo d2u_addon_backend_helper::getCSS();
-        echo d2u_addon_backend_helper::getJS();
-        echo d2u_addon_backend_helper::getJSOpenAll();
+        echo \TobiasKrais\D2UHelper\BackendHelper::getCSS();
+        echo \TobiasKrais\D2UHelper\BackendHelper::getJS();
+        echo \TobiasKrais\D2UHelper\BackendHelper::getJSOpenAll();
 }
 
 if ('' === $func) {

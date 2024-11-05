@@ -166,8 +166,8 @@ $tag_open = $sprog->getConfig('wildcard_open_tag');
 $tag_close = $sprog->getConfig('wildcard_close_tag');
 $d2u_machinery = rex_addon::get('d2u_machinery');
 
-$url_namespace = d2u_addon_frontend_helper::getUrlNamespace();
-$url_id = d2u_addon_frontend_helper::getUrlId();
+$url_namespace = TobiasKrais\D2UHelper\FrontendHelper::getUrlNamespace();
+$url_id = TobiasKrais\D2UHelper\FrontendHelper::getUrlId();
 ?>
 
 <div id="d2u_machinery_module_90_1" class="col-12">
@@ -330,7 +330,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
 
     // Text
     echo '<div class="col-12 col-md-6">';
-    echo d2u_addon_frontend_helper::prepareEditorField($machine->description);
+    echo TobiasKrais\D2UHelper\FrontendHelper::prepareEditorField($machine->description);
     echo '<p>&nbsp;</p>';
     echo '</div>';
 
@@ -414,7 +414,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
                     echo $ld_json;
                     echo '<script src="'. rex_url::base('assets/addons/plyr/plyr_playlist.js') .'"></script>';
                 } else {
-                    $videomanager = new Videomanager();
+                    $videomanager = new \TobiasKrais\D2UVideos\Videomanager();
                     $videomanager->printVideos($videos);
                 }
             } else {
@@ -427,7 +427,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
                     echo '<script src="'. rex_url::base('assets/addons/plyr/plyr_init.js') .'"></script>';
                     echo '</div></div>';
                 } else {
-                    $videomanager = new Videomanager();
+                    $videomanager = new \TobiasKrais\D2UVideos\Videomanager();
                     $videomanager->printVideo($video);
                 }
                 echo $video->getLDJSONScript();
@@ -537,7 +537,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '<div class="col-12 col-md-6 col-lg-10">';
             echo '<div class="block-box">';
             echo '<p><b>'. $agitator->name .'</b></p>';
-            echo d2u_addon_frontend_helper::prepareEditorField($agitator->description);
+            echo TobiasKrais\D2UHelper\FrontendHelper::prepareEditorField($agitator->description);
             echo '</div>';
             echo '</div>';
 
@@ -574,7 +574,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '<div class="col-12 col-sm-8 col-md-9 col-lg-10">';
             echo '<div class="block-box">';
             echo '<p><b>'. $feature->name .'</b></p>';
-            echo d2u_addon_frontend_helper::prepareEditorField($feature->description);
+            echo TobiasKrais\D2UHelper\FrontendHelper::prepareEditorField($feature->description);
             echo '</div>';
             echo '</div>';
 
@@ -681,13 +681,13 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
         }
 
         if (strlen($machine->delivery_set_basic) > 5) {
-            echo '<div class="col-12 '. $class .'"><div class="deliverysets"><div class="deliverybox">'. d2u_addon_frontend_helper::prepareEditorField($machine->delivery_set_basic) .'</div></div></div>';
+            echo '<div class="col-12 '. $class .'"><div class="deliverysets"><div class="deliverybox">'. TobiasKrais\D2UHelper\FrontendHelper::prepareEditorField($machine->delivery_set_basic) .'</div></div></div>';
         }
         if (strlen($machine->delivery_set_conversion) > 5) {
-            echo '<div class="col-12 '. $class .'"><div class="deliverysets"><div class="deliverybox">'. d2u_addon_frontend_helper::prepareEditorField($machine->delivery_set_conversion) .'</div></div></div>';
+            echo '<div class="col-12 '. $class .'"><div class="deliverysets"><div class="deliverybox">'. TobiasKrais\D2UHelper\FrontendHelper::prepareEditorField($machine->delivery_set_conversion) .'</div></div></div>';
         }
         if (strlen($machine->delivery_set_full) > 5) {
-            echo '<div class="col-12 '. $class .'"><div class="deliverysets"><div class="deliverybox">'. d2u_addon_frontend_helper::prepareEditorField($machine->delivery_set_full) .'</div></div></div>';
+            echo '<div class="col-12 '. $class .'"><div class="deliverysets"><div class="deliverybox">'. TobiasKrais\D2UHelper\FrontendHelper::prepareEditorField($machine->delivery_set_full) .'</div></div></div>';
         }
         if (count($machine->pictures_delivery_set) > 0) {
             echo '<div class="col-12 '. $class .'"><div class="deliverysets"><div class="deliverybox">';
@@ -759,7 +759,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '<div class="col-12 col-md-6 col-lg-10">';
             echo '<div class="block-box">';
             echo '<p><b>'. $service_option->name .'</b></p>';
-            echo d2u_addon_frontend_helper::prepareEditorField($service_option->description);
+            echo TobiasKrais\D2UHelper\FrontendHelper::prepareEditorField($service_option->description);
             echo '</div>';
             echo '</div>';
 
@@ -811,7 +811,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '<div class="col-12">';
             echo '<div class="block-box">';
             echo '<h3>'. $equipment_group->name .'</h3>';
-            echo '<p>'. d2u_addon_frontend_helper::prepareEditorField($equipment_group->description) .'</p>';
+            echo '<p>'. TobiasKrais\D2UHelper\FrontendHelper::prepareEditorField($equipment_group->description) .'</p>';
             echo '</div>';
             echo '</div>';
             $current_equipments = $equipments[$equipment_group->group_id];
@@ -868,7 +868,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
     } else {
         $form_data .= '
 			php|validate_timer|Spamprotection|<input name="validate_timer" type="hidden" value="'. microtime(true) .'" />|
-			validate|customfunction|validate_timer|d2u_addon_frontend_helper::yform_validate_timer|5|'. $tag_open .'d2u_helper_module_form_validate_spambots'. $tag_close .'|
+			validate|customfunction|validate_timer|TobiasKrais\D2UHelper\FrontendHelper::yform_validate_timer|5|'. $tag_open .'d2u_helper_module_form_validate_spambots'. $tag_close .'|
 
 			html|honeypot||<div class="mail-validate hide">
 			text|mailvalidate|'. $tag_open .'d2u_helper_module_form_email'. $tag_close .'||no_db

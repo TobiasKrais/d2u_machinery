@@ -8,7 +8,7 @@
 /**
  * Machine Options.
  */
-class Option implements \D2U_Helper\ITranslationHelper
+class Option implements \TobiasKrais\D2UHelper\ITranslationHelper
 {
     /** @var int Database ID */
     public int $option_id = 0;
@@ -25,8 +25,8 @@ class Option implements \D2U_Helper\ITranslationHelper
     /** @var string Preview picture file name */
     public string $pic = '';
 
-    /** @var Video|bool Videomanager video */
-    public Video|bool $video = false;
+    /** @var TobiasKrais\D2UVideos\Video|bool Videomanager video */
+    public TobiasKrais\D2UVideos\Video|bool $video = false;
 
     /** @var int[] Category ids in which the option will be available */
     public array $category_ids = [];
@@ -67,7 +67,7 @@ class Option implements \D2U_Helper\ITranslationHelper
             }
 
             if (\rex_addon::get('d2u_videos') instanceof rex_addon && \rex_addon::get('d2u_videos')->isAvailable() && $result->getValue('video_id') > 0) {
-                $this->video = new Video((int) $result->getValue('video_id'), $clang_id);
+                $this->video = new \TobiasKrais\D2UVideos\Video((int) $result->getValue('video_id'), $clang_id);
             }
         }
     }
@@ -90,7 +90,7 @@ class Option implements \D2U_Helper\ITranslationHelper
             .'WHERE option_id = '. $this->option_id;
         $result_main = \rex_sql::factory();
         $result_main->setQuery($query_main);
-        if (0 === (int) $result_main->getRows()) {
+        if (0 === $result_main->getRows()) {
             $query = 'DELETE FROM '. \rex::getTablePrefix() .'d2u_machinery_options '
                 .'WHERE option_id = '. $this->option_id;
             $result = \rex_sql::factory();
@@ -225,7 +225,7 @@ class Option implements \D2U_Helper\ITranslationHelper
                     ."category_ids = '|". implode('|', $this->category_ids) ."|', "
                     .'priority = '. $this->priority .' ';
             if (\rex_addon::get('d2u_videos') instanceof rex_addon && \rex_addon::get('d2u_videos')->isAvailable() && false !== $this->video) {
-                $query .= ', video_id = '. ($this->video instanceof Video ? $this->video->video_id : 0);
+                $query .= ', video_id = '. ($this->video instanceof TobiasKrais\D2UVideos\Video ? $this->video->video_id : 0);
             } else {
                 $query .= ', video_id = NULL';
             }
@@ -283,7 +283,7 @@ class Option implements \D2U_Helper\ITranslationHelper
 
         // When prio is too high or was deleted, simply add at end
         if ($this->priority > $result->getRows() || $delete) {
-            $this->priority = (int) $result->getRows() + 1;
+            $this->priority = $result->getRows() + 1;
         }
 
         $options = [];

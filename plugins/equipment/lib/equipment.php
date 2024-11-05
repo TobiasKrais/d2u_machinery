@@ -8,7 +8,7 @@
 /**
  * Machine Equipment.
  */
-class Equipment implements \D2U_Helper\ITranslationHelper
+class Equipment implements \TobiasKrais\D2UHelper\ITranslationHelper
 {
     /** @var int Database ID */
     public int $equipment_id = 0;
@@ -106,7 +106,7 @@ class Equipment implements \D2U_Helper\ITranslationHelper
             .'WHERE equipment_id = '. $this->equipment_id;
         $result_main = \rex_sql::factory();
         $result_main->setQuery($query_main);
-        if (0 === (int) $result_main->getRows()) {
+        if (0 === $result_main->getRows()) {
             $query = 'DELETE FROM '. \rex::getTablePrefix() .'d2u_machinery_equipments '
                 .'WHERE equipment_id = '. $this->equipment_id;
             $result = \rex_sql::factory();

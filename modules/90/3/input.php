@@ -53,6 +53,6 @@ if (rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
 <div class="row">
 	<div class="col-xs-12">Text unter Kategorienliste:</div>
 	<div class="col-xs-12">
-		<textarea name="REX_INPUT_VALUE[2]" class="form-control <?= d2u_addon_backend_helper::getWYSIWYGEditorClass() ?>">REX_VALUE[2]</textarea>
+		<textarea name="REX_INPUT_VALUE[2]" class="form-control <?= \TobiasKrais\D2UHelper\BackendHelper::getWYSIWYGEditorClass() ?>">REX_VALUE[2]</textarea>
 	</div>
 </div>

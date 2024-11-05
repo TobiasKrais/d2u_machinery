@@ -8,7 +8,7 @@
 /**
  * Supply.
  */
-class Supply implements \D2U_Helper\ITranslationHelper
+class Supply implements \TobiasKrais\D2UHelper\ITranslationHelper
 {
     /** @var int Database ID */
     public int $supply_id = 0;
@@ -31,8 +31,8 @@ class Supply implements \D2U_Helper\ITranslationHelper
     /** @var string Picture */
     public string $pic = '';
 
-    /** @var Video|bool Videomanager video */
-    public Video|bool $video = false;
+    /** @var TobiasKrais\D2UVideos\Video|bool Videomanager video */
+    public TobiasKrais\D2UVideos\Video|bool $video = false;
 
     /** @var string "yes" if translation needs update */
     public string $translation_needs_update = 'delete';
@@ -66,7 +66,7 @@ class Supply implements \D2U_Helper\ITranslationHelper
             }
 
             if (\rex_addon::get('d2u_videos') instanceof rex_addon && \rex_addon::get('d2u_videos')->isAvailable() && $result->getValue('video_id') > 0) {
-                $this->video = new Video((int) $result->getValue('video_id'), $clang_id);
+                $this->video = new \TobiasKrais\D2UVideos\Video((int) $result->getValue('video_id'), $clang_id);
             }
         }
     }
@@ -115,7 +115,7 @@ class Supply implements \D2U_Helper\ITranslationHelper
             .'WHERE supply_id = '. $this->supply_id;
         $result_main = \rex_sql::factory();
         $result_main->setQuery($query_main);
-        if (0 === (int) $result_main->getRows()) {
+        if (0 === $result_main->getRows()) {
             $query = 'DELETE FROM '. \rex::getTablePrefix() .'d2u_machinery_steel_supply '
                 .'WHERE supply_id = '. $this->supply_id;
             $result = \rex_sql::factory();
@@ -229,7 +229,7 @@ class Supply implements \D2U_Helper\ITranslationHelper
                     ."online_status = '". $this->online_status ."', "
                     ."pic = '". $this->pic ."', "
                     .'priority = '. $this->priority .' ';
-            if (\rex_addon::get('d2u_videos') instanceof rex_addon && \rex_addon::get('d2u_videos')->isAvailable() && $this->video instanceof Video) {
+            if (\rex_addon::get('d2u_videos') instanceof rex_addon && \rex_addon::get('d2u_videos')->isAvailable() && $this->video instanceof TobiasKrais\D2UVideos\Video) {
                 $query .= ', video_id = '. $this->video->video_id;
             } else {
                 $query .= ', video_id = NULL';
@@ -288,7 +288,7 @@ class Supply implements \D2U_Helper\ITranslationHelper
 
         // When prio is too high or was deleted, simply add at end
         if ($this->priority > $result->getRows() || $delete) {
-            $this->priority = (int) $result->getRows() + 1;
+            $this->priority = $result->getRows() + 1;
         }
 
         $objects = [];

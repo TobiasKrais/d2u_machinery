@@ -10,17 +10,17 @@ if (\rex::isBackend() && is_object(\rex::getUser())) {
 }
 
 if (\rex::isBackend()) {
-    rex_extension::register('ART_PRE_DELETED', 'rex_d2u_machinery_article_is_in_use');
-    rex_extension::register('CLANG_DELETED', 'rex_d2u_machinery_clang_deleted');
-    rex_extension::register('MEDIA_IS_IN_USE', 'rex_d2u_machinery_media_is_in_use');
+    rex_extension::register('ART_PRE_DELETED', rex_d2u_machinery_article_is_in_use(...));
+    rex_extension::register('CLANG_DELETED', rex_d2u_machinery_clang_deleted(...));
+    rex_extension::register('MEDIA_IS_IN_USE', rex_d2u_machinery_media_is_in_use(...));
 } else {
     $d2u_video = rex_addon::get('d2u_videos');
     if ($d2u_video->isAvailable() && rex_version::compare($d2u_video->getVersion(), '1.1', '>=')) {
-        rex_extension::register('YREWRITE_SITEMAP', 'rex_d2u_machinery_video_sitemap');
+        rex_extension::register('YREWRITE_SITEMAP', rex_d2u_machinery_video_sitemap(...));
     }
 }
 // Call this extension point also in frontend
-rex_extension::register('URL_PRE_SAVE', 'rex_d2u_machinery_url_shortener');
+rex_extension::register('URL_PRE_SAVE', rex_d2u_machinery_url_shortener(...));
 
 /**
  * Checks if article is used by this addon.
@@ -187,7 +187,7 @@ function rex_d2u_machinery_url_shortener(rex_extension_point $ep)
             $result = \rex_sql::factory();
             $result->setQuery($query);
 
-            // Don't forget to regenerate YRewrtie path file this way
+            // Don't forget to regenerate YRewrite path file this way
             // rex_yrewrite_forward::init();
             // rex_yrewrite_forward::generatePathFile();
             // This cannot be done here, because method would be called to often

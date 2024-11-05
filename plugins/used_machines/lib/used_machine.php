@@ -9,7 +9,7 @@
  * @api
  * Used machine object.
  */
-class UsedMachine implements \D2U_Helper\ITranslationHelper
+class UsedMachine implements \TobiasKrais\D2UHelper\ITranslationHelper
 {
     /** @var int Database ID */
     public int $used_machine_id = 0;
@@ -74,7 +74,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper
     /** @var array<string> Download filenames */
     public array $downloads = [];
 
-    /** @var Video[] Videomanager videos */
+    /** @var TobiasKrais\D2UVideos\Video[] Videomanager videos */
     public array $videos = [];
 
     /** @var string Needs translation update? "no", "yes" or "delete" */
@@ -148,7 +148,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper
                 if (is_array($video_ids)) {
                     foreach ($video_ids as $video_id) {
                         if ($video_id > 0) {
-                            $video = new Video($video_id, $clang_id);
+                            $video = new \TobiasKrais\D2UVideos\Video($video_id, $clang_id);
                             if ('' !== $video->getVideoURL()) {
                                 $this->videos[$video_id] = $video;
                             }
@@ -190,7 +190,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper
         }
 
         // Don't forget to regenerate URL cache / search_it index
-        \d2u_addon_backend_helper::generateUrlCache();
+        \TobiasKrais\D2UHelper\BackendHelper::generateUrlCache();
     }
 
     /**
@@ -211,7 +211,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper
             .'WHERE used_machine_id = '. $this->used_machine_id;
         $result_main = \rex_sql::factory();
         $result_main->setQuery($query_main);
-        if (0 === (int) $result_main->getRows()) {
+        if (0 === $result_main->getRows()) {
             $query = 'DELETE FROM '. \rex::getTablePrefix() .'d2u_machinery_used_machines '
                 .'WHERE used_machine_id = '. $this->used_machine_id;
             $result = \rex_sql::factory();
@@ -224,7 +224,7 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper
         }
 
         // Don't forget to regenerate URL cache / search_it index
-        \d2u_addon_backend_helper::generateUrlCache();
+        \TobiasKrais\D2UHelper\BackendHelper::generateUrlCache();
 
         // Delete from YRewrite forward list
         if (rex_addon::get('yrewrite')->isAvailable()) {
@@ -527,9 +527,9 @@ class UsedMachine implements \D2U_Helper\ITranslationHelper
         // Update URLs
         if ($regenerate_urls) {
             if ('rent' === $this->offer_type) {
-                \d2u_addon_backend_helper::generateUrlCache('used_rent_machine_id');
+                \TobiasKrais\D2UHelper\BackendHelper::generateUrlCache('used_rent_machine_id');
             } else {
-                \d2u_addon_backend_helper::generateUrlCache('used_sale_machine_id');
+                \TobiasKrais\D2UHelper\BackendHelper::generateUrlCache('used_sale_machine_id');
             }
         }
 

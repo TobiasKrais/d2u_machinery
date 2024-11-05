@@ -8,7 +8,7 @@
 /**
  * Process.
  */
-class Process implements \D2U_Helper\ITranslationHelper
+class Process implements \TobiasKrais\D2UHelper\ITranslationHelper
 {
     /** @var int Database ID */
     public int $process_id = 0;
@@ -70,7 +70,7 @@ class Process implements \D2U_Helper\ITranslationHelper
             .'WHERE process_id = '. $this->process_id;
         $result_main = \rex_sql::factory();
         $result_main->setQuery($query_main);
-        if (0 === (int) $result_main->getRows()) {
+        if (0 === $result_main->getRows()) {
             $query = 'DELETE FROM '. \rex::getTablePrefix() .'d2u_machinery_steel_process '
                 .'WHERE process_id = '. $this->process_id;
             $result = \rex_sql::factory();

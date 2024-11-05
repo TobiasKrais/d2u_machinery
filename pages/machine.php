@@ -1,6 +1,6 @@
 <?php
 $func = rex_request('func', 'string');
-$entry_id = (int) rex_request('entry_id', 'int');
+$entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
 
 // Print message
@@ -225,7 +225,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
                 $machine->videos = []; // Clear video array
                 foreach ($video_ids as $video_id) {
                     if ($video_id > 0) {
-                        $machine->videos[$video_id] = new Video($video_id, (int) rex_config::get('d2u_helper', 'default_lang'));
+                        $machine->videos[$video_id] = new \TobiasKrais\D2UVideos\Video($video_id, (int) rex_config::get('d2u_helper', 'default_lang'));
                     }
                 }
             }
@@ -347,12 +347,12 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 						<?php
                             $readonly = (\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) ? false : true;
 
-                            d2u_addon_backend_helper::form_input('d2u_helper_name', 'form[name]', $machine->name, true, $readonly, 'text');
-                            d2u_addon_backend_helper::form_input('d2u_machinery_machine_product_number', 'form[product_number]', $machine->product_number, false, $readonly, 'text');
-                            d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', (string) $machine->priority, true, $readonly, 'number');
-                            d2u_addon_backend_helper::form_imagelistfield('d2u_helper_picture', 1, $machine->pics, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_helper_name', 'form[name]', $machine->name, true, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_machine_product_number', 'form[product_number]', $machine->product_number, false, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('header_priority', 'form[priority]', (string) $machine->priority, true, $readonly, 'number');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_imagelistfield('d2u_helper_picture', 1, $machine->pics, $readonly);
                             if (rex_plugin::get('d2u_machinery', 'machine_construction_equipment_extension')->isAvailable()) {
-                                d2u_addon_backend_helper::form_imagelistfield('d2u_machinery_construction_equipment_picture_delivery_set', 2, $machine->pictures_delivery_set, $readonly);
+                                \TobiasKrais\D2UHelper\BackendHelper::form_imagelistfield('d2u_machinery_construction_equipment_picture_delivery_set', 2, $machine->pictures_delivery_set, $readonly);
                             }
                             $options = [];
                             foreach (Category::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $category) {
@@ -360,7 +360,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                     $options[$category->category_id] = $category->name;
                                 }
                             }                
-                            d2u_addon_backend_helper::form_select('d2u_helper_category', 'form[category_id]', $options, $machine->category instanceof Category ? [$machine->category->category_id] : [], 1, false, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_helper_category', 'form[category_id]', $options, $machine->category instanceof Category ? [$machine->category->category_id] : [], 1, false, $readonly);
                             if (rex_plugin::get('d2u_machinery', 'contacts')->isAvailable()) {
                                 $options_contacts = [0 => rex_i18n::msg('d2u_machinery_contacts_settings_contact')];
                                 foreach (\D2U_Machinery\Contact::getAll() as $contact) {
@@ -368,7 +368,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                         $options_contacts[$contact->contact_id] = $contact->name;
                                     }
                                 }
-                                d2u_addon_backend_helper::form_select('d2u_machinery_contacts_contact', 'form[contact_id]', $options_contacts, [$machine->contact instanceof \D2U_Machinery\Contact ? (string) $machine->contact->contact_id : ''], 1, false, $readonly);
+                                \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_contacts_contact', 'form[contact_id]', $options_contacts, [$machine->contact instanceof \D2U_Machinery\Contact ? (string) $machine->contact->contact_id : ''], 1, false, $readonly);
                             }
                             $options_alt_machines = [];
                             foreach (Machine::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $alt_machine) {
@@ -376,29 +376,29 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                     $options_alt_machines[$alt_machine->machine_id] = $alt_machine->name;
                                 }
                             }
-                            d2u_addon_backend_helper::form_select('d2u_machinery_machine_alternatives', 'form[alternative_machine_ids][]', $options_alt_machines, $machine->alternative_machine_ids, 10, true, $readonly);
-                            d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', 'online' === $machine->online_status, $readonly);
-                            d2u_addon_backend_helper::form_linkfield('d2u_machinery_machine_software', 'article_id_software', $machine->article_id_software, (int) rex_config::get('d2u_helper', 'default_lang'), $readonly);
-                            d2u_addon_backend_helper::form_linkfield('d2u_machinery_machine_service', 'article_id_service', $machine->article_id_service, (int) rex_config::get('d2u_helper', 'default_lang'), $readonly);
-                            d2u_addon_backend_helper::form_linklistfield('d2u_machinery_machine_references', 1, $machine->article_ids_references, (int) rex_config::get('d2u_helper', 'default_lang'), $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_machine_alternatives', 'form[alternative_machine_ids][]', $options_alt_machines, $machine->alternative_machine_ids, 10, true, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', 'online' === $machine->online_status, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_linkfield('d2u_machinery_machine_software', 'article_id_software', $machine->article_id_software, (int) rex_config::get('d2u_helper', 'default_lang'), $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_linkfield('d2u_machinery_machine_service', 'article_id_service', $machine->article_id_service, (int) rex_config::get('d2u_helper', 'default_lang'), $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_linklistfield('d2u_machinery_machine_references', 1, $machine->article_ids_references, (int) rex_config::get('d2u_helper', 'default_lang'), $readonly);
                             if (\rex_addon::get('d2u_videos')->isAvailable()) {
                                 $options = [];
-                                foreach (Video::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $video) {
+                                foreach (TobiasKrais\D2UVideos\Video::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $video) {
                                     $options[$video->video_id] = $video->name;
                                 }
-                                d2u_addon_backend_helper::form_select('d2u_machinery_category_videos', 'form[video_ids][]', $options, array_keys($machine->videos), 10, true, $readonly);
+                                \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_category_videos', 'form[video_ids][]', $options, array_keys($machine->videos), 10, true, $readonly);
                             }
 
-                            d2u_addon_backend_helper::form_input('d2u_machinery_machine_engine_power', 'form[engine_power]', $machine->engine_power, false, $readonly, 'text');
-                            d2u_addon_backend_helper::form_checkbox('d2u_machinery_machine_engine_power_frequency_controlled', 'form[engine_power_frequency_controlled]', 'true', $machine->engine_power_frequency_controlled, $readonly);
-                            d2u_addon_backend_helper::form_input('d2u_machinery_machine_length', 'form[length]', $machine->length, false, $readonly, 'number');
-                            d2u_addon_backend_helper::form_input('d2u_machinery_machine_width', 'form[width]', $machine->width, false, $readonly, 'number');
-                            d2u_addon_backend_helper::form_input('d2u_machinery_machine_height', 'form[height]', $machine->height, false, $readonly, 'number');
-                            d2u_addon_backend_helper::form_input('d2u_machinery_machine_depth', 'form[depth]', $machine->depth, false, $readonly, 'number');
-                            d2u_addon_backend_helper::form_input('d2u_machinery_machine_weight', 'form[weight]', $machine->weight, false, $readonly, 'text');
-                            d2u_addon_backend_helper::form_input('d2u_machinery_machine_voltage_v', 'form[operating_voltage_v]', $machine->operating_voltage_v, false, $readonly, 'text');
-                            d2u_addon_backend_helper::form_input('d2u_machinery_machine_voltage_hz', 'form[operating_voltage_hz]', $machine->operating_voltage_hz, false, $readonly, 'text');
-                            d2u_addon_backend_helper::form_input('d2u_machinery_machine_voltage_a', 'form[operating_voltage_a]', $machine->operating_voltage_a, false, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_machine_engine_power', 'form[engine_power]', $machine->engine_power, false, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_machinery_machine_engine_power_frequency_controlled', 'form[engine_power_frequency_controlled]', 'true', $machine->engine_power_frequency_controlled, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_machine_length', 'form[length]', $machine->length, false, $readonly, 'number');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_machine_width', 'form[width]', $machine->width, false, $readonly, 'number');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_machine_height', 'form[height]', $machine->height, false, $readonly, 'number');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_machine_depth', 'form[depth]', $machine->depth, false, $readonly, 'number');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_machine_weight', 'form[weight]', $machine->weight, false, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_machine_voltage_v', 'form[operating_voltage_v]', $machine->operating_voltage_v, false, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_machine_voltage_hz', 'form[operating_voltage_hz]', $machine->operating_voltage_hz, false, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_machine_voltage_a', 'form[operating_voltage_a]', $machine->operating_voltage_a, false, $readonly, 'text');
                         ?>
 					</div>
 				</fieldset>
@@ -411,7 +411,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                         foreach (Equipment::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $equipments) {
                             $options_equipments[$equipments->equipment_id] = $equipments->name;
                         }
-                        d2u_addon_backend_helper::form_select('d2u_machinery_equipments', 'form[equipment_ids][]', $options_equipments, $machine->equipment_ids, 10, true, $readonly);
+                        \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_equipments', 'form[equipment_ids][]', $options_equipments, $machine->equipment_ids, 10, true, $readonly);
                         echo '</div>';
                         echo '</fieldset>';
                     }
@@ -423,7 +423,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                         foreach (IndustrySector::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $industry_sector) {
                             $options_industry_sectors[$industry_sector->industry_sector_id] = $industry_sector->name;
                         }
-                        d2u_addon_backend_helper::form_select('d2u_machinery_industry_sectors', 'form[industry_sector_ids][]', $options_industry_sectors, $machine->industry_sector_ids, 10, true, $readonly);
+                        \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_industry_sectors', 'form[industry_sector_ids][]', $options_industry_sectors, $machine->industry_sector_ids, 10, true, $readonly);
                         echo '</div>';
                         echo '</fieldset>';
                     }
@@ -435,8 +435,8 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                         foreach (AgitatorType::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $agitator_type) {
                             $options_agitator_types[$agitator_type->agitator_type_id] = $agitator_type->name;
                         }
-                        d2u_addon_backend_helper::form_select('d2u_machinery_agitator_type', 'form[agitator_type_id]', $options_agitator_types, [$machine->agitator_type_id], 1, false, $readonly);
-                        d2u_addon_backend_helper::form_input('d2u_machinery_agitators_viscosity', 'form[viscosity]', $machine->viscosity, false, $readonly, 'number');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_agitator_type', 'form[agitator_type_id]', $options_agitator_types, [$machine->agitator_type_id], 1, false, $readonly);
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_agitators_viscosity', 'form[viscosity]', $machine->viscosity, false, $readonly, 'number');
                         echo '</div>';
                         echo '</fieldset>';
                     }
@@ -448,7 +448,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                         foreach (Certificate::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $certificate) {
                             $options_certificates[$certificate->certificate_id] = $certificate->name;
                         }
-                        d2u_addon_backend_helper::form_select('d2u_machinery_certificates', 'form[certificate_ids][]', $options_certificates, $machine->certificate_ids, 10, true, $readonly);
+                        \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_certificates', 'form[certificate_ids][]', $options_certificates, $machine->certificate_ids, 10, true, $readonly);
                         echo '</div>';
                         echo '</fieldset>';
                     }
@@ -456,74 +456,74 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                         echo '<fieldset>';
                         echo '<legend><small><i class="rex-icon fa-shower"></i></small> '. rex_i18n::msg('d2u_machinery_construction_equipment') .' - '. rex_i18n::msg('d2u_machinery_construction_equipment_airless') .'</legend>';
                         echo '<div class="panel-body-wrapper slide">';
-                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_airless_hose_connection', 'form[airless_hose_connection]', $machine->airless_hose_connection, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_airless_hose_diameter', 'form[airless_hose_diameter]', $machine->airless_hose_diameter, false, $readonly, 'number');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_airless_hose_length', 'form[airless_hose_length]', $machine->airless_hose_length, false, $readonly, 'number');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_airless_nozzle_size', 'form[airless_nozzle_size]', $machine->airless_nozzle_size, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_airless_hose_connection', 'form[airless_hose_connection]', $machine->airless_hose_connection, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_airless_hose_diameter', 'form[airless_hose_diameter]', $machine->airless_hose_diameter, false, $readonly, 'number');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_airless_hose_length', 'form[airless_hose_length]', $machine->airless_hose_length, false, $readonly, 'number');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_airless_nozzle_size', 'form[airless_nozzle_size]', $machine->airless_nozzle_size, false, $readonly, 'text');
                         echo '</div>';
                         echo '</fieldset>';
 
                         echo '<fieldset>';
                         echo '<legend><small><i class="rex-icon fa-square"></i></small> '. rex_i18n::msg('d2u_machinery_construction_equipment') .' - '. rex_i18n::msg('d2u_machinery_construction_equipment_container') .'</legend>';
                         echo '<div class="panel-body-wrapper slide">';
-                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_container_capacity', 'form[container_capacity]', $machine->container_capacity, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_container_mixing_performance', 'form[container_mixing_performance]', $machine->container_mixing_performance, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_container_waterconnect_pressure', 'form[container_waterconnect_pressure]', $machine->container_waterconnect_pressure, false, $readonly, 'number');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_container_waterconnect_diameter', 'form[container_waterconnect_diameter]', $machine->container_waterconnect_diameter, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_container_weight_empty', 'form[container_weight_empty]', $machine->container_weight_empty, false, $readonly, 'number');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_container_capacity', 'form[container_capacity]', $machine->container_capacity, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_container_mixing_performance', 'form[container_mixing_performance]', $machine->container_mixing_performance, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_container_waterconnect_pressure', 'form[container_waterconnect_pressure]', $machine->container_waterconnect_pressure, false, $readonly, 'number');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_container_waterconnect_diameter', 'form[container_waterconnect_diameter]', $machine->container_waterconnect_diameter, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_container_weight_empty', 'form[container_weight_empty]', $machine->container_weight_empty, false, $readonly, 'number');
                         echo '</div>';
                         echo '</fieldset>';
 
                         echo '<fieldset>';
                         echo '<legend><small><i class="rex-icon fa-cut"></i></small> '. rex_i18n::msg('d2u_machinery_construction_equipment') .' - '. rex_i18n::msg('d2u_machinery_construction_equipment_cutters') .'</legend>';
                         echo '<div class="panel-body-wrapper slide">';
-                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_cutters_cutting_depth', 'form[cutters_cutting_depth]', $machine->cutters_cutting_depth, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_cutters_cutting_length', 'form[cutters_cutting_length]', $machine->cutters_cutting_length, false, $readonly, 'number');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_cutters_rod_length', 'form[cutters_rod_length]', $machine->cutters_rod_length, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_cutters_cutting_depth', 'form[cutters_cutting_depth]', $machine->cutters_cutting_depth, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_cutters_cutting_length', 'form[cutters_cutting_length]', $machine->cutters_cutting_length, false, $readonly, 'number');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_cutters_rod_length', 'form[cutters_rod_length]', $machine->cutters_rod_length, false, $readonly, 'text');
                         echo '</div>';
                         echo '</fieldset>';
 
                         echo '<fieldset>';
                         echo '<legend><small><i class="rex-icon fa-window-minimize"></i></small> '. rex_i18n::msg('d2u_machinery_construction_equipment') .' - '. rex_i18n::msg('d2u_machinery_construction_equipment_floor') .'</legend>';
                         echo '<div class="panel-body-wrapper slide">';
-                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_floor_beam_power_on_concrete', 'form[floor_beam_power_on_concrete]', $machine->floor_beam_power_on_concrete, false, $readonly, 'number');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_floor_dust_extraction_connection', 'form[floor_dust_extraction_connection]', $machine->floor_dust_extraction_connection, false, $readonly, 'number');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_floor_feedrate', 'form[floor_feedrate]', $machine->floor_feedrate, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_floor_filter_connection', 'form[floor_filter_connection]', $machine->floor_filter_connection, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_floor_rotations', 'form[floor_rotations]', $machine->floor_rotations, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_floor_working_pressure', 'form[floor_working_pressure]', $machine->floor_working_pressure, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_floor_working_width', 'form[floor_working_width]', $machine->floor_working_width, false, $readonly, 'number');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_floor_beam_power_on_concrete', 'form[floor_beam_power_on_concrete]', $machine->floor_beam_power_on_concrete, false, $readonly, 'number');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_floor_dust_extraction_connection', 'form[floor_dust_extraction_connection]', $machine->floor_dust_extraction_connection, false, $readonly, 'number');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_floor_feedrate', 'form[floor_feedrate]', $machine->floor_feedrate, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_floor_filter_connection', 'form[floor_filter_connection]', $machine->floor_filter_connection, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_floor_rotations', 'form[floor_rotations]', $machine->floor_rotations, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_floor_working_pressure', 'form[floor_working_pressure]', $machine->floor_working_pressure, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_floor_working_width', 'form[floor_working_width]', $machine->floor_working_width, false, $readonly, 'number');
                         echo '</div>';
                         echo '</fieldset>';
 
                         echo '<fieldset>';
                         echo '<legend><small><i class="rex-icon fa-ticket"></i></small> '. rex_i18n::msg('d2u_machinery_construction_equipment') .' - '. rex_i18n::msg('d2u_machinery_construction_equipment_grinder') .'</legend>';
                         echo '<div class="panel-body-wrapper slide">';
-                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_grinder_grinding_plate', 'form[grinder_grinding_plate]', $machine->grinder_grinding_plate, false, $readonly, 'number');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_grinder_grinding_wheel', 'form[grinder_grinding_wheel]', $machine->grinder_grinding_wheel, false, $readonly, 'number');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_grinder_rotational_frequency', 'form[grinder_rotational_frequency]', $machine->grinder_rotational_frequency, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_grinder_sanding', 'form[grinder_sanding]', $machine->grinder_sanding, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_grinder_vacuum_connection', 'form[grinder_vacuum_connection]', $machine->grinder_vacuum_connection, false, $readonly, 'number');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_grinder_grinding_plate', 'form[grinder_grinding_plate]', $machine->grinder_grinding_plate, false, $readonly, 'number');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_grinder_grinding_wheel', 'form[grinder_grinding_wheel]', $machine->grinder_grinding_wheel, false, $readonly, 'number');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_grinder_rotational_frequency', 'form[grinder_rotational_frequency]', $machine->grinder_rotational_frequency, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_grinder_sanding', 'form[grinder_sanding]', $machine->grinder_sanding, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_grinder_vacuum_connection', 'form[grinder_vacuum_connection]', $machine->grinder_vacuum_connection, false, $readonly, 'number');
                         echo '</div>';
                         echo '</fieldset>';
 
                         echo '<fieldset>';
                         echo '<legend><small><i class="rex-icon fa-arrow-up"></i></small> '. rex_i18n::msg('d2u_machinery_construction_equipment') .' - '. rex_i18n::msg('d2u_machinery_construction_equipment_pumps') .'</legend>';
                         echo '<div class="panel-body-wrapper slide">';
-                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_operating_pressure', 'form[operating_pressure]', $machine->operating_pressure, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_pump_filling', 'form[pump_filling]', $machine->pump_filling, false, $readonly, 'number');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_pump_grain_size', 'form[pump_grain_size]', $machine->pump_grain_size, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_pump_material_container', 'form[pump_material_container]', $machine->pump_material_container, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_pump_flow_volume', 'form[pump_flow_volume]', $machine->pump_flow_volume, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_pump_conveying_distance', 'form[pump_conveying_distance]', $machine->pump_conveying_distance, false, $readonly, 'number');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_pump_pressure_height', 'form[pump_pressure_height]', $machine->pump_pressure_height, false, $readonly, 'number');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_operating_pressure', 'form[operating_pressure]', $machine->operating_pressure, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_pump_filling', 'form[pump_filling]', $machine->pump_filling, false, $readonly, 'number');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_pump_grain_size', 'form[pump_grain_size]', $machine->pump_grain_size, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_pump_material_container', 'form[pump_material_container]', $machine->pump_material_container, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_pump_flow_volume', 'form[pump_flow_volume]', $machine->pump_flow_volume, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_pump_conveying_distance', 'form[pump_conveying_distance]', $machine->pump_conveying_distance, false, $readonly, 'number');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_pump_pressure_height', 'form[pump_pressure_height]', $machine->pump_pressure_height, false, $readonly, 'number');
                         echo '</div>';
                         echo '</fieldset>';
 
                         echo '<fieldset>';
                         echo '<legend><small><i class="rex-icon fa-arrow-up"></i></small> '. rex_i18n::msg('d2u_machinery_construction_equipment') .' - '. rex_i18n::msg('d2u_machinery_construction_equipment_waste_water') .'</legend>';
                         echo '<div class="panel-body-wrapper slide">';
-                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_waste_water_capacity', 'form[waste_water_capacity]', $machine->waste_water_capacity, false, $readonly, 'number');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_waste_water_capacity', 'form[waste_water_capacity]', $machine->waste_water_capacity, false, $readonly, 'number');
                         echo '</div>';
                         echo '</fieldset>';
                     }
@@ -535,7 +535,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                         foreach (ServiceOption::getAll((int) rex_config::get('d2u_helper', 'default_lang'), false) as $service_options) {
                             $options_services[$service_options->service_option_id] = $service_options->name;
                         }
-                        d2u_addon_backend_helper::form_select('d2u_machinery_service_options', 'form[service_option_ids][]', $options_services, $machine->service_option_ids, 10, true, $readonly);
+                        \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_service_options', 'form[service_option_ids][]', $options_services, $machine->service_option_ids, 10, true, $readonly);
                         echo '</div>';
                         echo '</fieldset>';
                     }
@@ -547,7 +547,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                         foreach (Feature::getAll((int) rex_config::get('d2u_helper', 'default_lang'), false !== $machine->category ? $machine->category->category_id : 0) as $feature) {
                             $options_features[$feature->feature_id] = $feature->priority .' - '. $feature->name .' (ID: '. $feature->feature_id .')';
                         }
-                        d2u_addon_backend_helper::form_select('d2u_machinery_features', 'form[feature_ids][]', $options_features, $machine->feature_ids, 10, true, $readonly);
+                        \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_features', 'form[feature_ids][]', $options_features, $machine->feature_ids, 10, true, $readonly);
                         echo '</div>';
                         echo '</fieldset>';
                     }
@@ -559,7 +559,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                         foreach (Option::getAll((int) rex_config::get('d2u_helper', 'default_lang'), false !== $machine->category ? $machine->category->category_id : 0) as $option) {
                             $options_options[$option->option_id] = $option->priority .' - '. $option->name .' (ID: '. $option->option_id .')';
                         }
-                        d2u_addon_backend_helper::form_select('d2u_machinery_options', 'form[option_ids][]', $options_options, $machine->option_ids, 10, true, $readonly);
+                        \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_options', 'form[option_ids][]', $options_options, $machine->option_ids, 10, true, $readonly);
                         echo '</div>';
                         echo '</fieldset>';
                     }
@@ -571,125 +571,125 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                         foreach (Process::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $process) {
                             $options_processes[$process->process_id] = $process->name;
                         }
-                        d2u_addon_backend_helper::form_select('d2u_machinery_steel_processes', 'form[process_ids][]', $options_processes, array_keys($machine->processes), 4, true, $readonly);
+                        \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_steel_processes', 'form[process_ids][]', $options_processes, array_keys($machine->processes), 4, true, $readonly);
                         $options_procedures = [];
                         foreach (Procedure::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $procedure) {
                             $options_procedures[$procedure->procedure_id] = $procedure->name;
                         }
-                        d2u_addon_backend_helper::form_select('d2u_machinery_steel_procedures', 'form[procedure_ids][]', $options_procedures, array_keys($machine->procedures), 4, true, $readonly);
+                        \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_steel_procedures', 'form[procedure_ids][]', $options_procedures, array_keys($machine->procedures), 4, true, $readonly);
                         $options_materials = [];
                         foreach (Material::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $material) {
                             $options_materials[$material->material_id] = $material->name;
                         }
-                        d2u_addon_backend_helper::form_select('d2u_machinery_steel_material_class', 'form[material_ids][]', $options_materials, array_keys($machine->materials), 4, true, $readonly);
+                        \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_steel_material_class', 'form[material_ids][]', $options_materials, array_keys($machine->materials), 4, true, $readonly);
                         $options_tools = [];
                         foreach (Tool::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $tool) {
                             $options_tools[$tool->tool_id] = $tool->name;
                         }
-                        d2u_addon_backend_helper::form_select('d2u_machinery_steel_tools', 'form[tool_ids][]', $options_tools, array_keys($machine->tools), 4, true, $readonly);
+                        \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_steel_tools', 'form[tool_ids][]', $options_tools, array_keys($machine->tools), 4, true, $readonly);
                         echo '</div>';
                         echo '</fieldset>';
 
                         echo '<fieldset>';
                         echo '<legend><small><i class="rex-icon fa-steam"></i></small> '. rex_i18n::msg('d2u_machinery_steel_automation') .'</legend>';
                         echo '<div class="panel-body-wrapper slide">';
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_automation_supply_single_stroke', 'form[automation_supply_single_stroke]', $machine->automation_supply_single_stroke, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_automation_supply_multi_stroke', 'form[automation_supply_multi_stroke]', $machine->automation_supply_multi_stroke, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_automation_feedrate', 'form[automation_feedrate]', $machine->automation_feedrate, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_automation_rush_leader_flyback', 'form[automation_rush_leader_flyback]', $machine->automation_rush_leader_flyback, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_automation_supply_single_stroke', 'form[automation_supply_single_stroke]', $machine->automation_supply_single_stroke, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_automation_supply_multi_stroke', 'form[automation_supply_multi_stroke]', $machine->automation_supply_multi_stroke, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_automation_feedrate', 'form[automation_feedrate]', $machine->automation_feedrate, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_automation_rush_leader_flyback', 'form[automation_rush_leader_flyback]', $machine->automation_rush_leader_flyback, false, $readonly, 'text');
                         $options_automation = [];
                         foreach (Automation::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $automation) {
                             $options_automation[$automation->automation_id] = $automation->name .' (ID: '. $automation->automation_id .')';
                         }
-                        d2u_addon_backend_helper::form_select('d2u_machinery_steel_automation_automationgrades', 'form[automation_automationgrade_ids][]', $options_automation, array_keys($machine->automation_automationgrades), 4, true, $readonly);
+                        \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_steel_automation_automationgrades', 'form[automation_automationgrade_ids][]', $options_automation, array_keys($machine->automation_automationgrades), 4, true, $readonly);
                         $options_supply = [];
                         foreach (Supply::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $supply) {
                             $options_supply[$supply->supply_id] = $supply->priority .' - '. $supply->name .' (ID: '. $supply->supply_id .')';
                         }
-                        d2u_addon_backend_helper::form_select('d2u_machinery_steel_automation_supplys', 'form[automation_supply_ids][]', $options_supply, $machine->automation_supply_ids, 4, true, $readonly);
+                        \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_steel_automation_supplys', 'form[automation_supply_ids][]', $options_supply, $machine->automation_supply_ids, 4, true, $readonly);
                         echo '</div>';
                         echo '</fieldset>';
 
                         echo '<fieldset>';
                         echo '<legend><small><i class="rex-icon fa-steam"></i></small> '. rex_i18n::msg('d2u_machinery_steel_sheet_processing') .'</legend>';
                         echo '<div class="panel-body-wrapper slide">';
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_workspace', 'form[workspace]', $machine->workspace, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_workspace_min', 'form[workspace_min]', $machine->workspace_min, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_workspace_square', 'form[workspace_square]', $machine->workspace_square, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_workspace_flat', 'form[workspace_flat]', $machine->workspace_flat, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_workspace_plate', 'form[workspace_plate]', $machine->workspace_plate, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_workspace_profile', 'form[workspace_profile]', $machine->workspace_profile, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_workspace_angle_steel', 'form[workspace_angle_steel]', $machine->workspace_angle_steel, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_workspace_round', 'form[workspace_round]', $machine->workspace_round, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_sheet_width', 'form[sheet_width]', $machine->sheet_width, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_sheet_length', 'form[sheet_length]', $machine->sheet_length, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_sheet_thickness', 'form[sheet_thickness]', $machine->sheet_thickness, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_tool_changer_locations', 'form[tool_changer_locations]', $machine->tool_changer_locations, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_workspace', 'form[workspace]', $machine->workspace, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_workspace_min', 'form[workspace_min]', $machine->workspace_min, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_workspace_square', 'form[workspace_square]', $machine->workspace_square, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_workspace_flat', 'form[workspace_flat]', $machine->workspace_flat, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_workspace_plate', 'form[workspace_plate]', $machine->workspace_plate, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_workspace_profile', 'form[workspace_profile]', $machine->workspace_profile, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_workspace_angle_steel', 'form[workspace_angle_steel]', $machine->workspace_angle_steel, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_workspace_round', 'form[workspace_round]', $machine->workspace_round, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_sheet_width', 'form[sheet_width]', $machine->sheet_width, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_sheet_length', 'form[sheet_length]', $machine->sheet_length, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_sheet_thickness', 'form[sheet_thickness]', $machine->sheet_thickness, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_tool_changer_locations', 'form[tool_changer_locations]', $machine->tool_changer_locations, false, $readonly, 'text');
                         echo '</div>';
                         echo '</fieldset>';
 
                         echo '<fieldset>';
                         echo '<legend><small><i class="rex-icon fa-steam"></i></small> '. rex_i18n::msg('d2u_machinery_steel_drilling') .'</legend>';
                         echo '<div class="panel-body-wrapper slide">';
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_drilling_unit_vertical', 'form[drilling_unit_vertical]', $machine->drilling_unit_vertical, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_drilling_unit_horizontal', 'form[drilling_unit_horizontal]', $machine->drilling_unit_horizontal, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_drilling_unit_below', 'form[drilling_unit_below]', $machine->drilling_unit_below, false, $readonly, 'number');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_drilling_diameter', 'form[drilling_diameter]', $machine->drilling_diameter, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_drilling_tools_axis', 'form[drilling_tools_axis]', $machine->drilling_tools_axis, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_drilling_axis_drive_power', 'form[drilling_axis_drive_power]', $machine->drilling_axis_drive_power, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_drilling_rpm_speed', 'form[drilling_rpm_speed]', $machine->drilling_rpm_speed, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_drilling_unit_vertical', 'form[drilling_unit_vertical]', $machine->drilling_unit_vertical, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_drilling_unit_horizontal', 'form[drilling_unit_horizontal]', $machine->drilling_unit_horizontal, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_drilling_unit_below', 'form[drilling_unit_below]', $machine->drilling_unit_below, false, $readonly, 'number');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_drilling_diameter', 'form[drilling_diameter]', $machine->drilling_diameter, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_drilling_tools_axis', 'form[drilling_tools_axis]', $machine->drilling_tools_axis, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_drilling_axis_drive_power', 'form[drilling_axis_drive_power]', $machine->drilling_axis_drive_power, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_drilling_rpm_speed', 'form[drilling_rpm_speed]', $machine->drilling_rpm_speed, false, $readonly, 'text');
                         echo '</div>';
                         echo '</fieldset>';
 
                         echo '<fieldset>';
                         echo '<legend><small><i class="rex-icon fa-steam"></i></small> '. rex_i18n::msg('d2u_machinery_steel_saw') .'</legend>';
                         echo '<div class="panel-body-wrapper slide">';
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_saw_blade', 'form[saw_blade]', $machine->saw_blade, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_saw_band', 'form[saw_band]', $machine->saw_band, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_saw_band_tilt', 'form[saw_band_tilt]', $machine->saw_band_tilt, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_automation_feedrate_sawblade', 'form[automation_feedrate_sawblade]', $machine->automation_feedrate_sawblade, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_saw_cutting_speed', 'form[saw_cutting_speed]', $machine->saw_cutting_speed, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_saw_miter', 'form[saw_miter]', $machine->saw_miter, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_saw_blade', 'form[saw_blade]', $machine->saw_blade, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_saw_band', 'form[saw_band]', $machine->saw_band, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_saw_band_tilt', 'form[saw_band_tilt]', $machine->saw_band_tilt, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_automation_feedrate_sawblade', 'form[automation_feedrate_sawblade]', $machine->automation_feedrate_sawblade, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_saw_cutting_speed', 'form[saw_cutting_speed]', $machine->saw_cutting_speed, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_saw_miter', 'form[saw_miter]', $machine->saw_miter, false, $readonly, 'text');
                         echo '</div>';
                         echo '</fieldset>';
 
                         echo '<fieldset>';
                         echo '<legend><small><i class="rex-icon fa-steam"></i></small> '. rex_i18n::msg('d2u_machinery_steel_punching') .'</legend>';
                         echo '<div class="panel-body-wrapper slide">';
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_punching_bevel_angle', 'form[bevel_angle]', $machine->bevel_angle, false, $readonly, 'number');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_punching_diameter', 'form[punching_diameter]', $machine->punching_diameter, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_punching_power', 'form[punching_power]', $machine->punching_power, false, $readonly, 'number');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_punching_tools', 'form[punching_tools]', $machine->punching_tools, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_punching_shaving_unit_angle_steel_single_cut', 'form[shaving_unit_angle_steel_single_cut]', $machine->shaving_unit_angle_steel_single_cut, false, $readonly, 'number');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_punching_bevel_angle', 'form[bevel_angle]', $machine->bevel_angle, false, $readonly, 'number');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_punching_diameter', 'form[punching_diameter]', $machine->punching_diameter, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_punching_power', 'form[punching_power]', $machine->punching_power, false, $readonly, 'number');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_punching_tools', 'form[punching_tools]', $machine->punching_tools, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_punching_shaving_unit_angle_steel_single_cut', 'form[shaving_unit_angle_steel_single_cut]', $machine->shaving_unit_angle_steel_single_cut, false, $readonly, 'number');
                         $options_profile = [];
                         foreach (Profile::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $profile) {
                             $options_profile[$profile->profile_id] = $profile->name;
                         }
-                        d2u_addon_backend_helper::form_select('d2u_machinery_steel_punching_profiles', 'form[profile_ids][]', $options_profile, array_keys($machine->profiles), 4, true, $readonly);
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_punching_carrier_width', 'form[carrier_width]', $machine->carrier_width, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_punching_carrier_height', 'form[carrier_height]', $machine->carrier_height, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_punching_carrier_weight', 'form[carrier_weight]', $machine->carrier_weight, false, $readonly, 'number');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_punching_flange_thickness', 'form[flange_thickness]', $machine->flange_thickness, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_punching_web_thickness', 'form[web_thickness]', $machine->web_thickness, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_punching_component_length', 'form[component_length]', $machine->component_length, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_punching_component_weight', 'form[component_weight]', $machine->component_weight, false, $readonly, 'number');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_steel_punching_profiles', 'form[profile_ids][]', $options_profile, array_keys($machine->profiles), 4, true, $readonly);
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_punching_carrier_width', 'form[carrier_width]', $machine->carrier_width, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_punching_carrier_height', 'form[carrier_height]', $machine->carrier_height, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_punching_carrier_weight', 'form[carrier_weight]', $machine->carrier_weight, false, $readonly, 'number');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_punching_flange_thickness', 'form[flange_thickness]', $machine->flange_thickness, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_punching_web_thickness', 'form[web_thickness]', $machine->web_thickness, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_punching_component_length', 'form[component_length]', $machine->component_length, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_punching_component_weight', 'form[component_weight]', $machine->component_weight, false, $readonly, 'number');
                         $options_welding = [];
                         foreach (Welding::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $welding) {
                             $options_welding[$welding->welding_id] = $welding->name;
                         }
-                        d2u_addon_backend_helper::form_select('d2u_machinery_steel_weldings', 'form[welding_process_ids][]', $options_welding, array_keys($machine->weldings), 4, true, $readonly);
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_welding_thickness', 'form[welding_thickness]', $machine->welding_thickness, false, $readonly, 'number');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_welding_wire_thickness', 'form[welding_wire_thickness]', $machine->welding_wire_thickness, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_steel_weldings', 'form[welding_process_ids][]', $options_welding, array_keys($machine->weldings), 4, true, $readonly);
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_welding_thickness', 'form[welding_thickness]', $machine->welding_thickness, false, $readonly, 'number');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_welding_wire_thickness', 'form[welding_wire_thickness]', $machine->welding_wire_thickness, false, $readonly, 'text');
                         echo '</div>';
                         echo '</fieldset>';
 
                         echo '<fieldset>';
                         echo '<legend><small><i class="rex-icon fa-steam"></i></small> '. rex_i18n::msg('d2u_machinery_steel_beam') .'</legend>';
                         echo '<div class="panel-body-wrapper slide">';
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_beam_continuous_opening', 'form[beam_continuous_opening]', $machine->beam_continuous_opening, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_beam_turbines', 'form[beam_turbines]', $machine->beam_turbines, false, $readonly, 'number');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_beam_turbine_power', 'form[beam_turbine_power]', $machine->beam_turbine_power, false, $readonly, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_machinery_steel_beam_color_guns', 'form[beam_color_guns]', $machine->beam_color_guns, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_beam_continuous_opening', 'form[beam_continuous_opening]', $machine->beam_continuous_opening, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_beam_turbines', 'form[beam_turbines]', $machine->beam_turbines, false, $readonly, 'number');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_beam_turbine_power', 'form[beam_turbine_power]', $machine->beam_turbine_power, false, $readonly, 'text');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_steel_beam_color_guns', 'form[beam_color_guns]', $machine->beam_color_guns, false, $readonly, 'text');
                         echo '</div>';
                         echo '</fieldset>';
                     }
@@ -701,7 +701,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                         foreach (UsageArea::getAll((int) rex_config::get('d2u_helper', 'default_lang'), $machine->category instanceof Category ? $machine->category->category_id : 0) as $usage_area) {
                             $options_usage_areas[$usage_area->usage_area_id] = $usage_area->name;
                         }
-                        d2u_addon_backend_helper::form_select('d2u_machinery_usage_areas', 'form[usage_area_ids][]', $options_usage_areas, $machine->usage_area_ids, 10, true, $readonly);
+                        \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_usage_areas', 'form[usage_area_ids][]', $options_usage_areas, $machine->usage_area_ids, 10, true, $readonly);
                         echo '</div>';
                         echo '</fieldset>';
                     }
@@ -724,7 +724,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                     $options_translations['yes'] = rex_i18n::msg('d2u_helper_translation_needs_update');
                                     $options_translations['no'] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
                                     $options_translations['delete'] = rex_i18n::msg('d2u_helper_translation_delete');
-                                    d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$machine_lang->translation_needs_update], 1, false, $readonly_lang);
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$machine_lang->translation_needs_update], 1, false, $readonly_lang);
                                 } else {
                                     echo '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="no">';
                                 }
@@ -742,20 +742,20 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 							</script>
 							<div id="details_clang_<?= $rex_clang->getId() ?>">
 								<?php
-                                    d2u_addon_backend_helper::form_input('d2u_machinery_lang_name', 'form[lang]['. $rex_clang->getId() .'][lang_name]', $machine_lang->lang_name, false, $readonly_lang, 'text');
-                                    d2u_addon_backend_helper::form_textarea('d2u_machinery_machine_teaser', 'form[lang]['. $rex_clang->getId() .'][teaser]', $machine_lang->teaser, 3, false, $readonly_lang, false);
-                                    d2u_addon_backend_helper::form_textarea('d2u_helper_description', 'form[lang]['. $rex_clang->getId() .'][description]', $machine_lang->description, 5, false, $readonly_lang, true);
-                                    d2u_addon_backend_helper::form_textarea('d2u_machinery_benefits_long', 'form[lang]['. $rex_clang->getId() .'][benefits_long]', $machine_lang->benefits_long, 5, false, $readonly_lang, true);
-                                    d2u_addon_backend_helper::form_textarea('d2u_machinery_benefits_short', 'form[lang]['. $rex_clang->getId() .'][benefits_short]', $machine_lang->benefits_short, 5, false, $readonly_lang, true);
-                                    d2u_addon_backend_helper::form_medialistfield('d2u_machinery_machine_pdfs', (int) ('1'. $rex_clang->getId()), $machine_lang->pdfs, $readonly_lang);
-                                    d2u_addon_backend_helper::form_mediafield('d2u_machinery_machine_leaflet', '1'. $rex_clang->getId(), $machine_lang->leaflet, $readonly_lang);
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_lang_name', 'form[lang]['. $rex_clang->getId() .'][lang_name]', $machine_lang->lang_name, false, $readonly_lang, 'text');
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_textarea('d2u_machinery_machine_teaser', 'form[lang]['. $rex_clang->getId() .'][teaser]', $machine_lang->teaser, 3, false, $readonly_lang, false);
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_textarea('d2u_helper_description', 'form[lang]['. $rex_clang->getId() .'][description]', $machine_lang->description, 5, false, $readonly_lang, true);
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_textarea('d2u_machinery_benefits_long', 'form[lang]['. $rex_clang->getId() .'][benefits_long]', $machine_lang->benefits_long, 5, false, $readonly_lang, true);
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_textarea('d2u_machinery_benefits_short', 'form[lang]['. $rex_clang->getId() .'][benefits_short]', $machine_lang->benefits_short, 5, false, $readonly_lang, true);
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_medialistfield('d2u_machinery_machine_pdfs', (int) ('1'. $rex_clang->getId()), $machine_lang->pdfs, $readonly_lang);
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_mediafield('d2u_machinery_machine_leaflet', '1'. $rex_clang->getId(), $machine_lang->leaflet, $readonly_lang);
                                     if (rex_plugin::get('d2u_machinery', 'machine_construction_equipment_extension')->isAvailable()) {
-                                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_container_connection_port', 'form[lang]['. $rex_clang->getId() .'][container_connection_port]', $machine_lang->container_connection_port, false, $readonly_lang, 'text');
-                                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_container_conveying_wave', 'form[lang]['. $rex_clang->getId() .'][container_conveying_wave]', $machine_lang->container_conveying_wave, false, $readonly_lang, 'text');
-                                        d2u_addon_backend_helper::form_input('d2u_machinery_construction_equipment_description_technical', 'form[lang]['. $rex_clang->getId() .'][description_technical]', $machine_lang->description_technical, false, $readonly_lang, 'text');
-                                        d2u_addon_backend_helper::form_textarea('d2u_machinery_construction_equipment_delivery_set_basic', 'form[lang]['. $rex_clang->getId() .'][delivery_set_basic]', $machine_lang->delivery_set_basic, 5, false, $readonly_lang, true);
-                                        d2u_addon_backend_helper::form_textarea('d2u_machinery_construction_equipment_delivery_set_conversion', 'form[lang]['. $rex_clang->getId() .'][delivery_set_conversion]', $machine_lang->delivery_set_conversion, 5, false, $readonly_lang, true);
-                                        d2u_addon_backend_helper::form_textarea('d2u_machinery_construction_equipment_delivery_set_full', 'form[lang]['. $rex_clang->getId() .'][delivery_set_full]', $machine_lang->delivery_set_full, 5, false, $readonly_lang, true);
+                                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_container_connection_port', 'form[lang]['. $rex_clang->getId() .'][container_connection_port]', $machine_lang->container_connection_port, false, $readonly_lang, 'text');
+                                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_container_conveying_wave', 'form[lang]['. $rex_clang->getId() .'][container_conveying_wave]', $machine_lang->container_conveying_wave, false, $readonly_lang, 'text');
+                                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_description_technical', 'form[lang]['. $rex_clang->getId() .'][description_technical]', $machine_lang->description_technical, false, $readonly_lang, 'text');
+                                        \TobiasKrais\D2UHelper\BackendHelper::form_textarea('d2u_machinery_construction_equipment_delivery_set_basic', 'form[lang]['. $rex_clang->getId() .'][delivery_set_basic]', $machine_lang->delivery_set_basic, 5, false, $readonly_lang, true);
+                                        \TobiasKrais\D2UHelper\BackendHelper::form_textarea('d2u_machinery_construction_equipment_delivery_set_conversion', 'form[lang]['. $rex_clang->getId() .'][delivery_set_conversion]', $machine_lang->delivery_set_conversion, 5, false, $readonly_lang, true);
+                                        \TobiasKrais\D2UHelper\BackendHelper::form_textarea('d2u_machinery_construction_equipment_delivery_set_full', 'form[lang]['. $rex_clang->getId() .'][delivery_set_full]', $machine_lang->delivery_set_full, 5, false, $readonly_lang, true);
                                     }
                                 ?>
 							</div>
@@ -783,8 +783,8 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 	</form>
 	<br>
 	<?php
-        echo d2u_addon_backend_helper::getCSS();
-        echo d2u_addon_backend_helper::getJS();
+        echo \TobiasKrais\D2UHelper\BackendHelper::getCSS();
+        echo \TobiasKrais\D2UHelper\BackendHelper::getJS();
 }
 
 if ('' === $func) {

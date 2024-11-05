@@ -5,13 +5,13 @@ if (\rex::isBackend() && is_object(\rex::getUser())) {
 }
 
 if (\rex::isBackend()) {
-    rex_extension::register('CLANG_DELETED', 'rex_d2u_machinery_used_machines_clang_deleted');
-    rex_extension::register('MEDIA_IS_IN_USE', 'rex_d2u_machinery_used_machines_media_is_in_use');
-    rex_extension::register('ART_PRE_DELETED', 'rex_d2u_machinery_used_machines_article_is_in_use');
+    rex_extension::register('CLANG_DELETED', rex_d2u_machinery_used_machines_clang_deleted(...));
+    rex_extension::register('MEDIA_IS_IN_USE', rex_d2u_machinery_used_machines_media_is_in_use(...));
+    rex_extension::register('ART_PRE_DELETED', rex_d2u_machinery_used_machines_article_is_in_use(...));
 } else {
     $d2u_video = rex_addon::get('d2u_videos');
     if ($d2u_video->isAvailable() && rex_version::compare($d2u_video->getVersion(), '1.1', '>=')) {
-        rex_extension::register('YREWRITE_SITEMAP', 'rex_d2u_machinery_used_machines_video_sitemap');
+        rex_extension::register('YREWRITE_SITEMAP', rex_d2u_machinery_used_machines_video_sitemap(...));
     }
 }
 

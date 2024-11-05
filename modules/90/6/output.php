@@ -44,8 +44,8 @@ $sprog = rex_addon::get('sprog');
 $tag_open = $sprog->getConfig('wildcard_open_tag');
 $tag_close = $sprog->getConfig('wildcard_close_tag');
 
-$url_namespace = d2u_addon_frontend_helper::getUrlNamespace();
-$url_id = d2u_addon_frontend_helper::getUrlId();
+$url_namespace = TobiasKrais\D2UHelper\FrontendHelper::getUrlNamespace();
+$url_id = TobiasKrais\D2UHelper\FrontendHelper::getUrlId();
 
 $offer_type = 'REX_VALUE[2]'; /** @phpstan-ignore-line */
 

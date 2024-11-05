@@ -8,7 +8,7 @@
 /**
  * Procedure.
  */
-class Procedure implements \D2U_Helper\ITranslationHelper
+class Procedure implements \TobiasKrais\D2UHelper\ITranslationHelper
 {
     /** @var int Database ID */
     public int $procedure_id = 0;
@@ -70,7 +70,7 @@ class Procedure implements \D2U_Helper\ITranslationHelper
             .'WHERE procedure_id = '. $this->procedure_id;
         $result_main = \rex_sql::factory();
         $result_main->setQuery($query_main);
-        if (0 === (int) $result_main->getRows()) {
+        if (0 === $result_main->getRows()) {
             $query = 'DELETE FROM '. \rex::getTablePrefix() .'d2u_machinery_steel_procedure '
                 .'WHERE procedure_id = '. $this->procedure_id;
             $result = \rex_sql::factory();

@@ -15,6 +15,8 @@
 <ul>
 	<li>Export Plugin: kann Gebrauchtmaschinen nun wieder auf Beiträgen von Personen und Unternehmen posten und diese beim Löschen des Angebots entfernen (Linkedin Rest API Version 202401).</li>
 	<li>Bugfix: wenn ein Artikellink entfernt wurde, gab es beim Speichern einen Fehler.</li>
+	<li>Modul "90-1 D2U Machinery Addon - Hauptausgabe": An D2U Videomanager Addon >= 1.2 angepasst.</li>
+	<li>Modul "90-4 D2U Machinery Addon - Gebrauchtmaschinen": An D2U Videomanager Addon >= 1.2 angepasst.</li>
 </ul>
 <p>1.4.3:</p>
 <ul>

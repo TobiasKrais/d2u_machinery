@@ -1,6 +1,6 @@
 <?php
 $func = rex_request('func', 'string');
-$entry_id = (int) rex_request('entry_id', 'int');
+$entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
 
 // messages
@@ -122,7 +122,7 @@ if ('edit' === $func || 'add' === $func) {
                                     $options_translations['yes'] = rex_i18n::msg('d2u_helper_translation_needs_update');
                                     $options_translations['no'] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
                                     $options_translations['delete'] = rex_i18n::msg('d2u_helper_translation_delete');
-                                    d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$industry_sector->translation_needs_update], 1, false, $readonly_lang);
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$industry_sector->translation_needs_update], 1, false, $readonly_lang);
                                 } else {
                                     echo '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
                                 }
@@ -140,9 +140,9 @@ if ('edit' === $func || 'add' === $func) {
 							</script>
 							<div id="details_clang_<?= $rex_clang->getId() ?>">
 								<?php
-                                    d2u_addon_backend_helper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $industry_sector->name, $required, $readonly_lang, 'text');
-                                    d2u_addon_backend_helper::form_input('d2u_machinery_machine_teaser', 'form[lang]['. $rex_clang->getId() .'][teaser]', $industry_sector->teaser, false, $readonly_lang, 'text');
-                                    d2u_addon_backend_helper::form_textarea('d2u_helper_description', 'form[lang]['. $rex_clang->getId() .'][description]', $industry_sector->description, 5, false, $readonly_lang, true);
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $industry_sector->name, $required, $readonly_lang, 'text');
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_machine_teaser', 'form[lang]['. $rex_clang->getId() .'][teaser]', $industry_sector->teaser, false, $readonly_lang, 'text');
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_textarea('d2u_helper_description', 'form[lang]['. $rex_clang->getId() .'][description]', $industry_sector->description, 5, false, $readonly_lang, true);
                                 ?>
 							</div>
 						</div>
@@ -161,9 +161,9 @@ if ('edit' === $func || 'add' === $func) {
                                 $readonly = false;
                             }
 
-                            d2u_addon_backend_helper::form_mediafield('d2u_helper_icon', '2', $industry_sector->icon, $readonly);
-                            d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', '1', $industry_sector->pic, $readonly);
-                            d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', 'online' === $industry_sector->online_status, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_mediafield('d2u_helper_icon', '2', $industry_sector->icon, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_mediafield('d2u_helper_picture', '1', $industry_sector->pic, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', 'online' === $industry_sector->online_status, $readonly);
                         ?>
 					</div>
 				</fieldset>
@@ -186,8 +186,8 @@ if ('edit' === $func || 'add' === $func) {
 	</form>
 	<br>
 	<?php
-        echo d2u_addon_backend_helper::getCSS();
-        echo d2u_addon_backend_helper::getJS();
+        echo \TobiasKrais\D2UHelper\BackendHelper::getCSS();
+        echo \TobiasKrais\D2UHelper\BackendHelper::getJS();
 }
 
 if ('' === $func) {

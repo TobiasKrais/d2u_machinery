@@ -5,10 +5,12 @@
  * @author <a href="http://www.design-to-use.de">www.design-to-use.de</a>
  */
 
+use TobiasKrais\D2UHelper\BackendHelper;
+
 /**
  * Machine Category.
  */
-class Category implements \D2U_Helper\ITranslationHelper
+class Category implements \TobiasKrais\D2UHelper\ITranslationHelper
 {
     /** @var int Database ID */
     public int $category_id = 0;
@@ -64,7 +66,7 @@ class Category implements \D2U_Helper\ITranslationHelper
     /** @var array<string> array with PDF file names */
     public $pdfs = [];
 
-    /** @var Video[] Videomanager videos */
+    /** @var TobiasKrais\D2UVideos\Video[] Videomanager videos */
     public $videos = [];
 
     /** @var int Sort Priority */
@@ -134,7 +136,7 @@ class Category implements \D2U_Helper\ITranslationHelper
                 if (is_array($video_ids)) {
                     foreach ($video_ids as $video_id) {
                         if ($video_id > 0) {
-                            $video = new Video($video_id, $clang_id);
+                            $video = new \TobiasKrais\D2UVideos\Video($video_id, $clang_id);
                             if ('' !== $video->getVideoURL()) {
                                 $this->videos[$video_id] = $video;
                             }
@@ -156,9 +158,9 @@ class Category implements \D2U_Helper\ITranslationHelper
                     // Get offer type from used machine
                     $used_category_id = 0;
                     if (\rex_addon::get('url')->isAvailable()) {
-                        $url_namespace = d2u_addon_frontend_helper::getUrlNamespace();
+                        $url_namespace = TobiasKrais\D2UHelper\FrontendHelper::getUrlNamespace();
                         if ('used_rent_category_id' === $url_namespace || 'used_sale_category_id' === $url_namespace) {
-                            $used_category_id = d2u_addon_frontend_helper::getUrlId();
+                            $used_category_id = TobiasKrais\D2UHelper\FrontendHelper::getUrlId();
                         }
                     } elseif (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0 || filter_input(INPUT_GET, 'used_sale_category_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0) {
                         $used_category_id = (int) (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0 ? filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT) : filter_input(INPUT_GET, 'used_sale_category_id', FILTER_VALIDATE_INT));
@@ -204,7 +206,7 @@ class Category implements \D2U_Helper\ITranslationHelper
         }
 
         // Don't forget to regenerate URL list and search_it index
-        \d2u_addon_backend_helper::generateUrlCache();
+        BackendHelper::generateUrlCache();
 
         // Delete from YRewrite forward list
         if (rex_addon::get('yrewrite')->isAvailable()) {
@@ -655,13 +657,13 @@ class Category implements \D2U_Helper\ITranslationHelper
 
         // Update URLs
         if ($regenerate_urls) {
-            \d2u_addon_backend_helper::generateUrlCache('category_id');
-            \d2u_addon_backend_helper::generateUrlCache('machine_id');
+            BackendHelper::generateUrlCache('category_id');
+            BackendHelper::generateUrlCache('machine_id');
             if (rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
-                \d2u_addon_backend_helper::generateUrlCache('used_rent_category_id');
-                \d2u_addon_backend_helper::generateUrlCache('used_rent_machine_id');
-                \d2u_addon_backend_helper::generateUrlCache('used_sale_category_id');
-                \d2u_addon_backend_helper::generateUrlCache('used_sale_machine_id');
+                BackendHelper::generateUrlCache('used_rent_category_id');
+                BackendHelper::generateUrlCache('used_rent_machine_id');
+                BackendHelper::generateUrlCache('used_sale_category_id');
+                BackendHelper::generateUrlCache('used_sale_machine_id');
             }
         }
 
@@ -699,7 +701,7 @@ class Category implements \D2U_Helper\ITranslationHelper
 
         // When prio is too high or was deleted, simply add at end
         if ($this->priority > $result->getRows() || $delete) {
-            $this->priority = (int) $result->getRows() + 1;
+            $this->priority = $result->getRows() + 1;
         }
 
         $categories = [];

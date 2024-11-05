@@ -13,7 +13,7 @@ if (\rex_addon::get('url')->isAvailable()) {
 }
 
 // Delete language replacements
-if (!class_exists('d2u_machinery_lang_helper')) {
+if (!class_exists(d2u_machinery_lang_helper::class)) {
     // Load class in case addon is deactivated
     require_once 'lib/d2u_machinery_lang_helper.php';
 }

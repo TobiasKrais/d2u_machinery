@@ -93,7 +93,7 @@ abstract class AFTPExport extends AExport
     protected function upload()
     {
         // Establish connection and ...
-        $connection_id = ftp_connect($this->provider->ftp_server);
+        $connection_id = ftp_ssl_connect($this->provider->ftp_server);
         if (!$connection_id instanceof \FTP\Connection) {
             return rex_i18n::msg('d2u_machinery_export_ftp_error_connection');
         }

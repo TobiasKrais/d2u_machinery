@@ -1,6 +1,6 @@
 <?php
 $func = rex_request('func', 'string');
-$entry_id = (int) rex_request('entry_id', 'int');
+$entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
 
 // Print message
@@ -49,7 +49,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
                 $used_machine->videos = []; // Clear video array
                 foreach ($video_ids as $video_id) {
                     if ($video_id > 0) {
-                        $used_machine->videos[$video_id] = new Video($video_id, (int) rex_config::get('d2u_helper', 'default_lang'));
+                        $used_machine->videos[$video_id] = new \TobiasKrais\D2UVideos\Video($video_id, (int) rex_config::get('d2u_helper', 'default_lang'));
                     }
                 }
             }
@@ -128,15 +128,15 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 						<?php
                             $readonly = (\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) ? false : true;
 
-                            d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_manufacturer', 'form[manufacturer]', $used_machine->manufacturer, true, $readonly, 'text');
-                            d2u_addon_backend_helper::form_input('d2u_helper_name', 'form[name]', $used_machine->name, true, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_used_machines_manufacturer', 'form[manufacturer]', $used_machine->manufacturer, true, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_helper_name', 'form[name]', $used_machine->name, true, $readonly, 'text');
                             $options = [];
                             foreach (Category::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $category) {
                                 if ('' !== $category->name) {
                                     $options[$category->category_id] = $category->name;
                                 }
                             }
-                            d2u_addon_backend_helper::form_select('d2u_helper_category', 'form[category_id]', $options, [$used_machine->category instanceof Category ? $used_machine->category->category_id : 0], 1, false, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_helper_category', 'form[category_id]', $options, [$used_machine->category instanceof Category ? $used_machine->category->category_id : 0], 1, false, $readonly);
                             if (rex_plugin::get('d2u_machinery', 'contacts')->isAvailable()) {
                                 $options_contacts = [0 => rex_i18n::msg('d2u_machinery_contacts_settings_contact')];
                                 foreach (\D2U_Machinery\Contact::getAll() as $contact) {
@@ -144,32 +144,32 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                         $options_contacts[$contact->contact_id] = $contact->name;
                                     }
                                 }
-                                d2u_addon_backend_helper::form_select('d2u_machinery_contacts_contact', 'form[contact_id]', $options_contacts, [$used_machine->contact instanceof D2U_Machinery\Contact ? $used_machine->contact->contact_id : 0], 1, false, $readonly);
+                                \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_contacts_contact', 'form[contact_id]', $options_contacts, [$used_machine->contact instanceof D2U_Machinery\Contact ? $used_machine->contact->contact_id : 0], 1, false, $readonly);
                             }
                             $options_offer_type = ['sale' => rex_i18n::msg('d2u_machinery_used_machines_offer_type_sale'),
                                 'rent' => rex_i18n::msg('d2u_machinery_used_machines_offer_type_rent')];
-                            d2u_addon_backend_helper::form_select('d2u_machinery_used_machines_offer_type', 'form[offer_type]', $options_offer_type, [$used_machine->offer_type], 1, false, $readonly);
-                            d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_availability', 'form[availability]', $used_machine->availability, false, $readonly, 'date');
-                            d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_product_number', 'form[product_number]', $used_machine->product_number, false, $readonly, 'text');
-                            d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_year_built', 'form[year_built]', $used_machine->year_built, false, $readonly, 'number');
-                            d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_price', 'form[price]', $used_machine->price, false, $readonly, 'number');
-                            d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_currency_code', 'form[currency_code]', $used_machine->currency_code, false, $readonly, 'text');
-                            d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_vat', 'form[vat]', $used_machine->vat, false, $readonly, 'number');
-                            d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', 'online' === $used_machine->online_status, $readonly);
-                            d2u_addon_backend_helper::form_imagelistfield('d2u_helper_picture', 1, $used_machine->pics, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_used_machines_offer_type', 'form[offer_type]', $options_offer_type, [$used_machine->offer_type], 1, false, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_used_machines_availability', 'form[availability]', $used_machine->availability, false, $readonly, 'date');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_used_machines_product_number', 'form[product_number]', $used_machine->product_number, false, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_used_machines_year_built', 'form[year_built]', $used_machine->year_built, false, $readonly, 'number');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_used_machines_price', 'form[price]', $used_machine->price, false, $readonly, 'number');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_used_machines_currency_code', 'form[currency_code]', $used_machine->currency_code, false, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_used_machines_vat', 'form[vat]', $used_machine->vat, false, $readonly, 'number');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', 'online' === $used_machine->online_status, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_imagelistfield('d2u_helper_picture', 1, $used_machine->pics, $readonly);
                             $options_machines = [0 => rex_i18n::msg('d2u_machinery_no_selection')];
                             foreach (Machine::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $machine) {
                                 $options_machines[$machine->machine_id] = $machine->name;
                             }
-                            d2u_addon_backend_helper::form_select('d2u_machinery_used_machines_linked_machine', 'form[machine_id]', $options_machines, false === $used_machine->machine ? [] : [$used_machine->machine instanceof Machine ? $used_machine->machine->machine_id : 0], 1, false, $readonly);
-                            d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_location', 'form[location]', $used_machine->location, false, $readonly, 'text');
-                            d2u_addon_backend_helper::form_input('d2u_machinery_used_machines_external_url', 'form[external_url]', $used_machine->external_url, false, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_used_machines_linked_machine', 'form[machine_id]', $options_machines, false === $used_machine->machine ? [] : [$used_machine->machine instanceof Machine ? $used_machine->machine->machine_id : 0], 1, false, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_used_machines_location', 'form[location]', $used_machine->location, false, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_used_machines_external_url', 'form[external_url]', $used_machine->external_url, false, $readonly, 'text');
                             if (\rex_addon::get('d2u_videos')->isAvailable()) {
                                 $options = [];
-                                foreach (Video::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $video) {
+                                foreach (TobiasKrais\D2UVideos\Video::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $video) {
                                     $options[$video->video_id] = $video->name;
                                 }
-                                d2u_addon_backend_helper::form_select('d2u_machinery_category_videos', 'form[video_ids][]', $options, array_keys($used_machine->videos), 10, true, $readonly);
+                                \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_category_videos', 'form[video_ids][]', $options, array_keys($used_machine->videos), 10, true, $readonly);
                             }
                         ?>
 					</div>
@@ -193,7 +193,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                     $options_translations['yes'] = rex_i18n::msg('d2u_helper_translation_needs_update');
                                     $options_translations['no'] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
                                     $options_translations['delete'] = rex_i18n::msg('d2u_helper_translation_delete');
-                                    d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$used_machine_lang->translation_needs_update], 1, false, $readonly_lang);
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$used_machine_lang->translation_needs_update], 1, false, $readonly_lang);
                                 } else {
                                     echo '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="no">';
                                 }
@@ -211,9 +211,9 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 							</script>
 							<div id="details_clang_<?= $rex_clang->getId() ?>">
 								<?php
-                                    d2u_addon_backend_helper::form_input('d2u_machinery_machine_teaser', 'form[lang]['. $rex_clang->getId() .'][teaser]', $used_machine_lang->teaser, false, $readonly_lang, 'text');
-                                    d2u_addon_backend_helper::form_textarea('d2u_helper_description', 'form[lang]['. $rex_clang->getId() .'][description]', $used_machine_lang->description, 5, false, $readonly_lang, true);
-                                    d2u_addon_backend_helper::form_medialistfield('d2u_machinery_used_machines_downloads', $rex_clang->getId() + 100, $used_machine_lang->downloads, $readonly_lang);
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_machine_teaser', 'form[lang]['. $rex_clang->getId() .'][teaser]', $used_machine_lang->teaser, false, $readonly_lang, 'text');
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_textarea('d2u_helper_description', 'form[lang]['. $rex_clang->getId() .'][description]', $used_machine_lang->description, 5, false, $readonly_lang, true);
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_medialistfield('d2u_machinery_used_machines_downloads', $rex_clang->getId() + 100, $used_machine_lang->downloads, $readonly_lang);
                                 ?>
 							</div>
 						</div>
@@ -240,8 +240,8 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 	</form>
 	<br>
 	<?php
-        echo d2u_addon_backend_helper::getCSS();
-        echo d2u_addon_backend_helper::getJS();
+        echo \TobiasKrais\D2UHelper\BackendHelper::getCSS();
+        echo \TobiasKrais\D2UHelper\BackendHelper::getJS();
 }
 
 if ('' === $func) {

@@ -14,8 +14,8 @@ class d2u_machinery_frontend_helper
         $alternate_URLs = [];
 
         // Prepare objects first for sorting in correct order
-        $url_namespace = d2u_addon_frontend_helper::getUrlNamespace();
-        $url_id = d2u_addon_frontend_helper::getUrlId();
+        $url_namespace = TobiasKrais\D2UHelper\FrontendHelper::getUrlNamespace();
+        $url_id = TobiasKrais\D2UHelper\FrontendHelper::getUrlId();
 
         if (filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0 || 'machine_id' === $url_namespace) {
             $machine_id = (int) filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT);
@@ -113,8 +113,8 @@ class d2u_machinery_frontend_helper
         $machine = false;
         $used_machine = false;
 
-        $url_namespace = d2u_addon_frontend_helper::getUrlNamespace();
-        $url_id = d2u_addon_frontend_helper::getUrlId();
+        $url_namespace = TobiasKrais\D2UHelper\FrontendHelper::getUrlNamespace();
+        $url_id = TobiasKrais\D2UHelper\FrontendHelper::getUrlId();
 
         if (filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0 || 'machine_id' === $url_namespace) {
             $machine_id = (int) filter_input(INPUT_GET, 'machine_id', FILTER_VALIDATE_INT);
@@ -211,8 +211,8 @@ class d2u_machinery_frontend_helper
             $current_category_id = 0;
             $current_machine_id = 0;
 
-            $url_namespace = d2u_addon_frontend_helper::getUrlNamespace();
-            $url_id = d2u_addon_frontend_helper::getUrlId();
+            $url_namespace = TobiasKrais\D2UHelper\FrontendHelper::getUrlNamespace();
+            $url_id = TobiasKrais\D2UHelper\FrontendHelper::getUrlId();
 
             if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0 || 'category_id' === $url_namespace) {
                 // Category for normal machines
@@ -261,8 +261,8 @@ class d2u_machinery_frontend_helper
             $current_category_id = 0;
             $current_machine_id = 0;
 
-            $url_namespace = d2u_addon_frontend_helper::getUrlNamespace();
-            $url_id = d2u_addon_frontend_helper::getUrlId();
+            $url_namespace = TobiasKrais\D2UHelper\FrontendHelper::getUrlNamespace();
+            $url_id = TobiasKrais\D2UHelper\FrontendHelper::getUrlId();
 
             if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0 || 'category_id' === $url_namespace) {
                 // Category for normal machines

@@ -28,5 +28,5 @@
     echo '</div>';
     echo '</div>';
 ?>
-<div class="col-sm-12 abstand"><?php d2u_addon_frontend_helper::prepareEditorField($text_1) ?></div>
+<div class="col-sm-12 abstand"><?php TobiasKrais\D2UHelper\FrontendHelper::prepareEditorField($text_1) ?></div>
 <div class="col-sm-12 abstand"></div>

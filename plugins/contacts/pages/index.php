@@ -1,6 +1,6 @@
 <?php
 $func = rex_request('func', 'string');
-$entry_id = (int) rex_request('entry_id', 'int');
+$entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
 
 // Print comments
@@ -82,10 +82,10 @@ if ('edit' === $func || 'add' === $func) {
                                 $readonly = false;
                             }
 
-                            d2u_addon_backend_helper::form_input('d2u_helper_name', 'form[name]', $contact->name, true, $readonly);
-                            d2u_addon_backend_helper::form_input('d2u_machinery_contacts_email', 'form[email]', $contact->email, true, $readonly, 'email');
-                            d2u_addon_backend_helper::form_input('d2u_machinery_contacts_phone', 'form[phone]', $contact->phone, false, $readonly);
-                            d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', '1', $contact->picture, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_helper_name', 'form[name]', $contact->name, true, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_contacts_email', 'form[email]', $contact->email, true, $readonly, 'email');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_contacts_phone', 'form[phone]', $contact->phone, false, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_mediafield('d2u_helper_picture', '1', $contact->picture, $readonly);
                         ?>
 					</div>
 				</fieldset>
@@ -116,7 +116,7 @@ if ('edit' === $func || 'add' === $func) {
 		});
 	</script>
 	<?php
-        echo d2u_addon_backend_helper::getCSS();
+        echo \TobiasKrais\D2UHelper\BackendHelper::getCSS();
 }
 
 if ('' === $func) {

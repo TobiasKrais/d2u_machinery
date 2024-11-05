@@ -78,7 +78,7 @@ $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery
 $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_steel_welding_lang');
 
 // Delete language replacements
-if (!class_exists('d2u_machinery_machine_steel_processing_extension_lang_helper')) {
+if (!class_exists(d2u_machinery_machine_steel_processing_extension_lang_helper::class)) {
     // Load class in case addon is deactivated
     require_once 'lib/d2u_machinery_machine_steel_processing_extension_lang_helper.php';
 }

@@ -8,7 +8,7 @@
 /**
  * Machine.
  */
-class Machine implements \D2U_Helper\ITranslationHelper
+class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
 {
     /** @var int Machine id */
     public int $machine_id = 0;
@@ -286,7 +286,7 @@ class Machine implements \D2U_Helper\ITranslationHelper
     /** @var string Machine leaflet (PDF file) */
     public string $leaflet = '';
 
-    /** @var Video[] Videomanager videos */
+    /** @var TobiasKrais\D2UVideos\Video[] Videomanager videos */
     public array $videos = [];
 
     /** @var string Needs translation update? "no", "yes" or "delete" */
@@ -667,7 +667,7 @@ class Machine implements \D2U_Helper\ITranslationHelper
                 if (is_array($video_ids)) {
                     foreach ($video_ids as $video_id) {
                         if ($video_id > 0) {
-                            $video = new Video($video_id, $clang_id);
+                            $video = new \TobiasKrais\D2UVideos\Video($video_id, $clang_id);
                             if ('' !== $video->getVideoURL()) {
                                 $this->videos[$video_id] = $video;
                             }
@@ -704,7 +704,7 @@ class Machine implements \D2U_Helper\ITranslationHelper
         }
 
         // Don't forget to regenerate URL cache and search_it index
-        \d2u_addon_backend_helper::generateUrlCache();
+        \TobiasKrais\D2UHelper\BackendHelper::generateUrlCache();
     }
 
     /**
@@ -725,7 +725,7 @@ class Machine implements \D2U_Helper\ITranslationHelper
             .'WHERE machine_id = '. $this->machine_id;
         $result_main = \rex_sql::factory();
         $result_main->setQuery($query_main);
-        if (0 === (int) $result_main->getRows()) {
+        if (0 === $result_main->getRows()) {
             $query = 'DELETE FROM '. \rex::getTablePrefix() .'d2u_machinery_machines '
                 .'WHERE machine_id = '. $this->machine_id;
             $result = \rex_sql::factory();
@@ -736,7 +736,7 @@ class Machine implements \D2U_Helper\ITranslationHelper
         }
 
         // Don't forget to regenerate URL cache / search_it index
-        \d2u_addon_backend_helper::generateUrlCache();
+        \TobiasKrais\D2UHelper\BackendHelper::generateUrlCache();
 
         // Delete from YRewrite forward list
         if (rex_addon::get('yrewrite')->isAvailable()) {
@@ -2119,7 +2119,7 @@ class Machine implements \D2U_Helper\ITranslationHelper
         }
 
         // Don't forget to regenerate URL cache / search_it index
-        \d2u_addon_backend_helper::generateUrlCache();
+        \TobiasKrais\D2UHelper\BackendHelper::generateUrlCache();
 
         return !$error;
     }
@@ -2143,7 +2143,7 @@ class Machine implements \D2U_Helper\ITranslationHelper
 
         // When prio is too high or was deleted, simply add at end
         if ($this->priority > $result->getRows() || $delete) {
-            $this->priority = (int) $result->getRows() + 1;
+            $this->priority = $result->getRows() + 1;
         }
 
         $machines = [];

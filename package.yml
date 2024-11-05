@@ -33,7 +33,7 @@ requires:
         
 conflicts:
     packages:
-        d2u_videos: '<1.1'
+        d2u_videos: '<1.2'
         
 default_config:
     default_category_sort: 'name'

@@ -9,7 +9,7 @@
  * @api
  * Production line
  */
-class ProductionLine implements \D2U_Helper\ITranslationHelper
+class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper
 {
     /** @var int Database ID */
     public int $production_line_id = 0;
@@ -143,7 +143,7 @@ class ProductionLine implements \D2U_Helper\ITranslationHelper
         }
 
         // Don't forget to regenerate URL cache / search_it index
-        \d2u_addon_backend_helper::generateUrlCache('production_line_id');
+        \TobiasKrais\D2UHelper\BackendHelper::generateUrlCache('production_line_id');
     }
 
     /**
@@ -164,7 +164,7 @@ class ProductionLine implements \D2U_Helper\ITranslationHelper
             .'WHERE production_line_id = '. $this->production_line_id;
         $result_main = \rex_sql::factory();
         $result_main->setQuery($query_main);
-        if (0 === (int) $result_main->getRows()) {
+        if (0 === $result_main->getRows()) {
             $query = 'DELETE FROM '. \rex::getTablePrefix() .'d2u_machinery_production_lines '
                 .'WHERE production_line_id = '. $this->production_line_id;
             $result = \rex_sql::factory();
@@ -172,7 +172,7 @@ class ProductionLine implements \D2U_Helper\ITranslationHelper
         }
 
         // Don't forget to regenerate URL cache / search_it index
-        \d2u_addon_backend_helper::generateUrlCache('production_line_id');
+        \TobiasKrais\D2UHelper\BackendHelper::generateUrlCache('production_line_id');
 
         // Delete from YRewrite forward list
         if (rex_addon::get('yrewrite')->isAvailable()) {
@@ -379,7 +379,7 @@ class ProductionLine implements \D2U_Helper\ITranslationHelper
 
         // Update URLs
         if ($regenerate_urls) {
-            \d2u_addon_backend_helper::generateUrlCache('production_line_id');
+            \TobiasKrais\D2UHelper\BackendHelper::generateUrlCache('production_line_id');
         }
 
         return !$error;

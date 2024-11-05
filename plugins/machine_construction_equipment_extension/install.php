@@ -60,7 +60,7 @@
 // Media Manager media types
 $sql = \rex_sql::factory();
 $sql->setQuery('SELECT * FROM '. \rex::getTablePrefix() ."media_manager_type WHERE name = 'd2u_machinery_construction_equipment_delivery_set_slider'");
-if (0 === (int) $sql->getRows()) {
+if (0 === $sql->getRows()) {
     $sql->setQuery('INSERT INTO '. \rex::getTablePrefix() ."media_manager_type (`status`, `name`, `description`) VALUES
 		(0, 'd2u_machinery_construction_equipment_delivery_set_slider', 'D2U Machinery Addon - Baustellenausrüstung Plugin: Bilder slider Lieferumfang');");
     $last_id_d2u_machinery_list_tile = $sql->getLastId();
@@ -70,10 +70,10 @@ if (0 === (int) $sql->getRows()) {
 }
 
 // Insert frontend translations
-if (!class_exists('d2u_machinery_machine_construction_equipment_extension_lang_helper')) {
+if (!class_exists(d2u_machinery_machine_construction_equipment_extension_lang_helper::class)) {
     // Load class in case addon is deactivated
     require_once 'lib/d2u_machinery_machine_construction_equipment_extension_lang_helper.php';
 }
-if (class_exists('d2u_machinery_machine_construction_equipment_extension_lang_helper')) {
+if (class_exists(d2u_machinery_machine_construction_equipment_extension_lang_helper::class)) {
     d2u_machinery_machine_construction_equipment_extension_lang_helper::factory()->install();
 }

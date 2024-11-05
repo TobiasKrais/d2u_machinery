@@ -8,7 +8,7 @@
 /**
  * Machine Equipment Group.
  */
-class EquipmentGroup implements \D2U_Helper\ITranslationHelper
+class EquipmentGroup implements \TobiasKrais\D2UHelper\ITranslationHelper
 {
     /** @var int Database ID */
     public int $group_id = 0;
@@ -78,7 +78,7 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper
             .'WHERE group_id = '. $this->group_id;
         $result_main = \rex_sql::factory();
         $result_main->setQuery($query_main);
-        if (0 === (int) $result_main->getRows()) {
+        if (0 === $result_main->getRows()) {
             $query = 'DELETE FROM '. \rex::getTablePrefix() .'d2u_machinery_equipment_groups '
                 .'WHERE group_id = '. $this->group_id;
             $result = \rex_sql::factory();
@@ -239,7 +239,7 @@ class EquipmentGroup implements \D2U_Helper\ITranslationHelper
 
         // When prio is too high or was deleted, simply add at end
         if ($this->priority > $result->getRows() || $delete) {
-            $this->priority = (int) $result->getRows() + 1;
+            $this->priority = $result->getRows() + 1;
         }
 
         $equipment_groups = [];

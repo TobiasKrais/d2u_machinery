@@ -8,7 +8,7 @@
 /**
  * Industry sector.
  */
-class IndustrySector implements \D2U_Helper\ITranslationHelper
+class IndustrySector implements \TobiasKrais\D2UHelper\ITranslationHelper
 {
     /** @var int Database ID */
     public int $industry_sector_id = 0;
@@ -97,7 +97,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper
         }
 
         // Don't forget to regenerate URL cache / search_it index
-        \d2u_addon_backend_helper::generateUrlCache('industry_sector_id');
+        \TobiasKrais\D2UHelper\BackendHelper::generateUrlCache('industry_sector_id');
     }
 
     /**
@@ -118,7 +118,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper
             .'WHERE industry_sector_id = '. $this->industry_sector_id;
         $result_main = \rex_sql::factory();
         $result_main->setQuery($query_main);
-        if (0 === (int) $result_main->getRows()) {
+        if (0 === $result_main->getRows()) {
             $query = 'DELETE FROM '. \rex::getTablePrefix() .'d2u_machinery_industry_sectors '
                 .'WHERE industry_sector_id = '. $this->industry_sector_id;
             $result = \rex_sql::factory();
@@ -126,7 +126,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper
         }
 
         // Don't forget to regenerate URL cache / search_it index
-        \d2u_addon_backend_helper::generateUrlCache('industry_sector_id');
+        \TobiasKrais\D2UHelper\BackendHelper::generateUrlCache('industry_sector_id');
 
         // Delete from YRewrite forward list
         if (rex_addon::get('yrewrite')->isAvailable()) {
@@ -367,7 +367,7 @@ class IndustrySector implements \D2U_Helper\ITranslationHelper
 
         // Update URLs
         if ($regenerate_urls) {
-            \d2u_addon_backend_helper::generateUrlCache('industry_sector_id');
+            \TobiasKrais\D2UHelper\BackendHelper::generateUrlCache('industry_sector_id');
         }
 
         return !$error;

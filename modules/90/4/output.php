@@ -117,8 +117,8 @@ $sprog = rex_addon::get('sprog');
 $tag_open = $sprog->getConfig('wildcard_open_tag');
 $tag_close = $sprog->getConfig('wildcard_close_tag');
 
-$url_namespace = d2u_addon_frontend_helper::getUrlNamespace();
-$url_id = d2u_addon_frontend_helper::getUrlId();
+$url_namespace = TobiasKrais\D2UHelper\FrontendHelper::getUrlNamespace();
+$url_id = TobiasKrais\D2UHelper\FrontendHelper::getUrlId();
 
 if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0 || 'used_rent_category_id' === $url_namespace
         || filter_input(INPUT_GET, 'used_sale_category_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0 || 'used_sale_category_id' === $url_namespace) {
@@ -219,7 +219,7 @@ if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['opti
     }
 
     // Text
-    echo '<div class="col-12 col-md-6">'. d2u_addon_frontend_helper::prepareEditorField($used_machine->description) .'</div>';
+    echo '<div class="col-12 col-md-6">'. TobiasKrais\D2UHelper\FrontendHelper::prepareEditorField($used_machine->description) .'</div>';
     if ('slider' === $picture_type && count($used_machine->pics) > 0) {
         echo '<div class="col-12">&nbsp;</div>';
     }
@@ -256,7 +256,7 @@ if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['opti
                     echo $ld_json;
                     echo '<script src="'. rex_url::base('assets/addons/plyr/plyr_playlist.js') .'"></script>';
                 } else {
-                    $videomanager = new Videomanager();
+                    $videomanager = new \TobiasKrais\D2UVideos\Videomanager();
                     $videomanager->printVideos($used_machine->videos);
                 }
             } else {
@@ -269,7 +269,7 @@ if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['opti
                     echo '<script src="'. rex_url::base('assets/addons/plyr/plyr_init.js') .'"></script>';
                     echo '</div></div>';
                 } else {
-                    $videomanager = new Videomanager();
+                    $videomanager = new \TobiasKrais\D2UVideos\Videomanager();
                     $videomanager->printVideo($video);
                 }
                 echo $video->getLDJSONScript();
@@ -436,7 +436,7 @@ if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['opti
     } else {
         $form_data .= '
 			php|validate_timer|Spamprotection|<input name="validate_timer" type="hidden" value="'. microtime(true) .'" />|
-			validate|customfunction|validate_timer|d2u_addon_frontend_helper::yform_validate_timer|5|'. $tag_open .'d2u_helper_module_form_validate_spambots'. $tag_close .'|
+			validate|customfunction|validate_timer|TobiasKrais\D2UHelper\FrontendHelper::yform_validate_timer|5|'. $tag_open .'d2u_helper_module_form_validate_spambots'. $tag_close .'|
 
 			html|honeypot||<div class="mail-validate hide">
 			text|mailvalidate|'. $tag_open .'d2u_helper_module_form_email'. $tag_close .'||no_db

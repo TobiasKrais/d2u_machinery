@@ -1,6 +1,6 @@
 <?php
 $func = rex_request('func', 'string');
-$entry_id = (int) rex_request('entry_id', 'int');
+$entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
 
 // messages
@@ -25,7 +25,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
             $supply->priority = $form['priority'];
             $supply->pic = $input_media[1];
             if (\rex_addon::get('d2u_videos')->isAvailable() && isset($form['video_id']) && $form['video_id'] > 0) {
-                $supply->video = new Video($form['video_id'], (int) rex_config::get('d2u_helper', 'default_lang'));
+                $supply->video = new \TobiasKrais\D2UVideos\Video($form['video_id'], (int) rex_config::get('d2u_helper', 'default_lang'));
             } else {
                 $supply->video = false;
             }
@@ -116,15 +116,15 @@ if ('edit' === $func || 'add' === $func) {
                             if (\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
                                 $readonly = false;
                             }
-                            d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', 'online' === $supply->online_status, $readonly);
-                            d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $supply->priority, true, $readonly, 'number');
-                            d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', '1', $supply->pic, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', 'online' === $supply->online_status, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('header_priority', 'form[priority]', $supply->priority, true, $readonly, 'number');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_mediafield('d2u_helper_picture', '1', $supply->pic, $readonly);
                             if (\rex_addon::get('d2u_videos')->isAvailable()) {
                                 $options_video = [0 => rex_i18n::msg('d2u_machinery_video_no')];
-                                foreach (Video::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $video) {
+                                foreach (TobiasKrais\D2UVideos\Video::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $video) {
                                     $options_video[$video->video_id] = $video->name;
                                 }
-                                d2u_addon_backend_helper::form_select('d2u_machinery_video', 'form[video_id]', $options_video, false !== $supply->video ? [$supply->video instanceof Video ? $supply->video->video_id : 0] : [], 1, false, $readonly);
+                                \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_video', 'form[video_id]', $options_video, false !== $supply->video ? [$supply->video instanceof TobiasKrais\D2UVideos\Video ? $supply->video->video_id : 0] : [], 1, false, $readonly);
                             }
                         ?>
 					</div>
@@ -148,7 +148,7 @@ if ('edit' === $func || 'add' === $func) {
                                     $options_translations['yes'] = rex_i18n::msg('d2u_helper_translation_needs_update');
                                     $options_translations['no'] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
                                     $options_translations['delete'] = rex_i18n::msg('d2u_helper_translation_delete');
-                                    d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$supply->translation_needs_update], 1, false, $readonly_lang);
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$supply->translation_needs_update], 1, false, $readonly_lang);
                                 } else {
                                     echo '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
                                 }
@@ -166,8 +166,8 @@ if ('edit' === $func || 'add' === $func) {
 							</script>
 							<div id="details_clang_<?= $rex_clang->getId() ?>">
 								<?php
-                                    d2u_addon_backend_helper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $supply->name, $required, $readonly_lang, 'text');
-                                    d2u_addon_backend_helper::form_textarea('d2u_helper_description', 'form[lang]['. $rex_clang->getId() .'][description]', $supply->description, 5, false, $readonly_lang, true);
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $supply->name, $required, $readonly_lang, 'text');
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_textarea('d2u_helper_description', 'form[lang]['. $rex_clang->getId() .'][description]', $supply->description, 5, false, $readonly_lang, true);
                                 ?>
 							</div>
 						</div>
@@ -194,8 +194,8 @@ if ('edit' === $func || 'add' === $func) {
 	</form>
 	<br>
 	<?php
-        echo d2u_addon_backend_helper::getCSS();
-        echo d2u_addon_backend_helper::getJS();
+        echo \TobiasKrais\D2UHelper\BackendHelper::getCSS();
+        echo \TobiasKrais\D2UHelper\BackendHelper::getJS();
 }
 
 if ('' === $func) {

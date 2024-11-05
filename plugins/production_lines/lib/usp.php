@@ -8,7 +8,7 @@
 /**
  * Unique selling propositions.
  */
-class USP implements \D2U_Helper\ITranslationHelper
+class USP implements \TobiasKrais\D2UHelper\ITranslationHelper
 {
     /** @var int Database ID */
     public int $usp_id = 0;
@@ -73,7 +73,7 @@ class USP implements \D2U_Helper\ITranslationHelper
             .'WHERE usp_id = '. $this->usp_id;
         $result_main = \rex_sql::factory();
         $result_main->setQuery($query_main);
-        if (0 === (int) $result_main->getRows()) {
+        if (0 === $result_main->getRows()) {
             $query = 'DELETE FROM '. \rex::getTablePrefix() .'d2u_machinery_production_lines_usps '
                 .'WHERE usp_id = '. $this->usp_id;
             $result = \rex_sql::factory();

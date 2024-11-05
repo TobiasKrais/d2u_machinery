@@ -126,14 +126,14 @@ if (\rex_addon::get('url')->isAvailable()) {
         . "'{\"column_id\":\"category_id\",\"column_clang_id\":\"clang_id\",\"restriction_1_column\":\"\",\"restriction_1_comparison_operator\":\"=\",\"restriction_1_value\":\"\",\"restriction_2_logical_operator\":\"\",\"restriction_2_column\":\"\",\"restriction_2_comparison_operator\":\"=\",\"restriction_2_value\":\"\",\"restriction_3_logical_operator\":\"\",\"restriction_3_column\":\"\",\"restriction_3_comparison_operator\":\"=\",\"restriction_3_value\":\"\",\"column_segment_part_1\":\"name\",\"column_segment_part_2_separator\":\"\\/\",\"column_segment_part_2\":\"\",\"column_segment_part_3_separator\":\"\\/\",\"column_segment_part_3\":\"\",\"relation_1_column\":\"\",\"relation_1_position\":\"BEFORE\",\"relation_2_column\":\"\",\"relation_2_position\":\"BEFORE\",\"relation_3_column\":\"\",\"relation_3_position\":\"BEFORE\",\"append_user_paths\":\"\",\"append_structure_categories\":\"0\",\"column_seo_title\":\"seo_title\",\"column_seo_description\":\"seo_description\",\"column_seo_image\":\"picture\",\"sitemap_add\":\"1\",\"sitemap_frequency\":\"always\",\"sitemap_priority\":\"0.7\",\"column_sitemap_lastmod\":\"updatedate\"}', "
         . "'', '[]', '', '[]', '', '[]', CURRENT_TIMESTAMP, '". (rex::getUser() instanceof rex_user ? rex::getUser()->getValue('login') : '') ."', CURRENT_TIMESTAMP, '". (rex::getUser() instanceof rex_user ? rex::getUser()->getValue('login') : '') ."');");
 
-    \d2u_addon_backend_helper::generateUrlCache();
+    \TobiasKrais\D2UHelper\BackendHelper::generateUrlCache();
 }
 
 // Insert frontend translations
-if (!class_exists('d2u_machinery_used_machines_lang_helper')) {
+if (!class_exists(d2u_machinery_used_machines_lang_helper::class)) {
     // Load class in case addon is deactivated
     require_once 'lib/d2u_machinery_used_machines_lang_helper.php';
 }
-if (class_exists('d2u_machinery_used_machines_lang_helper')) {
+if (class_exists(d2u_machinery_used_machines_lang_helper::class)) {
     d2u_machinery_used_machines_lang_helper::factory()->install();
 }
