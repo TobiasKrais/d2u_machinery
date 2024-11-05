@@ -7,6 +7,7 @@
     ->ensureColumn(new \rex_sql_column('airless_hose_length', 'INT(5)', false))
     ->ensureColumn(new \rex_sql_column('airless_nozzle_size', 'VARCHAR(255)'))
     ->ensureColumn(new \rex_sql_column('container_capacity', 'VARCHAR(50)'))
+    ->ensureColumn(new \rex_sql_column('container_capacity_unit', 'VARCHAR(5)'))
     ->ensureColumn(new \rex_sql_column('container_mixing_performance', 'VARCHAR(255)'))
     ->ensureColumn(new \rex_sql_column('container_waterconnect_pressure', 'INT(5)', false))
     ->ensureColumn(new \rex_sql_column('container_waterconnect_diameter', 'VARCHAR(255)'))

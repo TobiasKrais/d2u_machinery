@@ -309,8 +309,11 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
     /** @var string Airless devices: maximum nozzle size */
     public string $airless_nozzle_size = '';
 
-    /** @var string Containers: maximum capacity (kg) */
+    /** @var string Containers: maximum capacity */
     public string $container_capacity = '';
+
+    /** @var string Containers: capacity unit (kg, l, m³) */
+    public string $container_capacity_unit = 'kg';
 
     /** @var string Containers: connection port */
     public string $container_connection_port = '';
@@ -510,6 +513,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
                 $this->airless_hose_length = (int) $result->getValue('airless_hose_length');
                 $this->airless_nozzle_size = (string) $result->getValue('airless_nozzle_size');
                 $this->container_capacity = (string) $result->getValue('container_capacity');
+                $this->container_capacity_unit = (string) $result->getValue('container_capacity_unit') ?: 'kg';
                 $this->container_mixing_performance = (string) $result->getValue('container_mixing_performance');
                 $this->container_waterconnect_pressure = (int) $result->getValue('container_waterconnect_pressure');
                 $this->container_waterconnect_diameter = (string) $result->getValue('container_waterconnect_diameter');
@@ -989,8 +993,8 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
             if ('' !== $this->container_capacity) {
                 $tech_data[] = [
                     'description' => $tag_open . 'd2u_machinery_construction_equipment_container_capacity' . $tag_close,
-                    'value' => $tag_open . 'd2u_machinery_construction_equipment_max' . $tag_close .' '. $this->container_capacity,
-                    'unit' => $tag_open . 'd2u_machinery_unit_kg' . $tag_close,
+                    'value' => $tag_open . 'd2u_machinery_construction_equipment_max' . $tag_close .' '. $this->container_capacity .' '. $tag_open . 'd2u_machinery_unit_'.$this->container_capacity_unit . $tag_close,
+                    'unit' => '',
                 ];
             }
 
@@ -1957,6 +1961,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
                     .', airless_hose_length = '. $this->airless_hose_length .' '
                     .", airless_nozzle_size = '". $this->airless_nozzle_size ."' "
                     .", container_capacity = '". $this->container_capacity ."' "
+                    .", container_capacity_unit = '". $this->container_capacity_unit ."' "
                     .", container_mixing_performance = '". $this->container_mixing_performance ."' "
                     .', container_waterconnect_pressure = '. $this->container_waterconnect_pressure .' '
                     .", container_waterconnect_diameter = '". $this->container_waterconnect_diameter ."' "

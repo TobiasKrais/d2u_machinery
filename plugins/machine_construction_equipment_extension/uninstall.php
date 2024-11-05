@@ -8,6 +8,7 @@
     ->removeColumn('airless_hose_length')
     ->removeColumn('airless_nozzle_size')
     ->removeColumn('container_capacity')
+    ->removeColumn('container_capacity_unit')
     ->removeColumn('container_mixing_performance')
     ->removeColumn('container_waterconnect_pressure')
     ->removeColumn('container_waterconnect_diameter')

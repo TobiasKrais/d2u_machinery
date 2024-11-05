@@ -22,7 +22,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
     $machine = false;
     $machine_id = $form['machine_id'];
     foreach (rex_clang::getAll() as $rex_clang) {
-        if (false === $machine) {
+        if (!$machine instanceof Machine) {
             $machine = new Machine($machine_id, $rex_clang->getId());
             $machine->machine_id = $machine_id; // Ensure correct ID in case first language has no object
             $machine->priority = $form['priority'];
@@ -72,6 +72,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
                 $machine->airless_hose_length = 0 === (int) $form['airless_hose_length'] ? 0 : $form['airless_hose_length'];
                 $machine->airless_nozzle_size = $form['airless_nozzle_size'];
                 $machine->container_capacity = $form['container_capacity'];
+                $machine->container_capacity_unit = $form['container_capacity_unit'];
                 $machine->container_mixing_performance = $form['container_mixing_performance'];
                 $machine->container_waterconnect_pressure = 0 === (int) $form['container_waterconnect_pressure'] ? 0 : $form['container_waterconnect_pressure'];
                 $machine->container_waterconnect_diameter = $form['container_waterconnect_diameter'];
@@ -229,7 +230,8 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
                     }
                 }
             }
-        } else {
+        }
+        else {
             $machine->clang_id = $rex_clang->getId();
         }
         $machine->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
@@ -467,6 +469,12 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                         echo '<legend><small><i class="rex-icon fa-square"></i></small> '. rex_i18n::msg('d2u_machinery_construction_equipment') .' - '. rex_i18n::msg('d2u_machinery_construction_equipment_container') .'</legend>';
                         echo '<div class="panel-body-wrapper slide">';
                         \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_container_capacity', 'form[container_capacity]', $machine->container_capacity, false, $readonly, 'text');
+                        $options_container_unit = [
+                            'kg' => Sprog\Wildcard::get('d2u_machinery_unit_kg'),
+                            'l' => Sprog\Wildcard::get('d2u_machinery_unit_l'),
+                            'm3' => Sprog\Wildcard::get('d2u_machinery_unit_m3'),
+                        ];
+                        \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_construction_equipment_container_capacity_unit', 'form[container_capacity_unit]', $options_container_unit, [$machine->container_capacity_unit], 1, false, $readonly);
                         \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_container_mixing_performance', 'form[container_mixing_performance]', $machine->container_mixing_performance, false, $readonly, 'text');
                         \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_container_waterconnect_pressure', 'form[container_waterconnect_pressure]', $machine->container_waterconnect_pressure, false, $readonly, 'number');
                         \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_construction_equipment_container_waterconnect_diameter', 'form[container_waterconnect_diameter]', $machine->container_waterconnect_diameter, false, $readonly, 'text');
