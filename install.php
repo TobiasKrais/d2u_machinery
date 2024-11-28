@@ -12,6 +12,7 @@
     ->ensureColumn(new \rex_sql_column('article_id_software', 'INT(11)', true))
     ->ensureColumn(new \rex_sql_column('article_id_service', 'INT(11)', true))
     ->ensureColumn(new \rex_sql_column('article_ids_references', 'VARCHAR(255)', true))
+    ->ensureColumn(new \rex_sql_column('reference_ids', 'TEXT', true))
     ->ensureColumn(new \rex_sql_column('online_status', 'VARCHAR(10)', true))
     ->ensureColumn(new \rex_sql_column('engine_power', 'VARCHAR(50)', true))
     ->ensureColumn(new \rex_sql_column('engine_power_frequency_controlled', 'VARCHAR(10)', true))
@@ -53,6 +54,7 @@
     ->ensureColumn(new \rex_sql_column('pic', 'VARCHAR(255)', true))
     ->ensureColumn(new \rex_sql_column('pic_usage', 'VARCHAR(255)', true))
     ->ensureColumn(new \rex_sql_column('video_ids', 'TEXT', true))
+    ->ensureColumn(new \rex_sql_column('reference_ids', 'TEXT', true))
     ->ensure();
 \rex_sql_table::get(\rex::getTable('d2u_machinery_categories_lang'))
     ->ensureColumn(new rex_sql_column('category_id', 'INT(11)', false))

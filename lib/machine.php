@@ -5,6 +5,8 @@
  * @author <a href="http://www.design-to-use.de">www.design-to-use.de</a>
  */
 
+use TobiasKrais\D2UReferences\Reference;
+
 /**
  * Machine.
  */
@@ -54,6 +56,9 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
 
     /** @var int[] Array with Redaxo article ids with customer success stories */
     public array $article_ids_references = [];
+
+    /** @var int[] Array with IDs from d2u_references addon */
+    public array $reference_ids = [];
 
     /** @var string Status. Either "online" or "offline". */
     public string $online_status = 'offline';
@@ -457,6 +462,8 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
             $this->article_id_service = (int) $result->getValue('article_id_service');
             $article_ids_references = preg_grep('/^\s*$/s', explode(',', (string) $result->getValue('article_ids_references')), PREG_GREP_INVERT);
             $this->article_ids_references = is_array($article_ids_references) ? $article_ids_references : [];
+            $reference_ids = preg_grep('/^\s*$/s', explode(',', (string) $result->getValue('reference_ids')), PREG_GREP_INVERT);
+            $this->reference_ids = is_array($reference_ids) ? array_map('intval', array_filter($reference_ids, 'is_numeric')) : [];
             $this->online_status = (string) $result->getValue('online_status');
             $this->engine_power = (string) $result->getValue('engine_power');
             $this->engine_power_frequency_controlled = 'true' === (string) $result->getValue('engine_power_frequency_controlled') ? true : false;
@@ -792,7 +799,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
     /**
      * @api
      * Get Feature objects related to this machine.
-     * @return Feature[] array with Feature objects
+     * @return array<int,Feature> array with Feature objects
      */
     public function getFeatures()
     {
@@ -822,19 +829,25 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
     }
 
     /**
-     * @api
-     * Get supply objects related to this machine.
-     * @return Supply[] array with supply objects
+     * Get reference objects reffering to this machine.
+     * @return array<int,Reference> array with Reference objects
+     * @throws InvalidArgumentException 
      */
-    public function getSupplies()
+    public function getReferences(): array
     {
-        $supplies = [];
-        foreach ($this->automation_supply_ids as $supply_id) {
-            $supply_id = new Supply($supply_id, $this->clang_id);
-            $supplies[$supply_id->priority] = $supply_id;
+        if (!rex_addon::get('d2u_references')->isAvailable()) {
+            return [];
         }
-        ksort($supplies);
-        return $supplies;
+
+        $references = [];
+        foreach ($this->reference_ids as $reference_id) {
+            $reference = new Reference($reference_id, $this->clang_id);
+            if ($reference instanceof Reference && $reference->reference_id > 0) {
+                $references[$reference->reference_id] = $reference;
+            }
+        }
+        ksort($references);
+        return $references;
     }
 
     /**
@@ -919,6 +932,22 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
             }
         }
         return $service_options;
+    }
+
+    /**
+     * @api
+     * Get supply objects related to this machine.
+     * @return Supply[] array with supply objects
+     */
+    public function getSupplies()
+    {
+        $supplies = [];
+        foreach ($this->automation_supply_ids as $supply_id) {
+            $supply_id = new Supply($supply_id, $this->clang_id);
+            $supplies[$supply_id->priority] = $supply_id;
+        }
+        ksort($supplies);
+        return $supplies;
     }
 
     /**
@@ -1885,7 +1914,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
      * @param bool $including_domain true if Domain name should be included
      * @return string URL
      */
-    public function getUrl($including_domain = false)
+    public function getUrl(bool $including_domain = false): string
     {
         if ('' === $this->url) {
             $parameterArray = [];
@@ -1910,7 +1939,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
      * Updates or inserts the object into database.
      * @return bool true if successful
      */
-    public function save()
+    public function save(): bool
     {
         $error = false;
 
@@ -1928,6 +1957,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
                     ."article_id_software = '". $this->article_id_software ."', "
                     ."article_id_service = '". $this->article_id_service ."', "
                     ."article_ids_references = '". implode(',', $this->article_ids_references) ."', "
+                    ."reference_ids = '". implode(',', $this->reference_ids) ."', "
                     ."online_status = '". $this->online_status ."', "
                     ."engine_power = '". $this->engine_power ."', "
                     ."engine_power_frequency_controlled = '". ($this->engine_power_frequency_controlled ? 'true' : 'false') ."', "

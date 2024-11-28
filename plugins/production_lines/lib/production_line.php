@@ -5,6 +5,8 @@
  * @author <a href="http://www.design-to-use.de">www.design-to-use.de</a>
  */
 
+use TobiasKrais\D2UReferences\Reference;
+
 /**
  * @api
  * Production line
@@ -37,6 +39,9 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper
 
     /** @var string Picture file name with links */
     public string $link_picture = '';
+
+    /** @var int[] Array with IDs from d2u_references addon */
+    public array $reference_ids = [];
 
     /** @var int[] Videomanager video ids */
     public array $video_ids = [];
@@ -114,6 +119,8 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper
                 $video_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('video_ids')), PREG_GREP_INVERT);
                 $this->video_ids = is_array($video_ids) ? array_map('intval', $video_ids) : [];
             }
+            $reference_ids = preg_grep('/^\s*$/s', explode(',', (string) $result->getValue('reference_ids')), PREG_GREP_INVERT);
+            $this->reference_ids = is_array($reference_ids) ? array_map('intval', array_filter($reference_ids, 'is_numeric')) : [];
         }
     }
 
@@ -238,6 +245,28 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper
         return $machines;
     }
 
+        /**
+     * Get reference objects reffering to this machine.
+     * @return array<int,Reference> array with Reference objects
+     * @throws InvalidArgumentException 
+     */
+    public function getReferences(): array
+    {
+        if (!rex_addon::get('d2u_references')->isAvailable()) {
+            return [];
+        }
+
+        $references = [];
+        foreach ($this->reference_ids as $reference_id) {
+            $reference = new Reference($reference_id, $this->clang_id);
+            if ($reference instanceof Reference && $reference->reference_id > 0) {
+                $references[$reference->reference_id] = $reference;
+            }
+        }
+        ksort($references);
+        return $references;
+    }
+
     /**
      * Get objects concerning translation updates.
      * @param int $clang_id Redaxo language ID
@@ -312,7 +341,7 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper
      * Updates or inserts the object into database.
      * @return bool true if successful
      */
-    public function save()
+    public function save(): bool
     {
         $error = false;
 
@@ -329,7 +358,8 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper
                     ."pictures = '". implode(',', $this->pictures) ."', "
                     ."link_picture = '". $this->link_picture ."', "
                     ."usp_ids = '|". implode('|', $this->usp_ids) ."|', "
-                    ."video_ids = '|". implode('|', $this->video_ids) ."|' ";
+                    ."video_ids = '|". implode('|', $this->video_ids) ."|', "
+                    ."reference_ids = '". implode(',', $this->reference_ids) ."' ";
             if (rex_plugin::get('d2u_machinery', 'industry_sectors')->isAvailable()) {
                 $query .= ", industry_sector_ids = '|". implode('|', $this->industry_sector_ids) ."|' ";
             }

@@ -17,6 +17,7 @@
 	<li>Bugfix: wenn ein Artikellink entfernt wurde, gab es beim Speichern einen Fehler.</li>
 	<li>Anpassungen an D2U Helper Version >= 1.14.0.</li>
 	<li>Container Kapazität ist nun die Einheit (kg, l oder m³) einstellbar.</li>
+	<li>Möglichkeit Referenzen aus dem D2U Referenzen Addon mit Kategorien, Maschinen und Produktionslinien zu verknüpfen hinzugefügt.</li>
 	<li>Modul "90-1 D2U Machinery Addon - Hauptausgabe": An D2U Videomanager Addon >= 1.2 angepasst.</li>
 	<li>Modul "90-4 D2U Machinery Addon - Gebrauchtmaschinen": An D2U Videomanager Addon >= 1.2 angepasst.</li>
 </ul>

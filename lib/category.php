@@ -6,6 +6,7 @@
  */
 
 use TobiasKrais\D2UHelper\BackendHelper;
+use TobiasKrais\D2UReferences\Reference;
 
 /**
  * Machine Category.
@@ -41,6 +42,9 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper
 
     /** @var string Usage area picture file name */
     public string $pic_usage = '';
+
+    /** @var int[] Array with IDs from d2u_references addon */
+    public array $reference_ids = [];
 
     /** @var int ID of the corresponding machinerypark category */
     public int $export_machinerypark_category_id = 0;
@@ -110,6 +114,8 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper
             $this->pic = (string) $result->getValue('pic');
             $this->pic_lang = (string) $result->getValue('pic_lang');
             $this->pic_usage = (string) $result->getValue('pic_usage');
+            $reference_ids = preg_grep('/^\s*$/s', explode(',', (string) $result->getValue('reference_ids')), PREG_GREP_INVERT);
+            $this->reference_ids = is_array($reference_ids) ? array_map('intval', array_filter($reference_ids, 'is_numeric')) : [];
             $pdfs = preg_grep('/^\s*$/s', explode(',', (string) $result->getValue('pdfs')), PREG_GREP_INVERT);
             $this->pdfs = is_array($pdfs) ? $pdfs : [];
             $this->priority = (int) $result->getValue('priority');
@@ -371,6 +377,28 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper
     }
 
     /**
+     * Get reference objects reffering to this machine.
+     * @return array<int,Reference> array with Reference objects
+     * @throws InvalidArgumentException 
+     */
+    public function getReferences(): array
+    {
+        if (!rex_addon::get('d2u_references')->isAvailable()) {
+            return [];
+        }
+
+        $references = [];
+        foreach ($this->reference_ids as $reference_id) {
+            $reference = new Reference($reference_id, $this->clang_id);
+            if ($reference instanceof Reference && $reference->reference_id > 0) {
+                $references[$reference->reference_id] = $reference;
+            }
+        }
+        ksort($references);
+        return $references;
+    }
+
+    /**
      * Gets the UsedMachines of the category if plugin ist installed.
      * @param bool $online_only If true only online used machines are returned
      * @return UsedMachine[] Used machines of this category
@@ -596,7 +624,8 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper
                     ."parent_category_id = '". ($this->parent_category instanceof self ? $this->parent_category->category_id : 0) ."', "
                     ."priority = '". $this->priority ."', "
                     ."pic = '". $this->pic ."', "
-                    ."pic_usage = '". $this->pic_usage ."' ";
+                    ."pic_usage = '". $this->pic_usage ."', "
+                    ."reference_ids = '". implode(',', $this->reference_ids) ."' ";
             if (rex_plugin::get('d2u_machinery', 'export')->isAvailable()) {
                 $query .= ", export_europemachinery_category_id = '". $this->export_europemachinery_category_id ."', "
                     ."export_europemachinery_category_name = '". $this->export_europemachinery_category_name ."', "

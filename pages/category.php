@@ -1,4 +1,7 @@
 <?php
+
+use TobiasKrais\D2UReferences\Reference;
+
 $func = rex_request('func', 'string');
 $entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
@@ -20,7 +23,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save', FILTER_VALIDATE_INT) || 1 =
     $category = false;
     $category_id = $form['category_id'];
     foreach (rex_clang::getAll() as $rex_clang) {
-        if (false === $category) {
+        if (!$category instanceof Category) {
             $category = new Category($category_id, $rex_clang->getId());
             $category->category_id = $category_id; // Ensure correct ID in case first language has no object
             if (isset($form['parent_category_id']) && $form['parent_category_id'] > 0) {
@@ -38,6 +41,9 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save', FILTER_VALIDATE_INT) || 1 =
                 foreach ($video_ids as $video_id) {
                     $category->videos[$video_id] = new \TobiasKrais\D2UVideos\Video($video_id, (int) rex_config::get('d2u_helper', 'default_lang'));
                 }
+            }
+            if (rex_addon::get('d2u_references')->isAvailable()) {
+                $category->reference_ids = $form['reference_ids'] ?? [];
             }
 
             if (rex_plugin::get('d2u_machinery', 'export')->isAvailable()) {
@@ -215,6 +221,13 @@ if ('edit' === $func || 'add' === $func) {
                                     $options[$video->video_id] = $video->name;
                                 }
                                 \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_category_videos', 'form[video_ids][]', $options, array_keys($category->videos), 10, true, $readonly);
+                            }
+                            if (\rex_addon::get('d2u_references')->isAvailable()) {
+                                $options_references = [];
+                                foreach (Reference::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $reference) {
+                                    $options_references[$reference->reference_id] = $reference->name;
+                                }
+                                \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_references', 'form[reference_ids][]', $options_references, $category->reference_ids, 10, true, $readonly);
                             }
                         ?>
 					</div>

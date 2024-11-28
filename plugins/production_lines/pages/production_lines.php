@@ -1,4 +1,7 @@
 <?php
+
+use TobiasKrais\D2UReferences\Reference;
+
 $func = rex_request('func', 'string');
 $entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
@@ -20,7 +23,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
     $production_line = false;
     $production_line_id = $form['production_line_id'];
     foreach (rex_clang::getAll() as $rex_clang) {
-        if (false === $production_line) {
+        if (!$production_line instanceof ProductionLine) {
             $production_line = new ProductionLine($production_line_id, $rex_clang->getId());
             $production_line->production_line_id = $production_line_id; // Ensure correct ID in case first language has no object
             $production_line->complementary_machine_ids = $form['complementary_machine_ids'] ?? [];
@@ -32,7 +35,10 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
             $production_line->link_picture = $input_media[1];
             $production_line->usp_ids = $form['usp_ids'] ?? [];
             $production_line->video_ids = $form['video_ids'] ?? [];
-            $production_line->online_status = '' === $form['online_status'] ? 'offline' : $form['online_status'];
+            if (rex_addon::get('d2u_references')->isAvailable()) {
+                $production_line->reference_ids = $form['reference_ids'] ?? [];
+            }
+            $production_line->online_status = null === $form['online_status'] || '' === $form['online_status'] ? 'offline' : $form['online_status'];
             if (rex_plugin::get('d2u_machinery', 'machine_steel_processing_extension')->isAvailable()) {
                 $automation_supply_ids = $form['automation_supply_ids'] ?? [];
                 $production_line->automation_supply_ids = [];
@@ -126,6 +132,13 @@ if ('edit' === $func || 'add' === $func) {
                                     $options[$video->video_id] = $video->name;
                                 }
                                 \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_category_videos', 'form[video_ids][]', $options, $production_line->video_ids, 10, true, $readonly);
+                            }
+                            if (\rex_addon::get('d2u_references')->isAvailable()) {
+                                $options_references = [];
+                                foreach (Reference::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $reference) {
+                                    $options_references[$reference->reference_id] = $reference->name;
+                                }
+                                \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_references', 'form[reference_ids][]', $options_references, $production_line->reference_ids, 10, true, $readonly);
                             }
                             $option_machines = [];
                             foreach (Machine::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $machine) {

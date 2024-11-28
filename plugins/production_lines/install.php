@@ -11,6 +11,7 @@
     ->ensureColumn(new \rex_sql_column('pictures', 'TEXT', true))
     ->ensureColumn(new \rex_sql_column('link_picture', 'TEXT', true))
     ->ensureColumn(new \rex_sql_column('usp_ids', 'VARCHAR(255)', true))
+    ->ensureColumn(new \rex_sql_column('reference_ids', 'TEXT', true))
     ->ensureColumn(new \rex_sql_column('video_ids', 'VARCHAR(255)', true))
     ->ensureColumn(new \rex_sql_column('online_status', 'VARCHAR(10)'))
     ->ensure();

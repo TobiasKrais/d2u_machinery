@@ -1,4 +1,7 @@
 <?php
+
+use TobiasKrais\D2UReferences\Reference;
+
 $func = rex_request('func', 'string');
 $entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
@@ -39,6 +42,9 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
             $machine->article_id_software = (int) $input_link['article_id_software'];
             $article_ids_references = preg_grep('/^\s*$/s', explode(',', $input_link_list[1]), PREG_GREP_INVERT);
             $machine->article_ids_references = is_array($article_ids_references) ? $article_ids_references : [];
+            if (rex_addon::get('d2u_references')->isAvailable()) {
+                $machine->reference_ids = $form['reference_ids'] ?? [];
+            }
             $machine->engine_power = $form['engine_power'];
             $machine->engine_power_frequency_controlled = array_key_exists('engine_power_frequency_controlled', $form);
             $machine->length = $form['length'];
@@ -383,6 +389,13 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                             \TobiasKrais\D2UHelper\BackendHelper::form_linkfield('d2u_machinery_machine_software', 'article_id_software', $machine->article_id_software, (int) rex_config::get('d2u_helper', 'default_lang'), $readonly);
                             \TobiasKrais\D2UHelper\BackendHelper::form_linkfield('d2u_machinery_machine_service', 'article_id_service', $machine->article_id_service, (int) rex_config::get('d2u_helper', 'default_lang'), $readonly);
                             \TobiasKrais\D2UHelper\BackendHelper::form_linklistfield('d2u_machinery_machine_references', 1, $machine->article_ids_references, (int) rex_config::get('d2u_helper', 'default_lang'), $readonly);
+                            if (\rex_addon::get('d2u_references')->isAvailable()) {
+                                $options_references = [];
+                                foreach (Reference::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $reference) {
+                                    $options_references[$reference->reference_id] = $reference->name;
+                                }
+                                \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_references', 'form[reference_ids][]', $options_references, $machine->reference_ids, 10, true, $readonly);
+                            }
                             if (\rex_addon::get('d2u_videos')->isAvailable()) {
                                 $options = [];
                                 foreach (TobiasKrais\D2UVideos\Video::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $video) {
