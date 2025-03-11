@@ -101,7 +101,28 @@ abstract class AFTPExport extends AExport
         // ... login
         $login_result = ftp_login($connection_id, $this->provider->ftp_username, $this->provider->ftp_password);
         if (!$login_result) {
-            return rex_i18n::msg('d2u_machinery_export_ftp_error_connection');
+            // login failed
+            if (extension_loaded('ssh2')) {
+                // try to connect via SSH
+                $connection_id_ssh = ssh2_connect($this->provider->ftp_server);
+                ssh2_auth_password($connection_id_ssh, $this->provider->ftp_username, $this->provider->ftp_password);
+                if (!ssh2_scp_send($connection_id_ssh, $this->cache_path . $this->getZipFileName(), $this->zip_filename, 0644)) {
+                    return rex_i18n::msg('d2u_machinery_export_ftp_error_upload');
+                }
+                // Close SSH connection
+                ssh2_disconnect($connection_id_ssh);
+
+                return '';
+            }
+            // try not connect without SSL
+            $connection_id = ftp_connect($this->provider->ftp_server);
+            if (!$connection_id instanceof \FTP\Connection) {
+                return rex_i18n::msg('d2u_machinery_export_ftp_error_connection');
+            }
+            $login_result = ftp_login($connection_id, $this->provider->ftp_username, $this->provider->ftp_password);
+            if (!$login_result) {
+                return rex_i18n::msg('d2u_machinery_export_ftp_error_connection');
+            }
         }
         // Passive mode
         ftp_pasv($connection_id, true);
