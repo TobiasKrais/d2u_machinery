@@ -11,6 +11,10 @@
 </fieldset>
 
 <h2>Changelog</h2>
+<p>1.5.1-DEV:</p>
+<ul>
+	<li>...</li>
+</ul>
 <p>1.5.0:</p>
 <ul>
 	<li>Export Plugin: kann Gebrauchtmaschinen nun wieder auf Beiträgen von Personen und Unternehmen posten und diese beim Löschen des Angebots entfernen (Linkedin Rest API Version 202401).</li>
