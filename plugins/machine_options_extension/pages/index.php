@@ -19,10 +19,10 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
     $option = false;
     $option_id = $form['option_id'];
     foreach (rex_clang::getAll() as $rex_clang) {
-        if (false === $option) {
+        if (!$option instanceof Option) {
             $option = new Option($option_id, $rex_clang->getId());
             $option->option_id = $option_id; // Ensure correct ID in case first language has no object
-            $option->category_ids = $form['category_ids'];
+            $option->category_ids = is_array($form['category_ids']) ? $form['category_ids'] : [];
             $option->priority = $form['priority'];
             $option->pic = $input_media[1];
             if (\rex_addon::get('d2u_videos')->isAvailable() && isset($form['video_id']) && $form['video_id'] > 0) {

@@ -19,10 +19,10 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
     $industry_sector = false;
     $industry_sector_id = $form['industry_sector_id'];
     foreach (rex_clang::getAll() as $rex_clang) {
-        if (false === $industry_sector) {
+        if (!$industry_sector instanceof IndustrySector) {
             $industry_sector = new IndustrySector($industry_sector_id, $rex_clang->getId());
             $industry_sector->industry_sector_id = $industry_sector_id; // Ensure correct ID in case first language has no object
-            $industry_sector->online_status = '' === $form['online_status'] ? 'offline' : $form['online_status'];
+            $industry_sector->online_status = isset($form['online_status']) ? $form['online_status'] : 'offline';
             $industry_sector->icon = $input_media[2];
             $industry_sector->pic = $input_media[1];
         } else {
