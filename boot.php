@@ -37,7 +37,7 @@ function rex_d2u_machinery_alternate_urls(rex_extension_point $ep) {
     $url_id = (int) $params['url_id'];
 
     $url_list = \TobiasKrais\D2UMachinery\FrontendHelper::getAlternateURLs($url_namespace, $url_id);
-    if (count($url_list) === 0) {
+    if (count($url_list) === 0 && is_array($ep->getSubject())) {
         $url_list = $ep->getSubject();
     }
 
