@@ -11,11 +11,11 @@
 </fieldset>
 
 <h2>Changelog</h2>
-<p>1.5.0-DEV:</p>
+<p>1.5.0:</p>
 <ul>
 	<li>Export Plugin: kann Gebrauchtmaschinen nun wieder auf Beiträgen von Personen und Unternehmen posten und diese beim Löschen des Angebots entfernen (Linkedin Rest API Version 202401).</li>
 	<li>Bugfix: wenn ein Artikellink entfernt wurde, gab es beim Speichern einen Fehler.</li>
-	<li>Anpassungen an D2U Helper Version >= 1.14.0.</li>
+	<li>Anpassungen an D2U Helper Version >= 1.14.0, auch die kommende Version 2.0.</li>
 	<li>Container Kapazität ist nun die Einheit (kg, l oder m³) einstellbar.</li>
 	<li>Möglichkeit Referenzen aus dem D2U Referenzen Addon mit Kategorien, Maschinen und Produktionslinien zu verknüpfen hinzugefügt.</li>
 	<li>Modul "90-1 D2U Machinery Addon - Hauptausgabe": An D2U Videomanager Addon >= 1.2 angepasst.</li>
