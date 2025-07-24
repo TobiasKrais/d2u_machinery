@@ -5,7 +5,7 @@
 class SocialExportLinkedIn extends AExport
 {
     /** @var string Linkedin API version */
-    private string $linkedin_version = '202501';
+    private string $linkedin_version = '202507';
 
     /**
      * Constructor. Initializes variables.

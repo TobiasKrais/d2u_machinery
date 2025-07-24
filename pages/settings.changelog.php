@@ -13,7 +13,7 @@
 <h2>Changelog</h2>
 <p>1.5.1-DEV:</p>
 <ul>
-	<li>...</li>
+	<li>Export Plugin: Linkedin API auf 202507 erhöht.</li>
 </ul>
 <p>1.5.0:</p>
 <ul>
