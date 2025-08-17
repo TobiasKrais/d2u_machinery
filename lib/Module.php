@@ -1,14 +1,19 @@
 <?php
+
+namespace TobiasKrais\D2UMachinery;
+
+use rex_plugin;
+
 /**
  * Class managing modules published by www.design-to-use.de.
  *
  * @author Tobias Krais
  */
-class D2UMachineryModules
+class Module
 {
     /**
      * Get modules offered by this addon.
-     * @return \TobiasKrais\D2UHelper\Module[] Modules offered by this addon
+     * @return array<int,TobiasKrais\D2UHelper\Module> Modules offered by this addon
      */
     public static function getModules()
     {

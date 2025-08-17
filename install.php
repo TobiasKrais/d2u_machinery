@@ -180,32 +180,6 @@ if ('show' == $this->getConfig('show_usage_areas', 'hide')) { /** @phpstan-ignor
 }
 
 // Update modules
-if (class_exists(TobiasKrais\D2UHelper\ModuleManager::class)) {
-    $modules = [];
-    $modules[] = new \TobiasKrais\D2UHelper\Module('90-1',
-        'D2U Machinery Addon - Hauptausgabe',
-        17);
-    if (rex_plugin::get('d2u_machinery', 'industry_sectors')->isAvailable()) {
-        $modules[] = new \TobiasKrais\D2UHelper\Module('90-2',
-            'D2U Machinery Addon - Branchen',
-            2);
-    }
-    $modules[] = new \TobiasKrais\D2UHelper\Module('90-3',
-        'D2U Machinery Addon - Kategorien',
-        6);
-    if (rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
-        $modules[] = new \TobiasKrais\D2UHelper\Module('90-4',
-            'D2U Machinery Addon - Gebrauchtmaschinen',
-            21);
-    }
-    $modules[] = new \TobiasKrais\D2UHelper\Module('90-5',
-        'D2U Machinery Addon - Box Beratungshinweis',
-        2);
-    if (rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
-        $modules[] = new \TobiasKrais\D2UHelper\Module('90-6',
-            'D2U Machinery Addon - Gebrauchtmaschinen Topangebote',
-            11);
-    }
-    $d2u_module_manager = new \TobiasKrais\D2UHelper\ModuleManager($modules, '', 'd2u_machinery');
-    $d2u_module_manager->autoupdate();
-}
+include __DIR__ . DIRECTORY_SEPARATOR .'lib'. DIRECTORY_SEPARATOR .'Module.php';
+$d2u_module_manager = new \TobiasKrais\D2UHelper\ModuleManager(\TobiasKrais\D2UMachinery\Module::getModules(), '', 'd2u_machinery');
+$d2u_module_manager->autoupdate();
