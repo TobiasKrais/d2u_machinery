@@ -112,7 +112,7 @@ class MachineryPark extends AFTPExport
             return rex_i18n::msg('d2u_machinery_export_csv_cannot_create');
         }
         foreach ($list as $fields) {
-            fputcsv($fp, $fields, ';');
+            fputcsv($fp, $fields, ';', '"', '\\');
         }
         fclose($fp);
 

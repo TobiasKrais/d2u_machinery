@@ -14,6 +14,7 @@
 <p>1.5.1-DEV:</p>
 <ul>
 	<li>Export Plugin: Linkedin API auf 202511 erhöht.</li>
+	<li>Export Plugin: PHP Warnung im CSV Export verhindert.</li>
 </ul>
 <p>1.5.0:</p>
 <ul>
