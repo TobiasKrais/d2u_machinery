@@ -42,8 +42,8 @@ d2u_machinery/
 │   ├── category.php        # Category management
 │   ├── settings.settings.php  # Addon settings
 │   ├── settings.setup.php     # Module manager
-│   ├── settings.help.php      # Help page
-│   └── settings.changelog.php # Changelog
+│   ├── help.readme.php        # Help/README page
+│   └── help.changelog.php     # Changelog
 └── plugins/                # 14 plugins
     ├── contacts/           # Contact persons
     ├── equipment/          # Equipment and equipment groups
@@ -131,7 +131,7 @@ d2u_machinery/
 
 Each module has a revision number defined in `lib/d2u_machinery_module_manager.php` inside the `getModules()` method. When a module is changed:
 
-1. Add a changelog entry in `pages/settings.changelog.php` describing the change.
+1. Add a changelog entry in `pages/help.changelog.php` describing the change.
 2. Increment the module's revision number by one.
 
 **Important:** The revision only needs to be incremented **once per release**, not per commit. Check the changelog: if the version number is followed by `-DEV`, the release is still in development and no additional revision bump is needed.
@@ -200,8 +200,14 @@ Managed via `pages/settings.settings.php` and stored in `rex_config`:
 
 ## Versioning
 
-This addon follows [Semantic Versioning](https://semver.org/). The version number is maintained in `package.yml`. During development, the changelog uses a `-DEV` suffix.
+This addon follows [Semantic Versioning](https://semver.org/):
+
+- **Major** (1st digit): Breaking changes (e.g. removed classes, renamed methods, incompatible DB changes)
+- **Minor** (2nd digit): New features, new modules, new database fields (backward compatible)
+- **Patch** (3rd digit): Bug fixes, small improvements (backward compatible)
+
+The version number is maintained in `package.yml`. During development, the changelog uses a `-DEV` suffix.
 
 ## Changelog
 
-The changelog is located in `pages/settings.changelog.php`.
+The changelog is located in `pages/help.changelog.php`.
