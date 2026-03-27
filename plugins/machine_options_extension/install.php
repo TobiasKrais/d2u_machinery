@@ -25,10 +25,3 @@
     \rex::getTable('d2u_machinery_machines'))
     ->ensureColumn(new \rex_sql_column('option_ids', 'TEXT'))
     ->alter();
-
-// Insert / Update language replacements
-if (!class_exists(d2u_machinery_machine_options_extension_lang_helper::class)) {
-    // Load class in case addon is deactivated
-    require_once 'lib/d2u_machinery_machine_options_extension_lang_helper.php';
-}
-d2u_machinery_machine_options_extension_lang_helper::factory()->install();

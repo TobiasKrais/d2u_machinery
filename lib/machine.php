@@ -960,17 +960,12 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
     {
         $tech_data = [];
 
-        // Get placeholder wildcard tags
-        $sprog = rex_addon::get('sprog');
-        $tag_open = $sprog->getConfig('wildcard_open_tag');
-        $tag_close = $sprog->getConfig('wildcard_close_tag');
-
         // Max. viscosity
         if (rex_plugin::get('d2u_machinery', 'machine_agitator_extension')->isAvailable() && $this->viscosity > 0) {
             $tech_data[] = [
-                'description' => $tag_open . 'd2u_machinery_agitators_viscosity' . $tag_close,
+                'description' => \Sprog\Wildcard::get('d2u_machinery_agitators_viscosity'),
                 'value' => $this->viscosity,
-                'unit' => $tag_open . 'd2u_machinery_agitators_mpas' . $tag_close,
+                'unit' => \Sprog\Wildcard::get('d2u_machinery_agitators_mpas'),
             ];
         }
 
@@ -978,9 +973,9 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
             // Operating pressure
             if ('' !== $this->operating_pressure) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_operating_pressure' . $tag_close,
-                    'value' => $tag_open . 'd2u_machinery_construction_equipment_up_to' . $tag_close .' '. $this->operating_pressure,
-                    'unit' => $tag_open . 'd2u_machinery_unit_bar' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_operating_pressure'),
+                    'value' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_up_to') .' '. $this->operating_pressure,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_bar'),
                 ];
             }
 
@@ -993,18 +988,18 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
             $h = '' === $this->operating_voltage_hz ? ' / -' : ' / '. $this->operating_voltage_hz;
             $a = '' === $this->operating_voltage_a ? ' / -' : ' / '. $this->operating_voltage_a;
             $tech_data[] = [
-                'description' => $tag_open . 'd2u_machinery_operating_voltage' . $tag_close,
+                'description' => \Sprog\Wildcard::get('d2u_machinery_operating_voltage'),
                 'value' => $v . $h . $a,
-                'unit' => $tag_open . 'd2u_machinery_unit_v' . $tag_close .'/'. $tag_open . 'd2u_machinery_unit_hz' . $tag_close .'/'. $tag_open . 'd2u_machinery_unit_a' . $tag_close,
+                'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_v') .'/'. \Sprog\Wildcard::get('d2u_machinery_unit_hz') .'/'. \Sprog\Wildcard::get('d2u_machinery_unit_a'),
             ];
         }
 
         // Engine power
         if ('' !== $this->engine_power) {
             $tech_data[] = [
-                'description' => $tag_open . 'd2u_machinery_engine_power' . $tag_close,
-                'value' => $this->engine_power . ($this->engine_power_frequency_controlled ? ' ('. $tag_open . 'd2u_machinery_engine_power_frequency_controlled' . $tag_close .')' : ''),
-                'unit' => $tag_open . 'd2u_machinery_unit_kw' . $tag_close,
+                'description' => \Sprog\Wildcard::get('d2u_machinery_engine_power'),
+                'value' => $this->engine_power . ($this->engine_power_frequency_controlled ? ' ('. \Sprog\Wildcard::get('d2u_machinery_engine_power_frequency_controlled') .')' : ''),
+                'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_kw'),
             ];
         }
 
@@ -1012,17 +1007,17 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
             // Water capacity
             if ($this->waste_water_capacity > 0) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_waste_water_capacity' . $tag_close,
-                    'value' => $tag_open . 'd2u_machinery_construction_equipment_max' . $tag_close .' '. $this->waste_water_capacity,
-                    'unit' => $tag_open . 'd2u_machinery_unit_l' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_waste_water_capacity'),
+                    'value' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_max') .' '. $this->waste_water_capacity,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_l'),
                 ];
             }
 
             // Capacity
             if ('' !== $this->container_capacity) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_container_capacity' . $tag_close,
-                    'value' => $tag_open . 'd2u_machinery_construction_equipment_max' . $tag_close .' '. $this->container_capacity .' '. $tag_open . 'd2u_machinery_unit_'.$this->container_capacity_unit . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_container_capacity'),
+                    'value' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_max') .' '. $this->container_capacity .' '. \Sprog\Wildcard::get('d2u_machinery_unit_'. $this->container_capacity_unit),
                     'unit' => '',
                 ];
             }
@@ -1030,62 +1025,62 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
             // Empty weight
             if ($this->container_weight_empty > 0) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_container_weight_empty' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_container_weight_empty'),
                     'value' => $this->container_weight_empty,
-                    'unit' => $tag_open . 'd2u_machinery_unit_kg' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_kg'),
                 ];
             }
 
             // Mixing performance
             if ('' !== $this->container_mixing_performance) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_container_mixing_performance' . $tag_close,
-                    'value' => $tag_open . 'd2u_machinery_construction_equipment_max' . $tag_close .' '. $this->container_mixing_performance,
-                    'unit' => $tag_open . 'd2u_machinery_unit_l_min' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_container_mixing_performance'),
+                    'value' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_max') .' '. $this->container_mixing_performance,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_l_min'),
                 ];
             }
 
             // Flow volume
             if ('' !== $this->pump_flow_volume) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_pump_flow_volume' . $tag_close,
-                    'value' => $tag_open . 'd2u_machinery_construction_equipment_max' . $tag_close .' '. $this->pump_flow_volume,
-                    'unit' => $tag_open . 'd2u_machinery_unit_l_min' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_pump_flow_volume'),
+                    'value' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_max') .' '. $this->pump_flow_volume,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_l_min'),
                 ];
             }
 
             // Conveying distance
             if ($this->pump_conveying_distance > 0) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_pump_conveying_distance' . $tag_close,
-                    'value' => $tag_open . 'd2u_machinery_construction_equipment_max' . $tag_close .' '. $this->pump_conveying_distance,
-                    'unit' => $tag_open . 'd2u_machinery_unit_m' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_pump_conveying_distance'),
+                    'value' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_max') .' '. $this->pump_conveying_distance,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_m'),
                 ];
             }
 
             // Pressure height
             if ($this->pump_pressure_height > 0) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_pump_pressure_height' . $tag_close,
-                    'value' => $tag_open . 'd2u_machinery_construction_equipment_max' . $tag_close .' '. $this->pump_pressure_height,
-                    'unit' => $tag_open . 'd2u_machinery_unit_m' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_pump_pressure_height'),
+                    'value' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_max') .' '. $this->pump_pressure_height,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_m'),
                 ];
             }
 
             // Grain size
             if ('' !== $this->pump_grain_size) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_pump_grain_size' . $tag_close,
-                    'value' => $tag_open . 'd2u_machinery_construction_equipment_max' . $tag_close .' '. $this->pump_grain_size,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_pump_grain_size'),
+                    'value' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_max') .' '. $this->pump_grain_size,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
 
             // Nozzle size
             if ('' !== $this->airless_nozzle_size) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_airless_nozzle_size' . $tag_close,
-                    'value' => $tag_open . 'd2u_machinery_construction_equipment_max' . $tag_close .' '. $this->airless_nozzle_size,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_airless_nozzle_size'),
+                    'value' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_max') .' '. $this->airless_nozzle_size,
                     'unit' => '"',
                 ];
             }
@@ -1093,25 +1088,25 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
             // Nozzle size
             if ('' !== $this->pump_material_container) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_pump_material_container' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_pump_material_container'),
                     'value' => $this->pump_material_container,
-                    'unit' => $tag_open . 'd2u_machinery_unit_l' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_l'),
                 ];
             }
 
             // Filling
             if ($this->pump_filling > 0) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_pump_filling' . $tag_close,
-                    'value' => $tag_open . 'd2u_machinery_unit_ca' . $tag_close .' '. $this->pump_filling,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_pump_filling'),
+                    'value' => \Sprog\Wildcard::get('d2u_machinery_unit_ca') .' '. $this->pump_filling,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
 
             // Hose connection
             if ('' !== $this->airless_hose_connection) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_airless_hose_connection' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_airless_hose_connection'),
                     'value' => $this->airless_hose_connection,
                     'unit' => '"',
                 ];
@@ -1120,97 +1115,97 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
             // Hose diameter
             if ($this->airless_hose_diameter > 0) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_airless_hose_diameter' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_airless_hose_diameter'),
                     'value' => $this->airless_hose_diameter,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
 
             // Hose length
             if ($this->airless_hose_length > 0) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_airless_hose_length' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_airless_hose_length'),
                     'value' => $this->airless_hose_length,
-                    'unit' => $tag_open . 'd2u_machinery_unit_m' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_m'),
                 ];
             }
 
             // Grinding plate
             if ($this->grinder_grinding_plate > 0) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_grinder_grinding_plate' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_grinder_grinding_plate'),
                     'value' => $this->grinder_grinding_plate,
-                    'unit' => $tag_open . 'd2u_machinery_unit_cm2' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_cm2'),
                 ];
             }
 
             // Grinding wheel
             if ($this->grinder_grinding_wheel > 0) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_grinder_grinding_wheel' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_grinder_grinding_wheel'),
                     'value' => $this->grinder_grinding_wheel,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
 
             // Grinding wheel
             if ('' !== $this->grinder_rotational_frequency) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_grinder_rotational_frequency' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_grinder_rotational_frequency'),
                     'value' => $this->grinder_rotational_frequency,
-                    'unit' => $tag_open . 'd2u_machinery_unit_rotations_min' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_rotations_min'),
                 ];
             }
 
             // Vacuum connection
             if ($this->grinder_vacuum_connection > 0) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_grinder_vacuum_connection' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_grinder_vacuum_connection'),
                     'value' => $this->grinder_vacuum_connection,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
 
             // Sanding
             if ('' !== $this->grinder_sanding) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_grinder_sanding' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_grinder_sanding'),
                     'value' => $this->grinder_sanding,
-                    'unit' => $tag_open . 'd2u_machinery_unit_rotations_min' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_rotations_min'),
                 ];
             }
 
             // Cutting length
             if ($this->cutters_cutting_length > 0) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_cutters_cutting_length' . $tag_close,
-                    'value' => $tag_open . 'd2u_machinery_construction_equipment_max' . $tag_close .' '. $this->cutters_cutting_length,
-                    'unit' => $tag_open . 'd2u_machinery_unit_cm' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_cutters_cutting_length'),
+                    'value' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_max') .' '. $this->cutters_cutting_length,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_cm'),
                 ];
             }
 
             // Cutting depth
             if ('' !== $this->cutters_cutting_depth) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_cutters_cutting_depth' . $tag_close,
-                    'value' => $tag_open . 'd2u_machinery_construction_equipment_max' . $tag_close .' '. $this->cutters_cutting_depth,
-                    'unit' => $tag_open . 'd2u_machinery_unit_cm' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_cutters_cutting_depth'),
+                    'value' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_max') .' '. $this->cutters_cutting_depth,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_cm'),
                 ];
             }
 
             // Rod length
             if ('' !== $this->cutters_rod_length) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_cutters_rod_length' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_cutters_rod_length'),
                     'value' => $this->cutters_rod_length,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
 
             // Conveying wave
             if ('' !== $this->container_conveying_wave) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_container_conveying_wave' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_container_conveying_wave'),
                     'value' => $this->container_conveying_wave,
                     'unit' => '',
                 ];
@@ -1219,16 +1214,16 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
             // Water connection
             if ('' !== $this->container_waterconnect_diameter && $this->container_waterconnect_pressure > 0) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_container_waterconnect' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_container_waterconnect'),
                     'value' => $this->container_waterconnect_pressure .' ('. $this->container_waterconnect_diameter .'")',
-                    'unit' => $tag_open . 'd2u_machinery_unit_bar' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_bar'),
                 ];
             }
 
             // Connection port
             if ('' !== $this->container_connection_port) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_container_connection_port' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_container_connection_port'),
                     'value' => $this->container_connection_port,
                     'unit' => '',
                 ];
@@ -1237,7 +1232,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
             // Machine technique
             if (false !== $this->category) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_machine_technique' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_machine_technique'),
                     'value' => '<a href="'. $this->category->getUrl() .'">'. $this->category->name .'</a>',
                     'unit' => '',
                 ];
@@ -1246,70 +1241,70 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
             // Working width
             if ($this->floor_working_width > 0) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_floor_working_width' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_floor_working_width'),
                     'value' => $this->floor_working_width,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
 
             // Working pressure
             if ('' !== $this->floor_working_pressure) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_floor_working_pressure' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_floor_working_pressure'),
                     'value' => $this->floor_working_pressure,
-                    'unit' => $tag_open . 'd2u_machinery_unit_kg' . $tag_close .'/'. $tag_open . 'd2u_machinery_unit_cm2' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_kg') .'/'. \Sprog\Wildcard::get('d2u_machinery_unit_cm2'),
                 ];
             }
 
             // Dust extraction connection
             if ($this->floor_dust_extraction_connection > 0) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_floor_dust_extraction_connection' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_floor_dust_extraction_connection'),
                     'value' => $this->floor_dust_extraction_connection,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
 
             // Feedrate
             if ('' !== $this->floor_feedrate) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_floor_feedrate' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_floor_feedrate'),
                     'value' => $this->floor_feedrate,
-                    'unit' => $tag_open . 'd2u_machinery_unit_m_min' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_m_min'),
                 ];
             }
 
             // Beam power on concrete
             if ($this->floor_beam_power_on_concrete > 0) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_floor_beam_power_on_concrete' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_floor_beam_power_on_concrete'),
                     'value' => $this->floor_beam_power_on_concrete,
-                    'unit' => $tag_open . 'd2u_machinery_unit_m2_h' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_m2_h'),
                 ];
             }
 
             // Filter connection
             if ('' !== $this->floor_filter_connection) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_floor_filter_connection' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_floor_filter_connection'),
                     'value' => $this->floor_filter_connection,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
 
             // Rotations
             if ('' !== $this->floor_rotations) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_floor_rotations' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_floor_rotations'),
                     'value' => $this->floor_rotations,
-                    'unit' => $tag_open . 'd2u_machinery_unit_min1' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_min1'),
                 ];
             }
 
             // Technical description
             if ('' !== $this->description_technical) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_construction_equipment_description_technical' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_description_technical'),
                     'value' => $this->description_technical,
                     'unit' => '',
                 ];
@@ -1319,30 +1314,30 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
         // Dimensions
         if ($this->length > 0 && $this->width > 0 && $this->height > 0) {
             $tech_data[] = [
-                'description' => $tag_open . 'd2u_machinery_dimensions_length_width_height' . $tag_close,
+                'description' => \Sprog\Wildcard::get('d2u_machinery_dimensions_length_width_height'),
                 'value' => $this->length .' x '. $this->width .' x '. $this->height,
-                'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
             ];
         } elseif ($this->depth > 0 && $this->width > 0 && $this->height > 0) {
             $tech_data[] = [
-                'description' => $tag_open . 'd2u_machinery_dimensions_width_height_depth' . $tag_close,
+                'description' => \Sprog\Wildcard::get('d2u_machinery_dimensions_width_height_depth'),
                 'value' => $this->width .' x '. $this->height	.' x '. $this->depth,
-                'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
             ];
         } elseif ($this->length > 0) {
             $tech_data[] = [
-                'description' => $tag_open . 'd2u_machinery_dimensions_length' . $tag_close,
+                'description' => \Sprog\Wildcard::get('d2u_machinery_dimensions_length'),
                 'value' => $this->length,
-                'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
             ];
         }
 
         // Weight
         if ('' !== $this->weight) {
             $tech_data[] = [
-                'description' => $tag_open . 'd2u_machinery_weight' . $tag_close,
-                'value' => $tag_open . 'd2u_machinery_unit_ca' . $tag_close .' '. $this->weight,
-                'unit' => $tag_open . 'd2u_machinery_unit_kg' . $tag_close,
+                'description' => \Sprog\Wildcard::get('d2u_machinery_weight'),
+                'value' => \Sprog\Wildcard::get('d2u_machinery_unit_ca') .' '. $this->weight,
+                'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_kg'),
             ];
         }
 
@@ -1354,7 +1349,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
                     $procedures[] = $procedure->name;
                 }
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_procedures' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_procedures'),
                     'value' => implode('<br>', $procedures),
                     'unit' => '',
                 ];
@@ -1363,160 +1358,160 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
             // Saw blade
             if ('' !== $this->saw_blade) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_saw_blade' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_saw_blade'),
                     'value' => $this->saw_blade,
-                    'unit' => $tag_open . 'd2u_machinery_unit_diameter_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_diameter_mm'),
                 ];
             }
 
             // Saw band
             if ('' !== $this->saw_band) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_saw_band' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_saw_band'),
                     'value' => $this->saw_band,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
 
             // Saw band tilt
             if ('' !== $this->saw_band_tilt) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_saw_band_tilt' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_saw_band_tilt'),
                     'value' => $this->saw_band_tilt,
-                    'unit' => $tag_open . 'd2u_machinery_unit_degrees' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_degrees'),
                 ];
             }
 
             // Saw cutting speed
             if ('' !== $this->saw_cutting_speed) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_saw_cutting_speed' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_saw_cutting_speed'),
                     'value' => $this->saw_cutting_speed,
-                    'unit' => $tag_open . 'd2u_machinery_unit_m_min' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_m_min'),
                 ];
             }
 
             // Feed rate
             if ('' !== $this->automation_feedrate) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_automation_feedrate' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_automation_feedrate'),
                     'value' => $this->automation_feedrate,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm_min' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm_min'),
                 ];
             }
 
             // Feed rate for saw blades
             if ('' !== $this->automation_feedrate_sawblade) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_automation_feedrate_sawblade' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_automation_feedrate_sawblade'),
                     'value' => $this->automation_feedrate_sawblade,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm_min' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm_min'),
                 ];
             }
 
             // Rush leader flyback
             if (0 !== $this->automation_rush_leader_flyback) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_automation_rush_leader_flyback' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_automation_rush_leader_flyback'),
                     'value' => $this->automation_rush_leader_flyback,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm_min' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm_min'),
                 ];
             }
 
             // Workspace max.
             if ('' !== $this->workspace) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_workspace' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_workspace'),
                     'value' => $this->workspace,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
 
             // Workspace square
             if ('' !== $this->workspace_square) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_workspace_square' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_workspace_square'),
                     'value' => $this->workspace_square,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
 
             // Workspace flat
             if ('' !== $this->workspace_flat) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_workspace_flat' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_workspace_flat'),
                     'value' => $this->workspace_flat,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
 
             // Workspace round
             if ('' !== $this->workspace_round) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_workspace_round' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_workspace_round'),
                     'value' => $this->workspace_round,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
 
             // Workspace plates
             if ('' !== $this->workspace_plate) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_workspace_plate' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_workspace_plate'),
                     'value' => $this->workspace_plate,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
 
             // Workspace profile
             if ('' !== $this->workspace_profile) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_workspace_profile' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_workspace_profile'),
                     'value' => $this->workspace_profile,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
 
             // Workspace angle steel
             if ('' !== $this->workspace_angle_steel) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_workspace_angle_steel' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_workspace_angle_steel'),
                     'value' => $this->workspace_angle_steel,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
 
             // Workspace minimum
             if ('' !== $this->workspace_min) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_workspace_min' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_workspace_min'),
                     'value' => $this->workspace_min,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
 
             // Bevel angle
             if ($this->bevel_angle > 0) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_bevel_angle' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_bevel_angle'),
                     'value' => $this->bevel_angle,
-                    'unit' => $tag_open . 'd2u_machinery_unit_degrees' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_degrees'),
                 ];
             }
 
             // Continuous opening
             if ('' !== $this->beam_continuous_opening) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_beam_continuous_opening' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_beam_continuous_opening'),
                     'value' => $this->beam_continuous_opening,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
 
             // Color guns
             if ('' !== $this->beam_color_guns) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_beam_color_guns' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_beam_color_guns'),
                     'value' => $this->beam_color_guns,
                     'unit' => '',
                 ];
@@ -1525,25 +1520,25 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
             // Number turbines
             if ($this->beam_turbines > 0) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_beam_turbines' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_beam_turbines'),
                     'value' => $this->beam_turbines,
-                    'unit' => $tag_open . 'd2u_machinery_unit_pieces' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_pieces'),
                 ];
             }
 
             // Turbine power
             if ('' !== $this->beam_turbine_power) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_beam_turbine_power' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_beam_turbine_power'),
                     'value' => $this->beam_turbine_power,
-                    'unit' => $tag_open . 'd2u_machinery_unit_kw' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_kw'),
                 ];
             }
 
             // saw miter
             if ('' !== $this->saw_miter) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_saw_miter' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_saw_miter'),
                     'value' => $this->saw_miter,
                     'unit' => '',
                 ];
@@ -1552,135 +1547,135 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
             // Vertical drilling units
             if ('' !== $this->drilling_unit_vertical) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_drilling_unit_vertical' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_drilling_unit_vertical'),
                     'value' => $this->drilling_unit_vertical,
-                    'unit' => $tag_open . 'd2u_machinery_unit_pieces' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_pieces'),
                 ];
             }
 
             // Horizontal drilling units
             if ('' !== $this->drilling_unit_horizontal) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_drilling_unit_horizontal' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_drilling_unit_horizontal'),
                     'value' => $this->drilling_unit_horizontal,
-                    'unit' => $tag_open . 'd2u_machinery_unit_pieces' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_pieces'),
                 ];
             }
 
             // Drilling units from below
             if ($this->drilling_unit_below > 0) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_drilling_unit_below' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_drilling_unit_below'),
                     'value' => $this->drilling_unit_below,
-                    'unit' => $tag_open . 'd2u_machinery_unit_pieces' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_pieces'),
                 ];
             }
 
             // Drilling diameter
             if ('' !== $this->drilling_diameter) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_drilling_diameter' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_drilling_diameter'),
                     'value' => $this->drilling_diameter,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
 
             // Drilling tools per axis
             if ('' !== $this->drilling_tools_axis) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_drilling_tools_axis' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_drilling_tools_axis'),
                     'value' => $this->drilling_tools_axis,
-                    'unit' => $tag_open . 'd2u_machinery_unit_pieces' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_pieces'),
                 ];
             }
 
             // Drilling axis drive power
             if ('' !== $this->drilling_axis_drive_power) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_drilling_axis_drive_power' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_drilling_axis_drive_power'),
                     'value' => $this->drilling_axis_drive_power,
-                    'unit' => $tag_open . 'd2u_machinery_unit_kw' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_kw'),
                 ];
             }
 
             // Max. drilling speed
             if ('' !== $this->drilling_rpm_speed) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_drilling_rpm_speed' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_drilling_rpm_speed'),
                     'value' => $this->drilling_rpm_speed,
-                    'unit' => $tag_open . 'd2u_machinery_unit_min1' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_min1'),
                 ];
             }
 
             // Sheet width
             if ('' !== $this->sheet_width) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_sheet_width' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_sheet_width'),
                     'value' => $this->sheet_width,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
 
             // Sheet length
             if ('' !== $this->sheet_length) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_sheet_length' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_sheet_length'),
                     'value' => $this->sheet_length,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
 
             // Sheet thickness
             if ('' !== $this->sheet_thickness) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_sheet_thickness' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_sheet_thickness'),
                     'value' => $this->sheet_thickness,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
 
             // Tool changer locations
             if ('' !== $this->tool_changer_locations) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_tool_changer_locations' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_tool_changer_locations'),
                     'value' => $this->tool_changer_locations,
-                    'unit' => $tag_open . 'd2u_machinery_unit_pieces' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_pieces'),
                 ];
             }
 
             // punching diameter
             if ('' !== $this->punching_diameter) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_punching_diameter' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_punching_diameter'),
                     'value' => $this->punching_diameter,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
 
             // Number of punching tools
             if ('' !== $this->punching_tools) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_punching_tools' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_punching_tools'),
                     'value' => $this->punching_tools,
-                    'unit' => $tag_open . 'd2u_machinery_unit_pieces' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_pieces'),
                 ];
             }
 
             // Punching power
             if ($this->punching_power > 0) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_punching_power' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_punching_power'),
                     'value' => $this->punching_power,
-                    'unit' => $tag_open . 'd2u_machinery_unit_kn' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_kn'),
                 ];
             }
 
             // Shaving unit angle steel singel cut
             if ($this->shaving_unit_angle_steel_single_cut > 0) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_shaving_unit_angle_steel_single_cut' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_shaving_unit_angle_steel_single_cut'),
                     'value' => $this->shaving_unit_angle_steel_single_cut,
-                    'unit' => $tag_open . 'd2u_machinery_unit_kn' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_kn'),
                 ];
             }
 
@@ -1691,7 +1686,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
                     $tools[] = $tool->name;
                 }
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_tools' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_tools'),
                     'value' => implode('<br>', $tools),
                     'unit' => '',
                 ];
@@ -1704,7 +1699,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
                     $automation_automationgrades[] = $automationgrade->name;
                 }
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_automation_automationgrades' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_automation_automationgrades'),
                     'value' => implode('<br>', $automation_automationgrades),
                     'unit' => '',
                 ];
@@ -1717,7 +1712,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
                     $materials[] = $material->name;
                 }
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_materials' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_materials'),
                     'value' => implode('<br>', $materials),
                     'unit' => '',
                 ];
@@ -1730,7 +1725,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
                     $processes[] = $process->name;
                 }
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_processes' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_processes'),
                     'value' => implode('<br>', $processes),
                     'unit' => '',
                 ];
@@ -1743,7 +1738,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
                     $profiles[] = $profile->name;
                 }
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_profiles' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_profiles'),
                     'value' => implode('<br>', $profiles),
                     'unit' => '',
                 ];
@@ -1752,63 +1747,63 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
             // Carrier width
             if ('' !== $this->carrier_width) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_carrier_width' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_carrier_width'),
                     'value' => $this->carrier_width,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
 
             // Carrier height
             if ('' !== $this->carrier_height) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_carrier_height' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_carrier_height'),
                     'value' => $this->carrier_height,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
 
             // Carrier max. weight
             if ($this->carrier_weight > 0) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_carrier_weight' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_carrier_weight'),
                     'value' => $this->carrier_weight,
-                    'unit' => $tag_open . 'd2u_machinery_unit_kg' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_kg'),
                 ];
             }
 
             // Flange thickness
             if ('' !== $this->flange_thickness) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_flange_thickness' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_flange_thickness'),
                     'value' => $this->flange_thickness,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
 
             // Web thickness min. / max.
             if ('' !== $this->web_thickness) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_web_thickness' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_web_thickness'),
                     'value' => $this->web_thickness,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
 
             // Component length
             if ('' !== $this->component_length) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_component_length' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_component_length'),
                     'value' => $this->component_length,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
 
             // Component weight
             if ($this->component_weight > 0) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_component_weight' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_component_weight'),
                     'value' => $this->component_weight,
-                    'unit' => $tag_open . 'd2u_machinery_unit_kg' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_kg'),
                 ];
             }
 
@@ -1819,7 +1814,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
                     $welding_processes[] = $welding->name;
                 }
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_weldings' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_weldings'),
                     'value' => implode('<br>', $welding_processes),
                     'unit' => '',
                 ];
@@ -1828,45 +1823,45 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
             // Welding thickness
             if ($this->welding_thickness > 0) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_welding_thickness' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_welding_thickness'),
                     'value' => $this->welding_thickness,
-                    'unit' => $tag_open . 'd2u_machinery_unit_a_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_a_mm'),
                 ];
             }
 
             // Welding wire thickness
             if ('' !== $this->welding_wire_thickness) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_welding_wire_thickness' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_welding_wire_thickness'),
                     'value' => $this->welding_wire_thickness,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
 
             // Welding wire thickness
             if ('' !== $this->welding_wire_thickness) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_welding_wire_thickness' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_welding_wire_thickness'),
                     'value' => $this->welding_wire_thickness,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
 
             // Automation supply single stroke
             if ('' !== $this->automation_supply_single_stroke) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_automation_supply_single_stroke' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_automation_supply_single_stroke'),
                     'value' => $this->automation_supply_single_stroke,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
 
             // Automation supply multi stroke
             if ('' !== $this->automation_supply_multi_stroke) {
                 $tech_data[] = [
-                    'description' => $tag_open . 'd2u_machinery_steel_automation_supply_multi_stroke' . $tag_close,
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_automation_supply_multi_stroke'),
                     'value' => $this->automation_supply_multi_stroke,
-                    'unit' => $tag_open . 'd2u_machinery_unit_mm' . $tag_close,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm'),
                 ];
             }
         }

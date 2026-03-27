@@ -17,10 +17,3 @@ $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery
     \rex::getTable('d2u_machinery_categories'))
     ->removeColumn('show_agitators')
     ->ensure();
-
-// Delete language replacements
-if (!class_exists(d2u_machinery_machine_agitator_extension_lang_helper::class)) {
-    // Load class in case addon is deactivated
-    require_once 'lib/d2u_machinery_machine_agitator_extension_lang_helper.php';
-}
-d2u_machinery_machine_agitator_extension_lang_helper::factory()->uninstall();

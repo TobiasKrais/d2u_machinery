@@ -25,10 +25,6 @@ function rex_d2u_machinery_agitators_clang_deleted(rex_extension_point $ep)
     foreach ($agitator_types as $agitator_type) {
         $agitator_type->delete(false);
     }
-
-    // Delete language replacements
-    d2u_machinery_machine_agitator_extension_lang_helper::factory()->uninstall($clang_id);
-
     return $warning;
 }
 

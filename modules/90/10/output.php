@@ -171,17 +171,17 @@ if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['opti
                 $used_machine->pics[0] .'" alt='. $used_machine->name .' style="max-width:100%;">';
         } else {
             // Slider
-            echo '<div id="machineCarousel" class="carousel carousel-fade slide" data-ride="carousel">';
+            echo '<div id="machineCarousel" class="carousel carousel-fade slide" data-bs-ride="carousel">';
             // Slider indicators
-            echo '<ol class="carousel-indicators">';
+            echo '<div class="carousel-indicators">';
             for ($i = 0; $i < count($used_machine->pics); ++$i) {
-                echo '<li data-target="#machineCarousel" data-slide-to="'. $i .'"';
+                echo '<button type="button" data-bs-target="#machineCarousel" data-bs-slide-to="'. $i .'"';
                 if (0 === $i) {
-                    echo ' class="active"';
+                    echo ' class="active" aria-current="true"';
                 }
-                echo '></li>';
+                echo ' aria-label="Slide '. ($i + 1) .'"></button>';
             }
-            echo '</ol>';
+            echo '</div>';
 
             // Wrapper for slides
             echo '<div class="carousel-inner" role="listbox">';
@@ -200,14 +200,14 @@ if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['opti
             echo '</div>';
 
             // Left and right controls
-            echo '<a class="carousel-control-prev" href="#machineCarousel" role="button" data-slide="prev">';
+            echo '<button class="carousel-control-prev" type="button" data-bs-target="#machineCarousel" data-bs-slide="prev">';
             echo '<span class="carousel-control-prev-icon" aria-hidden="true"></span>';
-            echo '<span class="sr-only">Previous</span>';
-            echo '</a>';
-            echo '<a class="carousel-control-next" href="#machineCarousel" role="button" data-slide="next">';
+            echo '<span class="visually-hidden">Previous</span>';
+            echo '</button>';
+            echo '<button class="carousel-control-next" type="button" data-bs-target="#machineCarousel" data-bs-slide="next">';
             echo '<span class="carousel-control-next-icon" aria-hidden="true"></span>';
-            echo '<span class="sr-only">Next</span>';
-            echo '</a>';
+            echo '<span class="visually-hidden">Next</span>';
+            echo '</button>';
 
             echo '</div>';
         }
@@ -348,11 +348,11 @@ if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['opti
         echo '<div class="row">';
         foreach ($used_machine->pics as $pic) {
             $media = rex_media::get($pic);
-            echo '<a href="index.php?rex_media_type='. $type_detail .'&rex_media_file='. $pic .'" data-toggle="lightbox'. $lightbox_id .'" data-gallery="example-gallery'. $lightbox_id .'" class="col-6 col-sm-4 col-lg-3"';
+            echo '<a href="index.php?rex_media_type='. $type_detail .'&rex_media_file='. $pic .'" data-d2u-gallery="gallery-'. $lightbox_id .'" class="col-6 col-sm-4 col-lg-3"';
             if ($media instanceof rex_media) {
                 echo ' data-title="'. $media->getValue('title') .'"';
             }
-            echo '>';
+            echo ' onclick="event.preventDefault(); d2uLightboxOpen(\'gallery-'. $lightbox_id .'\', this);">';
             echo '<img src="index.php?rex_media_type='. $type_thumb .'&rex_media_file='. $pic .'" class="img-fluid gallery-pic-box"';
             if ($media instanceof rex_media) {
                 echo ' alt="'. $media->getValue('title') .'" title="'. $media->getValue('title') .'"';
@@ -362,12 +362,6 @@ if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['opti
         }
         echo '</div>';
         echo '</div>';
-        echo '<script>';
-        echo "$(document).on('click', '[data-toggle=\"lightbox". $lightbox_id ."\"]', function(event) {";
-        echo 'event.preventDefault();';
-        echo '$(this).ekkoLightbox({ alwaysShowClose: true	});';
-        echo '});';
-        echo '</script>';
         echo '</div>'; // End row
         echo '</div>'; // End tab
     }
@@ -494,9 +488,13 @@ if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['opti
 print_consulation_hint();
 ?>
 <script>
-	// Allow activation of bootstrap tab via URL
-	$(function() {
-		var hash = window.location.hash;
-		hash && $('ul.nav a[href="' + hash + '"]').tab('show');
-	});
+    const machineryUsedTabTriggers = document.querySelectorAll('[data-bs-toggle="tab"]');
+    const machineryUsedHash = window.location.hash;
+    if (machineryUsedHash) {
+        machineryUsedTabTriggers.forEach(function (trigger) {
+            if (trigger.getAttribute('data-bs-target') === machineryUsedHash || trigger.getAttribute('href') === machineryUsedHash) {
+                bootstrap.Tab.getOrCreateInstance(trigger).show();
+            }
+        });
+    }
 </script>

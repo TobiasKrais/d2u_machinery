@@ -128,12 +128,3 @@ if (\rex_addon::get('url')->isAvailable()) {
 
     \TobiasKrais\D2UHelper\BackendHelper::generateUrlCache();
 }
-
-// Insert frontend translations
-if (!class_exists(d2u_machinery_used_machines_lang_helper::class)) {
-    // Load class in case addon is deactivated
-    require_once 'lib/d2u_machinery_used_machines_lang_helper.php';
-}
-if (class_exists(d2u_machinery_used_machines_lang_helper::class)) {
-    d2u_machinery_used_machines_lang_helper::factory()->install();
-}

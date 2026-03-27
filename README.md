@@ -10,7 +10,7 @@ Nach der Installation in Redaxo sollten folgende Schritte ausgeführt werden:
 2. Eingabe mindestens eines Kontaktes.
 3. Eingabe mindestens einer Kategorie. Diese werden für die Generierung der URLs benötigt.
 4. Nun kann mit der Eingabe von Maschinen begonnen werden.
-5. Wenn gewünscht, kann unter Setup eines der auf Bootstrap 4 basierenden Beispielmodule installiert werden. Die Templates mit der ID 00-1, 04-1, 04-2 und 04-3 im D2U Helper Addon geben die Reiter der Beispielmodule "90-1 D2U Machinery Addon - Hauptausgabe" und "90-4 D2U Machinery Addon - Gebrauchtmaschinen" aus.
+5. Wenn gewünscht, kann unter Setup eines der Beispielmodule in Bootstrap 4 oder Bootstrap 5 installiert werden. Die Templates mit der ID 00-1, 04-1, 04-2 und 04-3 im D2U Helper Addon geben die Reiter der Beispielmodule "90-1 D2U Machinery Addon - Hauptausgabe (BS4, deprecated)", "90-4 D2U Machinery Addon - Gebrauchtmaschinen (BS4, deprecated)", "90-7 D2U Machinery Addon - Hauptausgabe (BS5)" und "90-10 D2U Machinery Addon - Gebrauchtmaschinen (BS5)" aus.
 
 ## Plugins
 
@@ -18,11 +18,11 @@ Es exisitieren verschiedene Plugins, die nachfolgend kurz beschrieben werden. Um
 
 ### Kontakte (contacts)
 
-Dieses Plugin ermöglicht einer Maschine oder Gebrauchtmaschine einen Kontakt hinzuzufügen. Maschinenanfragen aus den Beispielmodulen "90-1 D2U Machinery Addon - Hauptausgabe" und "90-4 D2U Machinery Addon - Gebrauchtmaschinen" werden dann an diesen Kontakt geschickt und nicht an die in den Einstellungen hinterlegte allgemeine E-Mail-Adresse. Dieses Plugin ist für Unternehmen mit mehreren Ansprechpartnern gedacht.
+Dieses Plugin ermöglicht einer Maschine oder Gebrauchtmaschine einen Kontakt hinzuzufügen. Maschinenanfragen aus den Hauptausgabe- und Gebrauchtmaschinen-Beispielmodulen in Bootstrap 5 oder den veralteten Bootstrap-4-Varianten werden dann an diesen Kontakt geschickt und nicht an die in den Einstellungen hinterlegte allgemeine E-Mail-Adresse. Dieses Plugin ist für Unternehmen mit mehreren Ansprechpartnern gedacht.
 
 ### Zubehör (equipment)
 
-Dieses Plugin ermöglicht einer Maschine Zubehör oder Ersatzteile hinzuzufügen. Das Zubehör kann in Gruppen unterteilt werden, um die Übersichtlichkeit zu wahren. Nach der Installation sollten zuerst die Zubehörgruppen eingegeben werden und danach das Zubehör selbst. Im Beispielmodul "90-1 D2U Machinery Addon - Hauptausgabe" erscheint das Zubehör in einem eigenen Reiter.
+Dieses Plugin ermöglicht einer Maschine Zubehör oder Ersatzteile hinzuzufügen. Das Zubehör kann in Gruppen unterteilt werden, um die Übersichtlichkeit zu wahren. Nach der Installation sollten zuerst die Zubehörgruppen eingegeben werden und danach das Zubehör selbst. In den Hauptausgabe-Beispielmodulen erscheint das Zubehör in einem eigenen Reiter.
 
 ### Gebrauchtmaschinen Export (export)
 
@@ -58,23 +58,23 @@ Dieses Plugin fügt den Maschinen Zertifikate hinzu. Nach der Installation kann 
 
 ### Baustellenausrüstung (machine_construction_equipment_extension)
 
-Dieses Plugin hat keine eigene Seite. Es erweitert lediglich die Eingabefelder der Maschinen um Felder für technische Daten, die den Spezialbereichen Airlessgeräte, Container, Schneidegeräte, Bodenbearbeitung, Spezial-Schleifgeräte, Pumpen / Einhandpistolen und Abwasseranlagen zugeordnet sind. Im Beispielmodul "90-1 D2U Machinery Addon - Hauptausgabe" werden diese Felder in der Kategorieübersicht als Vergleich mit anderen Maschinen der Kategorie und einzeln in der Maschine im Reiter "Technische Daten" ausgegeben.
+Dieses Plugin hat keine eigene Seite. Es erweitert lediglich die Eingabefelder der Maschinen um Felder für technische Daten, die den Spezialbereichen Airlessgeräte, Container, Schneidegeräte, Bodenbearbeitung, Spezial-Schleifgeräte, Pumpen / Einhandpistolen und Abwasseranlagen zugeordnet sind. In den Hauptausgabe-Beispielmodulen werden diese Felder in der Kategorieübersicht als Vergleich mit anderen Maschinen der Kategorie und einzeln in der Maschine im Reiter "Technische Daten" ausgegeben.
 
 ### Features (machine_features_extension)
 
-Dieses Plugin fügt den Maschinen hervorhebenswerte Features hinzu. Nach der Installation kann ein Feature erstellt werden. Dieses kann dann in einer Maschine im Abschnitt "Features" zugeordnet werden. Im Beispielmodul "90-1 D2U Machinery Addon - Hauptausgabe" werden Features im Reiter "Features" ausgegeben.
+Dieses Plugin fügt den Maschinen hervorhebenswerte Features hinzu. Nach der Installation kann ein Feature erstellt werden. Dieses kann dann in einer Maschine im Abschnitt "Features" zugeordnet werden. In den Hauptausgabe-Beispielmodulen werden Features im Reiter "Features" ausgegeben.
 
 ### Optionen (machine_options_extension)
 
-Wie Features, fügt dieses Plugin den Maschinen zusätzliche Optionen hinzu. Im Unterschied zu den Features sind Optionen nicht fest in der Maschine eingebaut, sondern können optional gebucht werden. Nach der Installation kann eine Option erstellt werden. Dieses kann dann in einer Maschine im Abschnitt "Optionen" zugeordnet werden. Im Beispielmodul "90-1 D2U Machinery Addon - Hauptausgabe" werden Optionen derzeit noch nicht ausgegeben.
+Wie Features, fügt dieses Plugin den Maschinen zusätzliche Optionen hinzu. Im Unterschied zu den Features sind Optionen nicht fest in der Maschine eingebaut, sondern können optional gebucht werden. Nach der Installation kann eine Option erstellt werden. Dieses kann dann in einer Maschine im Abschnitt "Optionen" zugeordnet werden. In den Hauptausgabe-Beispielmodulen werden Optionen derzeit noch nicht ausgegeben.
 
 ### Stahlverarbeitung (machine_steel_processing_extension)
 
-Dieses Plugin erweitert die Eingabefelder der Maschinen um Felder für technische Daten, die den Spezialbereichen Automatisierung, Blech- / Stahlverarbeitung, Bohren, Sägen, Stanz- / Ausklink- / Schweißmaschinen, Strahlanlagen zugeordnet sind. Einzelne Auswahlfelder dieser Bereiche können im Reiter "Stahlverarbeitung" definiert werden. Im Beispielmodul "90-1 D2U Machinery Addon - Hauptausgabe" werden diese Felder nicht ausgegeben.
+Dieses Plugin erweitert die Eingabefelder der Maschinen um Felder für technische Daten, die den Spezialbereichen Automatisierung, Blech- / Stahlverarbeitung, Bohren, Sägen, Stanz- / Ausklink- / Schweißmaschinen, Strahlanlagen zugeordnet sind. Einzelne Auswahlfelder dieser Bereiche können im Reiter "Stahlverarbeitung" definiert werden. In den Hauptausgabe-Beispielmodulen werden diese Felder nicht ausgegeben.
 
 ### Anwendungsgebiete (machine_usage_area_extension)
 
-Dieses Plugin erweitert die Eingabefelder der Maschinen um Anwendungsgebiete. Der Übersichtlichkeit halber können Anwendungsgebiete auf bestimmte Kategorien beschränkt werden. Im Beispielmodul "90-1 D2U Machinery Addon - Hauptausgabe" werden diese Felder in der Kategorieübersicht als Vergleich mit anderen Maschinen der Kategorie und einzeln in der Maschine im Reiter "Anwendungsgebiete" ausgegeben.
+Dieses Plugin erweitert die Eingabefelder der Maschinen um Anwendungsgebiete. Der Übersichtlichkeit halber können Anwendungsgebiete auf bestimmte Kategorien beschränkt werden. In den Hauptausgabe-Beispielmodulen werden diese Felder in der Kategorieübersicht als Vergleich mit anderen Maschinen der Kategorie und einzeln in der Maschine im Reiter "Anwendungsgebiete" ausgegeben.
 
 ### Produktionslinien (production_lines)
 
@@ -82,8 +82,23 @@ Mit diesem Plugin lassen Produktionslinien erstellen. Hierzu werden verschiedene
 
 ### Service (service_options)
 
-Dieses Plugin erweitert die Eingabefelder der Maschinen um Serviceoptionen. Im Beispielmodul "90-1 D2U Machinery Addon - Hauptausgabe" werden diese Felder in der Maschine im Reiter "Service" ausgegeben.
+Dieses Plugin erweitert die Eingabefelder der Maschinen um Serviceoptionen. In den Hauptausgabe-Beispielmodulen werden diese Felder in der Maschine im Reiter "Service" ausgegeben.
 
 ### Gebrauchtmaschinen (used_machines)
 
-Dieses Plugin bietet die Möglichkeit zusätzlich zu Maschinen auch Gebrauchtmaschinen anzubieten. Diese können als Miet- oder Verkaufsangebot definiert werden. Als Beispielmodul steht das Modul "90-4 D2U Machinery Addon - Gebrauchtmaschinen zur Verfügung. Wenn das Export Plugin installiert ist, können Gebrauchtmaschinen auch auf Onlineportalen eingestellt werden.
+Dieses Plugin bietet die Möglichkeit zusätzlich zu Maschinen auch Gebrauchtmaschinen anzubieten. Diese können als Miet- oder Verkaufsangebot definiert werden. Als Beispielmodule stehen die Gebrauchtmaschinen-Varianten für Bootstrap 5 und das veraltete Bootstrap 4 zur Verfügung. Wenn das Export Plugin installiert ist, können Gebrauchtmaschinen auch auf Onlineportalen eingestellt werden.
+
+## Beispielmodule
+
+- 90-1 D2U Machinery Addon - Hauptausgabe (BS4, deprecated)
+- 90-2 D2U Machinery Addon - Branchen (BS4, deprecated)
+- 90-3 D2U Machinery Addon - Kategorien (BS4, deprecated)
+- 90-4 D2U Machinery Addon - Gebrauchtmaschinen (BS4, deprecated)
+- 90-5 D2U Machinery Addon - Box Beratungshinweis (BS4, deprecated)
+- 90-6 D2U Machinery Addon - Gebrauchtmaschinen Topangebote (BS4, deprecated)
+- 90-7 D2U Machinery Addon - Hauptausgabe (BS5)
+- 90-8 D2U Machinery Addon - Branchen (BS5)
+- 90-9 D2U Machinery Addon - Kategorien (BS5)
+- 90-10 D2U Machinery Addon - Gebrauchtmaschinen (BS5)
+- 90-11 D2U Machinery Addon - Box Beratungshinweis (BS5)
+- 90-12 D2U Machinery Addon - Gebrauchtmaschinen Topangebote (BS5)

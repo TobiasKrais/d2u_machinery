@@ -19,12 +19,3 @@
     \rex::getTable('d2u_machinery_machines'))
     ->ensureColumn(new \rex_sql_column('usage_area_ids', 'TEXT'))
     ->alter();
-
-// Insert frontend translations
-if (!class_exists(d2u_machinery_machine_usage_area_extension_lang_helper::class)) {
-    // Load class in case addon is deactivated
-    require_once 'lib/d2u_machinery_machine_usage_area_extension_lang_helper.php';
-}
-if (class_exists(d2u_machinery_machine_usage_area_extension_lang_helper::class)) {
-    d2u_machinery_machine_usage_area_extension_lang_helper::factory()->install();
-}

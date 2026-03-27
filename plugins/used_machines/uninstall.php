@@ -18,10 +18,3 @@ if (\rex_addon::get('url')->isAvailable()) {
 // Delete tables
 $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_used_machines');
 $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_used_machines_lang');
-
-// Delete language replacements
-if (!class_exists(d2u_machinery_used_machines_lang_helper::class)) {
-    // Load class in case addon is deactivated
-    require_once 'lib/d2u_machinery_used_machines_lang_helper.php';
-}
-d2u_machinery_used_machines_lang_helper::factory()->uninstall();

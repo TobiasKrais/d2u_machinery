@@ -12,7 +12,7 @@ if (!function_exists('print_categories')) {
         foreach ($categories as $category) {
             // Only use used categories
             if (count($category->getMachines()) > 0) {
-                echo '<div class="col-6 col-md-4'. (3 === (int) 'REX_VALUE[1]' ? '' : ' col-lg-3') .' mr-auto ml-auto abstand">'; /** @phpstan-ignore-line */
+                echo '<div class="col-6 col-md-4'. (3 === (int) 'REX_VALUE[1]' ? '' : ' col-lg-3') .' me-auto ms-auto abstand">'; /** @phpstan-ignore-line */
                 echo '<a href="'. $category->getUrl() .'" class="bluebox">';
                 echo '<div class="box" data-height-watch>';
                 if ('' !== $category->pic || '' !== $category->pic_lang) {
@@ -88,7 +88,7 @@ if (!function_exists('print_industry_sectors')) {
 
         foreach (IndustrySector::getAll(rex_clang::getCurrentId()) as $industry_sector) {
             if ('online' === $industry_sector->online_status && count($industry_sector->getMachines()) > 0) {
-                echo '<div class="col-sm-6 col-md-4'. (3 === (int) 'REX_VALUE[1]' ? '' : ' col-lg-3') .' mr-auto ml-auto abstand">'; /** @phpstan-ignore-line */
+                echo '<div class="col-sm-6 col-md-4'. (3 === (int) 'REX_VALUE[1]' ? '' : ' col-lg-3') .' me-auto ms-auto abstand">'; /** @phpstan-ignore-line */
                 echo '<a href="'. $industry_sector->getUrl() .'" class="bluebox">';
                 echo '<div class="box" data-height-watch>';
                 if ('' !== $industry_sector->pic) {
@@ -125,9 +125,9 @@ if (!function_exists('print_machines')) {
         foreach ($machines as $machine) {
             if ('online' === $machine->online_status) {
                 if ($d2u_machinery->hasConfig('show_teaser') && 'show' === $d2u_machinery->getConfig('show_teaser')) {
-                    echo '<div class="col-12 col-md-6 col-lg-4 mr-auto ml-auto abstand" data-height-watch>';
+                    echo '<div class="col-12 col-md-6 col-lg-4 me-auto ms-auto abstand" data-height-watch>';
                 } else {
-                    echo '<div class="col-sm-6 col-md-4'. (3 === (int) 'REX_VALUE[1]' ? '' : ' col-lg-3') .' mr-auto ml-auto abstand" data-height-watch>'; /** @phpstan-ignore-line */
+                    echo '<div class="col-sm-6 col-md-4'. (3 === (int) 'REX_VALUE[1]' ? '' : ' col-lg-3') .' me-auto ms-auto abstand" data-height-watch>'; /** @phpstan-ignore-line */
                 }
                 echo '<a href="'. $machine->getUrl() .'" class="bluebox">';
                 echo '<div class="box" data-height-watch>';
@@ -339,18 +339,18 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
                 $machine->pics[0] .'" alt="'. ('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'" style="max-width:100%;">';
         } else {
             // Slider
-            echo '<div id="machineCarousel" class="carousel carousel-fade slide" data-ride="carousel" data-pause="hover">';
+            echo '<div id="machineCarousel" class="carousel carousel-fade slide" data-bs-ride="carousel" data-bs-pause="hover">';
             // Slider indicators
 
-            echo '<ol class="carousel-indicators">';
+            echo '<div class="carousel-indicators">';
             for ($i = 0; $i < count($machine->pics); ++$i) {
-                echo '<li data-target="#machineCarousel" data-slide-to="'. $i .'"';
+                echo '<button type="button" data-bs-target="#machineCarousel" data-bs-slide-to="'. $i .'"';
                 if (0 === $i) {
-                    echo 'class="active"';
+                    echo ' class="active" aria-current="true"';
                 }
-                echo '></li>';
+                echo ' aria-label="Slide '. ($i + 1) .'"></button>';
             }
-            echo '</ol>';
+            echo '</div>';
 
             // Wrapper for slides
             echo '<div class="carousel-inner">';
@@ -367,14 +367,14 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '</div>';
 
             // Left and right controls
-            echo '<a class="carousel-control-prev" href="#machineCarousel" role="button" data-slide="prev">';
+            echo '<button class="carousel-control-prev" type="button" data-bs-target="#machineCarousel" data-bs-slide="prev">';
             echo '<span class="carousel-control-prev-icon" aria-hidden="true"></span>';
-            echo '<span class="sr-only">Previous</span>';
-            echo '</a>';
-            echo '<a class="carousel-control-next" href="#machineCarousel" role="button" data-slide="next">';
+            echo '<span class="visually-hidden">Previous</span>';
+            echo '</button>';
+            echo '<button class="carousel-control-next" type="button" data-bs-target="#machineCarousel" data-bs-slide="next">';
             echo '<span class="carousel-control-next-icon" aria-hidden="true"></span>';
-            echo '<span class="sr-only">Next</span>';
-            echo '</a>';
+            echo '<span class="visually-hidden">Next</span>';
+            echo '</button>';
 
             echo '</div>';
         }
@@ -490,7 +490,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '<div class="col-12 col-md-6 col-lg-2">';
             if ('' !== $agitator->pic) {
                 echo '<a href="index.php?rex_media_type=d2u_helper_gallery_detail&rex_media_file='. $agitator->pic .'" '
-                    .'data-toggle="lightbox_agitator" data-gallery="example-galleryagitator" data-title="'. $agitator->name .'">';
+                    .'data-d2u-gallery="example-galleryagitator" data-title="'. $agitator->name .'" onclick="event.preventDefault(); d2uLightboxOpen(\'example-galleryagitator\', this);">';
                 echo '<img src="index.php?rex_media_type=d2u_machinery_features&rex_media_file='.
                         $agitator->pic .'" alt='. $agitator->name .' class="featurepic">';
                 echo '</a>';
@@ -507,14 +507,6 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '<div class="col-12"><div class="deviderline"></div></div>';
             echo '</div>';
         }
-        echo '<script>';
-        echo "$(document).on('click', '[data-toggle=\"lightbox_agitator\"]', function(event) {
-				event.preventDefault();
-				$(this).ekkoLightbox({
-					alwaysShowClose: true
-				});
-			});";
-        echo '</script>';
         echo '</div>';
     }
 
@@ -527,7 +519,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '<div class="col-12 col-sm-4 col-md-3 col-lg-2">';
             if ('' !== $feature->pic) {
                 echo '<a href="index.php?rex_media_type=d2u_helper_gallery_detail&rex_media_file='. $feature->pic .'" '
-                    .'data-toggle="lightbox_features" data-gallery="example-galleryfeatures" data-title="'. $feature->name.'">';
+                    .'data-d2u-gallery="example-galleryfeatures" data-title="'. $feature->name.'" onclick="event.preventDefault(); d2uLightboxOpen(\'example-galleryfeatures\', this);">';
                 echo '<img src="index.php?rex_media_type=d2u_machinery_features&rex_media_file='. $feature->pic .'" class="img-fluid featurepic"'
                     .' alt="'. $feature->name .'" title="'. $feature->name .'">';
                 echo '</a>';
@@ -544,14 +536,6 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '<div class="col-12"><div class="deviderline"></div></div>';
             echo '</div>';
         }
-        echo '<script>';
-        echo "$(document).on('click', '[data-toggle=\"lightbox_features\"]', function(event) {
-				event.preventDefault();
-				$(this).ekkoLightbox({
-					alwaysShowClose: true
-				});
-			});";
-        echo '</script>';
         echo '</div>';
     }
 
@@ -659,18 +643,18 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
                     $machine->pictures_delivery_set[0] .'" alt="'. ('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'" style="max-width:100%;">';
             } else {
                 // Slider
-                echo '<div id="deliverysetCarousel" class="carousel carousel-fade slide" data-ride="carousel" data-pause="hover">';
+                echo '<div id="deliverysetCarousel" class="carousel carousel-fade slide" data-bs-ride="carousel" data-bs-pause="hover">';
                 // Slider indicators
 
-                echo '<ol class="carousel-indicators">';
+                echo '<div class="carousel-indicators">';
                 for ($i = 0; $i < count($machine->pictures_delivery_set); ++$i) {
-                    echo '<li data-target="#deliverysetCarousel" data-slide-to="'. $i .'"';
+                    echo '<button type="button" data-bs-target="#deliverysetCarousel" data-bs-slide-to="'. $i .'"';
                     if (0 === $i) {
-                        echo 'class="active"';
+                        echo ' class="active" aria-current="true"';
                     }
-                    echo '></li>';
+                    echo ' aria-label="Slide '. ($i + 1) .'"></button>';
                 }
-                echo '</ol>';
+                echo '</div>';
 
                 // Wrapper for slides
                 echo '<div class="carousel-inner">';
@@ -687,14 +671,14 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
                 echo '</div>';
 
                 // Left and right controls
-                echo '<a class="carousel-control-prev" href="#deliverysetCarousel" role="button" data-slide="prev">';
+                echo '<button class="carousel-control-prev" type="button" data-bs-target="#deliverysetCarousel" data-bs-slide="prev">';
                 echo '<span class="carousel-control-prev-icon" aria-hidden="true"></span>';
-                echo '<span class="sr-only">Previous</span>';
-                echo '</a>';
-                echo '<a class="carousel-control-next" href="#deliverysetCarousel" role="button" data-slide="next">';
+                echo '<span class="visually-hidden">Previous</span>';
+                echo '</button>';
+                echo '<button class="carousel-control-next" type="button" data-bs-target="#deliverysetCarousel" data-bs-slide="next">';
                 echo '<span class="carousel-control-next-icon" aria-hidden="true"></span>';
-                echo '<span class="sr-only">Next</span>';
-                echo '</a>';
+                echo '<span class="visually-hidden">Next</span>';
+                echo '</button>';
 
                 echo '</div>';
             }
@@ -713,7 +697,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '<div class="col-12 col-md-6 col-lg-2">';
             if ('' !== $service_option->picture) {
                 echo '<a href="index.php?rex_media_type=d2u_helper_gallery_detail&rex_media_file='. $service_option->picture .'" '
-                    .'data-toggle="lightbox_service" data-gallery="example-galleryservice" data-title="'. $service_option->name.'">';
+                    .'data-d2u-gallery="example-galleryservice" data-title="'. $service_option->name.'" onclick="event.preventDefault(); d2uLightboxOpen(\'example-galleryservice\', this);">';
                 echo '<img src="index.php?rex_media_type=d2u_machinery_features&rex_media_file='.
                         $service_option->picture .'" alt='. $service_option->name .' class="featurepic">';
                 echo '</a>';
@@ -729,14 +713,6 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '<div class="col-12"><div class="deviderline"></div></div>';
             echo '</div>';
         }
-        echo '<script>';
-        echo "$(document).on('click', '[data-toggle=\"lightbox_service\"]', function(event) {
-				event.preventDefault();
-				$(this).ekkoLightbox({
-					alwaysShowClose: true
-				});
-			});";
-        echo '</script>';
         echo '</div>';
     }
 
@@ -762,7 +738,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '<div class="col-12 col-sm-4 col-md-3 col-lg-2">';
             if ('' !== $equipment_group->picture) {
                 echo '<a href="index.php?rex_media_type=d2u_helper_gallery_detail&rex_media_file='. $equipment_group->picture .'" '
-                    .'data-toggle="lightbox_equipment" data-gallery="example-galleryequipment" data-title="'. $equipment_group->name.'">';
+                    .'data-d2u-gallery="example-galleryequipment" data-title="'. $equipment_group->name.'" onclick="event.preventDefault(); d2uLightboxOpen(\'example-galleryequipment\', this);">';
                 echo '<img src="index.php?rex_media_type=d2u_machinery_features&rex_media_file='. $equipment_group->picture .'" class="img-fluid featurepic"'
                     .' alt="'. $equipment_group->name .'" title="'. $equipment_group->name .'">';
                 echo '</a>';
@@ -794,14 +770,6 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '<div class="col-12"><div class="deviderline"></div></div>';
             echo '</div>';
         }
-        echo '<script>';
-        echo "$(document).on('click', '[data-toggle=\"lightbox_equipment\"]', function(event) {
-				event.preventDefault();
-				$(this).ekkoLightbox({
-					alwaysShowClose: true
-				});
-			});";
-        echo '</script>';
         echo '</div>';
     }
 
@@ -937,9 +905,13 @@ print_consulation_hint();
     </div>
 </div>
 <script>
-	// Allow activation of bootstrap tab via URL
-	$(function() {
-		var hash = window.location.hash;
-		hash && $('ul.nav a[href="' + hash + '"]').tab('show');
-	});
+    const machineryTabTriggers = document.querySelectorAll('[data-bs-toggle="tab"]');
+    const machineryHash = window.location.hash;
+    if (machineryHash) {
+        machineryTabTriggers.forEach(function (trigger) {
+            if (trigger.getAttribute('data-bs-target') === machineryHash || trigger.getAttribute('href') === machineryHash) {
+                bootstrap.Tab.getOrCreateInstance(trigger).show();
+            }
+        });
+    }
 </script>

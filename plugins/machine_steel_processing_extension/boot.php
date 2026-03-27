@@ -49,10 +49,6 @@ function rex_d2u_machinery_steel_processing_clang_deleted(rex_extension_point $e
     foreach ($weldings as $welding) {
         $welding->delete(false);
     }
-
-    // Delete language replacements
-    d2u_machinery_machine_steel_processing_extension_lang_helper::factory()->uninstall($clang_id);
-
     return $warning;
 }
 

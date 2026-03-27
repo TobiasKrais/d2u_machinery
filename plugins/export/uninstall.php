@@ -25,10 +25,3 @@ $export_cronjob = d2u_machinery_export_cronjob::factory();
 if ($export_cronjob->isInstalled()) {
     $export_cronjob->delete();
 }
-
-// Delete language replacements
-if (!class_exists(d2u_machinery_export_lang_helper::class)) {
-    // Load class in case addon is deactivated
-    require_once 'lib/d2u_machinery_export_lang_helper.php';
-}
-d2u_machinery_export_lang_helper::factory()->uninstall();

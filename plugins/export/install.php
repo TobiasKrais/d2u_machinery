@@ -55,6 +55,3 @@
     ->ensureColumn(new \rex_sql_column('export_europemachinery_category_name', 'VARCHAR(255)'))
     ->ensureColumn(new \rex_sql_column('export_mascus_category_name', 'VARCHAR(255)'))
     ->alter();
-
-// Insert frontend translations
-d2u_machinery_export_lang_helper::factory()->install();

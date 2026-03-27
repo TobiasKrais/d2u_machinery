@@ -50,14 +50,6 @@ if (\rex_addon::get('url')->isAvailable()) {
 
     \TobiasKrais\D2UHelper\BackendHelper::generateUrlCache('industry_sector_id');
 }
-
-// Insert / update frontend translations
-if (!class_exists(d2u_machinery_industry_sectors_lang_helper::class)) {
-    // Load class in case addon is deactivated
-    require_once 'lib/d2u_machinery_industry_sectors_lang_helper.php';
-}
-d2u_machinery_industry_sectors_lang_helper::factory()->install();
-
 // Default Config
 if (!rex_config::has('d2u_machinery', 'industry_sectors_article_id')) {
     rex_config::set('d2u_machinery', 'industry_sectors_article_id', rex_config::get('d2u_machinery', 'article_id'));

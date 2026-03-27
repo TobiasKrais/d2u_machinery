@@ -60,3 +60,295 @@ d2u_machinery_machine_voltage_hz = Betriebsspannung (Hz)
 d2u_machinery_machine_voltage_v = Betriebsspannung (V)
 d2u_machinery_machine_weight = Gewicht (kg)
 d2u_machinery_machine_width = Breite (mm)
+
+d2u_machinery_contacts = Kontakte
+d2u_machinery_contacts_contact = Kontakt
+d2u_machinery_contacts_contacts = Kontaktpersonen
+d2u_machinery_contacts_email = E-Mail-Adresse
+d2u_machinery_contacts_no_contacts_found = Es wurden noch keine Kontakte angelegt.
+d2u_machinery_contacts_phone = Telefonnummer
+d2u_machinery_contacts_settings_contact = Standardkontaktdaten aus den Addoneinstellungen verwenden
+
+d2u_machinery_equipments = Zubehör
+d2u_machinery_equipments_no_equipments_found = Es wurde noch kein Zubehör angelegt.
+d2u_machinery_equipment_group = Zubehörgruppe
+d2u_machinery_equipment_groups = Zubehörgruppen
+d2u_machinery_equipment_no_equipment_groups_found = Es wurden noch keine Zubehörgruppen angelegt.
+
+d2u_machinery_category_export = Exporteinstellungen
+d2u_machinery_category_export_machinerypark_category_id = MachineryPark.com Kategorie ID
+d2u_machinery_category_export_europemachinery_category_id = EuropeMachinery Kategorie ID
+d2u_machinery_category_export_europemachinery_category_name = EuropeMachinery Kategorie Name
+d2u_machinery_category_export_mascus_category_name = Mascus Kategorie Name
+
+d2u_machinery_export = Export
+d2u_machinery_export_all_online = Alle online setzen
+d2u_machinery_export_all_offline = Alle offline setzen
+d2u_machinery_export_basic_settings = Grundeinstellungen
+d2u_machinery_export_clang = Sprache
+d2u_machinery_export_company_name = Ihr Firmenname
+d2u_machinery_export_company_email = Ihre E-Mail Adresse
+d2u_machinery_export_customer_number = Ihre Kundennummer
+d2u_machinery_export_europemachinery = Europe Machinery / Agri Affairs
+d2u_machinery_export_failure_curl = Exporttyp benötigt die PHP Erweiterung cURL.
+d2u_machinery_export_failure_json = Exporttyp benötigt die PHP Erweiterung JSON.
+d2u_machinery_export_ftp_filename = Dateiname (nur wenn Name vom Portal vorgeschrieben ist)
+d2u_machinery_export_ftp_password = FTP Passwort
+d2u_machinery_export_ftp_server = FTP Server
+d2u_machinery_export_ftp_settings = FTP Einstellungen für Agri Affairs, Europe Machinery, MachineryPark und Mascus
+d2u_machinery_export_ftp_username = FTP Benutzername
+d2u_machinery_export_image_too_large = Bilddatei ist zu groß um für den Export vorbereitet zu werden. Bitte ersetzen Sie das Bild im Medienpool mit einer verkleinerten Version.
+d2u_machinery_export_last_export_date = Letzter Export am
+d2u_machinery_export_linkedin = Linkedin
+d2u_machinery_export_linkedin_autoexport_missing_requirements = Access Token oder Linkedin ID nicht vorhanden. Bitte erstellen Sie einen manuellen Export.
+d2u_machinery_export_linkedin_failure = Export fehlgeschlagen. Für Details siehe Logdatei.
+d2u_machinery_export_linkedin_id = Linkedin ID
+d2u_machinery_export_linkedin_id_hint = Wird keine ID eingegeben, liest der Export die URN ID der Person, bzw. des ersten Unternehmens aus, für die die Person Rechte besitzt und postet darauf.
+d2u_machinery_export_linkedin_type = Profiltyp
+d2u_machinery_export_linkedin_type_company = Unternehmen (die Linkedin App muss Zugriff auf die 'Advertising API' haben)
+d2u_machinery_export_linkedin_type_person = Natürliche Person
+d2u_machinery_export_login_email = Login E-Mailadresse
+d2u_machinery_export_no_providers_found = Es wurden noch keine Portale angelegt.
+d2u_machinery_export_number_online = Anzahl online
+d2u_machinery_export_machinerypark = MachineryPark
+d2u_machinery_export_mascus = Mascus
+d2u_machinery_export_media_manager_type = Media Manager Mediatyp
+d2u_machinery_export_oauth_token = OAuth Token
+d2u_machinery_export_oauth_token_secret = OAuth Token Secret
+d2u_machinery_export_provider = Portale
+d2u_machinery_export_report = Autoexport Report
+d2u_machinery_export_social_app_id = Application ID
+d2u_machinery_export_social_app_secret = Application Secret
+d2u_machinery_export_social_settings = Einstellungen für alle sozialen Netzwerke
+d2u_machinery_export_social_settings_linkedin = Einstellungen für LinkedIn
+d2u_machinery_export_start = Manuell exportieren
+d2u_machinery_export_type = Portaltyp
+d2u_machinery_export_uhr = Uhr
+d2u_machinery_export_we_offer = Unser Angebot
+
+d2u_machinery_export_rights_export = D2U Maschinen Addon: Export
+d2u_machinery_export_rights_export_provider = D2U Maschinen Addon: Portaleinstellungen
+
+d2u_machinery_export_csv_cannot_create = Fehler: Export CSV Datei konnte nicht erstellt werden.
+d2u_machinery_export_ftp_error_connection = Fehler: FTP Verbindung konnte nicht aufgebaut werden. Bitte prüfen sie zur Sicherheit die FTP Benutzerdaten.
+d2u_machinery_export_ftp_error_upload = Fehler: FTP Verbindung wurde hergestellt aber Datei konnte nicht hochgeladen werden.
+d2u_machinery_export_success = Übertragung erfolgreich
+d2u_machinery_export_xml_cannot_create = Fehler: Export XML Datei konnte nicht erstellt werden.
+d2u_machinery_export_zip_cannot_create = Fehler: Export ZIP Datei konnte nicht erstellt werden.
+
+d2u_machinery_export_settings_autoexport = Autoexport für FTP basierende Portale aktivieren. Änderungen bei Gebrauchtmaschinen werden täglich übertragen. Spätestens nach einer Woche erfolgt ein Export um das Ranking der Maschinen in den Portalen zu verbessern.
+d2u_machinery_export_settings_email = E-Mailadresse für Fehlerberichte
+
+d2u_machinery_industry_sectors = Branchen
+d2u_machinery_industry_sectors_article = Branchen Artikel
+
+d2u_machinery_industry_sectors_no_industry_sectors_found = Es wurden noch keine Branchen angelegt.
+
+d2u_machinery_agitator_extension = Rührwerke
+
+d2u_machinery_agitators_viscosity = Max. Viskosität (mPas)
+
+d2u_machinery_agitators = Rührorgane
+d2u_machinery_agitators_no_agitators_found = Es wurden noch keine Rührwerke angelegt.
+
+d2u_machinery_agitator_type = Rührwerkstyp
+d2u_machinery_agitator_types = Rührwerkstypen
+d2u_machinery_agitators_no_agitator_types_found = Es wurden noch keine Rührwerkstypen angelegt.
+
+d2u_machinery_category_show_agitators = Rührwerke bei Maschinen dieser Kategorie anzeigen
+
+d2u_machinery_certificates = Zertifikate
+
+d2u_machinery_certificates_no_certificates_found = Es wurden noch keine Zertifikate angelegt.
+
+d2u_machinery_construction_equipment = Baustellenausrüstung
+
+d2u_machinery_construction_equipment_airless = Airlessgeräte
+d2u_machinery_construction_equipment_airless_hose_connection = Schlauchanschluss (")
+d2u_machinery_construction_equipment_airless_hose_diameter = Schlauchdurchmesser (mm)
+d2u_machinery_construction_equipment_airless_hose_length = Schlauchlänge (m)
+d2u_machinery_construction_equipment_airless_nozzle_size = Düsengröße (")
+d2u_machinery_construction_equipment_container = Container
+d2u_machinery_construction_equipment_container_capacity = Füllmenge
+d2u_machinery_construction_equipment_container_capacity_unit = Einheit Füllmenge
+d2u_machinery_construction_equipment_container_connection_port = Anschluss (Container)
+d2u_machinery_construction_equipment_container_conveying_wave = Förderwelle (Container)
+d2u_machinery_construction_equipment_container_mixing_performance = Mischleistung (l/min)
+d2u_machinery_construction_equipment_container_waterconnect_pressure = Druck Wasseranschluss (bar)
+d2u_machinery_construction_equipment_container_waterconnect_diameter = Ø Wasseranschluss (")
+d2u_machinery_construction_equipment_container_weight_empty = Leergewicht (kg)
+d2u_machinery_construction_equipment_cutters = Schneidegeräte
+d2u_machinery_construction_equipment_cutters_cutting_depth = Schnitttiefe (cm)
+d2u_machinery_construction_equipment_cutters_cutting_length = Schnittlänge (cm)
+d2u_machinery_construction_equipment_cutters_rod_length = Stablänge (mm)
+d2u_machinery_construction_equipment_delivery_set_basic = Lieferumfang Grundmodul
+d2u_machinery_construction_equipment_delivery_set_conversion = Lieferumfang Bausätze
+d2u_machinery_construction_equipment_delivery_set_full = Lieferumfang Voll
+d2u_machinery_construction_equipment_description_technical = Kurzbeschreibung in den technischen Daten
+d2u_machinery_construction_equipment_floor = Bodenbearbeitung
+d2u_machinery_construction_equipment_floor_beam_power_on_concrete = Strahlleistung auf Beton (m²/h)
+d2u_machinery_construction_equipment_floor_dust_extraction_connection = Anschluß Staubabsaugung (mm)
+d2u_machinery_construction_equipment_floor_feedrate = Vorschub (m/min)
+d2u_machinery_construction_equipment_floor_filter_connection = Anschluss Filteranlage (mm)
+d2u_machinery_construction_equipment_floor_rotations = Umdrehungen (min-1)
+d2u_machinery_construction_equipment_floor_working_pressure = Arbeitsdruck (kg)
+d2u_machinery_construction_equipment_floor_working_width = Arbeitsbreite (mm)
+d2u_machinery_construction_equipment_grinder = Spezial-Schleifgeräte
+d2u_machinery_construction_equipment_grinder_grinding_plate = Schleifplatte (cm²)
+d2u_machinery_construction_equipment_grinder_grinding_wheel = Schleifscheiben (Ø) (mm)
+d2u_machinery_construction_equipment_grinder_rotational_frequency = Drehfrequenz (u/min)
+d2u_machinery_construction_equipment_grinder_sanding = Schleifhub (u/min)
+d2u_machinery_construction_equipment_grinder_vacuum_connection = Staubsaugeranschluss (Ø) (mm)
+d2u_machinery_construction_equipment_operating_pressure = Betriebsdruck (bar)
+d2u_machinery_construction_equipment_picture_delivery_set = Bild Lieferumfang
+d2u_machinery_construction_equipment_pumps = Pumpen / Einhandpistolen
+d2u_machinery_construction_equipment_pump_conveying_distance = Max. Förderweite (materialabhängig) (m)
+d2u_machinery_construction_equipment_pump_filling = Einfüllhöhe (mm)
+d2u_machinery_construction_equipment_pump_flow_volume = Max. Förderleistung (materialabhängig) (l/min)
+d2u_machinery_construction_equipment_pump_grain_size = Korngröße (mm)
+d2u_machinery_construction_equipment_pump_material_container = Materialbehälter (l)
+d2u_machinery_construction_equipment_pump_pressure_height = Max. Förderhöhe (materialabhängig) (m)
+d2u_machinery_construction_equipment_waste_water = Abwasseranlagen
+d2u_machinery_construction_equipment_waste_water_capacity = Fassungsvermögen (l)
+
+d2u_machinery_features = Features
+
+d2u_machinery_features_categories = Verfügbar in Kategorien
+d2u_machinery_features_delete_unused = Nicht verwendete Features löschen
+d2u_machinery_features_delete_unused_success = Features gelöscht.
+d2u_machinery_features_no_features_found = Es wurden noch keine Features angelegt.
+
+d2u_machinery_options = Optionen
+
+d2u_machinery_options_categories = Verfügbar in Kategorien
+d2u_machinery_options_delete_unused = Nicht verwendete Optionen löschen
+d2u_machinery_options_delete_unused_success = Optionen gelöscht.
+d2u_machinery_options_no_options_found = Es wurden noch keine Optionen angelegt.
+
+d2u_machinery_machine_steel_extension = Stahlverarbeitung
+
+d2u_machinery_steel_automation_degrees = Automatisierungsgrade
+d2u_machinery_steel_material_class = Materialklassen
+d2u_machinery_steel_procedures = Fertigungsverfahren
+d2u_machinery_steel_processes = Arbeitsprozesse
+d2u_machinery_steel_profiles = Profilbereiche
+d2u_machinery_steel_supply = Automatisierung
+d2u_machinery_steel_tools = Werkzeuge
+d2u_machinery_steel_welding = Schweißverfahren
+
+d2u_machinery_steel_automation_no_automations_found = Es wurden noch keine Automatisierungsgrade angelegt.
+d2u_machinery_steel_material_no_materials_found = Es wurden noch keine Materialklassen angelegt.
+d2u_machinery_steel_procedure_no_procedures_found = Es wurden noch keine Fertigungsverfahren angelegt.
+d2u_machinery_steel_process_no_processs_found = Es wurden noch keine Arbeitsprozesse angelegt.
+d2u_machinery_steel_profile_no_profiles_found = Es wurden noch keine Profilbereiche angelegt.
+d2u_machinery_steel_supply_no_supplys_found = Es wurden noch keine Automatisierungen angelegt.
+d2u_machinery_steel_tool_no_tools_found = Es wurden noch keine Werkzeuge angelegt.
+d2u_machinery_steel_welding_no_weldings_found = Es wurden noch keine Schweißverfahren angelegt.
+
+d2u_machinery_steel_automation = Technische Daten – Automatisierung
+d2u_machinery_steel_automation_automationgrades = Automatisierungsgrad
+d2u_machinery_steel_automation_feedrate = Vorschub (mm/min)
+d2u_machinery_steel_automation_feedrate_sawblade = Sägeblatt-Vorschub (mm/min)
+d2u_machinery_steel_automation_rush_leader_flyback = Eilvor-/-Rücklauf (mm/min)
+d2u_machinery_steel_automation_supply_multi_stroke = Materialnachschub Mehrfachhub (mm)
+d2u_machinery_steel_automation_supply_single_stroke = Materialnachschub Einfachhub (mm)
+d2u_machinery_steel_automation_supplys = Automatisierung
+d2u_machinery_steel_beam = Technische Daten – Strahlanlagen
+d2u_machinery_steel_beam_color_guns = Anzahl Farbpistolen
+d2u_machinery_steel_beam_continuous_opening = Durchlauföffnung (mm)
+d2u_machinery_steel_beam_turbines = Anzahl Turbinen (Stück)
+d2u_machinery_steel_beam_turbine_power = Leistung pro Turbine (kW)
+d2u_machinery_steel_cutting_range_configurator_file = Schnittbereichskonfigurator Datei
+d2u_machinery_steel_cutting_range_configurator_title = Titel Schnittbereichskonfigurator
+d2u_machinery_steel_drilling = Technische Daten – Bohren
+d2u_machinery_steel_drilling_axis_drive_power = Antriebsleistung pro Achse
+d2u_machinery_steel_drilling_diameter = Bohrdurchmesser (mm)
+d2u_machinery_steel_drilling_rpm_speed = Spindeldrehzahl max. (min-1)
+d2u_machinery_steel_drilling_tools_axis = Anzahl Werkzeuge pro Achse (Stück)
+d2u_machinery_steel_drilling_unit_below = Bohreinheiten von unten (U-Achse) (Stück)
+d2u_machinery_steel_drilling_unit_horizontal = Bohreinheiten Horizontal (Z- und W-Achse) (Stück)
+d2u_machinery_steel_drilling_unit_vertical = Bohreinheiten vertical (Y-Achse) (Stück)
+d2u_machinery_steel_punching = Technische Daten – Stanz- / Ausklink- / Schweißmaschinen
+d2u_machinery_steel_punching_bevel_angle = Fasenwinkel max. (°)
+d2u_machinery_steel_punching_carrier_height = Trägerhöhe min. / max. (mm)
+d2u_machinery_steel_punching_carrier_weight = Trägergewicht max. (kg/m)
+d2u_machinery_steel_punching_carrier_width = Trägerbreite min. / max. (mm)
+d2u_machinery_steel_punching_component_length = Bauteilelänge min. / max. (mm)
+d2u_machinery_steel_punching_component_weight = Bauteilgewicht max. (kg/m)
+d2u_machinery_steel_punching_diameter = Stanzdurchmesser (mm)
+d2u_machinery_steel_punching_flange_thickness = Flanschdicke min. / max. (mm)
+d2u_machinery_steel_punching_power = Stanzkraft
+d2u_machinery_steel_punching_profiles = Profilbereiche
+d2u_machinery_steel_punching_shaving_unit_angle_steel_single_cut = Winkelstahl-Schereinheit single cut (kN)
+d2u_machinery_steel_punching_tools = Anzahl Stanzwerkzeuge
+d2u_machinery_steel_punching_web_thickness = Stegdicke min. / max. (mm)
+d2u_machinery_steel_saw = Technische Daten – Sägen
+d2u_machinery_steel_saw_band = Sägeband (mm)
+d2u_machinery_steel_saw_band_tilt = Sägebandneigung (°)
+d2u_machinery_steel_saw_blade = Sägeblatt (Ø mm)
+d2u_machinery_steel_saw_cutting_speed = Schnittgeschwindigkeit (m/min)
+d2u_machinery_steel_saw_miter = Gehrungsbereich
+d2u_machinery_steel_sheet_processing = Technische Daten – Blech- / Stahlverarbeitung
+d2u_machinery_steel_sheet_length = Blech-Ausgangsmaterial Blechlänge (mm)
+d2u_machinery_steel_sheet_thickness = Blech-Ausgangsmaterial Blechdicke (mm)
+d2u_machinery_steel_sheet_width = Blech-Ausgangsmaterial Blechbreite (mm)
+d2u_machinery_steel_tool_changer_locations = Werkzeugwechsler x Magazinplätze (Stück)
+d2u_machinery_steel_welding_thickness = Schweißnahtdicke max. ((a) mm)
+d2u_machinery_steel_welding_wire_thickness = Drahtdicke (mm)
+d2u_machinery_steel_weldings = Schweißverfahren
+d2u_machinery_steel_workspace = Arbeitsbereich (B x H)
+d2u_machinery_steel_workspace_angle_steel = Arbeitsbereich Winkelstahl (mm)
+d2u_machinery_steel_workspace_flat = Arbeitsbereich Flachmaterial (mm)
+d2u_machinery_steel_workspace_min = Arbeitsbereich min. (mm)
+d2u_machinery_steel_workspace_plate = Arbeitsbereich Platten (mm)
+d2u_machinery_steel_workspace_profile = Arbeitsbereich Profile (mm)
+d2u_machinery_steel_workspace_round = Arbeitsbereich Rundmaterial (mm)
+d2u_machinery_steel_workspace_square = Arbeitsbereich Vierkantmaterial (mm)
+
+d2u_machinery_steel_supply_title = Überschrift
+
+d2u_machinery_usage_areas = Anwendungsgebiete
+
+d2u_machinery_usage_areas_categories = Verfügbar in Kategorien
+d2u_machinery_usage_areas_no_usage_areas_found = Es wurden noch keine Anwendungsgebiete angelegt.
+
+d2u_machinery_usage_areas_settings_by_machines = Maschinen oben, Anwendungsgebiete auf der Seite
+d2u_machinery_usage_areas_settings_by_usage_areas = Anwendungsgebiete oben, Maschinen auf der Seite
+d2u_machinery_usage_areas_settings_header = Orientierung Anwendungsgebietmatrix
+
+d2u_machinery_production_lines = Produktionslinien
+d2u_machinery_production_lines_article = Artikel Produktionslinien
+d2u_machinery_production_lines_no_production_lines_found = Es wurden noch keine Produktionslinien angelegt.
+
+d2u_machinery_production_lines_complementary_machines = Weitere mögliche Maschinen
+d2u_machinery_production_lines_line_code = Liniencode
+d2u_machinery_production_lines_link_picture = Bild mit Detailbeschreibungen
+d2u_machinery_production_lines_usp = Alleinstellungsmerkmale
+d2u_machinery_production_lines_usps_no_usps_found = Es wurden noch keine Alleinstellungsmerkmale angelegt.
+
+d2u_machinery_service_options = Service
+d2u_machinery_service_options_no_service_options_found = Es wurden noch keine Service Optionen angelegt.
+
+d2u_machinery_used_machines = Gebrauchtmaschinen
+d2u_machinery_used_machines_article_rent = Gebrauchtmaschinen Artikel Miete
+d2u_machinery_used_machines_article_sale = Gebrauchtmaschinen Artikel Verkauf
+d2u_machinery_used_machines_availability = Verfügbar ab
+d2u_machinery_used_machines_currency_code = Währungscode
+d2u_machinery_used_machines_downloads = Downloads
+d2u_machinery_used_machines_external_url = Externe URL
+d2u_machinery_used_machines_linked_machine = Verknüpfung zu Maschine
+d2u_machinery_used_machines_location = Standort
+d2u_machinery_used_machines_machine = Gebrauchtmaschine
+d2u_machinery_used_machines_manufacturer = Hersteller
+d2u_machinery_used_machines_no_used_machines_found = Keine Gebrauchtmaschinen gefunden.
+d2u_machinery_used_machines_offer_type = Angebotsart
+d2u_machinery_used_machines_offer_type_rent = Miete
+d2u_machinery_used_machines_offer_type_sale = Kauf
+d2u_machinery_used_machines_pic_type = Darstellung der Bilder
+d2u_machinery_used_machines_pic_type_lightbox = Lightbox (in eigenem Bildertab)
+d2u_machinery_used_machines_pic_type_slider = Slider (im Übersichtstab)
+d2u_machinery_used_machines_price = Preis
+d2u_machinery_used_machines_product_number = Produktnummer
+d2u_machinery_used_machines_settings_duplicate_article_id = VORSICHT: Da der Artikel für Maschinen, Gebrauchtmaschinen für Verkauf oder Miete gleich ist, kann die URL für Kategorien unter Umständen nicht korrekt generiert werden. Mögliche Lösungen sind: 1. Setzen Sie für Maschinen, Gebrauchtmaschinen für Verkauf und Miete unterschiedliche Artikel ein. Dann erscheint diese Fehlermeldung nicht mehr. 2. Nutzen Sie eine Kategorie entweder für Maschinen, Gebrauchtmaschinen Verkauf oder Miete, aber nie für mehreres.
+d2u_machinery_used_machines_technical_data = Technische Daten
+d2u_machinery_used_machines_vat = % enthaltene MwSt

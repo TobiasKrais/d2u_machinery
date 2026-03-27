@@ -60,10 +60,6 @@ function rex_d2u_machinery_used_machines_clang_deleted(rex_extension_point $ep)
     foreach ($used_machines as $used_machine) {
         $used_machine->delete(false);
     }
-
-    // Delete language replacements
-    d2u_machinery_used_machines_lang_helper::factory()->uninstall($clang_id);
-
     return $warning;
 }
 

@@ -2,6 +2,13 @@
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_machinery" target="_blank">GitHub Repository</a> melden.</p>
 
 <h2>Changelog</h2>
+<p>1.6.0-DEV:</p>
+<ul>
+	<li>Neue Module 90-7 bis 90-12 als Bootstrap-5-Varianten der bestehenden Beispielmodule hinzugefügt.</li>
+	<li>Module 90-1 bis 90-6 als "(BS4, deprecated)" markiert. Die BS4-Varianten werden im nächsten Major Release entfernt.</li>
+	<li>BS5-Module auf Bootstrap-5-Carousels und die d2u_helper Lightbox umgestellt.</li>
+	<li>Benötigt d2u_helper &gt;= 2.1.0.</li>
+</ul>
 <p>1.5.1-DEV:</p>
 <ul>
 	<li>Export Plugin: Linkedin API auf 202511 erhöht.</li>

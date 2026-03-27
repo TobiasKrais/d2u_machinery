@@ -25,10 +25,6 @@ function rex_d2u_machinery_equipment_clang_deleted(rex_extension_point $ep)
     foreach ($equipment_groups as $equipment_group) {
         $equipment_group->delete(false);
     }
-
-    // Delete language replacements
-    d2u_machinery_equipment_lang_helper::factory()->uninstall($clang_id);
-
     return $warning;
 }
 

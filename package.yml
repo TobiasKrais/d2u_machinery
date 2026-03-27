@@ -1,5 +1,5 @@
 package: d2u_machinery
-version: '1.5.1'
+version: '1.6.0'
 author: Tobias Krais
 supportpage: http://github.com/tobiaskrais/d2u_machinery
 
@@ -29,7 +29,7 @@ requires:
     php: '>=8.0'
     redaxo: '>=5.10.0'
     packages:
-        d2u_helper: '>=1.14.0'
+        d2u_helper: '>=2.1.0'
         media_manager: '>=2.3'
         sprog: '>=1.0.0'
         url: '>=2.0'
