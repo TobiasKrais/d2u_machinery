@@ -197,7 +197,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '</div>';
 
         // Usage Areas
-        if (rex_plugin::get('d2u_machinery', 'machine_usage_area_extension')->isAvailable() && 'show' === (string) $d2u_machinery->getConfig('show_categories_usage_areas', 'hide')) {
+        if (\TobiasKrais\D2UMachinery\Extension::isActive('machine_usage_area_extension') && 'show' === (string) $d2u_machinery->getConfig('show_categories_usage_areas', 'hide')) {
             echo '<div id="tab_usage_areas" class="tab-pane fade machine-tab">';
             echo '<div class="row">';
             echo '<div class="col-12">';
@@ -577,7 +577,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
     }
 
     // Usage Areas
-    if (rex_plugin::get('d2u_machinery', 'machine_usage_area_extension')->isAvailable() && 'show' === (string) $d2u_machinery->getConfig('show_machine_usage_areas', 'hide')) {
+    if (\TobiasKrais\D2UMachinery\Extension::isActive('machine_usage_area_extension') && 'show' === (string) $d2u_machinery->getConfig('show_machine_usage_areas', 'hide')) {
         echo '<div id="tab_usage_areas" class="tab-pane fade machine-tab">';
         echo '<div class="row">';
         echo '<div class="col-12">';
@@ -613,7 +613,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
     }
 
     // Delivery sets
-    if (rex_plugin::get('d2u_machinery', 'machine_construction_equipment_extension')->isAvailable() &&
+    if (\TobiasKrais\D2UMachinery\Extension::isActive('machine_construction_equipment_extension') &&
             (strlen($machine->delivery_set_basic) > 5 || strlen($machine->delivery_set_conversion) > 5 || strlen($machine->delivery_set_full) > 5)) {
         echo '<div id="tab_delivery_set" class="tab-pane fade machine-tab">';
         echo '<div class="row">';
@@ -705,7 +705,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
     }
 
     // Service options
-    if (rex_plugin::get('d2u_machinery', 'service_options')->isAvailable() && count($machine->service_option_ids) > 0) {
+    if (\TobiasKrais\D2UMachinery\Extension::isActive('service_options') && count($machine->service_option_ids) > 0) {
         echo '<div id="tab_service_options" class="tab-pane fade machine-tab">';
         $service_options = $machine->getServiceOptions();
         foreach ($service_options as $service_option) {
@@ -741,7 +741,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
     }
 
     // Equipment
-    if (rex_plugin::get('d2u_machinery', 'equipment')->isAvailable() && count($machine->equipment_ids) > 0) {
+    if (\TobiasKrais\D2UMachinery\Extension::isActive('equipment') && count($machine->equipment_ids) > 0) {
         echo '<div id="tab_equipment" class="tab-pane fade machine-tab">';
 
         $equipments = [];
@@ -900,7 +900,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
     }
     echo '</div>';
     echo '</div>';
-} elseif (rex_plugin::get('d2u_machinery', 'industry_sectors')->isAvailable() && (filter_input(INPUT_GET, 'industry_sector_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0 || ('industry_sector_id' === $url_namespace && $url_id > 0))) {
+} elseif (\TobiasKrais\D2UMachinery\Extension::isActive('industry_sectors') && (filter_input(INPUT_GET, 'industry_sector_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0 || ('industry_sector_id' === $url_namespace && $url_id > 0))) {
     $industry_sector_id = (int) filter_input(INPUT_GET, 'industry_sector_id', FILTER_VALIDATE_INT);
     if (\rex_addon::get('url')->isAvailable() && $url_id > 0) {
         $industry_sector_id = $url_id;
@@ -922,7 +922,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
 
     echo '<div class="col-12 abstand"></div>';
 
-    if (rex_plugin::get('d2u_machinery', 'industry_sectors')->isAvailable()) {
+    if (\TobiasKrais\D2UMachinery\Extension::isActive('industry_sectors')) {
         // Industry sectors
         echo '<div class="col-12">';
         echo '<div class="row" data-match-height>';

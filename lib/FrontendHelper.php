@@ -56,11 +56,11 @@ class FrontendHelper
             // Category for normal machines
             $category_id = (int) filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT);
             $offer_type = '';
-            if (rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable() && filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0) {
+            if (Extension::isActive('used_machines') && filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0) {
                 // Category for used machines (rent)
                 $category_id = (int) filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT);
                 $offer_type = 'rent';
-            } elseif (rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable() && filter_input(INPUT_GET, 'used_sale_category_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0) {
+            } elseif (Extension::isActive('used_machines') && filter_input(INPUT_GET, 'used_sale_category_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0) {
                 // Category for used machines (sale)
                 $category_id = (int) filter_input(INPUT_GET, 'used_sale_category_id', FILTER_VALIDATE_INT);
                 $offer_type = 'sale';
@@ -83,7 +83,7 @@ class FrontendHelper
                     }
                 }
             }
-        } elseif (rex_plugin::get('d2u_machinery', 'industry_sectors')->isAvailable() && (filter_input(INPUT_GET, 'industry_sector_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0 || 'industry_sector_id' === $url_namespace)) {
+        } elseif (Extension::isActive('industry_sectors') && (filter_input(INPUT_GET, 'industry_sector_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0 || 'industry_sector_id' === $url_namespace)) {
             $industry_sector_id = (int) filter_input(INPUT_GET, 'industry_sector_id', FILTER_VALIDATE_INT);
             if (rex_addon::get('url')->isAvailable() && $url_id > 0) {
                 $industry_sector_id = $url_id;
@@ -154,10 +154,10 @@ class FrontendHelper
                 || filter_input(INPUT_GET, 'used_sale_category_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0 || 'used_sale_category_id' === $url_namespace) {
             // Category for normal machines
             $category_id = (int) filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT);
-            if (rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable() && filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0) {
+            if (Extension::isActive('used_machines') && filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0) {
                 // Category for used machines (rent)
                 $category_id = (int) filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT);
-            } elseif (rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable() && filter_input(INPUT_GET, 'used_sale_category_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0) {
+            } elseif (Extension::isActive('used_machines') && filter_input(INPUT_GET, 'used_sale_category_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0) {
                 // Category for used machines (sale)
                 $category_id = (int) filter_input(INPUT_GET, 'used_sale_category_id', FILTER_VALIDATE_INT);
             }
@@ -201,7 +201,7 @@ class FrontendHelper
         }
 
         // Industry sectors
-        if (rex_plugin::get('d2u_machinery', 'industry_sectors')->isAvailable() && (filter_input(INPUT_GET, 'industry_sector_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0 || 'industry_sector_id' === $url_namespace)) {
+        if (Extension::isActive('industry_sectors') && (filter_input(INPUT_GET, 'industry_sector_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0 || 'industry_sector_id' === $url_namespace)) {
             $industry_sector_id = (int) filter_input(INPUT_GET, 'industry_sector_id', FILTER_VALIDATE_INT);
             if (\rex_addon::get('url')->isAvailable() && $url_id > 0) {
                 $industry_sector_id = $url_id;
@@ -211,7 +211,7 @@ class FrontendHelper
         }
 
         // Production lines
-        if (rex_plugin::get('d2u_machinery', 'production_lines')->isAvailable() && (filter_input(INPUT_GET, 'production_line_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0 || 'production_line_id' === $url_namespace)) {
+        if (Extension::isActive('production_lines') && (filter_input(INPUT_GET, 'production_line_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0 || 'production_line_id' === $url_namespace)) {
             $production_line_id = (int) filter_input(INPUT_GET, 'production_line_id', FILTER_VALIDATE_INT);
             if (\rex_addon::get('url')->isAvailable() && $url_id > 0) {
                 $production_line_id = $url_id;

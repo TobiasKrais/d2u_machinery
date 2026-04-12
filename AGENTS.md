@@ -1,6 +1,6 @@
 # D2U Machinery - Redaxo Addon
 
-A comprehensive Redaxo 5 CMS addon for managing industrial machinery catalogs. Includes machines, categories, technical data, videos, references, and an extensive plugin system for contacts, equipment, export, industry sectors, production lines, used machines, and various machine-specific extensions.
+A comprehensive Redaxo 5 CMS addon for managing industrial machinery catalogs. Includes machines, categories, technical data, videos, references, export, industry sectors, production lines, used machines, and various machine-specific extensions directly in the main addon.
 
 ## Tech Stack
 
@@ -44,21 +44,8 @@ d2u_machinery/
 │   ├── settings.setup.php     # Module manager
 │   ├── help.readme.php        # Help/README page
 │   └── help.changelog.php     # Changelog
-└── plugins/                # 14 plugins
-    ├── contacts/           # Contact persons
-    ├── equipment/          # Equipment and equipment groups
-    ├── export/             # Export to marketplaces (EuropeMachinery, MachineryPark, Mascus, LinkedIn)
-    ├── industry_sectors/   # Industry sector assignments
-    ├── machine_agitator_extension/  # Agitator types and agitators
-    ├── machine_certificates_extension/  # Machine certificates
-    ├── machine_construction_equipment_extension/  # Construction equipment extension
-    ├── machine_features_extension/  # Machine features
-    ├── machine_options_extension/   # Machine options
-    ├── machine_steel_processing_extension/  # Steel processing (8 sub-models)
-    ├── machine_usage_area_extension/  # Usage areas
-    ├── production_lines/   # Production lines and USPs
-    ├── service_options/    # Service options
-    └── used_machines/      # Used machine management
+└── plugins/                # Legacy compatibility stubs
+    └── */package.yml       # package.yml only, kept so rex_plugin::get(...) still works for older integrations
 ```
 
 ## Coding Conventions
@@ -136,9 +123,9 @@ Each module has a revision number defined in `lib/d2u_machinery_module_manager.p
 
 **Important:** The revision only needs to be incremented **once per release**, not per commit. Check the changelog: if the version number is followed by `-DEV`, the release is still in development and no additional revision bump is needed.
 
-### Plugins (14)
+### Integrated Features
 
-| Plugin | Description | Key Classes |
+| Feature | Description | Key Classes |
 | ------ | ----------- | ----------- |
 | `contacts` | Contact persons for machines | `Contact` |
 | `equipment` | Equipment and equipment groups | `Equipment`, `EquipmentGroup` |
@@ -154,6 +141,12 @@ Each module has a revision number defined in `lib/d2u_machinery_module_manager.p
 | `production_lines` | Production lines and USPs | `ProductionLine`, `USP` |
 | `service_options` | Service options | `ServiceOption` |
 | `used_machines` | Used machine management | `UsedMachine` |
+
+## Legacy Plugin Stubs
+
+- Plugin directories under `plugins/` must contain only `package.yml` files.
+- These stubs exist solely so `rex_plugin::get('d2u_machinery', ...)` remains available for backward compatibility.
+- No PHP logic, pages, libs, install, update or uninstall files should remain inside plugin directories.
 
 ### Media Manager Types
 

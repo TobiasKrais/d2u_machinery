@@ -46,7 +46,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save', FILTER_VALIDATE_INT) || 1 =
                 $category->reference_ids = $form['reference_ids'] ?? [];
             }
 
-            if (rex_plugin::get('d2u_machinery', 'export')->isAvailable()) {
+            if (\TobiasKrais\D2UMachinery\Extension::isActive('export')) {
                 $category->export_machinerypark_category_id = $form['export_machinerypark_category_id'];
                 $category->export_europemachinery_category_id = $form['export_europemachinery_category_id'];
                 $category->export_europemachinery_category_name = $form['export_europemachinery_category_name'];
@@ -63,7 +63,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save', FILTER_VALIDATE_INT) || 1 =
         $category->pdfs = is_array($pdfs) ? $pdfs : [];
         $category->pic_lang = $input_media['pic_lang_'. $rex_clang->getId()];
         $category->usage_area = $form['lang'][$rex_clang->getId()]['usage_area'];
-        if (rex_plugin::get('d2u_machinery', 'machine_agitator_extension')->isAvailable()) {
+        if (\TobiasKrais\D2UMachinery\Extension::isActive('machine_agitator_extension')) {
             // Checkbox also need special treatment if empty
             $category->show_agitators = array_key_exists('show_agitators', $form) ? 'show' : 'hide';
         }
@@ -105,7 +105,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_VALIDATE_INT) || '
     // Check if category is used
     $uses_machines = $category->getMachines();
     $uses_used_machines = [];
-    if (rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
+    if (\TobiasKrais\D2UMachinery\Extension::isActive('used_machines')) {
         $uses_used_machines = $category->getUsedMachines();
     }
     $uses_categories = $category->getChildren();
@@ -119,9 +119,9 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_VALIDATE_INT) || '
             $message .= '<li><a href="index.php?page=d2u_machinery/category&func=edit&entry_id='. $uses_category->category_id .'">'. $uses_category->name .'</a></li>';
         }
         foreach ($uses_machines as $uses_machine) {
-            $message .= '<li><a href="index.php?page=d2u_machinery/machine&func=edit&entry_id='. $uses_machine->machine_id .'">'. $uses_machine->name .'</a></li>';
+            $message .= '<li><a href="index.php?page=d2u_machinery/machine/machine&func=edit&entry_id='. $uses_machine->machine_id .'">'. $uses_machine->name .'</a></li>';
         }
-        if (rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
+        if (\TobiasKrais\D2UMachinery\Extension::isActive('used_machines')) {
             foreach ($uses_used_machines as $uses_used_machine) {
                 $message .= '<li><a href="index.php?page=d2u_machinery/used_machines&func=edit&entry_id='. $uses_used_machine->used_machine_id .'">'. $uses_used_machine->name .'</a></li>';
             }
@@ -233,7 +233,7 @@ if ('edit' === $func || 'add' === $func) {
 					</div>
 				</fieldset>
 				<?php
-                    if (rex_plugin::get('d2u_machinery', 'export')->isAvailable()) {
+                    if (\TobiasKrais\D2UMachinery\Extension::isActive('export')) {
                 ?>
 					<fieldset>
 						<legend><?= rex_i18n::msg('d2u_machinery_category_export') ?></legend>
@@ -250,7 +250,7 @@ if ('edit' === $func || 'add' === $func) {
                     }
                 ?>
 				<?php
-                    if (rex_plugin::get('d2u_machinery', 'machine_agitator_extension')->isAvailable()) {
+                    if (\TobiasKrais\D2UMachinery\Extension::isActive('machine_agitator_extension')) {
                 ?>
 					<fieldset>
 						<legend><small><i class="rex-icon fa-spoon"></i></small> <?= rex_i18n::msg('d2u_machinery_agitator_extension') ?></legend>

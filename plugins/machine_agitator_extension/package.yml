@@ -1,12 +1,4 @@
 package: d2u_machinery/machine_agitator_extension
-version: '1.5.1'
+version: '1.6.0'
 author: Tobias Krais
 supportpage: http://github.com/tobiaskrais/d2u_machinery
-
-page:
-    title: 'translate:d2u_machinery_agitator_extension'
-    perm: 'd2u_machinery[machine]'
-    icon: rex-icon fa-spoon
-    subpages:
-        agitator_type: { title: 'translate:d2u_machinery_agitator_types', icon: rex-icon fa-spoon }
-        agitator: { title: 'translate:d2u_machinery_agitators', icon: rex-icon fa-spoon }

@@ -1,3 +1,11 @@
+d2u_machinery_extension_disabled_notice = Extension "%s" is currently disabled. Activate it in the addon settings.
+d2u_machinery_extensions = Extensions
+d2u_machinery_extensions_activated = Activated
+d2u_machinery_extensions_deactivated = Deactivated
+d2u_machinery_extensions_notice = Extensions can be activated and deactivated directly in the main addon.
+d2u_machinery_extensions_machine_fields = The following extensions add fields to machines:
+d2u_machinery_extensions_additional_features = The following extensions add functionality besides machines:
+d2u_machinery_extensions_deactivate_warning = Note: Deactivating an extension removes its related database structures.
 d2u_machinery_meta_machines = Machines
 d2u_machinery_meta_title = D2U Machinery
 
@@ -116,7 +124,7 @@ d2u_machinery_export_mascus = Mascus
 d2u_machinery_export_media_manager_type = Media Manager media tyoe
 d2u_machinery_export_oauth_token = OAuth Token
 d2u_machinery_export_oauth_token_secret = OAuth Token Secret
-d2u_machinery_export_provider = Providers
+d2u_machinery_export_provider = Export portals
 d2u_machinery_export_report = Autoexport report
 d2u_machinery_export_social_app_id = Application ID
 d2u_machinery_export_social_app_secret = Application Secret
@@ -128,7 +136,7 @@ d2u_machinery_export_uhr = O'Clock
 d2u_machinery_export_we_offer = We offer
 
 d2u_machinery_export_rights_export = D2U Machinery addon: export
-d2u_machinery_export_rights_export_provider = D2U Machinery addon: provider settings
+d2u_machinery_export_rights_export_provider = D2U Machinery addon: export portal settings
 
 d2u_machinery_export_csv_cannot_create = Error: could not create export CSV file.
 d2u_machinery_export_ftp_error_connection = Error: could not establish FTP connection. Please check FTP settings.
@@ -139,6 +147,8 @@ d2u_machinery_export_zip_cannot_create = Error: export ZIP file could not be cre
 
 d2u_machinery_export_settings_autoexport = Activate autoexport for FTP based providers. Changes are uploaded daily. Not later than a week, export is uploaded again, to push up provider ranking.
 d2u_machinery_export_settings_email = Failure report e-mail address
+
+d2u_machinery_used_machines_year_built = Year of construction
 
 d2u_machinery_industry_sectors = Industry sectors
 d2u_machinery_industry_sectors_article = Industry sectors article
@@ -220,6 +230,8 @@ d2u_machinery_features_delete_unused_success = Features deleted.
 d2u_machinery_features_no_features_found = No features found.
 
 d2u_machinery_options = Options
+
+d2u_machinery_steel_automation_extension = Automation
 
 d2u_machinery_options_categories = Available in categories
 d2u_machinery_options_delete_unused = Delete unused options

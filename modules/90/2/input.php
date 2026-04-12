@@ -20,6 +20,6 @@
 	<div class="col-xs-12">&nbsp;</div>
 </div>
 <div class="row">
-	<div class="col-xs-12">Ausgabe der Branchen. Diese können im <a href="index.php?page=d2u_machinery/machine">
+	<div class="col-xs-12">Ausgabe der Branchen. Diese können im <a href="index.php?page=d2u_machinery/machine/machine">
 			D2U Maschinen Addon</a> bearbeitet werden.</div>
 </div>

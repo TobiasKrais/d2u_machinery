@@ -1,3 +1,11 @@
+d2u_machinery_extension_disabled_notice = Erweiterung "%s" ist aktuell deaktiviert. Aktivieren Sie sie in den Einstellungen des Addons.
+d2u_machinery_extensions = Erweiterungen
+d2u_machinery_extensions_activated = Aktiviert
+d2u_machinery_extensions_deactivated = Deaktiviert
+d2u_machinery_extensions_notice = Erweiterungen koennen direkt im Hauptaddon aktiviert und deaktiviert werden.
+d2u_machinery_extensions_machine_fields = Folgende Erweiterungen fügen Felder zu den Maschinen hinzu:
+d2u_machinery_extensions_additional_features = Folgende Erweiterungen fügen neben den Maschinen Funktionalität hinzu:
+d2u_machinery_extensions_deactivate_warning = Hinweis: Beim Deaktivieren einer Erweiterung werden die zugehörigen Datenbankstrukturen entfernt.
 d2u_machinery_meta_machines = Maschinen
 d2u_machinery_meta_title = D2U Maschinen
 
@@ -108,14 +116,14 @@ d2u_machinery_export_linkedin_type = Profiltyp
 d2u_machinery_export_linkedin_type_company = Unternehmen (die Linkedin App muss Zugriff auf die 'Advertising API' haben)
 d2u_machinery_export_linkedin_type_person = Natürliche Person
 d2u_machinery_export_login_email = Login E-Mailadresse
-d2u_machinery_export_no_providers_found = Es wurden noch keine Portale angelegt.
+d2u_machinery_export_no_providers_found = Es wurden noch keine Exportportale angelegt.
 d2u_machinery_export_number_online = Anzahl online
 d2u_machinery_export_machinerypark = MachineryPark
 d2u_machinery_export_mascus = Mascus
 d2u_machinery_export_media_manager_type = Media Manager Mediatyp
 d2u_machinery_export_oauth_token = OAuth Token
 d2u_machinery_export_oauth_token_secret = OAuth Token Secret
-d2u_machinery_export_provider = Portale
+d2u_machinery_export_provider = Exportportale
 d2u_machinery_export_report = Autoexport Report
 d2u_machinery_export_social_app_id = Application ID
 d2u_machinery_export_social_app_secret = Application Secret
@@ -127,7 +135,7 @@ d2u_machinery_export_uhr = Uhr
 d2u_machinery_export_we_offer = Unser Angebot
 
 d2u_machinery_export_rights_export = D2U Maschinen Addon: Export
-d2u_machinery_export_rights_export_provider = D2U Maschinen Addon: Portaleinstellungen
+d2u_machinery_export_rights_export_provider = D2U Maschinen Addon: Exportportaleinstellungen
 
 d2u_machinery_export_csv_cannot_create = Fehler: Export CSV Datei konnte nicht erstellt werden.
 d2u_machinery_export_ftp_error_connection = Fehler: FTP Verbindung konnte nicht aufgebaut werden. Bitte prüfen sie zur Sicherheit die FTP Benutzerdaten.
@@ -137,7 +145,9 @@ d2u_machinery_export_xml_cannot_create = Fehler: Export XML Datei konnte nicht e
 d2u_machinery_export_zip_cannot_create = Fehler: Export ZIP Datei konnte nicht erstellt werden.
 
 d2u_machinery_export_settings_autoexport = Autoexport für FTP basierende Portale aktivieren. Änderungen bei Gebrauchtmaschinen werden täglich übertragen. Spätestens nach einer Woche erfolgt ein Export um das Ranking der Maschinen in den Portalen zu verbessern.
-d2u_machinery_export_settings_email = E-Mailadresse für Fehlerberichte
+d2u_machinery_export_settings_email = E-Mail-Adresse für Fehlerberichte
+
+d2u_machinery_used_machines_year_built = Baujahr
 
 d2u_machinery_industry_sectors = Branchen
 d2u_machinery_industry_sectors_article = Branchen Artikel
@@ -219,6 +229,8 @@ d2u_machinery_features_delete_unused_success = Features gelöscht.
 d2u_machinery_features_no_features_found = Es wurden noch keine Features angelegt.
 
 d2u_machinery_options = Optionen
+
+d2u_machinery_steel_automation_extension = Automatisierung
 
 d2u_machinery_options_categories = Verfügbar in Kategorien
 d2u_machinery_options_delete_unused = Nicht verwendete Optionen löschen

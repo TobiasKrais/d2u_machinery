@@ -6,6 +6,7 @@
  */
 
 use TobiasKrais\D2UHelper\BackendHelper;
+use TobiasKrais\D2UMachinery\Extension;
 use TobiasKrais\D2UReferences\Reference;
 
 /**
@@ -124,7 +125,7 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper
             }
 
             // Export plugin fields
-            if (rex_plugin::get('d2u_machinery', 'export')->isAvailable()) {
+            if (Extension::isActive('export')) {
                 $this->export_europemachinery_category_id = (int) $result->getValue('export_europemachinery_category_id');
                 $this->export_europemachinery_category_name = (string) $result->getValue('export_europemachinery_category_name');
                 $this->export_machinerypark_category_id = (int) $result->getValue('export_machinerypark_category_id');
@@ -132,7 +133,7 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper
             }
 
             // Agitator fields
-            if (rex_plugin::get('d2u_machinery', 'machine_agitator_extension')->isAvailable()) {
+            if (Extension::isActive('machine_agitator_extension')) {
                 $this->show_agitators = (string) $result->getValue('show_agitators');
             }
 
@@ -153,7 +154,7 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper
         }
 
         // For used machines: set offer type
-        if (rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
+        if (Extension::isActive('used_machines')) {
             $d2u_machinery = rex_addon::get('d2u_machinery');
             $current_article_id = \rex::isBackend() || null === rex_article::getCurrent() ? 0 : rex_article::getCurrent()->getId();
             if ((int) $d2u_machinery->getConfig('used_machine_article_id_rent') === (int) $d2u_machinery->getConfig('used_machine_article_id_sale')
@@ -406,7 +407,7 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper
     public function getUsedMachines($online_only = false)
     {
         $usedMachines = [];
-        if (rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
+        if (Extension::isActive('used_machines')) {
             $query = 'SELECT lang.used_machine_id FROM '. \rex::getTablePrefix() .'d2u_machinery_used_machines_lang AS lang '
                 .'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_used_machines AS used_machines '
                     .'ON lang.used_machine_id = used_machines.used_machine_id '
@@ -487,7 +488,7 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper
                 $current_article_id = rex_article::getCurrentId();
             }
 
-            if (rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable() && ($current_article_id === (int) $d2u_machinery->getConfig('used_machine_article_id_rent') || $current_article_id === (int) $d2u_machinery->getConfig('used_machine_article_id_sale'))) {
+            if (Extension::isActive('used_machines') && ($current_article_id === (int) $d2u_machinery->getConfig('used_machine_article_id_rent') || $current_article_id === (int) $d2u_machinery->getConfig('used_machine_article_id_sale'))) {
                 if ('sale' === $this->offer_type) {
                     $article_id = (int) $d2u_machinery->getConfig('used_machine_article_id_sale');
                     // Set parameter key
@@ -567,7 +568,7 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper
      */
     public function hasUsedMachines($ignore_offlines = false)
     {
-        if (rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
+        if (Extension::isActive('used_machines')) {
             $query = 'SELECT lang.used_machine_id FROM '. \rex::getTablePrefix() .'d2u_machinery_used_machines_lang AS lang '
                 .'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_used_machines AS used_machines '
                     .'ON lang.used_machine_id = used_machines.used_machine_id '
@@ -626,13 +627,13 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper
                     ."pic = '". $this->pic ."', "
                     ."pic_usage = '". $this->pic_usage ."', "
                     ."reference_ids = '". implode(',', $this->reference_ids) ."' ";
-            if (rex_plugin::get('d2u_machinery', 'export')->isAvailable()) {
+            if (Extension::isActive('export')) {
                 $query .= ", export_europemachinery_category_id = '". $this->export_europemachinery_category_id ."', "
                     ."export_europemachinery_category_name = '". $this->export_europemachinery_category_name ."', "
                     ."export_machinerypark_category_id = '". $this->export_machinerypark_category_id ."', "
                     ."export_mascus_category_name = '". $this->export_mascus_category_name ."' ";
             }
-            if (rex_plugin::get('d2u_machinery', 'machine_agitator_extension')->isAvailable()) {
+            if (Extension::isActive('machine_agitator_extension')) {
                 $query .= ", show_agitators = '". $this->show_agitators ."' ";
             }
 
@@ -688,7 +689,7 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper
         if ($regenerate_urls) {
             BackendHelper::generateUrlCache('category_id');
             BackendHelper::generateUrlCache('machine_id');
-            if (rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
+            if (Extension::isActive('used_machines')) {
                 BackendHelper::generateUrlCache('used_rent_category_id');
                 BackendHelper::generateUrlCache('used_rent_machine_id');
                 BackendHelper::generateUrlCache('used_sale_category_id');
@@ -706,7 +707,7 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper
      */
     public function setOfferType($offer_type): void
     {
-        if (rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
+        if (Extension::isActive('used_machines')) {
             $this->offer_type = $offer_type;
         }
     }

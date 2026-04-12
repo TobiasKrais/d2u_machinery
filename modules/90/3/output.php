@@ -37,7 +37,7 @@ foreach (Category::getAll(rex_clang::getCurrentId()) as $category) {
             }
         }
         $article_id_link = (int) rex_config::get('d2u_machinery', 'article_id');
-    } elseif (rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
+    } elseif (\TobiasKrais\D2UMachinery\Extension::isActive('used_machines')) {
         $category->setOfferType('used_machines_rent' === $type ? 'rent' : 'sale'); /** @phpstan-ignore-line */
         if (!$category->hasUsedMachines(true)) {
             // Skip categories without used machines

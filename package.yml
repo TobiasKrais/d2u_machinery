@@ -8,8 +8,42 @@ page:
     perm: 'd2u_machinery[]'
     icon: rex-icon rex-icon-module
     subpages:
-        machine: { title: 'translate:d2u_machinery_meta_machines', icon: rex-icon rex-icon-module, perm: 'd2u_machinery[machine]' }
+        machine:
+            title: 'translate:d2u_machinery_meta_machines'
+            icon: rex-icon rex-icon-module
+            perm: 'd2u_machinery[machine]'
+            subpages:
+                machine: { title: 'translate:d2u_machinery_meta_machines', icon: rex-icon rex-icon-module, perm: 'd2u_machinery[machine]' }
+                automation: { title: 'translate:d2u_machinery_steel_automation_extension', icon: rex-icon fa-exchange, perm: 'd2u_machinery[machine]' }
+                features: { title: 'translate:d2u_machinery_features', icon: rex-icon fa-plug, perm: 'd2u_machinery[machine]' }
+                options: { title: 'translate:d2u_machinery_options', icon: rex-icon fa-plug, perm: 'd2u_machinery[machine]' }
+                service_options: { title: 'translate:d2u_machinery_service_options', icon: rex-icon fa-check-square, perm: 'd2u_machinery[machine]' }
+                equipment:
+                    title: 'translate:d2u_machinery_equipments'
+                    icon: rex-icon fa-plus
+                    perm: 'd2u_machinery[machine]'
+                usage_areas: { title: 'translate:d2u_machinery_usage_areas', icon: rex-icon fa-codepen, perm: 'd2u_machinery[machine]' }
+                agitators:
+                    title: 'translate:d2u_machinery_agitator_extension'
+                    icon: rex-icon fa-spoon
+                    perm: 'd2u_machinery[machine]'
+                steel_processing: { title: 'translate:d2u_machinery_machine_steel_extension', icon: rex-icon fa-steam, perm: 'd2u_machinery[machine]' }
+                certificates: { title: 'translate:d2u_machinery_certificates', icon: rex-icon fa-certificate, perm: 'd2u_machinery[machine]' }
+        contacts: { title: 'translate:d2u_machinery_contacts', icon: rex-icon fa-users, perm: 'd2u_machinery[machine]' }
         category: { title: 'translate:d2u_helper_categories', icon: rex-icon rex-icon-open-category, perm: 'd2u_machinery[category]' }
+        industry_sectors: { title: 'translate:d2u_machinery_industry_sectors', icon: rex-icon fa-industry, perm: 'd2u_machinery[category]' }
+        production_lines:
+            title: 'translate:d2u_machinery_production_lines'
+            icon: rex-icon fa-arrows-h
+            perm: 'd2u_machinery[]'
+        used_machines:
+            title: 'translate:d2u_machinery_used_machines'
+            icon: rex-icon fa-truck
+            perm: 'd2u_machinery[used_machines]'
+            subpages:
+                used_machines: { title: 'translate:d2u_machinery_used_machines', icon: rex-icon fa-truck, perm: 'd2u_machinery[used_machines]' }
+                export: { title: 'translate:d2u_machinery_export', icon: rex-icon fa-upload, perm: 'd2u_machinery[used_machines]' }
+                provider: { title: 'translate:d2u_machinery_export_provider', icon: rex-icon fa-globe, perm: 'd2u_machinery[used_machines]' }
         settings:
             icon: rex-icon fa-navicon
             title: ''
@@ -43,6 +77,21 @@ conflicts:
 default_config:
     default_category_sort: 'name'
     default_machine_sort: 'name'
+    extension_contacts: 'inactive'
+    extension_equipment: 'inactive'
+    extension_export: 'inactive'
+    extension_industry_sectors: 'inactive'
+    extension_machine_agitator_extension: 'inactive'
+    extension_machine_certificates_extension: 'inactive'
+    extension_machine_construction_equipment_extension: 'inactive'
+    extension_machine_features_extension: 'inactive'
+    extension_machine_options_extension: 'inactive'
+    extension_machine_steel_automation_extension: 'inactive'
+    extension_machine_steel_processing_extension: 'inactive'
+    extension_machine_usage_area_extension: 'inactive'
+    extension_production_lines: 'inactive'
+    extension_service_options: 'inactive'
+    extension_used_machines: 'inactive'
     show_categories_usage_area: 'hide'
     show_teaser: 'hide'
     show_techdata: 'show'

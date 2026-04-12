@@ -5,6 +5,7 @@
  * @author <a href="http://www.design-to-use.de">www.design-to-use.de</a>
  */
 
+use TobiasKrais\D2UMachinery\Extension;
 use TobiasKrais\D2UReferences\Reference;
 
 /**
@@ -488,33 +489,33 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
                 $this->translation_needs_update = (string) $result->getValue('translation_needs_update');
             }
 
-            if (rex_plugin::get('d2u_machinery', 'contacts') instanceof rex_plugin && rex_plugin::get('d2u_machinery', 'contacts')->isAvailable()) {
+            if (Extension::isActive('contacts')) {
                 if ((int) $result->getValue('contact_id') > 0) {
                     $this->contact = new D2U_Machinery\Contact((int) $result->getValue('contact_id'));
                 }
             }
 
-            if (rex_plugin::get('d2u_machinery', 'contacts') instanceof rex_plugin && rex_plugin::get('d2u_machinery', 'equipment')->isAvailable()) {
+            if (Extension::isActive('contacts') && Extension::isActive('equipment')) {
                 $equipment_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('equipment_ids')), PREG_GREP_INVERT);
                 $this->equipment_ids = is_array($equipment_ids) ? array_map('intval', $equipment_ids) : [];
             }
 
-            if (rex_plugin::get('d2u_machinery', 'contacts') instanceof rex_plugin && rex_plugin::get('d2u_machinery', 'industry_sectors')->isAvailable()) {
+            if (Extension::isActive('contacts') && Extension::isActive('industry_sectors')) {
                 $industry_sector_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('industry_sector_ids')), PREG_GREP_INVERT);
                 $this->industry_sector_ids = is_array($industry_sector_ids) ? array_map('intval', $industry_sector_ids) : [];
             }
 
-            if (rex_plugin::get('d2u_machinery', 'contacts') instanceof rex_plugin && rex_plugin::get('d2u_machinery', 'machine_agitator_extension')->isAvailable()) {
+            if (Extension::isActive('contacts') && Extension::isActive('machine_agitator_extension')) {
                 $this->agitator_type_id = (int) $result->getValue('agitator_type_id');
                 $this->viscosity = (int) $result->getValue('viscosity');
             }
 
-            if (rex_plugin::get('d2u_machinery', 'contacts') instanceof rex_plugin && rex_plugin::get('d2u_machinery', 'machine_certificates_extension')->isAvailable()) {
+            if (Extension::isActive('contacts') && Extension::isActive('machine_certificates_extension')) {
                 $certificate_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('certificate_ids')), PREG_GREP_INVERT);
                 $this->certificate_ids = is_array($certificate_ids) ? array_map('intval', $certificate_ids) : [];
             }
 
-            if (rex_plugin::get('d2u_machinery', 'contacts') instanceof rex_plugin && rex_plugin::get('d2u_machinery', 'machine_construction_equipment_extension')->isAvailable()) {
+            if (Extension::isActive('contacts') && Extension::isActive('machine_construction_equipment_extension')) {
                 $this->airless_hose_connection = (string) $result->getValue('airless_hose_connection');
                 $this->airless_hose_diameter = (int) $result->getValue('airless_hose_diameter');
                 $this->airless_hose_length = (int) $result->getValue('airless_hose_length');
@@ -558,22 +559,22 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
                 $this->delivery_set_full = stripslashes(htmlspecialchars_decode((string) $result->getValue('delivery_set_full')));
             }
 
-            if (rex_plugin::get('d2u_machinery', 'contacts') instanceof rex_plugin && rex_plugin::get('d2u_machinery', 'service_options')->isAvailable()) {
+            if (Extension::isActive('contacts') && Extension::isActive('service_options')) {
                 $service_option_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('service_option_ids')), PREG_GREP_INVERT);
                 $this->service_option_ids = is_array($service_option_ids) ? array_map('intval', $service_option_ids) : [];
             }
 
-            if (rex_plugin::get('d2u_machinery', 'contacts') instanceof rex_plugin && rex_plugin::get('d2u_machinery', 'machine_features_extension')->isAvailable()) {
+            if (Extension::isActive('contacts') && Extension::isActive('machine_features_extension')) {
                 $feature_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('feature_ids')), PREG_GREP_INVERT);
                 $this->feature_ids = is_array($feature_ids) ? array_map('intval', $feature_ids) : [];
             }
 
-            if (rex_plugin::get('d2u_machinery', 'contacts') instanceof rex_plugin && rex_plugin::get('d2u_machinery', 'machine_options_extension')->isAvailable()) {
+            if (Extension::isActive('contacts') && Extension::isActive('machine_options_extension')) {
                 $option_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('option_ids')), PREG_GREP_INVERT);
                 $this->option_ids = is_array($option_ids) ? array_map('intval', $option_ids) : [];
             }
 
-            if (rex_plugin::get('d2u_machinery', 'contacts') instanceof rex_plugin && rex_plugin::get('d2u_machinery', 'machine_steel_processing_extension')->isAvailable()) {
+            if (Extension::isActive('contacts') && Extension::isActive('machine_steel_processing_extension')) {
                 $process_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('process_ids')), PREG_GREP_INVERT);
                 if (is_array($process_ids)) {
                     foreach ($process_ids as $process_id) {
@@ -667,13 +668,13 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
                 $this->beam_color_guns = (string) $result->getValue('beam_color_guns');
             }
 
-            if (rex_plugin::get('d2u_machinery', 'contacts') instanceof rex_plugin && rex_plugin::get('d2u_machinery', 'machine_usage_area_extension')->isAvailable()) {
+            if (Extension::isActive('contacts') && Extension::isActive('machine_usage_area_extension')) {
                 $usage_area_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('usage_area_ids')), PREG_GREP_INVERT);
                 $this->usage_area_ids = is_array($usage_area_ids) ? array_map('intval', $usage_area_ids) : [];
             }
 
             // Videos
-            if (rex_plugin::get('d2u_machinery', 'contacts') instanceof rex_plugin && \rex_addon::get('d2u_videos')->isAvailable() && '' !== $result->getValue('video_ids')) {
+            if (Extension::isActive('contacts') && \rex_addon::get('d2u_videos')->isAvailable() && '' !== $result->getValue('video_ids')) {
                 $video_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('video_ids')), PREG_GREP_INVERT);
                 if (is_array($video_ids)) {
                     foreach ($video_ids as $video_id) {
@@ -875,7 +876,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
      */
     public function getReferringProductionLines()
     {
-        if (rex_plugin::get('d2u_machinery', 'production_lines')->isAvailable()) {
+        if (Extension::isActive('production_lines')) {
             $query = 'SELECT production_line_id FROM '. \rex::getTablePrefix() .'d2u_machinery_production_lines '
                 ."WHERE machine_ids LIKE '%|". $this->machine_id ."|%' OR complementary_machine_ids LIKE '%|". $this->machine_id ."|%'";
             $result = \rex_sql::factory();
@@ -899,7 +900,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
      */
     public function getReferringUsedMachines()
     {
-        if (rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
+        if (Extension::isActive('used_machines')) {
             $query = 'SELECT used_machine_id FROM '. \rex::getTablePrefix() .'d2u_machinery_used_machines '
                 .'WHERE machine_id = '. $this->machine_id;
             $result = \rex_sql::factory();
@@ -961,7 +962,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
         $tech_data = [];
 
         // Max. viscosity
-        if (rex_plugin::get('d2u_machinery', 'machine_agitator_extension')->isAvailable() && $this->viscosity > 0) {
+        if (Extension::isActive('machine_agitator_extension') && $this->viscosity > 0) {
             $tech_data[] = [
                 'description' => \Sprog\Wildcard::get('d2u_machinery_agitators_viscosity'),
                 'value' => $this->viscosity,
@@ -969,7 +970,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
             ];
         }
 
-        if (rex_plugin::get('d2u_machinery', 'machine_construction_equipment_extension')->isAvailable()) {
+        if (Extension::isActive('machine_construction_equipment_extension')) {
             // Operating pressure
             if ('' !== $this->operating_pressure) {
                 $tech_data[] = [
@@ -1003,7 +1004,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
             ];
         }
 
-        if (rex_plugin::get('d2u_machinery', 'machine_construction_equipment_extension')->isAvailable()) {
+        if (Extension::isActive('machine_construction_equipment_extension')) {
             // Water capacity
             if ($this->waste_water_capacity > 0) {
                 $tech_data[] = [
@@ -1341,7 +1342,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
             ];
         }
 
-        if (rex_plugin::get('d2u_machinery', 'machine_steel_processing_extension')->isAvailable()) {
+        if (Extension::isActive('machine_steel_processing_extension')) {
             // Procedures
             if (count($this->procedures) > 0) {
                 $procedures = [];
@@ -1964,23 +1965,23 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
                     ."operating_voltage_v = '". $this->operating_voltage_v ."', "
                     ."operating_voltage_hz = '". $this->operating_voltage_hz ."', "
                     ."operating_voltage_a = '". $this->operating_voltage_a ."' ";
-            if (rex_plugin::get('d2u_machinery', 'contacts')->isAvailable()) {
+            if (Extension::isActive('contacts')) {
                 $query .= ', contact_id = '. ($this->contact instanceof \D2U_Machinery\Contact ? $this->contact->contact_id : 0) .' ';
             }
-            if (rex_plugin::get('d2u_machinery', 'equipment')->isAvailable()) {
+            if (Extension::isActive('equipment')) {
                 $query .= ", equipment_ids = '|". implode('|', $this->equipment_ids) ."|' ";
             }
-            if (rex_plugin::get('d2u_machinery', 'industry_sectors')->isAvailable()) {
+            if (Extension::isActive('industry_sectors')) {
                 $query .= ", industry_sector_ids = '|". implode('|', $this->industry_sector_ids) ."|' ";
             }
-            if (rex_plugin::get('d2u_machinery', 'machine_agitator_extension')->isAvailable()) {
+            if (Extension::isActive('machine_agitator_extension')) {
                 $query .= ', agitator_type_id = '. $this->agitator_type_id .' '
                     .', viscosity = '. $this->viscosity .' ';
             }
-            if (rex_plugin::get('d2u_machinery', 'machine_certificates_extension')->isAvailable()) {
+            if (Extension::isActive('machine_certificates_extension')) {
                 $query .= ", certificate_ids = '|". implode('|', $this->certificate_ids) ."|' ";
             }
-            if (rex_plugin::get('d2u_machinery', 'machine_construction_equipment_extension')->isAvailable()) {
+            if (Extension::isActive('machine_construction_equipment_extension')) {
                 $query .= ", airless_hose_connection = '". $this->airless_hose_connection ."' "
                     .', airless_hose_diameter = '. $this->airless_hose_diameter .' '
                     .', airless_hose_length = '. $this->airless_hose_length .' '
@@ -2016,16 +2017,16 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
                     .', pump_pressure_height = '. ($this->pump_pressure_height > 0 ? $this->pump_pressure_height : 0) .' '
                     .', waste_water_capacity = '. ($this->waste_water_capacity > 0 ? $this->waste_water_capacity : 0) .' ';
             }
-            if (rex_plugin::get('d2u_machinery', 'service_options')->isAvailable()) {
+            if (Extension::isActive('service_options')) {
                 $query .= ", service_option_ids = '|". implode('|', $this->service_option_ids) ."|' ";
             }
-            if (rex_plugin::get('d2u_machinery', 'machine_features_extension')->isAvailable()) {
+            if (Extension::isActive('machine_features_extension')) {
                 $query .= ", feature_ids = '|". implode('|', $this->feature_ids) ."|' ";
             }
-            if (rex_plugin::get('d2u_machinery', 'machine_options_extension')->isAvailable()) {
+            if (Extension::isActive('machine_options_extension')) {
                 $query .= ", option_ids = '|". implode('|', $this->option_ids) ."|' ";
             }
-            if (rex_plugin::get('d2u_machinery', 'machine_steel_processing_extension')->isAvailable()) {
+            if (Extension::isActive('machine_steel_processing_extension')) {
                 $query .= ", process_ids = '|". implode('|', array_keys($this->processes)) ."|' "
                     .", procedure_ids = '|". implode('|', array_keys($this->procedures)) ."|' "
                     .", material_ids = '|". implode('|', array_keys($this->materials)) ."|' "
@@ -2083,7 +2084,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
                     .", beam_color_guns = '". $this->beam_color_guns ."' "
                 ;
             }
-            if (rex_plugin::get('d2u_machinery', 'machine_usage_area_extension')->isAvailable()) {
+            if (Extension::isActive('machine_usage_area_extension')) {
                 $query .= ", usage_area_ids = '|". implode('|', $this->usage_area_ids) ."|' ";
             }
             if (\rex_addon::get('d2u_videos') instanceof rex_addon && \rex_addon::get('d2u_videos')->isAvailable() && count($this->videos) > 0) {
@@ -2130,7 +2131,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
                         ."translation_needs_update = '". $this->translation_needs_update ."', "
                         .'updatedate = CURRENT_TIMESTAMP, '
                         ."updateuser = '". (\rex::getUser() instanceof rex_user ? \rex::getUser()->getLogin() : '') ."' ";
-                if (rex_plugin::get('d2u_machinery', 'machine_construction_equipment_extension')->isAvailable()) {
+                if (Extension::isActive('machine_construction_equipment_extension')) {
                     $query .= ", container_connection_port = '". $this->container_connection_port ."' "
                         .", container_conveying_wave = '". $this->container_conveying_wave ."' "
                         .", description_technical = '". $this->description_technical ."' "
