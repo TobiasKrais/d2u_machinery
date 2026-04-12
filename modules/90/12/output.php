@@ -1,5 +1,7 @@
 <?php
 
+use TobiasKrais\D2UMachinery\UsedMachine;
+
 if (!function_exists('print_used_machines_top_offers')) {
     /**
      * Prints machines.

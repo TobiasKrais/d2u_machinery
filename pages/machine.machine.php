@@ -1,6 +1,15 @@
 <?php
 
+use TobiasKrais\D2UMachinery\Automation;
+use TobiasKrais\D2UMachinery\Category;
 use TobiasKrais\D2UMachinery\Extension;
+use TobiasKrais\D2UMachinery\Machine;
+use TobiasKrais\D2UMachinery\Material;
+use TobiasKrais\D2UMachinery\Procedure;
+use TobiasKrais\D2UMachinery\Process;
+use TobiasKrais\D2UMachinery\Profile;
+use TobiasKrais\D2UMachinery\Tool;
+use TobiasKrais\D2UMachinery\Welding;
 use TobiasKrais\D2UReferences\Reference;
 
 $func = rex_request('func', 'string');
@@ -58,7 +67,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
 			$machine->operating_voltage_a = $form['operating_voltage_a'];
 
 			if (Extension::isActive('contacts')) {
-				$machine->contact = $form['contact_id'] ? new \D2U_Machinery\Contact($form['contact_id']) : false;
+				$machine->contact = $form['contact_id'] ? new \TobiasKrais\D2UMachinery\Contact($form['contact_id']) : false;
 			}
 			if (Extension::isActive('equipment')) {
 				$machine->equipment_ids = $form['equipment_ids'] ?? [];
@@ -377,12 +386,12 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 							\TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_helper_category', 'form[category_id]', $options, $machine->category instanceof Category ? [$machine->category->category_id] : [], 1, false, $readonly);
 							if (Extension::isActive('contacts')) {
 								$options_contacts = [0 => rex_i18n::msg('d2u_machinery_contacts_settings_contact')];
-								foreach (\D2U_Machinery\Contact::getAll() as $contact) {
+								foreach (\TobiasKrais\D2UMachinery\Contact::getAll() as $contact) {
 									if ('' !== $contact->name) {
 										$options_contacts[$contact->contact_id] = $contact->name;
 									}
 								}
-								\TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_contacts_contact', 'form[contact_id]', $options_contacts, [$machine->contact instanceof \D2U_Machinery\Contact ? (string) $machine->contact->contact_id : ''], 1, false, $readonly);
+								\TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_contacts_contact', 'form[contact_id]', $options_contacts, [$machine->contact instanceof \TobiasKrais\D2UMachinery\Contact ? (string) $machine->contact->contact_id : ''], 1, false, $readonly);
 							}
 							$options_alt_machines = [];
 							foreach (Machine::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $alt_machine) {

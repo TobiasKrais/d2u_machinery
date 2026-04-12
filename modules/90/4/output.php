@@ -1,4 +1,9 @@
 <?php
+
+use TobiasKrais\D2UMachinery\Category;
+use TobiasKrais\D2UMachinery\Machine;
+use TobiasKrais\D2UMachinery\UsedMachine;
+
 if (!function_exists('print_used_machine_categories')) {
     /**
      * Prints category list for used machines.
@@ -417,7 +422,7 @@ if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['opti
 			validate|empty|message|'. \Sprog\Wildcard::get('d2u_helper_module_form_validate_message') .'
 			validate|empty|privacy_policy_accepted|'. \Sprog\Wildcard::get('d2u_helper_module_form_validate_privacy_policy') .'
 
-			action|tpl2email|d2u_machinery_machine_request|'. ($used_machine->contact instanceof \D2U_Machinery\Contact ? $used_machine->contact->email : $d2u_machinery->getConfig('request_form_email'));
+            action|tpl2email|d2u_machinery_machine_request|'. ($used_machine->contact instanceof \TobiasKrais\D2UMachinery\Contact ? $used_machine->contact->email : $d2u_machinery->getConfig('request_form_email'));
 
     $yform = new rex_yform();
     $yform->setFormData(trim($form_data));

@@ -1,5 +1,6 @@
 <?php
 
+use TobiasKrais\D2UMachinery\ProductionLine;
 use TobiasKrais\D2UReferences\Reference;
 
 $func = rex_request('func', 'string');

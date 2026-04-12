@@ -7,7 +7,7 @@ A comprehensive Redaxo 5 CMS addon for managing industrial machinery catalogs. I
 - **Language:** PHP >= 8.0
 - **CMS:** Redaxo >= 5.10.0
 - **Frontend Framework:** Bootstrap 4/5 (via d2u_helper templates)
-- **Namespaces:** `TobiasKrais\D2UMachinery` (FrontendHelper, Module), `D2U_Machinery` (Contact), global (Machine, Category)
+- **Namespace:** `TobiasKrais\D2UMachinery` for all addon classes
 
 ## Project Structure
 
@@ -22,12 +22,12 @@ d2u_machinery/
 ├── assets/                 # Fonts, placeholder images
 ├── lang/                   # Backend translations (de_de, en_gb)
 ├── lib/                    # PHP classes
-│   ├── machine.php         # Machine model (main entity)
-│   ├── category.php        # Category model (hierarchical)
+│   ├── Machine.php         # Machine model (main entity)
+│   ├── Category.php        # Category model (hierarchical)
 │   ├── FrontendHelper.php  # Frontend utilities (alternate URLs, breadcrumbs)
-│   ├── d2u_machinery_lang_helper.php  # Sprog wildcard provider (7 languages)
-│   ├── d2u_machinery_module_manager.php  # Module definitions and revisions
-│   └── deprecated_helper_classes.php
+│   ├── LangHelper.php      # Sprog wildcard provider (7 languages)
+│   ├── Module.php          # Module definitions and revisions
+│   └── deprecated_helper_classes.php   # Legacy class aliases for backward compatibility
 ├── modules/                # 6 module variants in group 90
 │   └── 90/
 │       ├── 1/              # Hauptausgabe (main output)
@@ -50,7 +50,7 @@ d2u_machinery/
 
 ## Coding Conventions
 
-- **Namespaces:** `TobiasKrais\D2UMachinery` (FrontendHelper, Module), `D2U_Machinery` (Contact), global (Machine, Category)
+- **Namespace:** `TobiasKrais\D2UMachinery` for all addon classes
 - **Deprecated:** `d2u_machinery_frontend_helper` alias since 1.5.0
 - **Naming:** camelCase for variables, PascalCase for classes
 - **Indentation:** 4 spaces in PHP classes, tabs in module files
@@ -69,7 +69,7 @@ d2u_machinery/
 | `Machine` | Machine model: name, pictures, category, technical data, videos, references, online status. Implements `ITranslationHelper` |
 | `Category` | Category model: hierarchical with parent, picture, usage pictures, videos, references. Implements `ITranslationHelper` |
 | `FrontendHelper` | Frontend utilities: alternate URLs, breadcrumbs for machines/categories/used machines/industry sectors/production lines |
-| `d2u_machinery_lang_helper` | Sprog wildcard provider for 7 languages (DE, EN, FR, NL, ES, RU, ZH) |
+| `LangHelper` | Sprog wildcard provider for 7 languages (DE, EN, FR, NL, ES, RU, ZH) |
 | `Module` | Module definitions and revision numbers for 6 modules |
 
 ## Database Tables

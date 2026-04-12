@@ -1,4 +1,8 @@
 <?php
+
+use TobiasKrais\D2UMachinery\ExportedUsedMachine;
+use TobiasKrais\D2UMachinery\Provider;
+
 $func = rex_request('func', 'string');
 $provider_id = (int) rex_request('provider_id', 'int');
 $used_machine_id = (int) rex_request('used_machine_id', 'int');

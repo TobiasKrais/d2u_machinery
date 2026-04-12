@@ -1,4 +1,9 @@
 <?php
+
+use TobiasKrais\D2UMachinery\Category;
+use TobiasKrais\D2UMachinery\Machine;
+use TobiasKrais\D2UMachinery\UsedMachine;
+
 if (!\TobiasKrais\D2UMachinery\Extension::guardLegacyPage('used_machines')) {
     return;
 }
@@ -46,7 +51,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
             $used_machine->external_url = $form['external_url'];
 
             if (\TobiasKrais\D2UMachinery\Extension::isActive('contacts')) {
-                $used_machine->contact = $form['contact_id'] ? new \D2U_Machinery\Contact($form['contact_id']) : false;
+                $used_machine->contact = $form['contact_id'] ? new \TobiasKrais\D2UMachinery\Contact($form['contact_id']) : false;
             }
 
             if (\rex_addon::get('d2u_videos')->isAvailable()) {
@@ -144,12 +149,12 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                             \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_helper_category', 'form[category_id]', $options, [$used_machine->category instanceof Category ? $used_machine->category->category_id : 0], 1, false, $readonly);
                             if (\TobiasKrais\D2UMachinery\Extension::isActive('contacts')) {
                                 $options_contacts = [0 => rex_i18n::msg('d2u_machinery_contacts_settings_contact')];
-                                foreach (\D2U_Machinery\Contact::getAll() as $contact) {
+                                foreach (\TobiasKrais\D2UMachinery\Contact::getAll() as $contact) {
                                     if ('' !== $contact->name) {
                                         $options_contacts[$contact->contact_id] = $contact->name;
                                     }
                                 }
-                                \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_contacts_contact', 'form[contact_id]', $options_contacts, [$used_machine->contact instanceof D2U_Machinery\Contact ? $used_machine->contact->contact_id : 0], 1, false, $readonly);
+                                \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_contacts_contact', 'form[contact_id]', $options_contacts, [$used_machine->contact instanceof \TobiasKrais\D2UMachinery\Contact ? $used_machine->contact->contact_id : 0], 1, false, $readonly);
                             }
                             $options_offer_type = ['sale' => rex_i18n::msg('d2u_machinery_used_machines_offer_type_sale'),
                                 'rent' => rex_i18n::msg('d2u_machinery_used_machines_offer_type_rent')];

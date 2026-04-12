@@ -1,5 +1,7 @@
 <?php
 
+use TobiasKrais\D2UMachinery\ServiceOption;
+
 $func = rex_request('func', 'string');
 $entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');

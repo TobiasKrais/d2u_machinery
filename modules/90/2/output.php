@@ -1,4 +1,7 @@
 <?php
+
+use TobiasKrais\D2UMachinery\IndustrySector;
+
     $text_1 = 'REX_VALUE[id=1 output="html"]';
 
     echo '<div class="col-sm-12 abstand">';

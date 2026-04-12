@@ -16,7 +16,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
 	// Media fields and links need special treatment
 	$input_media = rex_post('REX_INPUT_MEDIA', 'array', []);
 
-	$contact = new \D2U_Machinery\Contact($form['contact_id']);
+	$contact = new \TobiasKrais\D2UMachinery\Contact($form['contact_id']);
 	$contact->name = $form['name'];
 	$contact->picture = $input_media[1];
 	$contact->phone = $form['phone'];
@@ -43,14 +43,14 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_VALIDATE_INT) || '
 		$form = rex_post('form', 'array', []);
 		$contact_id = $form['contact_id'];
 	}
-	$contact = new D2U_Machinery\Contact($contact_id);
+	$contact = new \TobiasKrais\D2UMachinery\Contact($contact_id);
 
 	// Check if object is used
 	$uses_machines = $contact->getMachines();
 
 	// If not used, delete
 	if (0 === count($uses_machines)) {
-		$contact = new D2U_Machinery\Contact($contact_id);
+		$contact = new \TobiasKrais\D2UMachinery\Contact($contact_id);
 		$contact->delete();
 	} else {
 		$message = '<ul>';
@@ -77,7 +77,7 @@ if ('edit' === $func || 'add' === $func) {
 					<legend><?= rex_i18n::msg('d2u_machinery_contacts_contact') ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-						    $contact = new D2U_Machinery\Contact($entry_id);
+						    $contact = new \TobiasKrais\D2UMachinery\Contact($entry_id);
 						    $readonly = true;
 						    if (rex::getUser() instanceof rex_user && (rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
 						        $readonly = false;

@@ -1,4 +1,7 @@
 <?php
+
+use TobiasKrais\D2UMachinery\Certificate;
+
 if (!\TobiasKrais\D2UMachinery\Extension::guardLegacyPage('machine_certificates_extension')) {
     return;
 }

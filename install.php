@@ -133,11 +133,11 @@ if (\rex_addon::get('url')->isAvailable()) {
 }
 
 // Insert frontend translations
-if (!class_exists(d2u_machinery_lang_helper::class)) {
+if (!class_exists(\TobiasKrais\D2UMachinery\LangHelper::class)) {
     // Load class in case addon is deactivated
-    require_once 'lib/d2u_machinery_lang_helper.php';
+    require_once 'lib/LangHelper.php';
 }
-d2u_machinery_lang_helper::factory()->install();
+\TobiasKrais\D2UMachinery\LangHelper::factory()->install();
 
 // Media Manager media types
 $sql->setQuery('SELECT * FROM '. \rex::getTablePrefix() ."media_manager_type WHERE name = 'd2u_machinery_list_tile'");

@@ -1,4 +1,7 @@
 <?php
+
+use TobiasKrais\D2UMachinery\UsageArea;
+
 if (!\TobiasKrais\D2UMachinery\Extension::guardLegacyPage('machine_usage_area_extension')) {
     return;
 }

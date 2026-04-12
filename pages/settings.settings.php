@@ -143,11 +143,11 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
         }
 
         // Install / update language replacements
-        d2u_machinery_lang_helper::factory()->install();
+        \TobiasKrais\D2UMachinery\LangHelper::factory()->install();
 
         // Install / remove Cronjob
         if (\TobiasKrais\D2UMachinery\Extension::isActive('export')) {
-            $export_cronjob = d2u_machinery_export_cronjob::factory();
+            $export_cronjob = \TobiasKrais\D2UMachinery\ExportCronjob::factory();
             if ('active' === rex_config::get('d2u_machinery', 'export_autoexport')) {
                 if (!$export_cronjob->isInstalled()) {
                     $export_cronjob->install();

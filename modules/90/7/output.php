@@ -1,4 +1,13 @@
 <?php
+
+use TobiasKrais\D2UMachinery\AgitatorType;
+use TobiasKrais\D2UMachinery\Category;
+use TobiasKrais\D2UMachinery\Equipment;
+use TobiasKrais\D2UMachinery\EquipmentGroup;
+use TobiasKrais\D2UMachinery\IndustrySector;
+use TobiasKrais\D2UMachinery\Machine;
+use TobiasKrais\D2UMachinery\UsageArea;
+
 if (!function_exists('print_categories')) {
     /**
      * Prints category list.
@@ -818,7 +827,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
 			validate|empty|message|'. \Sprog\Wildcard::get('d2u_helper_module_form_validate_message') .'
 			validate|empty|privacy_policy_accepted|'. \Sprog\Wildcard::get('d2u_helper_module_form_validate_privacy_policy') .'
 
-			action|tpl2email|d2u_machinery_machine_request|'. ($machine->contact instanceof \D2U_Machinery\Contact ? $machine->contact->email : $d2u_machinery->getConfig('request_form_email'));
+            action|tpl2email|d2u_machinery_machine_request|'. ($machine->contact instanceof \TobiasKrais\D2UMachinery\Contact ? $machine->contact->email : $d2u_machinery->getConfig('request_form_email'));
 
     $yform = new rex_yform();
     $yform->setFormData(trim($form_data));

@@ -1,4 +1,8 @@
 <?php
+
+use TobiasKrais\D2UMachinery\Category;
+use TobiasKrais\D2UMachinery\Feature;
+
 if (!\TobiasKrais\D2UMachinery\Extension::guardLegacyPage('machine_features_extension')) {
     return;
 }

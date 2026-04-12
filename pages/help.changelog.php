@@ -4,6 +4,47 @@
 <h2>Changelog</h2>
 <p>1.6.0-DEV:</p>
 <ul>
+	<li>Vorbereitung auf Version 2 / R6: Folgende Klassen werden ab Version 2 dieses Addons umbenannt. Schon jetzt stehen die neuen Klassen fuer die Uebergangszeit zur Verfuegung und die alten Klassennamen werden in <code>lib/deprecated_helper_classes.php</code> auf die neuen Klassen gemappt:
+		<ul>
+			<li><code>AExport</code> wird zu <code>TobiasKrais\D2UMachinery\AExport</code>.</li>
+			<li><code>AFTPExport</code> wird zu <code>TobiasKrais\D2UMachinery\AFTPExport</code>.</li>
+			<li><code>Agitator</code> wird zu <code>TobiasKrais\D2UMachinery\Agitator</code>.</li>
+			<li><code>AgitatorType</code> wird zu <code>TobiasKrais\D2UMachinery\AgitatorType</code>.</li>
+			<li><code>Automation</code> wird zu <code>TobiasKrais\D2UMachinery\Automation</code>.</li>
+			<li><code>Category</code> wird zu <code>TobiasKrais\D2UMachinery\Category</code>.</li>
+			<li><code>Certificate</code> wird zu <code>TobiasKrais\D2UMachinery\Certificate</code>.</li>
+			<li><code>D2U_Machinery\Contact</code> wird zu <code>TobiasKrais\D2UMachinery\Contact</code>.</li>
+			<li><code>d2u_machinery_export_cronjob</code> wird zu <code>TobiasKrais\D2UMachinery\ExportCronjob</code>.</li>
+			<li><code>Equipment</code> wird zu <code>TobiasKrais\D2UMachinery\Equipment</code>.</li>
+			<li><code>EquipmentGroup</code> wird zu <code>TobiasKrais\D2UMachinery\EquipmentGroup</code>.</li>
+			<li><code>EuropeMachinery</code> wird zu <code>TobiasKrais\D2UMachinery\EuropeMachinery</code>.</li>
+			<li><code>ExportedUsedMachine</code> wird zu <code>TobiasKrais\D2UMachinery\ExportedUsedMachine</code>.</li>
+			<li><code>Feature</code> wird zu <code>TobiasKrais\D2UMachinery\Feature</code>.</li>
+			<li><code>d2u_machinery_frontend_helper</code> wird zu <code>TobiasKrais\D2UMachinery\FrontendHelper</code>.</li>
+			<li><code>IndustrySector</code> wird zu <code>TobiasKrais\D2UMachinery\IndustrySector</code>.</li>
+			<li><code>d2u_machinery_lang_helper</code> wird zu <code>TobiasKrais\D2UMachinery\LangHelper</code>.</li>
+			<li><code>Machine</code> wird zu <code>TobiasKrais\D2UMachinery\Machine</code>.</li>
+			<li><code>MachineryPark</code> wird zu <code>TobiasKrais\D2UMachinery\MachineryPark</code>.</li>
+			<li><code>Mascus</code> wird zu <code>TobiasKrais\D2UMachinery\Mascus</code>.</li>
+			<li><code>Material</code> wird zu <code>TobiasKrais\D2UMachinery\Material</code>.</li>
+			<li><code>Module</code> wird zu <code>TobiasKrais\D2UMachinery\Module</code>.</li>
+			<li><code>Option</code> wird zu <code>TobiasKrais\D2UMachinery\Option</code>.</li>
+			<li><code>Procedure</code> wird zu <code>TobiasKrais\D2UMachinery\Procedure</code>.</li>
+			<li><code>Process</code> wird zu <code>TobiasKrais\D2UMachinery\Process</code>.</li>
+			<li><code>ProductionLine</code> wird zu <code>TobiasKrais\D2UMachinery\ProductionLine</code>.</li>
+			<li><code>Profile</code> wird zu <code>TobiasKrais\D2UMachinery\Profile</code>.</li>
+			<li><code>Provider</code> wird zu <code>TobiasKrais\D2UMachinery\Provider</code>.</li>
+			<li><code>ServiceOption</code> wird zu <code>TobiasKrais\D2UMachinery\ServiceOption</code>.</li>
+			<li><code>SocialExportLinkedIn</code> wird zu <code>TobiasKrais\D2UMachinery\SocialExportLinkedIn</code>.</li>
+			<li><code>Supply</code> wird zu <code>TobiasKrais\D2UMachinery\Supply</code>.</li>
+			<li><code>Tool</code> wird zu <code>TobiasKrais\D2UMachinery\Tool</code>.</li>
+			<li><code>USP</code> wird zu <code>TobiasKrais\D2UMachinery\USP</code>.</li>
+			<li><code>UsageArea</code> wird zu <code>TobiasKrais\D2UMachinery\UsageArea</code>.</li>
+			<li><code>UsedMachine</code> wird zu <code>TobiasKrais\D2UMachinery\UsedMachine</code>.</li>
+			<li><code>Welding</code> wird zu <code>TobiasKrais\D2UMachinery\Welding</code>.</li>
+		</ul>
+	</li>
+	<li>Die Dateinamen der Klassen wurden passend zu den Klassennamen auf CamelCase umgestellt, z.B. <code>machine.php</code> zu <code>Machine.php</code>, <code>category.php</code> zu <code>Category.php</code>, <code>d2u_machinery_lang_helper.php</code> zu <code>LangHelper.php</code> und <code>d2u_machinery_export_cronjob.php</code> zu <code>ExportCronjob.php</code>.</li>
 	<li>Backend-Struktur fuer REDAXO 6 von einzelinstallierten Plugins auf zentral schaltbare Erweiterungen im Addon umgestellt.</li>
 	<li>Die bisherigen Plugins wurden technisch vollstaendig in das Hauptaddon integriert; eigene Plugin-Verzeichnisse, Plugin-Bootstraps sowie getrennte Installations- und Update-Routinen entfallen.</li>
 	<li>Erweiterungen werden jetzt zentral in den Addon-Einstellungen aktiviert. Die Schalter befinden sich auf der Einstellungsseite des Hauptaddons und blenden die zugehoerigen Funktionen und Backend-Bereiche je nach Aktivierung ein.</li>

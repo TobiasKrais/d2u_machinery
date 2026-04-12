@@ -2,6 +2,8 @@
 
 use TobiasKrais\D2UMachinery\Extension;
 
+require_once __DIR__ .'/lib/deprecated_helper_classes.php';
+
 if (\rex::isBackend() && is_object(\rex::getUser())) {
     Extension::ensureConfigInitialized();
 
@@ -205,7 +207,7 @@ function rex_d2u_machinery_clang_deleted(rex_extension_point $ep)
         rex_config::remove('d2u_machinery', 'lang_replacement_'. $clang_id);
     }
     // Delete language replacements
-    d2u_machinery_lang_helper::factory()->uninstall($clang_id);
+    \TobiasKrais\D2UMachinery\LangHelper::factory()->uninstall($clang_id);
 
     return $warning;
 }

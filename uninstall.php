@@ -26,11 +26,11 @@ if (null === $d2uMachineryAction) {
     }
 
     // Delete language replacements
-    if (!class_exists(d2u_machinery_lang_helper::class)) {
+    if (!class_exists(\TobiasKrais\D2UMachinery\LangHelper::class)) {
         // Load class in case addon is deactivated
-        require_once 'lib/d2u_machinery_lang_helper.php';
+        require_once 'lib/LangHelper.php';
     }
-    d2u_machinery_lang_helper::factory()->uninstall();
+    \TobiasKrais\D2UMachinery\LangHelper::factory()->uninstall();
 
     // Delete tables
     $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_machines');
@@ -75,10 +75,10 @@ if (d2u_machinery_should_uninstall($d2uMachineryAction, 'export')) {
         ->removeColumn('export_europemachinery_category_name')
         ->removeColumn('export_mascus_category_name')
         ->ensure();
-    if (!class_exists(d2u_machinery_export_cronjob::class)) {
-        require_once 'lib/d2u_machinery_export_cronjob.php';
+    if (!class_exists(\TobiasKrais\D2UMachinery\ExportCronjob::class)) {
+        require_once 'lib/ExportCronjob.php';
     }
-    $export_cronjob = d2u_machinery_export_cronjob::factory();
+    $export_cronjob = \TobiasKrais\D2UMachinery\ExportCronjob::factory();
     if ($export_cronjob->isInstalled()) {
         $export_cronjob->delete();
     }

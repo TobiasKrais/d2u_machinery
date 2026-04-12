@@ -1,5 +1,7 @@
 <?php
 
+use TobiasKrais\D2UMachinery\Category;
+
 $headline = 'REX_VALUE[1]';
 $text = 'REX_VALUE[id=2 output=html]';
 $type = 'REX_VALUE[3]' !== '' ? 'REX_VALUE[3]' : 'machines'; /** @phpstan-ignore-line */
