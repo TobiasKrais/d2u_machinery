@@ -1,6 +1,10 @@
 <?php
 
+use TobiasKrais\D2UMachinery\IndustrySector;
+use TobiasKrais\D2UMachinery\Machine;
 use TobiasKrais\D2UMachinery\ProductionLine;
+use TobiasKrais\D2UMachinery\Supply;
+use TobiasKrais\D2UMachinery\USP;
 use TobiasKrais\D2UReferences\Reference;
 
 $func = rex_request('func', 'string');

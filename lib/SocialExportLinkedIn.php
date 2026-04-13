@@ -18,7 +18,7 @@ use rex_yrewrite;
 class SocialExportLinkedIn extends AExport
 {
     /** @var string Linkedin API version */
-    private string $linkedin_version = '202511';
+    private string $linkedin_version = '202603';
 
     /**
      * Constructor. Initializes variables.

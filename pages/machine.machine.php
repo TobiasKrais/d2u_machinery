@@ -1,14 +1,23 @@
 <?php
 
+use TobiasKrais\D2UMachinery\AgitatorType;
 use TobiasKrais\D2UMachinery\Automation;
 use TobiasKrais\D2UMachinery\Category;
+use TobiasKrais\D2UMachinery\Certificate;
+use TobiasKrais\D2UMachinery\Equipment;
 use TobiasKrais\D2UMachinery\Extension;
+use TobiasKrais\D2UMachinery\Feature;
+use TobiasKrais\D2UMachinery\IndustrySector;
 use TobiasKrais\D2UMachinery\Machine;
 use TobiasKrais\D2UMachinery\Material;
+use TobiasKrais\D2UMachinery\Option;
 use TobiasKrais\D2UMachinery\Procedure;
 use TobiasKrais\D2UMachinery\Process;
 use TobiasKrais\D2UMachinery\Profile;
+use TobiasKrais\D2UMachinery\ServiceOption;
+use TobiasKrais\D2UMachinery\Supply;
 use TobiasKrais\D2UMachinery\Tool;
+use TobiasKrais\D2UMachinery\UsageArea;
 use TobiasKrais\D2UMachinery\Welding;
 use TobiasKrais\D2UReferences\Reference;
 

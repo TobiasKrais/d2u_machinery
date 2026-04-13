@@ -1,5 +1,6 @@
 <?php
 
+use TobiasKrais\D2UMachinery\Agitator;
 use TobiasKrais\D2UMachinery\AgitatorType;
 
 $func = rex_request('func', 'string');

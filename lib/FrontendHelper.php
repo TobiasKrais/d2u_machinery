@@ -1,15 +1,9 @@
 <?php
 namespace TobiasKrais\D2UMachinery;
 
-use Category;
-use IndustrySector;
-use Machine;
-use ProductionLine;
 use rex_addon;
 use rex_clang;
 use rex_config;
-use rex_plugin;
-use UsedMachine;
 
 /**
  * @api

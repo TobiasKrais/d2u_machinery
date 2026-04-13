@@ -2,30 +2,13 @@
 
 namespace TobiasKrais\D2UMachinery;
 
-use DOMDocument;
-use Exception;
-use ZipArchive;
-use rex;
-use rex_addon;
-use rex_article;
-use rex_be_controller;
-use rex_clang;
-use rex_config;
 use rex_dir;
-use rex_escape;
 use rex_i18n;
-use rex_mailer;
 use rex_media;
 use rex_media_manager;
 use rex_path;
-use rex_plugin;
-use rex_request;
-use rex_sql;
 use rex_url;
-use rex_user;
-use rex_version;
 use rex_view;
-use rex_yrewrite;
 
 /**
  * Defines methods each export provider has to implement.
