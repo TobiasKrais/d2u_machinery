@@ -2,6 +2,10 @@
 
 use TobiasKrais\D2UMachinery\Extension;
 
+if (!class_exists(Extension::class)) {
+    require_once __DIR__ . DIRECTORY_SEPARATOR .'lib'. DIRECTORY_SEPARATOR .'Extension.php';
+}
+
 $d2uMachineryAction = $d2uMachineryAction ?? null;
 $d2uMachineryRequestedAction = $d2uMachineryRequestedAction ?? $d2uMachineryAction;
 $d2uMachineryCascadeDependencies = $d2uMachineryCascadeDependencies ?? false;
@@ -151,8 +155,7 @@ if (null === $d2uMachineryAction) {
 
     // Insert frontend translations
     if (!class_exists(\TobiasKrais\D2UMachinery\LangHelper::class)) {
-        // Load class in case addon is deactivated
-        require_once 'lib/LangHelper.php';
+        require_once __DIR__ . DIRECTORY_SEPARATOR .'lib'. DIRECTORY_SEPARATOR .'LangHelper.php';
     }
     \TobiasKrais\D2UMachinery\LangHelper::factory()->install();
 
