@@ -16,6 +16,30 @@ Nach der Installation in Redaxo sollten folgende Schritte ausgeführt werden:
 
 Seit Version 1.6 werden die frueheren Plugins zentral als Erweiterungen innerhalb des Addons verwaltet. Die Fachlogik, Backend-Seiten sowie Installations- und Update-Routinen liegen direkt im Hauptaddon. Um die Komplexitaet des Addons so gering wie moeglich zu halten, **sollte eine Erweiterung nur aktiviert werden, wenn sie auch benoetigt wird**.
 
+### Abfrage von Erweiterungen
+
+Bis Version 1.5 wurde in der Regel das jeweilige Plugin direkt abgefragt. Typische Altaufrufe sehen so aus:
+
+```php
+if (rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
+    // Funktion der frueheren used_machines-Erweiterung verwenden
+}
+```
+
+Seit Version 1.6 wird nicht mehr das Plugin, sondern die integrierte Erweiterung des Hauptaddons abgefragt. Dafuer gibt es die zentrale Extension-Verwaltung:
+
+```php
+use TobiasKrais\D2UMachinery\Extension;
+
+if (Extension::isActive('used_machines')) {
+    // Funktion der integrierten Erweiterung verwenden
+}
+```
+
+Die Schluessel entsprechen in der Regel den frueheren Plugin-Namen, zum Beispiel `contacts`, `equipment`, `industry_sectors`, `production_lines`, `service_options`, `used_machines` oder `export`.
+
+Fuer Altinstallationen bleiben auch Wrapper fuer ehemalige Plugins ohne eigene Backend-Seite erhalten, zum Beispiel `machine_construction_equipment_extension`.
+
 ### Kontakte (contacts)
 
 Diese Erweiterung ermöglicht einer Maschine oder Gebrauchtmaschine einen Kontakt hinzuzufügen. Maschinenanfragen aus den Hauptausgabe- und Gebrauchtmaschinen-Beispielmodulen in Bootstrap 5 oder den veralteten Bootstrap-4-Varianten werden dann an diesen Kontakt geschickt und nicht an die in den Einstellungen hinterlegte allgemeine E-Mail-Adresse. Diese Erweiterung ist für Unternehmen mit mehreren Ansprechpartnern gedacht.

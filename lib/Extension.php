@@ -5,6 +5,7 @@ namespace TobiasKrais\D2UMachinery;
 use rex_be_controller;
 use rex_config;
 use rex_plugin;
+use rex_plugin_manager;
 
 /**
  * Central management for former plugin-based addon extensions.
@@ -100,7 +101,7 @@ final class Extension
             'legacy_plugin' => 'production_lines',
             'title' => 'd2u_machinery_production_lines',
             'pages' => ['d2u_machinery/production_lines'],
-            'dependencies' => [],
+            'dependencies' => ['industry_sectors'],
         ],
         'service_options' => [
             'config' => 'extension_service_options',
@@ -148,6 +149,16 @@ final class Extension
         return \rex_i18n::msg(self::getTitleKey($key));
     }
 
+    public static function getLegacyPluginName(string $key): ?string
+    {
+        $legacyPlugin = self::requireDefinition($key)['legacy_plugin'] ?? null;
+        if (!is_string($legacyPlugin) || '' === $legacyPlugin) {
+            return null;
+        }
+
+        return $legacyPlugin;
+    }
+
     public static function isActive(string $key): bool
     {
         $configKey = self::getConfigKey($key);
@@ -171,6 +182,32 @@ final class Extension
         return $states;
     }
 
+    /**
+     * @return array<int,string>
+     */
+    public static function getDeactivationCascade(string $key): array
+    {
+        self::requireDefinition($key);
+
+        $cascade = [];
+        self::collectDeactivationCascade($key, $cascade);
+
+        return array_keys($cascade);
+    }
+
+    /**
+     * @return array<int,string>
+     */
+    public static function getActivationCascade(string $key): array
+    {
+        self::requireDefinition($key);
+
+        $cascade = [];
+        self::collectActivationCascade($key, $cascade);
+
+        return array_keys($cascade);
+    }
+
     public static function ensureConfigInitialized(): void
     {
         foreach (array_keys(self::DEFINITIONS) as $key) {
@@ -183,9 +220,13 @@ final class Extension
 
     public static function migrateLegacyStates(?string $fromVersion = null): void
     {
+        $hadExtensionConfig = self::hasAnyExtensionConfig();
         self::ensureConfigInitialized();
 
-        if (null !== $fromVersion && \rex_version::compare($fromVersion, '1.6.0', '<') && self::isActive('machine_steel_processing_extension')) {
+        if (
+            ((null !== $fromVersion && \rex_version::compare($fromVersion, '1.6.0', '<')) || !$hadExtensionConfig)
+            && self::isActive('machine_steel_processing_extension')
+        ) {
             rex_config::set('d2u_machinery', self::getConfigKey('machine_steel_automation_extension'), self::STATE_ACTIVE);
         }
     }
@@ -218,7 +259,12 @@ final class Extension
                 continue;
             }
 
-            self::runLegacyScript($key, 'install.php');
+            $legacyPlugin = self::getLegacyPluginName($key);
+            if (null !== $legacyPlugin && rex_plugin::exists('d2u_machinery', $legacyPlugin)) {
+                self::installLegacyPlugin($key);
+            } else {
+                self::runLegacyScript($key, 'install.php');
+            }
             $activated[] = $key;
         }
 
@@ -227,7 +273,17 @@ final class Extension
                 continue;
             }
 
-            self::runLegacyScript($key, 'uninstall.php');
+            $legacyPlugin = self::getLegacyPluginName($key);
+            if (null !== $legacyPlugin && rex_plugin::exists('d2u_machinery', $legacyPlugin)) {
+                $plugin = rex_plugin::get('d2u_machinery', $legacyPlugin);
+                if ($plugin instanceof rex_plugin && $plugin->isInstalled()) {
+                    self::uninstallLegacyPlugin($key);
+                } else {
+                    self::runLegacyScript($key, 'uninstall.php');
+                }
+            } else {
+                self::runLegacyScript($key, 'uninstall.php');
+            }
             $deactivated[] = $key;
         }
 
@@ -251,6 +307,50 @@ final class Extension
             'deactivated' => $deactivated,
             'normalized' => $normalizedStates,
         ];
+    }
+
+    public static function installLegacyPlugin(string $key): void
+    {
+        $legacyPlugin = self::getLegacyPluginName($key);
+        if (null === $legacyPlugin || !rex_plugin::exists('d2u_machinery', $legacyPlugin)) {
+            return;
+        }
+
+        $plugin = rex_plugin::get('d2u_machinery', $legacyPlugin);
+        if (!$plugin instanceof rex_plugin) {
+            return;
+        }
+
+        $manager = rex_plugin_manager::factory($plugin);
+        if (!$plugin->isInstalled()) {
+            if (!$manager->install()) {
+                throw new \RuntimeException($manager->getMessage());
+            }
+
+            return;
+        }
+
+        if (!$plugin->isAvailable() && !$manager->activate()) {
+            throw new \RuntimeException($manager->getMessage());
+        }
+    }
+
+    public static function uninstallLegacyPlugin(string $key): void
+    {
+        $legacyPlugin = self::getLegacyPluginName($key);
+        if (null === $legacyPlugin || !rex_plugin::exists('d2u_machinery', $legacyPlugin)) {
+            return;
+        }
+
+        $plugin = rex_plugin::get('d2u_machinery', $legacyPlugin);
+        if (!$plugin instanceof rex_plugin || !$plugin->isInstalled()) {
+            return;
+        }
+
+        $manager = rex_plugin_manager::factory($plugin);
+        if (!$manager->uninstall()) {
+            throw new \RuntimeException($manager->getMessage());
+        }
     }
 
     public static function hideInactiveBackendPages(): void
@@ -380,10 +480,55 @@ final class Extension
         return self::requireDefinition($key)['dependencies'];
     }
 
+    private static function hasAnyExtensionConfig(): bool
+    {
+        foreach (array_keys(self::DEFINITIONS) as $key) {
+            if (rex_config::has('d2u_machinery', self::getConfigKey($key))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array<string,bool> $cascade
+     */
+    private static function collectDeactivationCascade(string $key, array &$cascade): void
+    {
+        if (isset($cascade[$key])) {
+            return;
+        }
+
+        foreach (array_keys(self::DEFINITIONS) as $candidate) {
+            if (in_array($key, self::getDependencies($candidate), true)) {
+                self::collectDeactivationCascade($candidate, $cascade);
+            }
+        }
+
+        $cascade[$key] = true;
+    }
+
+    /**
+     * @param array<string,bool> $cascade
+     */
+    private static function collectActivationCascade(string $key, array &$cascade): void
+    {
+        if (isset($cascade[$key])) {
+            return;
+        }
+
+        foreach (self::getDependencies($key) as $dependency) {
+            self::collectActivationCascade($dependency, $cascade);
+        }
+
+        $cascade[$key] = true;
+    }
+
     private static function isLegacyPluginInstalled(string $key): bool
     {
-        $legacyPlugin = (string) (self::requireDefinition($key)['legacy_plugin'] ?? '');
-        if ('' === $legacyPlugin) {
+        $legacyPlugin = self::getLegacyPluginName($key);
+        if (null === $legacyPlugin) {
             return false;
         }
         $plugin = rex_plugin::get('d2u_machinery', $legacyPlugin);

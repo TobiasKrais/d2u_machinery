@@ -3,11 +3,29 @@
 use TobiasKrais\D2UMachinery\Extension;
 
 $d2uMachineryAction = $d2uMachineryAction ?? null;
+$d2uMachineryRequestedAction = $d2uMachineryRequestedAction ?? $d2uMachineryAction;
+$d2uMachineryCascadeDependencies = $d2uMachineryCascadeDependencies ?? false;
+$d2uMachineryActivatedActions = null;
+$sql = \rex_sql::factory();
+
+if (null !== $d2uMachineryRequestedAction) {
+    $d2uMachineryActivatedActions = $d2uMachineryCascadeDependencies
+        ? Extension::getActivationCascade($d2uMachineryRequestedAction)
+        : [$d2uMachineryRequestedAction];
+}
 
 if (!function_exists('d2u_machinery_should_install')) {
-    function d2u_machinery_should_install(?string $action, string $extension): bool
+    function d2u_machinery_should_install(array|string|null $action, string $extension): bool
     {
-        return null === $action || $action === $extension;
+        if (null === $action) {
+            return true;
+        }
+
+        if (is_array($action)) {
+            return in_array($extension, $action, true);
+        }
+
+        return $action === $extension;
     }
 }
 
@@ -85,7 +103,6 @@ if (null === $d2uMachineryAction) {
     ->ensure();
 
 // Create views for url addon
-$sql = \rex_sql::factory();
 $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_machinery_url_machines AS
 	SELECT lang.machine_id, lang.clang_id, IF(lang.lang_name IS NULL or lang.lang_name = "", machines.name, lang.lang_name) as name, CONCAT(IF(lang.lang_name IS NULL or lang.lang_name = "", machines.name, lang.lang_name), " - ", categories.name) AS seo_title, lang.teaser AS seo_description, SUBSTRING_INDEX(machines.pics, ",", 1) as picture, machines.category_id, lang.updatedate
 	FROM '. \rex::getTablePrefix() .'d2u_machinery_machines_lang AS lang
@@ -177,7 +194,7 @@ if (0 === $sql->getRows()) {
 if (!$this->hasConfig()) { /** @phpstan-ignore-line */
     $this->setConfig('article_id', rex_article::getSiteStartArticleId()); /** @phpstan-ignore-line */
 }
-Extension::ensureConfigInitialized();
+Extension::migrateLegacyStates();
 // Remove default lang setting
 if (!$this->hasConfig()) { /** @phpstan-ignore-line */
     $this->removeConfig('default_lang'); /** @phpstan-ignore-line */
@@ -198,6 +215,13 @@ include __DIR__ . DIRECTORY_SEPARATOR .'lib'. DIRECTORY_SEPARATOR .'Module.php';
 $d2u_module_manager = new \TobiasKrais\D2UHelper\ModuleManager(\TobiasKrais\D2UMachinery\Module::getModules(), '', 'd2u_machinery');
 $d2u_module_manager->autoupdate();
 
+}
+
+if (null !== $d2uMachineryRequestedAction) {
+    $activatedExtensions = is_array($d2uMachineryActivatedActions) ? $d2uMachineryActivatedActions : [$d2uMachineryRequestedAction];
+    foreach ($activatedExtensions as $extensionKey) {
+        \rex_config::set('d2u_machinery', Extension::getConfigKey($extensionKey), Extension::STATE_ACTIVE);
+    }
 }
 
 // Plugin: contacts

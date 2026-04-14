@@ -44,8 +44,8 @@ d2u_machinery/
 │   ├── settings.setup.php     # Module manager
 │   ├── help.readme.php        # Help/README page
 │   └── help.changelog.php     # Changelog
-└── plugins/                # Legacy compatibility stubs
-    └── */package.yml       # package.yml only, kept so rex_plugin::get(...) still works for older integrations
+└── plugins/                # Legacy compatibility plugins
+    └── */                  # package.yml + install.php + uninstall.php for synchronized setup and cleanup with integrated extensions
 ```
 
 ## Coding Conventions
@@ -142,11 +142,14 @@ Each module has a revision number defined in `lib/d2u_machinery_module_manager.p
 | `service_options` | Service options | `ServiceOption` |
 | `used_machines` | Used machine management | `UsedMachine` |
 
-## Legacy Plugin Stubs
+## Legacy Compatibility Plugins
 
-- Plugin directories under `plugins/` must contain only `package.yml` files.
-- These stubs exist solely so `rex_plugin::get('d2u_machinery', ...)` remains available for backward compatibility.
-- No PHP logic, pages, libs, install, update or uninstall files should remain inside plugin directories.
+- Plugin directories under `plugins/` keep their `package.yml` for backward compatibility and may additionally contain `install.php` and `uninstall.php`.
+- Each plugin `install.php` delegates to the addon root `install.php`, so installing a legacy plugin activates the matching integrated extension config as well.
+- Each plugin `uninstall.php` delegates to the addon root `uninstall.php`, so uninstalling a legacy plugin removes the matching integrated extension data as well.
+- This also applies to former plugins without their own backend page, such as `machine_construction_equipment_extension`.
+- If an integrated extension is deactivated in addon settings, the matching legacy plugin should be uninstalled via REDAXO's package manager.
+- No separate plugin libs, pages, install or update scripts should be added.
 
 ### Media Manager Types
 

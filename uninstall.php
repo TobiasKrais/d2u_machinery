@@ -1,14 +1,35 @@
 <?php
 
 $d2uMachineryAction = $d2uMachineryAction ?? null;
+$d2uMachineryRequestedAction = $d2uMachineryRequestedAction ?? $d2uMachineryAction;
+$d2uMachineryTriggeredByLegacyPlugin = $d2uMachineryTriggeredByLegacyPlugin ?? false;
+$d2uMachineryCascadeDependencies = $d2uMachineryCascadeDependencies ?? false;
+$d2uMachineryDeactivatedActions = null;
+
+if (null !== $d2uMachineryRequestedAction) {
+    if (!class_exists(\TobiasKrais\D2UMachinery\Extension::class)) {
+        require_once __DIR__ .'/lib/Extension.php';
+    }
+    $d2uMachineryDeactivatedActions = $d2uMachineryCascadeDependencies
+        ? \TobiasKrais\D2UMachinery\Extension::getDeactivationCascade($d2uMachineryRequestedAction)
+        : [$d2uMachineryRequestedAction];
+}
 
 /**
- * @param string|null $action
+ * @param array<int,string>|string|null $action
  */
 if (!function_exists('d2u_machinery_should_uninstall')) {
-    function d2u_machinery_should_uninstall(?string $action, string $extension): bool
+    function d2u_machinery_should_uninstall(array|string|null $action, string $extension): bool
     {
-        return null === $action || $action === $extension;
+        if (null === $action) {
+            return true;
+        }
+
+        if (is_array($action)) {
+            return in_array($extension, $action, true);
+        }
+
+        return $action === $extension;
     }
 }
 
@@ -304,4 +325,29 @@ if (d2u_machinery_should_uninstall($d2uMachineryAction, 'used_machines')) {
     }
     $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_used_machines');
     $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_used_machines_lang');
+}
+
+if (null !== $d2uMachineryRequestedAction) {
+    if (!class_exists(\TobiasKrais\D2UMachinery\Extension::class)) {
+        require_once __DIR__ .'/lib/Extension.php';
+    }
+
+    $deactivatedExtensions = is_array($d2uMachineryDeactivatedActions) ? $d2uMachineryDeactivatedActions : [$d2uMachineryRequestedAction];
+    foreach ($deactivatedExtensions as $extensionKey) {
+        \rex_config::set(
+            'd2u_machinery',
+            \TobiasKrais\D2UMachinery\Extension::getConfigKey($extensionKey),
+            \TobiasKrais\D2UMachinery\Extension::STATE_INACTIVE
+        );
+    }
+
+    if ($d2uMachineryTriggeredByLegacyPlugin) {
+        foreach ($deactivatedExtensions as $extensionKey) {
+            if ($extensionKey === $d2uMachineryRequestedAction) {
+                continue;
+            }
+
+            \TobiasKrais\D2UMachinery\Extension::uninstallLegacyPlugin($extensionKey);
+        }
+    }
 }

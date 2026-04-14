@@ -44,16 +44,11 @@
 			<li><code>Welding</code> wird zu <code>TobiasKrais\D2UMachinery\Welding</code>.</li>
 		</ul>
 	</li>
-	<li>Die Dateinamen der Klassen wurden passend zu den Klassennamen auf CamelCase umgestellt, z.B. <code>machine.php</code> zu <code>Machine.php</code>, <code>category.php</code> zu <code>Category.php</code>, <code>d2u_machinery_lang_helper.php</code> zu <code>LangHelper.php</code> und <code>d2u_machinery_export_cronjob.php</code> zu <code>ExportCronjob.php</code>.</li>
 	<li>Backend-Struktur fuer REDAXO 6 von einzelinstallierten Plugins auf zentral schaltbare Erweiterungen im Addon umgestellt.</li>
-	<li>Die bisherigen Plugins wurden technisch vollstaendig in das Hauptaddon integriert; eigene Plugin-Verzeichnisse, Plugin-Bootstraps sowie getrennte Installations- und Update-Routinen entfallen.</li>
-	<li>Erweiterungen werden jetzt zentral in den Addon-Einstellungen aktiviert. Die Schalter befinden sich auf der Einstellungsseite des Hauptaddons und blenden die zugehoerigen Funktionen und Backend-Bereiche je nach Aktivierung ein.</li>
-	<li>Maschinen-Unterseiten im Backend auf kuerzere und konsistente Page-IDs wie machine/options, machine/features und machine/steel_processing umbenannt.</li>
-	<li>Alte Wrapper-Dateien in pages/ entfernt; die aktiven Seiten enthalten ihre Logik nun direkt selbst.</li>
-	<li>Einstellungsseite der Erweiterungen ueberarbeitet: Untereinstellungen stehen direkt unter den Schaltern und Abhaengigkeiten werden direkt beruecksichtigt.</li>
+	<li>Die bisherigen Plugins wurden technisch vollstaendig in das Hauptaddon integriert; eigene Plugin-Verzeichnisse, Plugin-Bootstraps sowie getrennte Installations- und Update-Routinen entfallen. Die Plugins existieren nur noch als Wrapper und werden in Version 2.0.0 komplett entfernt. Nur das Deaktivieren der Plugins im Addon Manager zeigt jetzt keine Wirkung mehr.</li>
+	<li>Erweiterungen werden jetzt zentral in den Addon-Einstellungen aktiviert. Die Schalter befinden sich auf der Einstellungsseite des Hauptaddons und blenden die zugehoerigen Funktionen und Backend-Bereiche je nach Aktivierung ein. Die Umstellung der Code-Abfrage von frueheren Plugins auf die neuen Erweiterungen ist in der <a href="https://github.com/TobiasKrais/d2u_machinery#abfrage-von-erweiterungen" target="_blank">README im Abschnitt "Abfrage von Erweiterungen"</a> beschrieben.</li>
 	<li>Neue Module 90-7 bis 90-12 als Bootstrap-5-Varianten der bestehenden Beispielmodule hinzugefuegt.</li>
 	<li>Module 90-1 bis 90-6 als "(BS4, deprecated)" markiert. Die BS4-Varianten werden im naechsten Major Release entfernt.</li>
-	<li>BS5-Module auf Bootstrap-5-Carousels und die d2u_helper Lightbox umgestellt.</li>
 	<li>Benoetigt d2u_helper &gt;= 2.1.0.</li>
 </ul>
 <p>1.5.1-DEV:</p>
