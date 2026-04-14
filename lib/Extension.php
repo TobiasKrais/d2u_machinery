@@ -78,8 +78,8 @@ final class Extension
         'machine_steel_automation_extension' => [
             'config' => 'extension_machine_steel_automation_extension',
             'legacy_plugin' => null,
-            'title' => 'd2u_machinery_steel_automation_extension',
-            'pages' => ['d2u_machinery/machine/automation'],
+            'title' => 'd2u_machinery_supply_extension',
+            'pages' => ['d2u_machinery/machine/supply'],
             'dependencies' => ['machine_steel_processing_extension'],
         ],
         'machine_steel_processing_extension' => [
@@ -385,7 +385,7 @@ final class Extension
         self::unsetSubpage($subpages, ['machine', 'subpages', 'certificates'], self::isActive('machine_certificates_extension'));
         self::unsetSubpage($subpages, ['machine', 'subpages', 'features'], self::isActive('machine_features_extension'));
         self::unsetSubpage($subpages, ['machine', 'subpages', 'options'], self::isActive('machine_options_extension'));
-        self::unsetSubpage($subpages, ['machine', 'subpages', 'automation'], self::isActive('machine_steel_automation_extension'));
+        self::unsetSubpage($subpages, ['machine', 'subpages', 'supply'], self::isActive('machine_steel_automation_extension'));
         self::unsetSubpage($subpages, ['machine', 'subpages', 'steel_processing'], self::isActive('machine_steel_processing_extension'));
         self::unsetSubpage($subpages, ['machine', 'subpages', 'service_options'], self::isActive('service_options'));
         self::unsetSubpage($subpages, ['machine', 'subpages', 'usage_areas'], self::isActive('machine_usage_area_extension'));

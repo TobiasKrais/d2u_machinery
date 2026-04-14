@@ -1,5 +1,7 @@
 <?php
 
+use TobiasKrais\D2UHelper\BackendHelper;
+
 use TobiasKrais\D2UMachinery\ServiceOption;
 
 $func = rex_request('func', 'string');
@@ -102,7 +104,7 @@ if ('edit' === $func || 'add' === $func) {
 							        $optionsTranslations['yes'] = rex_i18n::msg('d2u_helper_translation_needs_update');
 							        $optionsTranslations['no'] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
 							        $optionsTranslations['delete'] = rex_i18n::msg('d2u_helper_translation_delete');
-							        \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $optionsTranslations, [$serviceOption->translation_needs_update], 1, false, $readonlyLang);
+							        BackendHelper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $optionsTranslations, [$serviceOption->translation_needs_update], 1, false, $readonlyLang);
 							    } else {
 							        echo '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
 							    }
@@ -117,8 +119,8 @@ if ('edit' === $func || 'add' === $func) {
 							</script>
 							<div id="details_clang_<?= $rex_clang->getId() ?>">
 								<?php
-								    \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $serviceOption->name, $required, $readonlyLang, 'text');
-								    \TobiasKrais\D2UHelper\BackendHelper::form_textarea('d2u_helper_description', 'form[lang]['. $rex_clang->getId() .'][description]', $serviceOption->description, 10, false, $readonlyLang, true);
+								    BackendHelper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $serviceOption->name, $required, $readonlyLang, 'text');
+								    BackendHelper::form_textarea('d2u_helper_description', 'form[lang]['. $rex_clang->getId() .'][description]', $serviceOption->description, 10, false, $readonlyLang, true);
 								?>
 							</div>
 						</div>
@@ -135,8 +137,8 @@ if ('edit' === $func || 'add' === $func) {
 						    if (rex::getUser() instanceof rex_user && (rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
 						        $readonly = false;
 						    }
-						    \TobiasKrais\D2UHelper\BackendHelper::form_mediafield('d2u_helper_picture', '1', $serviceOption->picture, $readonly);
-						    \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', 'online' === $serviceOption->online_status, $readonly);
+						    BackendHelper::form_mediafield('d2u_helper_picture', '1', $serviceOption->picture, $readonly);
+						    BackendHelper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', 'online' === $serviceOption->online_status, $readonly);
 						?>
 					</div>
 				</fieldset>
@@ -159,8 +161,8 @@ if ('edit' === $func || 'add' === $func) {
 	</form>
 	<br>
 	<?php
-	    echo \TobiasKrais\D2UHelper\BackendHelper::getCSS();
-	    echo \TobiasKrais\D2UHelper\BackendHelper::getJS();
+	    echo BackendHelper::getCSS();
+	    echo BackendHelper::getJS();
 }
 
 if ('' === $func) {

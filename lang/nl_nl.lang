@@ -1,0 +1,367 @@
+d2u_machinery_extension_disabled_notice = Extensie "%s" is momenteel gedeactiveerd. Activeer deze in de addon-instellingen.
+d2u_machinery_extensions = Extensies
+d2u_machinery_extensions_activated = Geactiveerd
+d2u_machinery_extensions_deactivated = Gedeactiveerd
+d2u_machinery_extensions_notice = Extensies kunnen direct in de hoofd-addon worden geactiveerd en gedeactiveerd.
+d2u_machinery_extensions_machine_fields = De volgende extensies voegen velden aan machines toe:
+d2u_machinery_extensions_additional_features = De volgende extensies voegen naast machines extra functionaliteit toe:
+d2u_machinery_extensions_deactivate_warning = Let op: het deactiveren van een extensie verwijdert de bijbehorende databasestructuren.
+d2u_machinery_meta_machines = Machines
+d2u_machinery_meta_title = D2U Machinery
+
+d2u_machinery_data_all_lang = Algemene gegevens
+d2u_machinery_internal_name = Interne naam
+d2u_machinery_lang_name = Taalspecifieke naam (optioneel)
+d2u_machinery_no_selection = Geen selectie
+d2u_machinery_video = D2U Videomanager-video
+d2u_machinery_video_no = Geen video
+
+d2u_machinery_rights_all = D2U Machinery-addon
+d2u_machinery_rights_edit_data = D2U Machinery-addon: bewerkingsrechten voor gegevens
+d2u_machinery_rights_edit_lang = D2U Machinery-addon: bewerkingsrechten voor vertalingen (de talen uit de rolinstellingen zijn van toepassing)
+d2u_machinery_rights_settings = D2U Machinery-addon: instellingen
+
+d2u_machinery_settings_article = Machineartikel
+d2u_machinery_settings_categories_navi = Categorieën in de navigatie van de D2U Helper-addon tonen.
+d2u_machinery_settings_categories_show_usage_areas = Tabblad "Toepassingsgebieden" voor categorieën tonen
+d2u_machinery_settings_consultation_article = Artikellink achter "Laat u adviseren"
+d2u_machinery_settings_consultation_pics = Afbeelding(en) voor "Laat u adviseren"
+d2u_machinery_settings_contact_phone = Telefoonnummer voor advies
+d2u_machinery_settings_analytics = Google Analytics
+d2u_machinery_settings_analytics_activate = Google-Analytics-event verzenden bij klik op de verzendknop in het contactformulier
+d2u_machinery_settings_analytics_event_action = Naam van de event-actie
+d2u_machinery_settings_analytics_event_category = Naam van de event-categorie
+d2u_machinery_settings_machines_navi = Machines in de navigatie van de D2U Helper-addon tonen.
+d2u_machinery_settings_machine_show_usage_areas = Tabblad "Toepassingsgebieden" voor machines tonen
+d2u_machinery_settings_request_form_email = E-mailadres van de ontvanger van het contactformulier
+d2u_machinery_settings_short_urls = Korte URL's maken door de naam van de REDAXO-structuurcategorie uit de URL te verwijderen.
+d2u_machinery_settings_short_urls_forward = Oude URL's naar de verkorte URL's doorsturen.
+d2u_machinery_settings_show_teaser = Korte beschrijving van de machine in de machinelijst tonen
+d2u_machinery_settings_show_tech_data = Tabblad "Technische gegevens" tonen
+
+d2u_machinery_category_parent = Bovenliggende categorie
+d2u_machinery_category_parent_none = Heeft geen bovenliggende categorie
+d2u_machinery_category_pdfs = PDF-bestanden
+d2u_machinery_category_pic_lang = Taalspecifieke afbeelding (overschrijft algemene afbeelding)
+d2u_machinery_category_pic_usage = Toepassingsafbeelding
+d2u_machinery_category_videos = D2U Videomanager-video's
+d2u_machinery_category_usage_area = Naam van gebruikt proces
+
+d2u_machinery_machine = Machine
+d2u_machinery_machine_alternatives = Alternatieve machines
+d2u_machinery_benefits_long = Voordelen in één oogopslag (lang)
+d2u_machinery_benefits_short = Voordelen in één oogopslag (kort)
+d2u_machinery_machine_depth = Diepte (mm)
+d2u_machinery_machine_engine_power = Motorvermogen (kW)
+d2u_machinery_machine_engine_power_frequency_controlled = Motorvermogen frequentiegeregeld?
+d2u_machinery_machine_height = Hoogte (mm)
+d2u_machinery_machine_leaflet = Brochure
+d2u_machinery_machine_length = Lengte (mm)
+d2u_machinery_machine_no_machines_found = Geen machines gevonden.
+d2u_machinery_machine_pdfs = PDF-bestanden
+d2u_machinery_machine_product_number = Productnummer
+d2u_machinery_machine_references = Referentieartikel
+d2u_machinery_machine_service = Serviceartikel
+d2u_machinery_machine_software = Softwareartikel
+d2u_machinery_machine_teaser = Korte beschrijving
+d2u_machinery_machine_voltage_a = Bedrijfsspanning (A)
+d2u_machinery_machine_voltage_hz = Bedrijfsspanning (Hz)
+d2u_machinery_machine_voltage_v = Bedrijfsspanning (V)
+d2u_machinery_machine_weight = Gewicht (kg)
+d2u_machinery_machine_width = Breedte (mm)
+
+d2u_machinery_contacts = Contacten
+d2u_machinery_contacts_contact = Contact
+d2u_machinery_contacts_contacts = Contactpersonen
+d2u_machinery_contacts_email = E-mailadres
+d2u_machinery_contacts_no_contacts_found = Geen contacten gevonden.
+d2u_machinery_contacts_phone = Telefoonnummer
+d2u_machinery_contacts_settings_contact = Standaardcontactgegevens uit de addon-instellingen overnemen
+
+d2u_machinery_equipments = Toebehoren
+d2u_machinery_equipments_no_equipments_found = Geen toebehoren gevonden.
+d2u_machinery_equipment_group = Toebehorengroep
+d2u_machinery_equipment_groups = Toebehorengroepen
+d2u_machinery_equipment_no_equipment_groups_found = Geen toebehorengroepen gevonden.
+
+d2u_machinery_category_export = Exportinstellingen
+d2u_machinery_category_export_machinerypark_category_id = MachineryPark.com-categorie-ID
+d2u_machinery_category_export_europemachinery_category_id = EuropeMachinery-categorie-ID
+d2u_machinery_category_export_europemachinery_category_name = EuropeMachinery-categorienaam
+d2u_machinery_category_export_mascus_category_name = Mascus-categorienaam
+
+d2u_machinery_export = Export
+d2u_machinery_export_all_online = Alles online zetten
+d2u_machinery_export_all_offline = Alles offline zetten
+d2u_machinery_export_basic_settings = Basisinstellingen
+d2u_machinery_export_clang = Taal
+d2u_machinery_export_company_name = Bedrijfsnaam
+d2u_machinery_export_company_email = E-mailadres
+d2u_machinery_export_customer_number = Klantnummer
+d2u_machinery_export_europemachinery = Europe Machinery / Agri Affairs
+d2u_machinery_export_failure_curl = Exporttype heeft de PHP-extensie cURL nodig.
+d2u_machinery_export_failure_json = Exporttype heeft de PHP-extensie JSON nodig.
+d2u_machinery_export_ftp_filename = Bestandsnaam (alleen als een speciale naam vereist is)
+d2u_machinery_export_ftp_password = FTP-wachtwoord
+d2u_machinery_export_ftp_server = FTP-server
+d2u_machinery_export_ftp_settings = FTP-instellingen voor Agri Affairs, Europe Machinery, MachineryPark en Mascus
+d2u_machinery_export_ftp_username = FTP-gebruikersnaam
+d2u_machinery_export_image_too_large = Het afbeeldingsbestand is te groot om voor export te worden verkleind. Vervang het door een kleinere versie.
+d2u_machinery_export_last_export_date = Datum van laatste export
+d2u_machinery_export_linkedin = LinkedIn
+d2u_machinery_export_linkedin_autoexport_missing_requirements = Access-token of LinkedIn-ID niet beschikbaar. Log alstublieft handmatig in.
+d2u_machinery_export_linkedin_failure = Export mislukt. Zie logbestand voor details.
+d2u_machinery_export_linkedin_id = LinkedIn-ID
+d2u_machinery_export_linkedin_id_hint = Als geen ID is ingesteld, wordt automatisch de standaard-URN-ID van de persoon of de eerste bedrijfs-URN-ID geselecteerd waarvoor de persoon toegang heeft.
+d2u_machinery_export_linkedin_type = Profieltype
+d2u_machinery_export_linkedin_type_company = Bedrijf (de LinkedIn-app heeft toegang tot de 'Advertising API' nodig)
+d2u_machinery_export_linkedin_type_person = Natuurlijk persoon
+d2u_machinery_export_login_email = Login-e-mailadres
+d2u_machinery_export_no_providers_found = Geen aanbieders gevonden.
+d2u_machinery_export_number_online = Aantal online
+d2u_machinery_export_machinerypark = MachineryPark
+d2u_machinery_export_mascus = Mascus
+d2u_machinery_export_media_manager_type = Media Manager-mediatype
+d2u_machinery_export_oauth_token = OAuth-token
+d2u_machinery_export_oauth_token_secret = OAuth-token-secret
+d2u_machinery_export_provider = Exportportalen
+d2u_machinery_export_report = Auto-exportrapport
+d2u_machinery_export_social_app_id = Application-ID
+d2u_machinery_export_social_app_secret = Application-secret
+d2u_machinery_export_social_settings = Instellingen voor sociale netwerken
+d2u_machinery_export_social_settings_linkedin = Instellingen voor LinkedIn
+d2u_machinery_export_start = Handmatig exporteren
+d2u_machinery_export_type = Aanbiedertype
+d2u_machinery_export_uhr = Uur
+d2u_machinery_export_we_offer = Ons aanbod
+
+d2u_machinery_export_rights_export = D2U Machinery-addon: export
+d2u_machinery_export_rights_export_provider = D2U Machinery-addon: instellingen exportportalen
+
+d2u_machinery_export_csv_cannot_create = Fout: export-CSV-bestand kon niet worden aangemaakt.
+d2u_machinery_export_ftp_error_connection = Fout: FTP-verbinding kon niet worden opgebouwd. Controleer de FTP-instellingen.
+d2u_machinery_export_ftp_error_upload = Fout: FTP-verbinding is opgebouwd, maar uploaden is mislukt.
+d2u_machinery_export_success = Upload succesvol.
+d2u_machinery_export_xml_cannot_create = Fout: export-XML-bestand kon niet worden aangemaakt.
+d2u_machinery_export_zip_cannot_create = Fout: export-ZIP-bestand kon niet worden aangemaakt.
+
+d2u_machinery_export_settings_autoexport = Auto-export voor FTP-gebaseerde aanbieders activeren. Wijzigingen worden dagelijks geüpload. Uiterlijk na een week wordt opnieuw geëxporteerd om de ranking bij de aanbieder te verbeteren.
+d2u_machinery_export_settings_email = E-mailadres voor foutrapporten
+
+d2u_machinery_used_machines_year_built = Bouwjaar
+
+d2u_machinery_industry_sectors = Branches
+d2u_machinery_industry_sectors_article = Branches-artikel
+
+d2u_machinery_industry_sectors_no_industry_sectors_found = Geen branches gevonden.
+
+d2u_machinery_agitator_extension = Roerwerken
+
+d2u_machinery_agitators_viscosity = Max. viscositeit (mPas)
+
+d2u_machinery_agitators = Roerorganen
+d2u_machinery_agitators_no_agitators_found = Geen roerwerken gevonden.
+
+d2u_machinery_agitator_type = Roerwerktype
+d2u_machinery_agitator_types = Roerwerktypen
+d2u_machinery_agitators_no_agitator_types_found = Geen roerwerktypen gevonden.
+
+d2u_machinery_category_show_agitators = Roerwerken voor machines in deze categorie tonen
+
+d2u_machinery_certificates = Certificaten
+
+d2u_machinery_certificates_no_certificates_found = Geen certificaten gevonden.
+
+d2u_machinery_construction_equipment = Bouwplaatsuitrusting
+
+d2u_machinery_construction_equipment_airless = Airless-apparaten
+d2u_machinery_construction_equipment_airless_hose_connection = Slangaansluiting (")
+d2u_machinery_construction_equipment_airless_hose_diameter = Slangdiameter (mm)
+d2u_machinery_construction_equipment_airless_hose_length = Slanglengte (m)
+d2u_machinery_construction_equipment_airless_nozzle_size = Sproeiergrootte (")
+d2u_machinery_construction_equipment_container = Container
+d2u_machinery_construction_equipment_container_capacity = Vulhoeveelheid
+d2u_machinery_construction_equipment_container_capacity_unit = Eenheid vulhoeveelheid
+d2u_machinery_construction_equipment_container_connection_port = Aansluiting (container)
+d2u_machinery_construction_equipment_container_conveying_wave = Transportspiraal (container)
+d2u_machinery_construction_equipment_container_mixing_performance = Mengvermogen (l/min)
+d2u_machinery_construction_equipment_container_waterconnect_pressure = Druk wateraansluiting (bar)
+d2u_machinery_construction_equipment_container_waterconnect_diameter = Ø wateraansluiting (")
+d2u_machinery_construction_equipment_container_weight_empty = Leeggewicht (kg)
+d2u_machinery_construction_equipment_cutters = Snijapparaten
+d2u_machinery_construction_equipment_cutters_cutting_depth = Snijdiepte (cm)
+d2u_machinery_construction_equipment_cutters_cutting_length = Snijlengte (cm)
+d2u_machinery_construction_equipment_cutters_rod_length = Staaflengte (mm)
+d2u_machinery_construction_equipment_delivery_set_basic = Leveringsomvang basisunit
+d2u_machinery_construction_equipment_delivery_set_conversion = Leveringsomvang bouwsets
+d2u_machinery_construction_equipment_delivery_set_full = Leveringsomvang compleet
+d2u_machinery_construction_equipment_description_technical = Korte beschrijving in de technische gegevens
+d2u_machinery_construction_equipment_floor = Vloerbewerking
+d2u_machinery_construction_equipment_floor_beam_power_on_concrete = Straalvermogen op beton (m²/h)
+d2u_machinery_construction_equipment_floor_dust_extraction_connection = Aansluiting stofafzuiging (mm)
+d2u_machinery_construction_equipment_floor_feedrate = Voeding (m/min)
+d2u_machinery_construction_equipment_floor_filter_connection = Aansluiting filtersysteem (mm)
+d2u_machinery_construction_equipment_floor_rotations = Omwentelingen (min-1)
+d2u_machinery_construction_equipment_floor_working_pressure = Werkdruk (kg)
+d2u_machinery_construction_equipment_floor_working_width = Werkbreedte (mm)
+d2u_machinery_construction_equipment_grinder = Speciale slijpmachines
+d2u_machinery_construction_equipment_grinder_grinding_plate = Slijpplaat (cm²)
+d2u_machinery_construction_equipment_grinder_grinding_wheel = Slijpschijven (Ø) (mm)
+d2u_machinery_construction_equipment_grinder_rotational_frequency = Rotatiefrequentie (u/min)
+d2u_machinery_construction_equipment_grinder_sanding = Slijpslag (u/min)
+d2u_machinery_construction_equipment_grinder_vacuum_connection = Stofzuigeraansluiting (Ø) (mm)
+d2u_machinery_construction_equipment_operating_pressure = Bedrijfsdruk (bar)
+d2u_machinery_construction_equipment_picture_delivery_set = Afbeelding leveringsomvang
+d2u_machinery_construction_equipment_pumps = Pompen / eenhandspistolen
+d2u_machinery_construction_equipment_pump_conveying_distance = Max. transportafstand (afhankelijk van materiaal) (m)
+d2u_machinery_construction_equipment_pump_filling = Vulhoogte (mm)
+d2u_machinery_construction_equipment_pump_flow_volume = Max. transportcapaciteit (afhankelijk van materiaal) (l/min)
+d2u_machinery_construction_equipment_pump_grain_size = Korrelgrootte (mm)
+d2u_machinery_construction_equipment_pump_material_container = Materiaalreservoir (l)
+d2u_machinery_construction_equipment_pump_pressure_height = Max. opvoerhoogte (afhankelijk van materiaal) (m)
+d2u_machinery_construction_equipment_waste_water = Afvalwatersystemen
+d2u_machinery_construction_equipment_waste_water_capacity = Inhoud (l)
+
+d2u_machinery_features = Kenmerken
+
+d2u_machinery_features_categories = Beschikbaar in categorieën
+d2u_machinery_features_delete_unused = Niet-gebruikte kenmerken verwijderen
+d2u_machinery_features_delete_unused_success = Kenmerken verwijderd.
+d2u_machinery_features_no_features_found = Geen kenmerken gevonden.
+
+d2u_machinery_options = Opties
+
+d2u_machinery_supply_extension = Automatisering
+
+d2u_machinery_options_categories = Beschikbaar in categorieën
+d2u_machinery_options_delete_unused = Niet-gebruikte opties verwijderen
+d2u_machinery_options_delete_unused_success = Opties verwijderd.
+d2u_machinery_options_no_options_found = Geen opties gevonden.
+
+d2u_machinery_machine_steel_extension = Staalverwerking
+
+d2u_machinery_steel_automation_degrees = Automatiseringsgraden
+d2u_machinery_steel_material_class = Materiaalklassen
+d2u_machinery_steel_procedures = Productieprocessen
+d2u_machinery_steel_processes = Werkprocessen
+d2u_machinery_steel_profiles = Profielbereiken
+d2u_machinery_steel_supply = Automatisering
+d2u_machinery_steel_tools = Gereedschappen
+d2u_machinery_steel_welding = Lasprocessen
+
+d2u_machinery_steel_automation_no_automations_found = Geen automatiseringsgraden gevonden.
+d2u_machinery_steel_material_no_materials_found = Geen materiaalklassen gevonden.
+d2u_machinery_steel_procedure_no_procedures_found = Geen productieprocessen gevonden.
+d2u_machinery_steel_process_no_processs_found = Geen werkprocessen gevonden.
+d2u_machinery_steel_profile_no_profiles_found = Geen profielbereiken gevonden.
+d2u_machinery_steel_supply_no_supplys_found = Geen automatiseringen gevonden.
+d2u_machinery_steel_tool_no_tools_found = Geen gereedschappen gevonden.
+d2u_machinery_steel_welding_no_weldings_found = Geen lasprocessen gevonden.
+
+d2u_machinery_steel_automation = Technische gegevens - automatisering
+d2u_machinery_steel_automation_automationgrades = Automatiseringsgraden
+d2u_machinery_steel_automation_feedrate = Voeding (mm/min)
+d2u_machinery_steel_automation_feedrate_sawblade = Zaagbladvoeding (mm/min)
+d2u_machinery_steel_automation_rush_leader_flyback = Snel vooruit-/terugloop (mm/min)
+d2u_machinery_steel_automation_supply_multi_stroke = Materiaaltoevoer meervoudige slag (mm)
+d2u_machinery_steel_automation_supply_single_stroke = Materiaaltoevoer enkelvoudige slag (mm)
+d2u_machinery_steel_automation_supplys = Automatisering
+d2u_machinery_steel_beam = Technische gegevens - straalinstallaties
+d2u_machinery_steel_beam_color_guns = Aantal verfpistolen
+d2u_machinery_steel_beam_continuous_opening = Doorvoeropening (mm)
+d2u_machinery_steel_beam_turbines = Aantal turbines
+d2u_machinery_steel_beam_turbine_power = Vermogen per turbine (kW)
+d2u_machinery_steel_cutting_range_configurator_file = Bestand snijbereikconfigurator
+d2u_machinery_steel_cutting_range_configurator_title = Titel snijbereikconfigurator
+d2u_machinery_steel_drilling = Technische gegevens - boren
+d2u_machinery_steel_drilling_axis_drive_power = Aandrijfvermogen per as
+d2u_machinery_steel_drilling_diameter = Boordiameter (mm)
+d2u_machinery_steel_drilling_rpm_speed = Max. spiltoerental (min-1)
+d2u_machinery_steel_drilling_tools_axis = Aantal gereedschappen per as
+d2u_machinery_steel_drilling_unit_below = Booreenheden van onderen (u-as)
+d2u_machinery_steel_drilling_unit_horizontal = Horizontale booreenheden (z- en y-as)
+d2u_machinery_steel_drilling_unit_vertical = Verticale booreenheden (y-as)
+d2u_machinery_steel_punching = Technische gegevens - pons-/lasmachines / copingrobots
+d2u_machinery_steel_punching_bevel_angle = Max. afschuiningshoek (°)
+d2u_machinery_steel_punching_carrier_height = Balkhoogte min. / max. (mm)
+d2u_machinery_steel_punching_carrier_weight = Balkgewicht max. (kg/m)
+d2u_machinery_steel_punching_carrier_width = Balkbreedte min. / max. (mm)
+d2u_machinery_steel_punching_component_length = Componentlengte min. / max. (mm)
+d2u_machinery_steel_punching_component_weight = Componentgewicht max. (kg/m)
+d2u_machinery_steel_punching_diameter = Ponsdiameter (mm)
+d2u_machinery_steel_punching_flange_thickness = Flensdikte min. / max. (mm)
+d2u_machinery_steel_punching_power = Ponskracht
+d2u_machinery_steel_punching_profiles = Profielbereiken
+d2u_machinery_steel_punching_shaving_unit_angle_steel_single_cut = Hoekstaal-scheereenheid single cut (kN)
+d2u_machinery_steel_punching_tools = Aantal ponsgereedschappen
+d2u_machinery_steel_punching_web_thickness = Lijfdikte min. / max. (mm)
+d2u_machinery_steel_saw = Technische gegevens - zagen
+d2u_machinery_steel_saw_band = Zaagband (mm)
+d2u_machinery_steel_saw_band_tilt = Zaagbandhelling (°)
+d2u_machinery_steel_saw_blade = Zaagblad (Ø mm)
+d2u_machinery_steel_saw_cutting_speed = Snijsnelheid (m/min)
+d2u_machinery_steel_saw_miter = Verstekbereik
+d2u_machinery_steel_sheet_processing = Technische gegevens - plaat-/staalverwerking
+d2u_machinery_steel_sheet_length = Plaat-uitgangsmateriaal plaatlengte (mm)
+d2u_machinery_steel_sheet_thickness = Plaat-uitgangsmateriaal plaatdikte (mm)
+d2u_machinery_steel_sheet_width = Plaat-uitgangsmateriaal plaatbreedte (mm)
+d2u_machinery_steel_tool_changer_locations = Gereedschapswisselaar x magazijnplaatsen
+d2u_machinery_steel_welding_thickness = Lasnaaddikte max. ((a) mm)
+d2u_machinery_steel_welding_wire_thickness = Draaddikte (mm)
+d2u_machinery_steel_weldings = Lasprocessen
+d2u_machinery_steel_workspace = Werkbereik (B x H)
+d2u_machinery_steel_workspace_angle_steel = Werkbereik hoekstaal (mm)
+d2u_machinery_steel_workspace_flat = Werkbereik vlak materiaal (mm)
+d2u_machinery_steel_workspace_min = Werkbereik min. (mm)
+d2u_machinery_steel_workspace_plate = Werkbereik platen (mm)
+d2u_machinery_steel_workspace_profile = Werkbereik profielen (mm)
+d2u_machinery_steel_workspace_round = Werkbereik rond materiaal (mm)
+d2u_machinery_steel_workspace_square = Werkbereik vierkant materiaal (mm)
+
+d2u_machinery_steel_supply_title = Koptekst
+
+d2u_machinery_usage_areas = Toepassingsgebieden
+
+d2u_machinery_usage_areas_categories = Beschikbaar in categorieën
+d2u_machinery_usage_areas_no_usage_areas_found = Geen toepassingsgebieden gevonden.
+
+d2u_machinery_usage_areas_settings_by_machines = Machines bovenaan, toepassingsgebieden aan de zijkant
+d2u_machinery_usage_areas_settings_by_usage_areas = Toepassingsgebieden bovenaan, machines aan de zijkant
+d2u_machinery_usage_areas_settings_header = Oriëntatie matrix toepassingsgebieden
+
+d2u_machinery_production_lines = Productielijnen
+d2u_machinery_production_lines_article = Artikel productielijnen
+d2u_machinery_production_lines_no_production_lines_found = Geen productielijnen gevonden.
+
+d2u_machinery_production_lines_complementary_machines = Aanvullende machines
+d2u_machinery_production_lines_line_code = Lijncode
+d2u_machinery_production_lines_link_picture = Afbeelding met detailbeschrijvingen
+d2u_machinery_production_lines_usp = Unieke verkoopargumenten
+d2u_machinery_production_lines_usps_no_usps_found = Geen unieke verkoopargumenten gevonden.
+
+d2u_machinery_service_options = Service
+d2u_machinery_options_no_service_options_found = Geen serviceopties gevonden.
+
+d2u_machinery_used_machines = Gebruikte machines
+d2u_machinery_used_machines_article_rent = Artikel gebruikte machines huur
+d2u_machinery_used_machines_article_sale = Artikel gebruikte machines verkoop
+d2u_machinery_used_machines_availability = Beschikbaar vanaf
+d2u_machinery_used_machines_currency_code = Valutacode
+d2u_machinery_used_machines_downloads = Downloads
+d2u_machinery_used_machines_external_url = Externe URL
+d2u_machinery_used_machines_linked_machine = Koppeling met machine
+d2u_machinery_used_machines_location = Locatie
+d2u_machinery_used_machines_machine = Gebruikte machine
+d2u_machinery_used_machines_manufacturer = Fabrikant
+d2u_machinery_used_machines_no_used_machines_found = Geen gebruikte machines gevonden.
+d2u_machinery_used_machines_offer_type = Aanbiedingstype
+d2u_machinery_used_machines_offer_type_rent = Huur
+d2u_machinery_used_machines_offer_type_sale = Koop
+d2u_machinery_used_machines_pic_type = Weergave van afbeeldingen
+d2u_machinery_used_machines_pic_type_lightbox = Lightbox (in apart afbeeldingstabblad)
+d2u_machinery_used_machines_pic_type_slider = Slider (in overzichtstabblad)
+d2u_machinery_used_machines_price = Prijs
+d2u_machinery_used_machines_product_number = Productnummer
+d2u_machinery_used_machines_settings_duplicate_article_id = WAARSCHUWING: dezelfde artikel-ID wordt gebruikt voor machines, gebruikte machines voor verkoop of huur. Dit kan problemen geven bij het genereren van categorie-URL's. Mogelijke oplossingen: 1. Gebruik verschillende artikel-ID's voor machines en gebruikte machines voor verkoop en huur. Dan verdwijnt deze waarschuwing. 2. Gebruik een machinecategorie alleen voor machines, gebruikte machines voor huur of verkoop, maar nooit voor meerdere tegelijk.
+d2u_machinery_used_machines_technical_data = Technische gegevens
+d2u_machinery_used_machines_vat = % inbegrepen btw

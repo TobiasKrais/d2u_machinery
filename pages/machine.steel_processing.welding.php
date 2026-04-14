@@ -1,5 +1,7 @@
 <?php
 
+use TobiasKrais\D2UHelper\BackendHelper;
+
 use TobiasKrais\D2UMachinery\Welding;
 
 $func = rex_request('func', 'string');
@@ -101,7 +103,7 @@ if ('edit' === $func || 'add' === $func) {
                             if (\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
                                 $readonly = false;
                             }
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_helper_name', 'form[internal_name]', $welding->internal_name, true, $readonly, 'text');
+                            BackendHelper::form_input('d2u_helper_name', 'form[internal_name]', $welding->internal_name, true, $readonly, 'text');
                         ?>
 					</div>
 				</fieldset>
@@ -124,7 +126,7 @@ if ('edit' === $func || 'add' === $func) {
                                     $options_translations['yes'] = rex_i18n::msg('d2u_helper_translation_needs_update');
                                     $options_translations['no'] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
                                     $options_translations['delete'] = rex_i18n::msg('d2u_helper_translation_delete');
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$welding->translation_needs_update], 1, false, $readonly_lang);
+                                    BackendHelper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$welding->translation_needs_update], 1, false, $readonly_lang);
                                 } else {
                                     echo '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
                                 }
@@ -142,7 +144,7 @@ if ('edit' === $func || 'add' === $func) {
 							</script>
 							<div id="details_clang_<?= $rex_clang->getId() ?>">
 								<?php
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $welding->name, $required, $readonly_lang, 'text');
+                                    BackendHelper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $welding->name, $required, $readonly_lang, 'text');
                                 ?>
 							</div>
 						</div>
@@ -169,9 +171,9 @@ if ('edit' === $func || 'add' === $func) {
 	</form>
 	<br>
 	<?php
-        echo \TobiasKrais\D2UHelper\BackendHelper::getCSS();
-        echo \TobiasKrais\D2UHelper\BackendHelper::getJS();
-        echo \TobiasKrais\D2UHelper\BackendHelper::getJSOpenAll();
+        echo BackendHelper::getCSS();
+        echo BackendHelper::getJS();
+        echo BackendHelper::getJSOpenAll();
 }
 
 if ('' === $func) {

@@ -2,7 +2,7 @@
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_machinery" target="_blank">GitHub Repository</a> melden.</p>
 
 <h2>Changelog</h2>
-<p>1.6.0-DEV:</p>
+<p>1.6.0:</p>
 <ul>
 	<li>Vorbereitung auf Version 2 / R6: Folgende Klassen werden ab Version 2 dieses Addons umbenannt. Schon jetzt stehen die neuen Klassen fuer die Uebergangszeit zur Verfuegung und die alten Klassennamen werden in <code>lib/deprecated_helper_classes.php</code> auf die neuen Klassen gemappt:
 		<ul>
@@ -50,10 +50,7 @@
 	<li>Neue Module 90-7 bis 90-12 als Bootstrap-5-Varianten der bestehenden Beispielmodule hinzugefuegt.</li>
 	<li>Module 90-1 bis 90-6 als "(BS4, deprecated)" markiert. Die BS4-Varianten werden im naechsten Major Release entfernt.</li>
 	<li>Benoetigt d2u_helper &gt;= 2.1.0.</li>
-</ul>
-<p>1.5.1-DEV:</p>
-<ul>
-	<li>Export Plugin: Linkedin API auf 202511 erhoeht.</li>
+	<li>Export Plugin: Linkedin API auf 202603 erhoeht.</li>
 	<li>Export Plugin: PHP Warnung im CSV Export verhindert.</li>
 	<li>Module "90-1 D2U Machinery Addon - Hauptausgabe" und "90-4 D2U Machinery Addon - Gebrauchtmaschinen": Direkte Plyr-Sonderbehandlung entfernt. Die Videoausgabe laeuft jetzt vollstaendig ueber das D2U Videos Addon.</li>
 </ul>

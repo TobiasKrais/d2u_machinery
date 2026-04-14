@@ -1,11 +1,13 @@
 <?php
 
-use TobiasKrais\D2UMachinery\Supply;
+use TobiasKrais\D2UHelper\BackendHelper;
+
+use TobiasKrais\D2UMachinery\Automation;
 
 $func = rex_request('func', 'string');
 $entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
-$steelProcessingPageParams = isset($steelProcessingPageParams) && is_array($steelProcessingPageParams) ? $steelProcessingPageParams : ['steel_processing_subpage' => 'supply'];
+$steelProcessingPageParams = isset($steelProcessingPageParams) && is_array($steelProcessingPageParams) ? $steelProcessingPageParams : ['steel_processing_subpage' => 'automation'];
 
 // messages
 if ('' !== $message) {
@@ -16,35 +18,25 @@ if ('' !== $message) {
 if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input(INPUT_POST, 'btn_apply')) {
     $form = rex_post('form', 'array', []);
 
-    // Media fields and links need special treatment
-    $input_media = rex_post('REX_INPUT_MEDIA', 'array', []);
-
     $success = true;
-    $supply = false;
-    $supply_id = $form['supply_id'];
+    $automation = false;
+    $automation_id = $form['automation_id'];
     foreach (rex_clang::getAll() as $rex_clang) {
-        if (false === $supply) {
-            $supply = new Supply($supply_id, $rex_clang->getId());
-            $supply->supply_id = $supply_id; // Ensure correct ID in case first language has no object
-            $supply->priority = $form['priority'];
-            $supply->pic = $input_media[1];
-            if (\rex_addon::get('d2u_videos')->isAvailable() && isset($form['video_id']) && $form['video_id'] > 0) {
-                $supply->video = new \TobiasKrais\D2UVideos\Video($form['video_id'], (int) rex_config::get('d2u_helper', 'default_lang'));
-            } else {
-                $supply->video = false;
-            }
+        if (false === $automation) {
+            $automation = new Automation($automation_id, $rex_clang->getId());
+            $automation->automation_id = $automation_id; // Ensure correct ID in case first language has no object
+            $automation->internal_name = $form['internal_name'];
         } else {
-            $supply->clang_id = $rex_clang->getId();
+            $automation->clang_id = $rex_clang->getId();
         }
-        $supply->name = $form['lang'][$rex_clang->getId()]['name'];
-        $supply->description = $form['lang'][$rex_clang->getId()]['description'];
-        $supply->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
+        $automation->name = $form['lang'][$rex_clang->getId()]['name'];
+        $automation->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 
-        if ('delete' === $supply->translation_needs_update) {
-            $supply->delete(false);
-        } elseif ($supply->save()) {
+        if ('delete' === $automation->translation_needs_update) {
+            $automation->delete(false);
+        } elseif ($automation->save()) {
             // remember id, for each database lang object needs same id
-            $supply_id = $supply->supply_id;
+            $automation_id = $automation->automation_id;
         } else {
             $success = false;
         }
@@ -57,8 +49,8 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
     }
 
     // Redirect to make reload and thus double save impossible
-    if (1 === (int) filter_input(INPUT_POST, 'btn_apply', FILTER_VALIDATE_INT) && false !== $supply) {
-        header('Location: '. rex_url::currentBackendPage(array_merge($steelProcessingPageParams, ['entry_id' => $supply->supply_id, 'func' => 'edit', 'message' => $message]), false));
+    if (1 === (int) filter_input(INPUT_POST, 'btn_apply', FILTER_VALIDATE_INT) && false !== $automation) {
+        header('Location: '. rex_url::currentBackendPage(array_merge($steelProcessingPageParams, ['entry_id' => $automation->automation_id, 'func' => 'edit', 'message' => $message]), false));
     } else {
         header('Location: '. rex_url::currentBackendPage(array_merge($steelProcessingPageParams, ['message' => $message]), false));
     }
@@ -66,20 +58,20 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
 }
 // Delete
 if (1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_VALIDATE_INT) || 'delete' === $func) {
-    $supply_id = $entry_id;
-    if (0 === $supply_id) {
+    $automation_id = $entry_id;
+    if (0 === $automation_id) {
         $form = rex_post('form', 'array', []);
-        $supply_id = $form['supply_id'];
+        $automation_id = $form['automation_id'];
     }
-    $supply = new Supply($supply_id, (int) rex_config::get('d2u_helper', 'default_lang'));
-    $supply->supply_id = $supply_id; // Ensure correct ID in case language has no object
+    $automation = new Automation($automation_id, (int) rex_config::get('d2u_helper', 'default_lang'));
+    $automation->automation_id = $automation_id; // Ensure correct ID in case language has no object
 
     // Check if object is used
-    $referring_machines = $supply->getReferringMachines();
+    $referring_machines = $automation->getReferringMachines();
 
     // If not used, delete
     if (0 === count($referring_machines)) {
-        $supply->delete();
+        $automation->delete(true);
     } else {
         $message = '<ul>';
         foreach ($referring_machines as $referring_machine) {
@@ -92,50 +84,32 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_VALIDATE_INT) || '
 
     $func = '';
 }
-// Change online status of machine
-elseif ('changestatus' === $func) {
-    $supply = new Supply($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'));
-    $supply->supply_id = $entry_id; // Ensure correct ID in case language has no object
-    $supply->changeStatus();
-
-    header('Location: '. rex_url::currentBackendPage($steelProcessingPageParams));
-    exit;
-}
 
 // Eingabeformular
 if ('edit' === $func || 'add' === $func) {
 ?>
     <form action="<?= rex_url::currentBackendPage($steelProcessingPageParams) ?>" method="post">
 		<div class="panel panel-edit">
-			<header class="panel-heading"><div class="panel-title"><?= rex_i18n::msg('d2u_machinery_steel_supply') ?></div></header>
+			<header class="panel-heading"><div class="panel-title"><?= rex_i18n::msg('d2u_machinery_steel_automation_degrees') ?></div></header>
 			<div class="panel-body">
-				<input type="hidden" name="form[supply_id]" value="<?= $entry_id ?>">
+				<input type="hidden" name="form[automation_id]" value="<?= $entry_id ?>">
 				<fieldset>
 					<legend><?= rex_i18n::msg('d2u_helper_data_all_lang') ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
                             // Do not use last object from translations, because you don't know if it exists in DB
-                            $supply = new Supply($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'));
+                            $automation = new Automation($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'));
                             $readonly = true;
                             if (\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
                                 $readonly = false;
                             }
-                            \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', 'online' === $supply->online_status, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('header_priority', 'form[priority]', $supply->priority, true, $readonly, 'number');
-                            \TobiasKrais\D2UHelper\BackendHelper::form_mediafield('d2u_helper_picture', '1', $supply->pic, $readonly);
-                            if (\rex_addon::get('d2u_videos')->isAvailable()) {
-                                $options_video = [0 => rex_i18n::msg('d2u_machinery_video_no')];
-                                foreach (TobiasKrais\D2UVideos\Video::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $video) {
-                                    $options_video[$video->video_id] = $video->name;
-                                }
-                                \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_video', 'form[video_id]', $options_video, false !== $supply->video ? [$supply->video instanceof TobiasKrais\D2UVideos\Video ? $supply->video->video_id : 0] : [], 1, false, $readonly);
-                            }
+                            BackendHelper::form_input('d2u_helper_name', 'form[internal_name]', $automation->internal_name, true, $readonly, 'text');
                         ?>
 					</div>
 				</fieldset>
 				<?php
                     foreach (rex_clang::getAll() as $rex_clang) {
-                        $supply = new Supply($entry_id, $rex_clang->getId());
+                        $automation = new Automation($entry_id, $rex_clang->getId());
                         $required = $rex_clang->getId() === (int) (rex_config::get('d2u_helper', 'default_lang')) ? true : false;
 
                         $readonly_lang = true;
@@ -152,7 +126,7 @@ if ('edit' === $func || 'add' === $func) {
                                     $options_translations['yes'] = rex_i18n::msg('d2u_helper_translation_needs_update');
                                     $options_translations['no'] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
                                     $options_translations['delete'] = rex_i18n::msg('d2u_helper_translation_delete');
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$supply->translation_needs_update], 1, false, $readonly_lang);
+                                    BackendHelper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$automation->translation_needs_update], 1, false, $readonly_lang);
                                 } else {
                                     echo '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
                                 }
@@ -170,8 +144,7 @@ if ('edit' === $func || 'add' === $func) {
 							</script>
 							<div id="details_clang_<?= $rex_clang->getId() ?>">
 								<?php
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $supply->name, $required, $readonly_lang, 'text');
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_textarea('d2u_helper_description', 'form[lang]['. $rex_clang->getId() .'][description]', $supply->description, 5, false, $readonly_lang, true);
+                                    BackendHelper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $automation->name, $required, $readonly_lang, 'text');
                                 ?>
 							</div>
 						</div>
@@ -198,55 +171,50 @@ if ('edit' === $func || 'add' === $func) {
 	</form>
 	<br>
 	<?php
-        echo \TobiasKrais\D2UHelper\BackendHelper::getCSS();
-        echo \TobiasKrais\D2UHelper\BackendHelper::getJS();
+        echo BackendHelper::getCSS();
+        echo BackendHelper::getJS();
+        echo BackendHelper::getJSOpenAll();
 }
 
 if ('' === $func) {
-    $query = 'SELECT supplys.supply_id, name, online_status, priority '
-        . 'FROM '. \rex::getTablePrefix() .'d2u_machinery_steel_supply AS supplys '
-        . 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_steel_supply_lang AS lang '
-            . 'ON supplys.supply_id = lang.supply_id AND lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' '
-        . 'ORDER BY priority ASC ';
+    $query = 'SELECT automations.automation_id, internal_name '
+        . 'FROM '. \rex::getTablePrefix() .'d2u_machinery_steel_automation AS automations '
+        . 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_steel_automation_lang AS lang '
+            . 'ON automations.automation_id = lang.automation_id AND lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' '
+        . 'ORDER BY name ASC';
     $list = rex_list::factory($query, 1000);
 
     $list->addTableAttribute('class', 'table-striped table-hover');
 
-    $tdIcon = '<i class="rex-icon fa-stack-overflow"></i>';
+    $tdIcon = '<i class="rex-icon fa-exchange"></i>';
     $thIcon = '';
     if (\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
         $thIcon = '<a href="' . $list->getUrl(['func' => 'add']) . '" title="' . rex_i18n::msg('add') . '"><i class="rex-icon rex-icon-add-module"></i></a>';
     }
     $list->addColumn($thIcon, $tdIcon, 0, ['<th class="rex-table-icon">###VALUE###</th>', '<td class="rex-table-icon">###VALUE###</td>']);
-    $list->setColumnParams($thIcon, ['func' => 'edit', 'entry_id' => '###supply_id###']);
+    $list->setColumnParams($thIcon, ['func' => 'edit', 'entry_id' => '###automation_id###']);
 
-    $list->setColumnLabel('supply_id', rex_i18n::msg('id'));
-    $list->setColumnLayout('supply_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
+    $list->setColumnLabel('automation_id', rex_i18n::msg('id'));
+    $list->setColumnLayout('automation_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
 
-    $list->setColumnLabel('name', rex_i18n::msg('d2u_helper_name'));
-    $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###supply_id###']);
+    $list->setColumnLabel('internal_name', rex_i18n::msg('d2u_machinery_internal_name'));
+    $list->setColumnParams('internal_name', ['func' => 'edit', 'entry_id' => '###automation_id###']);
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
-    $list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###supply_id###']);
+    $list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###automation_id###']);
 
-    $list->setColumnLabel('priority', rex_i18n::msg('header_priority'));
-
-    $list->removeColumn('online_status');
     if (\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
-        $list->addColumn(rex_i18n::msg('status_online'), '<a class="rex-###online_status###" href="' . rex_url::currentBackendPage(array_merge($steelProcessingPageParams, ['func' => 'changestatus'])) . '&entry_id=###supply_id###"><i class="rex-icon rex-icon-###online_status###"></i> ###online_status###</a>');
-        $list->setColumnLayout(rex_i18n::msg('status_online'), ['', '<td class="rex-table-action">###VALUE###</td>']);
-
         $list->addColumn(rex_i18n::msg('delete_module'), '<i class="rex-icon rex-icon-delete"></i> ' . rex_i18n::msg('delete'));
         $list->setColumnLayout(rex_i18n::msg('delete_module'), ['', '<td class="rex-table-action">###VALUE###</td>']);
-        $list->setColumnParams(rex_i18n::msg('delete_module'), ['func' => 'delete', 'entry_id' => '###supply_id###']);
+        $list->setColumnParams(rex_i18n::msg('delete_module'), ['func' => 'delete', 'entry_id' => '###automation_id###']);
         $list->addLinkAttribute(rex_i18n::msg('delete_module'), 'data-confirm', rex_i18n::msg('d2u_helper_confirm_delete'));
     }
 
-    $list->setNoRowsMessage(rex_i18n::msg('d2u_machinery_steel_supply_no_supplys_found'));
+    $list->setNoRowsMessage(rex_i18n::msg('d2u_machinery_steel_automation_no_automations_found'));
 
     $fragment = new rex_fragment();
-    $fragment->setVar('title', rex_i18n::msg('d2u_machinery_steel_supply'), false);
+    $fragment->setVar('title', rex_i18n::msg('d2u_machinery_steel_automation_degrees'), false);
     $fragment->setVar('content', $list->get(), false);
     echo $fragment->parse('core/page/section.php');
 }

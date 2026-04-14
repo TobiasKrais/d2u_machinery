@@ -1,4 +1,6 @@
 <?php
+
+use TobiasKrais\D2UHelper\BackendHelper;
 // save settings
 if ('save' === filter_input(INPUT_POST, 'btn_save')) {
     $settings = rex_post('settings', 'array', []);
@@ -121,19 +123,19 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
 
         // Update url schemes
         if (\rex_addon::get('url')->isAvailable()) {
-            \TobiasKrais\D2UHelper\BackendHelper::update_url_scheme(\rex::getTablePrefix() .'d2u_machinery_url_machine_categories', $settings['article_id']);
-            \TobiasKrais\D2UHelper\BackendHelper::update_url_scheme(\rex::getTablePrefix() .'d2u_machinery_url_machines', $settings['article_id']);
+            BackendHelper::update_url_scheme(\rex::getTablePrefix() .'d2u_machinery_url_machine_categories', $settings['article_id']);
+            BackendHelper::update_url_scheme(\rex::getTablePrefix() .'d2u_machinery_url_machines', $settings['article_id']);
             if (\TobiasKrais\D2UMachinery\Extension::isActive('industry_sectors')) {
-                \TobiasKrais\D2UHelper\BackendHelper::update_url_scheme(\rex::getTablePrefix() .'d2u_machinery_url_industry_sectors', $settings['industry_sectors_article_id']);
+                BackendHelper::update_url_scheme(\rex::getTablePrefix() .'d2u_machinery_url_industry_sectors', $settings['industry_sectors_article_id']);
             }
             if (\TobiasKrais\D2UMachinery\Extension::isActive('production_lines')) {
-                \TobiasKrais\D2UHelper\BackendHelper::update_url_scheme(\rex::getTablePrefix() .'d2u_machinery_url_production_lines', $settings['production_lines_article_id']);
+                BackendHelper::update_url_scheme(\rex::getTablePrefix() .'d2u_machinery_url_production_lines', $settings['production_lines_article_id']);
             }
             if (\TobiasKrais\D2UMachinery\Extension::isActive('used_machines')) {
-                \TobiasKrais\D2UHelper\BackendHelper::update_url_scheme(\rex::getTablePrefix() .'d2u_machinery_url_used_machines_rent', $settings['used_machine_article_id_rent']);
-                \TobiasKrais\D2UHelper\BackendHelper::update_url_scheme(\rex::getTablePrefix() .'d2u_machinery_url_used_machine_categories_rent', $settings['used_machine_article_id_rent']);
-                \TobiasKrais\D2UHelper\BackendHelper::update_url_scheme(\rex::getTablePrefix() .'d2u_machinery_url_used_machines_sale', $settings['used_machine_article_id_sale']);
-                \TobiasKrais\D2UHelper\BackendHelper::update_url_scheme(\rex::getTablePrefix() .'d2u_machinery_url_used_machine_categories_sale', $settings['used_machine_article_id_sale']);
+                BackendHelper::update_url_scheme(\rex::getTablePrefix() .'d2u_machinery_url_used_machines_rent', $settings['used_machine_article_id_rent']);
+                BackendHelper::update_url_scheme(\rex::getTablePrefix() .'d2u_machinery_url_used_machine_categories_rent', $settings['used_machine_article_id_rent']);
+                BackendHelper::update_url_scheme(\rex::getTablePrefix() .'d2u_machinery_url_used_machines_sale', $settings['used_machine_article_id_sale']);
+                BackendHelper::update_url_scheme(\rex::getTablePrefix() .'d2u_machinery_url_used_machine_categories_sale', $settings['used_machine_article_id_sale']);
             }
 
             // Update forward cache - wait for packages included to prevent internal Server error
@@ -178,16 +180,16 @@ if (\TobiasKrais\D2UMachinery\Extension::isActive('used_machines') && ((int) rex
                     <p><strong><?= rex_i18n::msg('d2u_machinery_extensions_machine_fields') ?></strong></p>
                     <?php
                         $machineFieldExtensions = [
-                            'equipment',
-                            'machine_agitator_extension',
-                            'machine_certificates_extension',
-                            'machine_construction_equipment_extension',
+                            'machine_steel_automation_extension',
                             'machine_features_extension',
                             'machine_options_extension',
-                            'machine_steel_automation_extension',
-                            'machine_steel_processing_extension',
-                            'machine_usage_area_extension',
                             'service_options',
+                            'equipment',
+                            'machine_usage_area_extension',
+                            'machine_agitator_extension',
+                            'machine_steel_processing_extension',
+                            'machine_certificates_extension',
+                            'machine_construction_equipment_extension',
                         ];
                         $additionalExtensions = [
                             'contacts',
@@ -210,22 +212,22 @@ if (\TobiasKrais\D2UMachinery\Extension::isActive('used_machines') && ((int) rex
                                 echo '<dd><label>'. rex_i18n::msg(\TobiasKrais\D2UMachinery\Extension::getTitleKey($extensionKey)) .'</label>';
                                 echo '<div id="d2u-machinery-'. $extensionKey .'-settings" style="padding: 8px 0 0 28px;">';
                                 if ('export' === $extensionKey) {
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_machinery_export_settings_autoexport', 'settings[export_autoexport]', 'active', 'active' === rex_config::get('d2u_machinery', 'export_autoexport'));
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_export_settings_email', 'settings[export_failure_email]', (string) rex_config::get('d2u_machinery', 'export_failure_email'), true, false, 'email');
+                                    BackendHelper::form_checkbox('d2u_machinery_export_settings_autoexport', 'settings[export_autoexport]', 'active', 'active' === rex_config::get('d2u_machinery', 'export_autoexport'));
+                                    BackendHelper::form_input('d2u_machinery_export_settings_email', 'settings[export_failure_email]', (string) rex_config::get('d2u_machinery', 'export_failure_email'), true, false, 'email');
                                 } elseif ('industry_sectors' === $extensionKey) {
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_linkfield('d2u_machinery_industry_sectors_article', '5', (int) rex_config::get('d2u_machinery', 'industry_sectors_article_id'), (int) rex_config::get('d2u_helper', 'default_lang', rex_clang::getStartId()));
+                                    BackendHelper::form_linkfield('d2u_machinery_industry_sectors_article', '5', (int) rex_config::get('d2u_machinery', 'industry_sectors_article_id'), (int) rex_config::get('d2u_helper', 'default_lang', rex_clang::getStartId()));
                                 } elseif ('production_lines' === $extensionKey) {
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_linkfield('d2u_machinery_production_lines_article', '6', (int) rex_config::get('d2u_machinery', 'production_lines_article_id'), (int) rex_config::get('d2u_helper', 'default_lang', rex_clang::getStartId()));
+                                    BackendHelper::form_linkfield('d2u_machinery_production_lines_article', '6', (int) rex_config::get('d2u_machinery', 'production_lines_article_id'), (int) rex_config::get('d2u_helper', 'default_lang', rex_clang::getStartId()));
                                 } elseif ('used_machines' === $extensionKey) {
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_linkfield('d2u_machinery_used_machines_article_rent', '3', (int) rex_config::get('d2u_machinery', 'used_machine_article_id_rent'), (int) rex_config::get('d2u_helper', 'default_lang', rex_clang::getStartId()));
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_linkfield('d2u_machinery_used_machines_article_sale', '4', (int) rex_config::get('d2u_machinery', 'used_machine_article_id_sale'), (int) rex_config::get('d2u_helper', 'default_lang', rex_clang::getStartId()));
+                                    BackendHelper::form_linkfield('d2u_machinery_used_machines_article_rent', '3', (int) rex_config::get('d2u_machinery', 'used_machine_article_id_rent'), (int) rex_config::get('d2u_helper', 'default_lang', rex_clang::getStartId()));
+                                    BackendHelper::form_linkfield('d2u_machinery_used_machines_article_sale', '4', (int) rex_config::get('d2u_machinery', 'used_machine_article_id_sale'), (int) rex_config::get('d2u_helper', 'default_lang', rex_clang::getStartId()));
                                     $options_used_machines_show_pics = ['slider' => rex_i18n::msg('d2u_machinery_used_machines_pic_type_slider'), 'lightbox' => rex_i18n::msg('d2u_machinery_used_machines_pic_type_lightbox')];
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_used_machines_pic_type', 'settings[used_machines_pic_type]', $options_used_machines_show_pics, [(string) rex_config::get('d2u_machinery', 'used_machines_pic_type')]);
+                                    BackendHelper::form_select('d2u_machinery_used_machines_pic_type', 'settings[used_machines_pic_type]', $options_used_machines_show_pics, [(string) rex_config::get('d2u_machinery', 'used_machines_pic_type')]);
                                 } elseif ('machine_usage_area_extension' === $extensionKey) {
                                     $optionsUsageAreaHeader = ['machines' => rex_i18n::msg('d2u_machinery_usage_areas_settings_by_machines'), 'usage' => rex_i18n::msg('d2u_machinery_usage_areas_settings_by_usage_areas')];
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_usage_areas_settings_header', 'settings[usage_area_header]', $optionsUsageAreaHeader, [(string) rex_config::get('d2u_machinery', 'usage_area_header')]);
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_machinery_settings_categories_show_usage_areas', 'settings[show_categories_usage_areas]', 'show', 'show' === rex_config::get('d2u_machinery', 'show_categories_usage_areas'));
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_machinery_settings_machine_show_usage_areas', 'settings[show_machine_usage_areas]', 'show', 'show' === rex_config::get('d2u_machinery', 'show_machine_usage_areas'));
+                                    BackendHelper::form_select('d2u_machinery_usage_areas_settings_header', 'settings[usage_area_header]', $optionsUsageAreaHeader, [(string) rex_config::get('d2u_machinery', 'usage_area_header')]);
+                                    BackendHelper::form_checkbox('d2u_machinery_settings_categories_show_usage_areas', 'settings[show_categories_usage_areas]', 'show', 'show' === rex_config::get('d2u_machinery', 'show_categories_usage_areas'));
+                                    BackendHelper::form_checkbox('d2u_machinery_settings_machine_show_usage_areas', 'settings[show_machine_usage_areas]', 'show', 'show' === rex_config::get('d2u_machinery', 'show_machine_usage_areas'));
                                 }
                                 echo '</div>';
                                 echo '</dd>';
@@ -234,7 +236,7 @@ if (\TobiasKrais\D2UMachinery\Extension::isActive('used_machines') && ((int) rex
                                 return;
                             }
 
-                            \TobiasKrais\D2UHelper\BackendHelper::form_checkbox(
+                            BackendHelper::form_checkbox(
                                 \TobiasKrais\D2UMachinery\Extension::getTitleKey($extensionKey),
                                 'settings['. $configKey .']',
                                 \TobiasKrais\D2UMachinery\Extension::STATE_ACTIVE,
@@ -301,14 +303,14 @@ if (\TobiasKrais\D2UMachinery\Extension::isActive('used_machines') && ((int) rex
 				<legend><small><i class="rex-icon rex-icon-database"></i></small> <?= rex_i18n::msg('d2u_helper_settings') ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
-                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_settings_request_form_email', 'settings[request_form_email]', (string) rex_config::get('d2u_machinery', 'request_form_email'), true, false, 'email');
-                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_settings_contact_phone', 'settings[contact_phone]', (string) rex_config::get('d2u_machinery', 'contact_phone'), true, false);
+                        BackendHelper::form_input('d2u_machinery_settings_request_form_email', 'settings[request_form_email]', (string) rex_config::get('d2u_machinery', 'request_form_email'), true, false, 'email');
+                        BackendHelper::form_input('d2u_machinery_settings_contact_phone', 'settings[contact_phone]', (string) rex_config::get('d2u_machinery', 'contact_phone'), true, false);
                         $consultation_pics = '' !== rex_config::get('d2u_machinery', 'consultation_pics', '') ? preg_grep('/^\s*$/s', explode(',', (string) rex_config::get('d2u_machinery', 'consultation_pics')), PREG_GREP_INVERT) : ('' !== rex_config::get('d2u_machinery', 'consultation_pic', '') ? [rex_config::get('d2u_machinery', 'consultation_pic')] : []);
-                        \TobiasKrais\D2UHelper\BackendHelper::form_imagelistfield('d2u_machinery_settings_consultation_pics', 1, is_array($consultation_pics) ? $consultation_pics : [], false);
-                        \TobiasKrais\D2UHelper\BackendHelper::form_linkfield('d2u_machinery_settings_consultation_article', '2', (int) rex_config::get('d2u_machinery', 'consultation_article_id'), (int) rex_config::get('d2u_helper', 'default_lang', rex_clang::getStartId()));
+                        BackendHelper::form_imagelistfield('d2u_machinery_settings_consultation_pics', 1, is_array($consultation_pics) ? $consultation_pics : [], false);
+                        BackendHelper::form_linkfield('d2u_machinery_settings_consultation_article', '2', (int) rex_config::get('d2u_machinery', 'consultation_article_id'), (int) rex_config::get('d2u_helper', 'default_lang', rex_clang::getStartId()));
                         if (rex_addon::get('url')->isAvailable()) {
-                            \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_machinery_settings_short_urls', 'settings[short_urls]', 'true', 'true' === rex_config::get('d2u_machinery', 'short_urls'));
-                            \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_machinery_settings_short_urls_forward', 'settings[short_urls_forward]', 'true', 'true' === rex_config::get('d2u_machinery', 'short_urls_forward'));
+                            BackendHelper::form_checkbox('d2u_machinery_settings_short_urls', 'settings[short_urls]', 'true', 'true' === rex_config::get('d2u_machinery', 'short_urls'));
+                            BackendHelper::form_checkbox('d2u_machinery_settings_short_urls_forward', 'settings[short_urls_forward]', 'true', 'true' === rex_config::get('d2u_machinery', 'short_urls_forward'));
                             ?>
 							<script>
 								function changeTypeShortURLs() {
@@ -336,7 +338,7 @@ if (\TobiasKrais\D2UMachinery\Extension::isActive('used_machines') && ((int) rex
 				<legend><small><i class="rex-icon rex-icon-language"></i></small> <?= rex_i18n::msg('d2u_helper_lang_replacements') ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
-                        \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_helper_lang_wildcard_overwrite', 'settings[lang_wildcard_overwrite]', 'true', 'true' === rex_config::get('d2u_machinery', 'lang_wildcard_overwrite'));
+                        BackendHelper::form_checkbox('d2u_helper_lang_wildcard_overwrite', 'settings[lang_wildcard_overwrite]', 'true', 'true' === rex_config::get('d2u_machinery', 'lang_wildcard_overwrite'));
                         foreach (rex_clang::getAll() as $rex_clang) {
                             echo '<dl class="rex-form-group form-group">';
                             echo '<dt><label>'. $rex_clang->getName() .'</label></dt>';
@@ -370,9 +372,9 @@ if (\TobiasKrais\D2UMachinery\Extension::isActive('used_machines') && ((int) rex
                 <div class="panel-body-wrapper slide">
                     <?php
                         $optionsCategorySort = ['name' => rex_i18n::msg('d2u_helper_name'), 'priority' => rex_i18n::msg('header_priority')];
-                        \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_helper_sort', 'settings[default_category_sort]', $optionsCategorySort, [(string) rex_config::get('d2u_machinery', 'default_category_sort')]);
-                        \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_machinery_settings_show_teaser', 'settings[show_teaser]', 'show', 'show' === rex_config::get('d2u_machinery', 'show_teaser'));
-                        \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_machinery_settings_categories_navi', 'settings[show_categories_navi]', 'show', 'show' === rex_config::get('d2u_machinery', 'show_categories_navi'));
+                        BackendHelper::form_select('d2u_helper_sort', 'settings[default_category_sort]', $optionsCategorySort, [(string) rex_config::get('d2u_machinery', 'default_category_sort')]);
+                        BackendHelper::form_checkbox('d2u_machinery_settings_show_teaser', 'settings[show_teaser]', 'show', 'show' === rex_config::get('d2u_machinery', 'show_teaser'));
+                        BackendHelper::form_checkbox('d2u_machinery_settings_categories_navi', 'settings[show_categories_navi]', 'show', 'show' === rex_config::get('d2u_machinery', 'show_categories_navi'));
                     ?>
                 </div>
             </fieldset>
@@ -380,11 +382,11 @@ if (\TobiasKrais\D2UMachinery\Extension::isActive('used_machines') && ((int) rex
                 <legend><small><i class="rex-icon rex-icon-module"></i></small> <?= rex_i18n::msg('d2u_machinery_meta_machines') ?></legend>
                 <div class="panel-body-wrapper slide">
                     <?php
-                        \TobiasKrais\D2UHelper\BackendHelper::form_linkfield('d2u_machinery_settings_article', '1', (int) rex_config::get('d2u_machinery', 'article_id'), (int) rex_config::get('d2u_helper', 'default_lang', rex_clang::getStartId()));
+                        BackendHelper::form_linkfield('d2u_machinery_settings_article', '1', (int) rex_config::get('d2u_machinery', 'article_id'), (int) rex_config::get('d2u_helper', 'default_lang', rex_clang::getStartId()));
                         $optionsMachineSort = ['name' => rex_i18n::msg('d2u_helper_name'), 'priority' => rex_i18n::msg('header_priority')];
-                        \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_helper_sort', 'settings[default_machine_sort]', $optionsMachineSort, [(string) rex_config::get('d2u_machinery', 'default_machine_sort')]);
-                        \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_machinery_settings_show_tech_data', 'settings[show_techdata]', 'show', 'show' === rex_config::get('d2u_machinery', 'show_techdata'));
-                        \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_machinery_settings_machines_navi', 'settings[show_machines_navi]', 'show', 'show' === rex_config::get('d2u_machinery', 'show_machines_navi'));
+                        BackendHelper::form_select('d2u_helper_sort', 'settings[default_machine_sort]', $optionsMachineSort, [(string) rex_config::get('d2u_machinery', 'default_machine_sort')]);
+                        BackendHelper::form_checkbox('d2u_machinery_settings_show_tech_data', 'settings[show_techdata]', 'show', 'show' === rex_config::get('d2u_machinery', 'show_techdata'));
+                        BackendHelper::form_checkbox('d2u_machinery_settings_machines_navi', 'settings[show_machines_navi]', 'show', 'show' === rex_config::get('d2u_machinery', 'show_machines_navi'));
                     ?>
                 </div>
             </fieldset>
@@ -392,9 +394,9 @@ if (\TobiasKrais\D2UMachinery\Extension::isActive('used_machines') && ((int) rex
 				<legend><small><i class="rex-icon fa-google"></i></small> <?= rex_i18n::msg('d2u_machinery_settings_analytics') ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
-                        \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_machinery_settings_analytics_activate', 'settings[google_analytics_activate]', 'true', 'true' === rex_config::get('d2u_machinery', 'google_analytics_activate'));
-                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_settings_analytics_event_category', 'settings[analytics_event_category]', (string) rex_config::get('d2u_machinery', 'analytics_event_category'), false, false, 'text');
-                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_settings_analytics_event_action', 'settings[analytics_event_action]', (string) rex_config::get('d2u_machinery', 'analytics_event_action'), false, false, 'text');
+                        BackendHelper::form_checkbox('d2u_machinery_settings_analytics_activate', 'settings[google_analytics_activate]', 'true', 'true' === rex_config::get('d2u_machinery', 'google_analytics_activate'));
+                        BackendHelper::form_input('d2u_machinery_settings_analytics_event_category', 'settings[analytics_event_category]', (string) rex_config::get('d2u_machinery', 'analytics_event_category'), false, false, 'text');
+                        BackendHelper::form_input('d2u_machinery_settings_analytics_event_action', 'settings[analytics_event_action]', (string) rex_config::get('d2u_machinery', 'analytics_event_action'), false, false, 'text');
                     ?>
 					<script>
 						function changeType() {
@@ -428,6 +430,6 @@ if (\TobiasKrais\D2UMachinery\Extension::isActive('used_machines') && ((int) rex
 	</div>
 </form>
 <?php
-    echo \TobiasKrais\D2UHelper\BackendHelper::getCSS();
-    echo \TobiasKrais\D2UHelper\BackendHelper::getJS();
-    echo \TobiasKrais\D2UHelper\BackendHelper::getJSOpenAll();
+    echo BackendHelper::getCSS();
+    echo BackendHelper::getJS();
+    echo BackendHelper::getJSOpenAll();

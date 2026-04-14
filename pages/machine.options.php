@@ -1,5 +1,7 @@
 <?php
 
+use TobiasKrais\D2UHelper\BackendHelper;
+
 use TobiasKrais\D2UMachinery\Category;
 use TobiasKrais\D2UMachinery\Option;
 
@@ -111,7 +113,7 @@ if ('edit' === $func || 'add' === $func) {
 							        $optionsTranslations['yes'] = rex_i18n::msg('d2u_helper_translation_needs_update');
 							        $optionsTranslations['no'] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
 							        $optionsTranslations['delete'] = rex_i18n::msg('d2u_helper_translation_delete');
-							        \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $optionsTranslations, [$option->translation_needs_update], 1, false, $readonlyLang);
+							        BackendHelper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $optionsTranslations, [$option->translation_needs_update], 1, false, $readonlyLang);
 							    } else {
 							        echo '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
 							    }
@@ -126,8 +128,8 @@ if ('edit' === $func || 'add' === $func) {
 							</script>
 							<div id="details_clang_<?= $rex_clang->getId() ?>">
 								<?php
-								    \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $option->name, $required, $readonlyLang, 'text');
-								    \TobiasKrais\D2UHelper\BackendHelper::form_textarea('d2u_helper_description', 'form[lang]['. $rex_clang->getId() .'][description]', $option->description, 10, false, $readonlyLang, true);
+								    BackendHelper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $option->name, $required, $readonlyLang, 'text');
+								    BackendHelper::form_textarea('d2u_helper_description', 'form[lang]['. $rex_clang->getId() .'][description]', $option->description, 10, false, $readonlyLang, true);
 								?>
 							</div>
 						</div>
@@ -144,19 +146,19 @@ if ('edit' === $func || 'add' === $func) {
 						    if (rex::getUser() instanceof rex_user && (rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
 						        $readonly = false;
 						    }
-						    \TobiasKrais\D2UHelper\BackendHelper::form_input('header_priority', 'form[priority]', $option->priority, true, $readonly, 'number');
-						    \TobiasKrais\D2UHelper\BackendHelper::form_mediafield('d2u_helper_picture', '1', $option->pic, $readonly);
+						    BackendHelper::form_input('header_priority', 'form[priority]', $option->priority, true, $readonly, 'number');
+						    BackendHelper::form_mediafield('d2u_helper_picture', '1', $option->pic, $readonly);
 						    $options = [];
 						    foreach (Category::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $category) {
 						        $options[$category->category_id] = $category->name;
 						    }
-						    \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_options_categories', 'form[category_ids][]', $options, $option->category_ids, 10, true, $readonly);
+						    BackendHelper::form_select('d2u_machinery_options_categories', 'form[category_ids][]', $options, $option->category_ids, 10, true, $readonly);
 						    if (rex_addon::get('d2u_videos')->isAvailable()) {
 						        $optionsVideo = [0 => rex_i18n::msg('d2u_machinery_video_no')];
 						        foreach (TobiasKrais\D2UVideos\Video::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $video) {
 						            $optionsVideo[$video->video_id] = $video->name;
 						        }
-						        \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_video', 'form[video_id]', $optionsVideo, false !== $option->video ? [$option->video instanceof TobiasKrais\D2UVideos\Video ? $option->video->video_id : 0] : [], 1, false, $readonly);
+						        BackendHelper::form_select('d2u_machinery_video', 'form[video_id]', $optionsVideo, false !== $option->video ? [$option->video instanceof TobiasKrais\D2UVideos\Video ? $option->video->video_id : 0] : [], 1, false, $readonly);
 						    }
 						?>
 					</div>
@@ -180,8 +182,8 @@ if ('edit' === $func || 'add' === $func) {
 	</form>
 	<br>
 	<?php
-	    echo \TobiasKrais\D2UHelper\BackendHelper::getCSS();
-	    echo \TobiasKrais\D2UHelper\BackendHelper::getJS();
+	    echo BackendHelper::getCSS();
+	    echo BackendHelper::getJS();
 }
 
 if ('' === $func) {

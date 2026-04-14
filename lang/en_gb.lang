@@ -16,10 +16,10 @@ d2u_machinery_no_selection = No selection
 d2u_machinery_video = D2U Videomanager Video
 d2u_machinery_video_no = No Video
 
-d2u_machinery_rights_all = D2U Machienry addon
-d2u_machinery_rights_edit_data = D2U Machienry addon: edit rights for data
-d2u_machinery_rights_edit_lang = D2U Machienry addon: edit rights for translations (languages set in user roles apply)
-d2u_machinery_rights_settings = D2U Machienry addon: settings
+d2u_machinery_rights_all = D2U Machinery addon
+d2u_machinery_rights_edit_data = D2U Machinery addon: edit rights for data
+d2u_machinery_rights_edit_lang = D2U Machinery addon: edit rights for translations (languages set in user roles apply)
+d2u_machinery_rights_settings = D2U Machinery addon: settings
 
 d2u_machinery_settings_article = Machine article
 d2u_machinery_settings_categories_navi = Show categories in D2U Helper addon navigation.
@@ -231,7 +231,7 @@ d2u_machinery_features_no_features_found = No features found.
 
 d2u_machinery_options = Options
 
-d2u_machinery_steel_automation_extension = Automation
+d2u_machinery_supply_extension = Automation
 
 d2u_machinery_options_categories = Available in categories
 d2u_machinery_options_delete_unused = Delete unused options

@@ -14,7 +14,7 @@ page:
             perm: 'd2u_machinery[machine]'
             subpages:
                 machine: { title: 'translate:d2u_machinery_meta_machines', icon: rex-icon rex-icon-module, perm: 'd2u_machinery[machine]' }
-                automation: { title: 'translate:d2u_machinery_steel_automation_extension', icon: rex-icon fa-exchange, perm: 'd2u_machinery[machine]' }
+                supply: { title: 'translate:d2u_machinery_supply_extension', icon: rex-icon fa-stack-overflow, perm: 'd2u_machinery[machine]' }
                 features: { title: 'translate:d2u_machinery_features', icon: rex-icon fa-plug, perm: 'd2u_machinery[machine]' }
                 options: { title: 'translate:d2u_machinery_options', icon: rex-icon fa-plug, perm: 'd2u_machinery[machine]' }
                 service_options: { title: 'translate:d2u_machinery_service_options', icon: rex-icon fa-check-square, perm: 'd2u_machinery[machine]' }

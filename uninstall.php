@@ -217,12 +217,7 @@ if (d2u_machinery_should_uninstall($d2uMachineryAction, 'machine_steel_processin
         ->removeColumn('procedure_ids')
         ->removeColumn('material_ids')
         ->removeColumn('tool_ids')
-        ->removeColumn('automation_supply_single_stroke')
-        ->removeColumn('automation_supply_multi_stroke')
-        ->removeColumn('automation_feedrate')
-        ->removeColumn('automation_rush_leader_flyback')
         ->removeColumn('automation_automationgrade_ids')
-        ->removeColumn('automation_supply_ids')
         ->removeColumn('workspace')
         ->removeColumn('workspace_square')
         ->removeColumn('workspace_flat')
@@ -276,12 +271,30 @@ if (d2u_machinery_should_uninstall($d2uMachineryAction, 'machine_steel_processin
     $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_steel_procedure_lang');
     $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_steel_profile');
     $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_steel_profile_lang');
-    $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_steel_supply');
-    $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_steel_supply_lang');
     $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_steel_tool');
     $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_steel_tool_lang');
     $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_steel_welding');
     $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_steel_welding_lang');
+}
+
+// Plugin: steel automation
+if (d2u_machinery_should_uninstall($d2uMachineryAction, 'machine_steel_automation_extension')) {
+    \rex_sql_table::get(\rex::getTable('d2u_machinery_machines'))
+        ->removeColumn('automation_supply_single_stroke')
+        ->removeColumn('automation_supply_multi_stroke')
+        ->removeColumn('automation_feedrate')
+        ->removeColumn('automation_feedrate_sawblade')
+        ->removeColumn('automation_rush_leader_flyback')
+        ->removeColumn('automation_supply_ids')
+        ->ensure();
+    $sql->setQuery('SHOW TABLES LIKE "'. \rex::getTable('d2u_machinery_production_lines') .'"');
+    if ($sql->getRows() > 0) {
+        \rex_sql_table::get(\rex::getTable('d2u_machinery_production_lines'))
+            ->removeColumn('automation_supply_ids')
+            ->ensure();
+    }
+    $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_steel_supply');
+    $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_steel_supply_lang');
 }
 
 // Plugin: usage areas

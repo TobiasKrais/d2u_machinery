@@ -108,7 +108,7 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper
                 $industry_sector_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('industry_sector_ids')), PREG_GREP_INVERT);
                 $this->industry_sector_ids = is_array($industry_sector_ids) ? array_map('intval', $industry_sector_ids) : [];
             }
-            if (\TobiasKrais\D2UMachinery\Extension::isActive('machine_steel_processing_extension')) {
+            if (\TobiasKrais\D2UMachinery\Extension::isActive('machine_steel_automation_extension')) {
                 $automation_supply_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('automation_supply_ids')), PREG_GREP_INVERT);
                 $this->automation_supply_ids = is_array($automation_supply_ids) ? array_map('intval', $automation_supply_ids) : [];
             }
@@ -374,7 +374,7 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper
             if (\TobiasKrais\D2UMachinery\Extension::isActive('industry_sectors')) {
                 $query .= ", industry_sector_ids = '|". implode('|', $this->industry_sector_ids) ."|' ";
             }
-            if (\TobiasKrais\D2UMachinery\Extension::isActive('machine_steel_processing_extension')) {
+            if (\TobiasKrais\D2UMachinery\Extension::isActive('machine_steel_automation_extension')) {
                 $query .= ", automation_supply_ids = '|". implode('|', $this->automation_supply_ids) ."|' ";
             }
 

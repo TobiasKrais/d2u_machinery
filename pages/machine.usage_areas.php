@@ -1,5 +1,7 @@
 <?php
 
+use TobiasKrais\D2UHelper\BackendHelper;
+
 use TobiasKrais\D2UMachinery\Category;
 use TobiasKrais\D2UMachinery\UsageArea;
 
@@ -118,7 +120,7 @@ if ('edit' === $func || 'add' === $func) {
                                     $options_translations['yes'] = rex_i18n::msg('d2u_helper_translation_needs_update');
                                     $options_translations['no'] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
                                     $options_translations['delete'] = rex_i18n::msg('d2u_helper_translation_delete');
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$usage_area->translation_needs_update], 1, false, $readonly_lang);
+                                    BackendHelper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$usage_area->translation_needs_update], 1, false, $readonly_lang);
                                 } else {
                                     echo '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
                                 }
@@ -136,7 +138,7 @@ if ('edit' === $func || 'add' === $func) {
 							</script>
 							<div id="details_clang_<?= $rex_clang->getId() ?>">
 								<?php
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $usage_area->name, $required, $readonly_lang, 'text');
+                                    BackendHelper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $usage_area->name, $required, $readonly_lang, 'text');
                                 ?>
 							</div>
 						</div>
@@ -155,13 +157,13 @@ if ('edit' === $func || 'add' === $func) {
                                 $readonly = false;
                             }
 
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('header_priority', 'form[priority]', $usage_area->priority, true, $readonly, 'number');
+                            BackendHelper::form_input('header_priority', 'form[priority]', $usage_area->priority, true, $readonly, 'number');
 
                             $options = [];
                             foreach (Category::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $category) {
                                 $options[$category->category_id] = $category->name;
                             }
-                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_usage_areas_categories', 'form[category_ids][]', $options, $usage_area->category_ids, 10, true, $readonly);
+                            BackendHelper::form_select('d2u_machinery_usage_areas_categories', 'form[category_ids][]', $options, $usage_area->category_ids, 10, true, $readonly);
                         ?>
 					</div>
 				</fieldset>
@@ -184,8 +186,8 @@ if ('edit' === $func || 'add' === $func) {
 	</form>
 	<br>
 	<?php
-        echo \TobiasKrais\D2UHelper\BackendHelper::getCSS();
-        echo \TobiasKrais\D2UHelper\BackendHelper::getJS();
+        echo BackendHelper::getCSS();
+        echo BackendHelper::getJS();
 }
 
 if ('' === $func) {

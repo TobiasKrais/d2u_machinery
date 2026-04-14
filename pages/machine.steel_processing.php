@@ -5,9 +5,9 @@ if (!\TobiasKrais\D2UMachinery\Extension::guardLegacyPage('machine_steel_process
 }
 
 $steelProcessingPages = [
-	'supply' => [
-		'label' => rex_i18n::msg('d2u_machinery_steel_supply'),
-		'path' => rex_path::addon('d2u_machinery', 'pages/machine.steel_processing.supply.php'),
+	'automation' => [
+		'label' => rex_i18n::msg('d2u_machinery_steel_automation_degrees'),
+		'path' => rex_path::addon('d2u_machinery', 'pages/machine.steel_processing.automation.php'),
 	],
 	'material' => [
 		'label' => rex_i18n::msg('d2u_machinery_steel_material_class'),
@@ -35,9 +35,9 @@ $steelProcessingPages = [
 	],
 ];
 
-$steelProcessingSubpage = rex_request('steel_processing_subpage', 'string', 'supply');
+$steelProcessingSubpage = rex_request('steel_processing_subpage', 'string', 'automation');
 if (!isset($steelProcessingPages[$steelProcessingSubpage])) {
-	$steelProcessingSubpage = 'supply';
+	$steelProcessingSubpage = 'automation';
 }
 $steelProcessingPageParams = ['steel_processing_subpage' => $steelProcessingSubpage];
 

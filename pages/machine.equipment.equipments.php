@@ -1,5 +1,7 @@
 <?php
 
+use TobiasKrais\D2UHelper\BackendHelper;
+
 use TobiasKrais\D2UMachinery\Equipment;
 use TobiasKrais\D2UMachinery\EquipmentGroup;
 
@@ -114,7 +116,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                     $options_translations['yes'] = rex_i18n::msg('d2u_helper_translation_needs_update');
                                     $options_translations['no'] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
                                     $options_translations['delete'] = rex_i18n::msg('d2u_helper_translation_delete');
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$equipment->translation_needs_update], 1, false, $readonly_lang);
+                                    BackendHelper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$equipment->translation_needs_update], 1, false, $readonly_lang);
                                 } else {
                                     echo '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
                                 }
@@ -130,7 +132,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 							</script>
 							<div id="details_clang_<?= $rex_clang->getId() ?>">
 								<?php
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $equipment->name, $required, $readonly_lang, 'text');
+                                    BackendHelper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $equipment->name, $required, $readonly_lang, 'text');
                                 ?>
 							</div>
 						</div>
@@ -148,15 +150,15 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                 $readonly = false;
                             }
 
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_machine_product_number', 'form[article_number]', $equipment->article_number, false, $readonly, 'text');
+                            BackendHelper::form_input('d2u_machinery_machine_product_number', 'form[article_number]', $equipment->article_number, false, $readonly, 'text');
                             $options = [];
                             foreach (EquipmentGroup::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $equipment_group) {
                                 if ('' !== $equipment_group->name) {
                                     $options[$equipment_group->group_id] = $equipment_group->name;
                                 }
                             }
-                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_equipment_group', 'form[group_id]', $options, $equipment->group instanceof EquipmentGroup ? [$equipment->group->group_id] : [], 1, false, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', 'online' === $equipment->online_status, $readonly);
+                            BackendHelper::form_select('d2u_machinery_equipment_group', 'form[group_id]', $options, $equipment->group instanceof EquipmentGroup ? [$equipment->group->group_id] : [], 1, false, $readonly);
+                            BackendHelper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', 'online' === $equipment->online_status, $readonly);
                         ?>
 					</div>
 				</fieldset>
@@ -179,8 +181,8 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 	</form>
 	<br>
 	<?php
-        echo \TobiasKrais\D2UHelper\BackendHelper::getCSS();
-        echo \TobiasKrais\D2UHelper\BackendHelper::getJS();
+        echo BackendHelper::getCSS();
+        echo BackendHelper::getJS();
 }
 
 if ('' === $func) {

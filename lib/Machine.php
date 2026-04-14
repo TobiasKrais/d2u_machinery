@@ -129,25 +129,25 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
     /** @var Tool[] machine_steel_processing_extension: Tool objects */
     public array $tools = [];
 
-    /** @var string machine_steel_processing_extension: Automation - Supply single stroke (mm) */
+    /** @var string machine_steel_automation_extension: Automation - Supply single stroke (mm) */
     public string $automation_supply_single_stroke = '';
 
-    /** @var string machine_steel_processing_extension: Automation - Multiple single stroke (mm) */
+    /** @var string machine_steel_automation_extension: Automation - Multiple single stroke (mm) */
     public string $automation_supply_multi_stroke = '';
 
-    /** @var string machine_steel_processing_extension: Automation - Feed rate range (mm/min) */
+    /** @var string machine_steel_automation_extension: Automation - Feed rate range (mm/min) */
     public string $automation_feedrate = '';
 
-    /** @var string machine_steel_processing_extension: Automation - Feed rate range for saw blades (mm/min) */
+    /** @var string machine_steel_automation_extension: Automation - Feed rate range for saw blades (mm/min) */
     public string $automation_feedrate_sawblade = '';
 
-    /** @var int machine_steel_processing_extension: Automation - Rush leader flyback (mm/min) */
+    /** @var int machine_steel_automation_extension: Automation - Rush leader flyback (mm/min) */
     public int $automation_rush_leader_flyback = 0;
 
     /** @var Automation[] machine_steel_processing_extension: Automation grade objects */
     public array $automation_automationgrades = [];
 
-    /** @var int[] machine_steel_processing_extension: Automation supply ids */
+    /** @var int[] machine_steel_automation_extension: Automation supply ids */
     public array $automation_supply_ids = [];
 
     /** @var string machine_steel_processing_extension: Workspace (mm x mm or only mm) */
@@ -610,19 +610,12 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
                         $this->tools[$tool_id] = new Tool($tool_id, $this->clang_id);
                     }
                 }
-                $this->automation_supply_single_stroke = (string) $result->getValue('automation_supply_single_stroke');
-                $this->automation_supply_multi_stroke = (string) $result->getValue('automation_supply_multi_stroke');
-                $this->automation_feedrate = (string) $result->getValue('automation_feedrate');
-                $this->automation_feedrate_sawblade = (string) $result->getValue('automation_feedrate_sawblade');
-                $this->automation_rush_leader_flyback = (int) $result->getValue('automation_rush_leader_flyback');
                 $automation_automationgrade_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('automation_automationgrade_ids')), PREG_GREP_INVERT);
                 if (is_array($automation_automationgrade_ids)) {
                     foreach ($automation_automationgrade_ids as $automation_automationgrade_id) {
                         $this->automation_automationgrades[$automation_automationgrade_id] = new Automation($automation_automationgrade_id, $this->clang_id);
                     }
                 }
-                $automation_supply_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('automation_supply_ids')), PREG_GREP_INVERT);
-                $this->automation_supply_ids = is_array($automation_supply_ids) ? array_map('intval', $automation_supply_ids) : [];
                 $this->workspace = (string) $result->getValue('workspace');
                 $this->workspace_square = (string) $result->getValue('workspace_square');
                 $this->workspace_flat = (string) $result->getValue('workspace_flat');
@@ -657,6 +650,16 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
                     foreach ($profile_ids as $profile_id) {
                         $this->profiles[$profile_id] = new Profile($profile_id, $this->clang_id);
                     }
+                }
+
+                if (Extension::isActive('machine_steel_automation_extension')) {
+                    $this->automation_supply_single_stroke = (string) $result->getValue('automation_supply_single_stroke');
+                    $this->automation_supply_multi_stroke = (string) $result->getValue('automation_supply_multi_stroke');
+                    $this->automation_feedrate = (string) $result->getValue('automation_feedrate');
+                    $this->automation_feedrate_sawblade = (string) $result->getValue('automation_feedrate_sawblade');
+                    $this->automation_rush_leader_flyback = (int) $result->getValue('automation_rush_leader_flyback');
+                    $automation_supply_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('automation_supply_ids')), PREG_GREP_INVERT);
+                    $this->automation_supply_ids = is_array($automation_supply_ids) ? array_map('intval', $automation_supply_ids) : [];
                 }
                 $this->carrier_width = (string) $result->getValue('carrier_width');
                 $this->carrier_height = (string) $result->getValue('carrier_height');
@@ -1403,33 +1406,6 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
                 ];
             }
 
-            // Feed rate
-            if ('' !== $this->automation_feedrate) {
-                $tech_data[] = [
-                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_automation_feedrate'),
-                    'value' => $this->automation_feedrate,
-                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm_min'),
-                ];
-            }
-
-            // Feed rate for saw blades
-            if ('' !== $this->automation_feedrate_sawblade) {
-                $tech_data[] = [
-                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_automation_feedrate_sawblade'),
-                    'value' => $this->automation_feedrate_sawblade,
-                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm_min'),
-                ];
-            }
-
-            // Rush leader flyback
-            if (0 !== $this->automation_rush_leader_flyback) {
-                $tech_data[] = [
-                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_automation_rush_leader_flyback'),
-                    'value' => $this->automation_rush_leader_flyback,
-                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm_min'),
-                ];
-            }
-
             // Workspace max.
             if ('' !== $this->workspace) {
                 $tech_data[] = [
@@ -1859,6 +1835,36 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
                 ];
             }
 
+        }
+
+        if (Extension::isActive('machine_steel_automation_extension')) {
+            // Feed rate
+            if ('' !== $this->automation_feedrate) {
+                $tech_data[] = [
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_automation_feedrate'),
+                    'value' => $this->automation_feedrate,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm_min'),
+                ];
+            }
+
+            // Feed rate for saw blades
+            if ('' !== $this->automation_feedrate_sawblade) {
+                $tech_data[] = [
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_automation_feedrate_sawblade'),
+                    'value' => $this->automation_feedrate_sawblade,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm_min'),
+                ];
+            }
+
+            // Rush leader flyback
+            if (0 !== $this->automation_rush_leader_flyback) {
+                $tech_data[] = [
+                    'description' => \Sprog\Wildcard::get('d2u_machinery_steel_automation_rush_leader_flyback'),
+                    'value' => $this->automation_rush_leader_flyback,
+                    'unit' => \Sprog\Wildcard::get('d2u_machinery_unit_mm_min'),
+                ];
+            }
+
             // Automation supply single stroke
             if ('' !== $this->automation_supply_single_stroke) {
                 $tech_data[] = [
@@ -2042,13 +2048,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
                     .", procedure_ids = '|". implode('|', array_keys($this->procedures)) ."|' "
                     .", material_ids = '|". implode('|', array_keys($this->materials)) ."|' "
                     .", tool_ids = '|". implode('|', array_keys($this->tools)) ."|' "
-                    .", automation_supply_single_stroke = '". $this->automation_supply_single_stroke ."' "
-                    .", automation_supply_multi_stroke = '". $this->automation_supply_multi_stroke ."' "
-                    .", automation_feedrate = '". $this->automation_feedrate ."' "
-                    .", automation_feedrate_sawblade = '". $this->automation_feedrate_sawblade ."' "
-                    .", automation_rush_leader_flyback = '". $this->automation_rush_leader_flyback ."' "
                     .", automation_automationgrade_ids = '|". implode('|', array_keys($this->automation_automationgrades)) ."|' "
-                    .", automation_supply_ids = '|". implode('|', $this->automation_supply_ids) ."|' "
                     .", workspace = '". $this->workspace ."' "
                     .", workspace_square = '". $this->workspace_square ."' "
                     .", workspace_flat = '". $this->workspace_flat ."' "
@@ -2094,6 +2094,15 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
                     .", beam_turbine_power = '". $this->beam_turbine_power ."' "
                     .", beam_color_guns = '". $this->beam_color_guns ."' "
                 ;
+
+                if (Extension::isActive('machine_steel_automation_extension')) {
+                    $query .= ", automation_supply_single_stroke = '". $this->automation_supply_single_stroke ."' "
+                        .", automation_supply_multi_stroke = '". $this->automation_supply_multi_stroke ."' "
+                        .", automation_feedrate = '". $this->automation_feedrate ."' "
+                        .", automation_feedrate_sawblade = '". $this->automation_feedrate_sawblade ."' "
+                        .", automation_rush_leader_flyback = '". $this->automation_rush_leader_flyback ."' "
+                        .", automation_supply_ids = '|". implode('|', $this->automation_supply_ids) ."|' ";
+                }
             }
             if (Extension::isActive('machine_usage_area_extension')) {
                 $query .= ", usage_area_ids = '|". implode('|', $this->usage_area_ids) ."|' ";

@@ -1,5 +1,7 @@
 <?php
 
+use TobiasKrais\D2UHelper\BackendHelper;
+
 use TobiasKrais\D2UMachinery\IndustrySector;
 use TobiasKrais\D2UMachinery\Machine;
 use TobiasKrais\D2UMachinery\ProductionLine;
@@ -45,7 +47,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
                 $production_line->reference_ids = $form['reference_ids'] ?? [];
             }
             $production_line->online_status = null === $form['online_status'] || '' === $form['online_status'] ? 'offline' : $form['online_status'];
-            if (\TobiasKrais\D2UMachinery\Extension::isActive('machine_steel_processing_extension')) {
+            if (\TobiasKrais\D2UMachinery\Extension::isActive('machine_steel_automation_extension')) {
                 $automation_supply_ids = $form['automation_supply_ids'] ?? [];
                 $production_line->automation_supply_ids = [];
                 foreach ($automation_supply_ids as $automation_supply_id) {
@@ -129,49 +131,49 @@ if ('edit' === $func || 'add' === $func) {
                                 $readonly = false;
                             }
 
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_production_lines_line_code', 'form[line_code]', $production_line->line_code, false, $readonly, 'text');
-                            \TobiasKrais\D2UHelper\BackendHelper::form_imagelistfield('d2u_helper_pictures', 1, $production_line->pictures, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_mediafield('d2u_machinery_production_lines_link_picture', '1', $production_line->link_picture, $readonly);
+                            BackendHelper::form_input('d2u_machinery_production_lines_line_code', 'form[line_code]', $production_line->line_code, false, $readonly, 'text');
+                            BackendHelper::form_imagelistfield('d2u_helper_pictures', 1, $production_line->pictures, $readonly);
+                            BackendHelper::form_mediafield('d2u_machinery_production_lines_link_picture', '1', $production_line->link_picture, $readonly);
                             if (\rex_addon::get('d2u_videos')->isAvailable()) {
                                 $options = [];
                                 foreach (TobiasKrais\D2UVideos\Video::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $video) {
                                     $options[$video->video_id] = $video->name;
                                 }
-                                \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_category_videos', 'form[video_ids][]', $options, $production_line->video_ids, 10, true, $readonly);
+                                BackendHelper::form_select('d2u_machinery_category_videos', 'form[video_ids][]', $options, $production_line->video_ids, 10, true, $readonly);
                             }
                             if (\rex_addon::get('d2u_references')->isAvailable()) {
                                 $options_references = [];
                                 foreach (Reference::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $reference) {
                                     $options_references[$reference->reference_id] = $reference->name;
                                 }
-                                \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_references', 'form[reference_ids][]', $options_references, $production_line->reference_ids, 10, true, $readonly);
+                                BackendHelper::form_select('d2u_references', 'form[reference_ids][]', $options_references, $production_line->reference_ids, 10, true, $readonly);
                             }
                             $option_machines = [];
                             foreach (Machine::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $machine) {
                                 $option_machines[$machine->machine_id] = $machine->name;
                             }
-                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_meta_machines', 'form[machine_ids][]', $option_machines, $production_line->machine_ids, 10, true, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_production_lines_complementary_machines', 'form[complementary_machine_ids][]', $option_machines, $production_line->complementary_machine_ids, 10, true, $readonly);
-                            if (\TobiasKrais\D2UMachinery\Extension::isActive('machine_steel_processing_extension')) {
+                            BackendHelper::form_select('d2u_machinery_meta_machines', 'form[machine_ids][]', $option_machines, $production_line->machine_ids, 10, true, $readonly);
+                            BackendHelper::form_select('d2u_machinery_production_lines_complementary_machines', 'form[complementary_machine_ids][]', $option_machines, $production_line->complementary_machine_ids, 10, true, $readonly);
+                            if (\TobiasKrais\D2UMachinery\Extension::isActive('machine_steel_automation_extension')) {
                                 $options_supply = [];
                                 foreach (Supply::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $supply) {
                                     $options_supply[$supply->supply_id] = $supply->priority .' - '. $supply->name .' (ID: '. $supply->supply_id .')';
                                 }
-                                \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_steel_automation_supplys', 'form[automation_supply_ids][]', $options_supply, $production_line->automation_supply_ids, 4, true, $readonly);
+                                BackendHelper::form_select('d2u_machinery_steel_automation_supplys', 'form[automation_supply_ids][]', $options_supply, $production_line->automation_supply_ids, 4, true, $readonly);
                             }
                             if (\TobiasKrais\D2UMachinery\Extension::isActive('industry_sectors')) {
                                 $options_industry_sectors = [];
                                 foreach (IndustrySector::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $industry_sector) {
                                     $options_industry_sectors[$industry_sector->industry_sector_id] = $industry_sector->name;
                                 }
-                                \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_industry_sectors', 'form[industry_sector_ids][]', $options_industry_sectors, $production_line->industry_sector_ids, 10, true, $readonly);
+                                BackendHelper::form_select('d2u_machinery_industry_sectors', 'form[industry_sector_ids][]', $options_industry_sectors, $production_line->industry_sector_ids, 10, true, $readonly);
                             }
                             $option_usps = [];
                             foreach (USP::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $usp) {
                                 $option_usps[$usp->usp_id] = $usp->name;
                             }
-                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_machinery_production_lines_usp', 'form[usp_ids][]', $option_usps, $production_line->usp_ids, 10, true, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', 'online' === $production_line->online_status, $readonly);
+                            BackendHelper::form_select('d2u_machinery_production_lines_usp', 'form[usp_ids][]', $option_usps, $production_line->usp_ids, 10, true, $readonly);
+                            BackendHelper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', 'online' === $production_line->online_status, $readonly);
                         ?>
 					</div>
 				</fieldset>
@@ -194,7 +196,7 @@ if ('edit' === $func || 'add' === $func) {
                                     $options_translations['yes'] = rex_i18n::msg('d2u_helper_translation_needs_update');
                                     $options_translations['no'] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
                                     $options_translations['delete'] = rex_i18n::msg('d2u_helper_translation_delete');
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$production_line->translation_needs_update], 1, false, $readonly_lang);
+                                    BackendHelper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$production_line->translation_needs_update], 1, false, $readonly_lang);
                                 } else {
                                     echo '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
                                 }
@@ -212,10 +214,10 @@ if ('edit' === $func || 'add' === $func) {
 							</script>
 							<div id="details_clang_<?= $rex_clang->getId() ?>">
 								<?php
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $production_line->name, $required, $readonly_lang, 'text');
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_machinery_machine_teaser', 'form[lang]['. $rex_clang->getId() .'][teaser]', $production_line->teaser, false, $readonly_lang, 'text');
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_textarea('d2u_helper_description', 'form[lang]['. $rex_clang->getId() .'][description_short]', $production_line->description_short, 5, false, $readonly_lang, true);
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_textarea('d2u_helper_description_long', 'form[lang]['. $rex_clang->getId() .'][description_long]', $production_line->description_long, 5, false, $readonly_lang, true);
+                                    BackendHelper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $production_line->name, $required, $readonly_lang, 'text');
+                                    BackendHelper::form_input('d2u_machinery_machine_teaser', 'form[lang]['. $rex_clang->getId() .'][teaser]', $production_line->teaser, false, $readonly_lang, 'text');
+                                    BackendHelper::form_textarea('d2u_helper_description', 'form[lang]['. $rex_clang->getId() .'][description_short]', $production_line->description_short, 5, false, $readonly_lang, true);
+                                    BackendHelper::form_textarea('d2u_helper_description_long', 'form[lang]['. $rex_clang->getId() .'][description_long]', $production_line->description_long, 5, false, $readonly_lang, true);
                                 ?>
 							</div>
 						</div>
@@ -242,8 +244,8 @@ if ('edit' === $func || 'add' === $func) {
 	</form>
 	<br>
 	<?php
-        echo \TobiasKrais\D2UHelper\BackendHelper::getCSS();
-        echo \TobiasKrais\D2UHelper\BackendHelper::getJS();
+        echo BackendHelper::getCSS();
+        echo BackendHelper::getJS();
 }
 
 if ('' === $func) {

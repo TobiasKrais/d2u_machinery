@@ -1,8 +1,29 @@
 <?php
 
+use TobiasKrais\D2UMachinery\Agitator;
+use TobiasKrais\D2UMachinery\AgitatorType;
+use TobiasKrais\D2UMachinery\Automation;
+use TobiasKrais\D2UMachinery\Category;
+use TobiasKrais\D2UMachinery\Certificate;
+use TobiasKrais\D2UMachinery\Equipment;
+use TobiasKrais\D2UMachinery\EquipmentGroup;
 use TobiasKrais\D2UMachinery\Extension;
-
-require_once __DIR__ .'/lib/deprecated_helper_classes.php';
+use TobiasKrais\D2UMachinery\Feature;
+use TobiasKrais\D2UMachinery\IndustrySector;
+use TobiasKrais\D2UMachinery\Machine;
+use TobiasKrais\D2UMachinery\Material;
+use TobiasKrais\D2UMachinery\Option;
+use TobiasKrais\D2UMachinery\Procedure;
+use TobiasKrais\D2UMachinery\Process;
+use TobiasKrais\D2UMachinery\ProductionLine;
+use TobiasKrais\D2UMachinery\Profile;
+use TobiasKrais\D2UMachinery\Provider;
+use TobiasKrais\D2UMachinery\ServiceOption;
+use TobiasKrais\D2UMachinery\Supply;
+use TobiasKrais\D2UMachinery\Tool;
+use TobiasKrais\D2UMachinery\UsageArea;
+use TobiasKrais\D2UMachinery\UsedMachine;
+use TobiasKrais\D2UMachinery\Welding;
 
 if (\rex::isBackend() && is_object(\rex::getUser())) {
     Extension::ensureConfigInitialized();
@@ -690,8 +711,8 @@ function rex_d2u_machinery_steel_processing_media_is_in_use(rex_extension_point 
         .'GROUP BY supply_id');
 
     for ($i = 0; $i < $sql_machine->getRows(); ++$i) {
-        $message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/machine/steel_processing&steel_processing_subpage=supply&func=edit&entry_id='.
-            $sql_machine->getValue('supply_id') .'\')">'.rex_i18n::msg('d2u_machinery_meta_title') .' '. rex_i18n::msg('d2u_machinery_machine_steel_extension') .' - '. rex_i18n::msg('d2u_machinery_steel_supply') .': '. $sql_machine->getValue('name') .'</a>';
+        $message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/machine/supply&func=edit&entry_id='.
+            $sql_machine->getValue('supply_id') .'\')">'.rex_i18n::msg('d2u_machinery_meta_title') .' '. rex_i18n::msg('d2u_machinery_supply_extension') .' - '. rex_i18n::msg('d2u_machinery_steel_supply') .': '. $sql_machine->getValue('name') .'</a>';
         if (!in_array($message, $warning, true)) {
             $warning[] = $message;
         }
@@ -1065,7 +1086,7 @@ function rex_d2u_machinery_translation_list(rex_extension_point $ep) {
                 if ('' === $automation->name) {
                     $automation = new Automation($automation->automation_id, $source_clang_id);
                 }
-                $html_automations .= '<li><a href="'. rex_url::backendPage('d2u_machinery/machine/automation', ['entry_id' => $automation->automation_id, 'func' => 'edit']) .'">'. $automation->name .'</a></li>';
+                $html_automations .= '<li><a href="'. rex_url::backendPage('d2u_machinery/machine/steel_processing', ['steel_processing_subpage' => 'automation', 'entry_id' => $automation->automation_id, 'func' => 'edit']) .'">'. $automation->name .'</a></li>';
             }
             $html_automations .= '</ul>';
             $list_entry['pages'][] = [
@@ -1138,22 +1159,6 @@ function rex_d2u_machinery_translation_list(rex_extension_point $ep) {
                 'html' => $html_profiles
             ];
         }
-        $supplies = Supply::getTranslationHelperObjects($target_clang_id, $filter_type);
-        if (count($supplies) > 0) {
-            $html_supplies = '<ul>';
-            foreach ($supplies as $supply) {
-                if ('' === $supply->name) {
-                    $supply = new Supply($supply->supply_id, $source_clang_id);
-                }
-                $html_supplies .= '<li><a href="'. rex_url::backendPage('d2u_machinery/machine/steel_processing', ['steel_processing_subpage' => 'supply', 'entry_id' => $supply->supply_id, 'func' => 'edit']) .'">'. $supply->name .'</a></li>';
-            }
-            $html_supplies .= '</ul>';
-            $list_entry['pages'][] = [
-                'title' => rex_i18n::msg('d2u_machinery_machine_steel_extension') .' - '. rex_i18n::msg('d2u_machinery_steel_supply'),
-                'icon' => 'rex-icon fa-stack-overflow',
-                'html' => $html_supplies
-            ];
-        }
         $tools = Tool::getTranslationHelperObjects($target_clang_id, $filter_type);
         if (count($tools) > 0) {
             $html_tools = '<ul>';
@@ -1184,6 +1189,24 @@ function rex_d2u_machinery_translation_list(rex_extension_point $ep) {
                 'title' => rex_i18n::msg('d2u_machinery_machine_steel_extension') .' - '. rex_i18n::msg('d2u_machinery_steel_welding'),
                 'icon' => 'rex-icon fa-magic',
                 'html' => $html_weldings
+            ];
+        }
+    }
+    if (Extension::isActive('machine_steel_automation_extension')) {
+        $supplies = Supply::getTranslationHelperObjects($target_clang_id, $filter_type);
+        if (count($supplies) > 0) {
+            $html_supplies = '<ul>';
+            foreach ($supplies as $supply) {
+                if ('' === $supply->name) {
+                    $supply = new Supply($supply->supply_id, $source_clang_id);
+                }
+                $html_supplies .= '<li><a href="'. rex_url::backendPage('d2u_machinery/machine/supply', ['entry_id' => $supply->supply_id, 'func' => 'edit']) .'">'. $supply->name .'</a></li>';
+            }
+            $html_supplies .= '</ul>';
+            $list_entry['pages'][] = [
+                'title' => rex_i18n::msg('d2u_machinery_supply_extension') .' - '. rex_i18n::msg('d2u_machinery_steel_supply'),
+                'icon' => 'rex-icon fa-stack-overflow',
+                'html' => $html_supplies
             ];
         }
     }
