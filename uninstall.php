@@ -33,6 +33,21 @@ if (!function_exists('d2u_machinery_should_uninstall')) {
     }
 }
 
+if (!function_exists('d2u_machinery_delete_url_profile_by_namespace')) {
+    function d2u_machinery_delete_url_profile_by_namespace(string $namespace): void
+    {
+        if (!\rex_addon::get('url')->isAvailable()) {
+            return;
+        }
+
+        foreach (\Url\Profile::getByNamespace($namespace) as $profile) {
+            $profile->deleteUrls();
+        }
+
+        \rex_sql::factory()->setQuery('DELETE FROM '. \rex::getTablePrefix() ."url_generator_profile WHERE `namespace` = '". $namespace ."';");
+    }
+}
+
 $sql = \rex_sql::factory();
 
 if (null === $d2uMachineryAction) {
@@ -42,8 +57,8 @@ if (null === $d2uMachineryAction) {
 
     // Delete url schemes
     if (\rex_addon::get('url')->isAvailable()) {
-        $sql->setQuery('DELETE FROM '. \rex::getTablePrefix() ."url_generator_profile WHERE `namespace` = 'machine_id';");
-        $sql->setQuery('DELETE FROM '. \rex::getTablePrefix() ."url_generator_profile WHERE `namespace` = 'category_id';");
+        d2u_machinery_delete_url_profile_by_namespace('machine_id');
+        d2u_machinery_delete_url_profile_by_namespace('category_id');
     }
 
     // Delete language replacements
@@ -109,7 +124,7 @@ if (d2u_machinery_should_uninstall($d2uMachineryAction, 'export')) {
 if (d2u_machinery_should_uninstall($d2uMachineryAction, 'industry_sectors')) {
     $sql->setQuery('DROP VIEW IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_url_industry_sectors');
     if (\rex_addon::get('url')->isAvailable()) {
-        $sql->setQuery('DELETE FROM '. \rex::getTablePrefix() ."url_generator_profile WHERE `namespace` = 'industry_sector_id';");
+        d2u_machinery_delete_url_profile_by_namespace('industry_sector_id');
     }
     $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_industry_sectors');
     $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_industry_sectors_lang');
@@ -309,6 +324,9 @@ if (d2u_machinery_should_uninstall($d2uMachineryAction, 'machine_usage_area_exte
 // Plugin: production lines
 if (d2u_machinery_should_uninstall($d2uMachineryAction, 'production_lines')) {
     $sql->setQuery('DROP VIEW IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_url_production_lines');
+    if (\rex_addon::get('url')->isAvailable()) {
+        d2u_machinery_delete_url_profile_by_namespace('production_line_id');
+    }
     $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_production_lines');
     $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_production_lines_lang');
     $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_production_lines_usps');
@@ -331,10 +349,10 @@ if (d2u_machinery_should_uninstall($d2uMachineryAction, 'used_machines')) {
     $sql->setQuery('DROP VIEW IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_url_used_machines_sale');
     $sql->setQuery('DROP VIEW IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_url_used_machine_categories_sale');
     if (\rex_addon::get('url')->isAvailable()) {
-        $sql->setQuery('DELETE FROM '. \rex::getTablePrefix() ."url_generator_profile WHERE `namespace` = 'used_rent_machine_id';");
-        $sql->setQuery('DELETE FROM '. \rex::getTablePrefix() ."url_generator_profile WHERE `namespace` = 'used_rent_category_id';");
-        $sql->setQuery('DELETE FROM '. \rex::getTablePrefix() ."url_generator_profile WHERE `namespace` = 'used_sale_machine_id';");
-        $sql->setQuery('DELETE FROM '. \rex::getTablePrefix() ."url_generator_profile WHERE `namespace` = 'used_sale_category_id';");
+        d2u_machinery_delete_url_profile_by_namespace('used_rent_machine_id');
+        d2u_machinery_delete_url_profile_by_namespace('used_rent_category_id');
+        d2u_machinery_delete_url_profile_by_namespace('used_sale_machine_id');
+        d2u_machinery_delete_url_profile_by_namespace('used_sale_category_id');
     }
     $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_used_machines');
     $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_used_machines_lang');

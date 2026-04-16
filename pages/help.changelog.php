@@ -4,7 +4,9 @@
 <h2>Changelog</h2>
 <p>1.7.1-DEV:</p>
 <ul>
-	<li>...</li>
+	<li>Beim Addon-Update werden bestehende URL-Profile vor dem Neuanlegen zuerst mitsamt ihren generierten URLs entfernt, damit keine verwaisten URL-Einträge für Branchen, Produktionslinien und weitere Profiltypen zurückbleiben.</li>
+	<li>Die URL-Cache-Regenerierung im Installer wurde von globalen Rebuilds auf gezielte Namespace-Updates umgestellt, damit beim Update keine noch veralteten Profildefinitionen mit fehlenden Views angesprochen werden.</li>
+	<li>Veraltete URL-Profile inaktiver Erweiterungen werden jetzt bereits zu Beginn des Installers entfernt, damit globale URL-Rebuilds im REDAXO-Updateprozess keine nicht mehr vorhandenen Extension-Views wie Produktionslinien mehr ansprechen.</li>
 </ul>
 <p>1.7.0:</p>
 <ul>

@@ -33,6 +33,62 @@ if (!function_exists('d2u_machinery_should_install')) {
     }
 }
 
+if (!function_exists('d2u_machinery_delete_url_profile_by_namespace')) {
+    function d2u_machinery_delete_url_profile_by_namespace(string $namespace): void
+    {
+        if (!\rex_addon::get('url')->isAvailable()) {
+            return;
+        }
+
+        foreach (\Url\Profile::getByNamespace($namespace) as $profile) {
+            $profile->deleteUrls();
+        }
+
+        \rex_sql::factory()->setQuery('DELETE FROM '. \rex::getTablePrefix() ."url_generator_profile WHERE `namespace` = '". $namespace ."';");
+    }
+}
+
+if (!function_exists('d2u_machinery_cleanup_inactive_url_profiles')) {
+    /**
+     * @param array<string,bool> $activeExtensions
+     */
+    function d2u_machinery_cleanup_inactive_url_profiles(array $activeExtensions): void
+    {
+        if (!\rex_addon::get('url')->isAvailable()) {
+            return;
+        }
+
+        $namespacesByExtension = [
+            'industry_sectors' => ['industry_sector_id'],
+            'production_lines' => ['production_line_id'],
+            'used_machines' => [
+                'used_rent_machine_id',
+                'used_rent_category_id',
+                'used_sale_machine_id',
+                'used_sale_category_id',
+            ],
+        ];
+
+        foreach ($namespacesByExtension as $extension => $namespaces) {
+            if (($activeExtensions[$extension] ?? false) === true) {
+                continue;
+            }
+
+            foreach ($namespaces as $namespace) {
+                d2u_machinery_delete_url_profile_by_namespace($namespace);
+            }
+        }
+    }
+}
+
+$d2uMachineryEffectiveExtensionStates = Extension::getStates();
+if (is_array($d2uMachineryActivatedActions)) {
+    foreach ($d2uMachineryActivatedActions as $extensionKey) {
+        $d2uMachineryEffectiveExtensionStates[$extensionKey] = true;
+    }
+}
+d2u_machinery_cleanup_inactive_url_profiles($d2uMachineryEffectiveExtensionStates);
+
 if (null === $d2uMachineryAction) {
 
     \rex_sql_table::get(\rex::getTable('d2u_machinery_machines'))
@@ -132,7 +188,7 @@ if (null === $d2uMachineryAction) {
         $article_id = rex_config::get('d2u_machinery', 'article_id', rex_article::getSiteStartArticleId());
 
         // Insert url schemes Version 2.x
-        $sql->setQuery('DELETE FROM '. \rex::getTablePrefix() ."url_generator_profile WHERE `namespace` = 'machine_id';");
+        d2u_machinery_delete_url_profile_by_namespace('machine_id');
         $sql->setQuery('INSERT INTO '. \rex::getTablePrefix() ."url_generator_profile (`namespace`, `article_id`, `clang_id`, `table_name`, `table_parameters`, `relation_1_table_name`, `relation_1_table_parameters`, `relation_2_table_name`, `relation_2_table_parameters`, `relation_3_table_name`, `relation_3_table_parameters`, `createdate`, `createuser`, `updatedate`, `updateuser`) VALUES
     		('machine_id', "
             . $article_id .', '
@@ -142,7 +198,7 @@ if (null === $d2uMachineryAction) {
             . "'relation_1_xxx_1_xxx_". rex::getTablePrefix() ."d2u_machinery_categories_lang', "
             . "'{\"column_id\":\"category_id\",\"column_clang_id\":\"clang_id\",\"column_segment_part_1\":\"name\",\"column_segment_part_2_separator\":\"\\/\",\"column_segment_part_2\":\"\",\"column_segment_part_3_separator\":\"\\/\",\"column_segment_part_3\":\"\"}', "
             . "'', '[]', '', '[]', CURRENT_TIMESTAMP, '". (rex::getUser() instanceof rex_user ? rex::getUser()->getValue('login') : '') ."', CURRENT_TIMESTAMP, '". (rex::getUser() instanceof rex_user ? rex::getUser()->getValue('login') : '') ."');");
-        $sql->setQuery('DELETE FROM '. \rex::getTablePrefix() ."url_generator_profile WHERE `namespace` = 'category_id';");
+        d2u_machinery_delete_url_profile_by_namespace('category_id');
         $sql->setQuery('INSERT INTO '. \rex::getTablePrefix() ."url_generator_profile (`namespace`, `article_id`, `clang_id`, `table_name`, `table_parameters`, `relation_1_table_name`, `relation_1_table_parameters`, `relation_2_table_name`, `relation_2_table_parameters`, `relation_3_table_name`, `relation_3_table_parameters`, `createdate`, `createuser`, `updatedate`, `updateuser`) VALUES
     		('category_id', "
             . $article_id .', '
@@ -151,7 +207,8 @@ if (null === $d2uMachineryAction) {
             . "'{\"column_id\":\"category_id\",\"column_clang_id\":\"clang_id\",\"restriction_1_column\":\"\",\"restriction_1_comparison_operator\":\"=\",\"restriction_1_value\":\"\",\"restriction_2_logical_operator\":\"\",\"restriction_2_column\":\"\",\"restriction_2_comparison_operator\":\"=\",\"restriction_2_value\":\"\",\"restriction_3_logical_operator\":\"\",\"restriction_3_column\":\"\",\"restriction_3_comparison_operator\":\"=\",\"restriction_3_value\":\"\",\"column_segment_part_1\":\"name\",\"column_segment_part_2_separator\":\"\\/\",\"column_segment_part_2\":\"\",\"column_segment_part_3_separator\":\"\\/\",\"column_segment_part_3\":\"\",\"relation_1_column\":\"\",\"relation_1_position\":\"BEFORE\",\"relation_2_column\":\"\",\"relation_2_position\":\"BEFORE\",\"relation_3_column\":\"\",\"relation_3_position\":\"BEFORE\",\"append_user_paths\":\"\",\"append_structure_categories\":\"0\",\"column_seo_title\":\"seo_title\",\"column_seo_description\":\"seo_description\",\"column_seo_image\":\"picture\",\"sitemap_add\":\"1\",\"sitemap_frequency\":\"monthly\",\"sitemap_priority\":\"0.7\",\"column_sitemap_lastmod\":\"updatedate\"}', "
             . "'', '[]', '', '[]', '', '[]', CURRENT_TIMESTAMP, '". (rex::getUser() instanceof rex_user ? rex::getUser()->getValue('login') : '') ."', CURRENT_TIMESTAMP, '". (rex::getUser() instanceof rex_user ? rex::getUser()->getValue('login') : '') ."');");
 
-        \TobiasKrais\D2UHelper\BackendHelper::generateUrlCache();
+        \TobiasKrais\D2UHelper\BackendHelper::generateUrlCache('machine_id');
+        \TobiasKrais\D2UHelper\BackendHelper::generateUrlCache('category_id');
     }
 
     // Insert frontend translations
@@ -381,7 +438,7 @@ if (d2u_machinery_should_install($d2uMachineryAction, 'industry_sectors')) {
     if (\rex_addon::get('url')->isAvailable()) {
         $clang_id = 1 === count(rex_clang::getAllIds()) ? rex_clang::getStartId() : 0;
         $article_id = rex_config::get('d2u_machinery', 'industry_sectors_article_id', rex_article::getSiteStartArticleId());
-        $sql->setQuery('DELETE FROM '. \rex::getTablePrefix() ."url_generator_profile WHERE `namespace` = 'industry_sector_id';");
+        d2u_machinery_delete_url_profile_by_namespace('industry_sector_id');
         $sql->setQuery('INSERT INTO '. \rex::getTablePrefix() ."url_generator_profile (`namespace`, `article_id`, `clang_id`, `table_name`, `table_parameters`, `relation_1_table_name`, `relation_1_table_parameters`, `relation_2_table_name`, `relation_2_table_parameters`, `relation_3_table_name`, `relation_3_table_parameters`, `createdate`, `createuser`, `updatedate`, `updateuser`) VALUES
     		('industry_sector_id', "
             . $article_id .', '
@@ -835,7 +892,7 @@ if (d2u_machinery_should_install($d2uMachineryAction, 'production_lines')) {
     if (\rex_addon::get('url')->isAvailable()) {
         $clang_id = 1 === count(rex_clang::getAllIds()) ? rex_clang::getStartId() : 0;
         $article_id = rex_config::get('d2u_machinery', 'production_lines_article_id', 0) > 0 ? rex_config::get('d2u_machinery', 'production_lines_article_id') : rex_article::getSiteStartArticleId();
-        $sql->setQuery('DELETE FROM '. \rex::getTablePrefix() ."url_generator_profile WHERE `namespace` = 'production_line_id';");
+        d2u_machinery_delete_url_profile_by_namespace('production_line_id');
         $sql->setQuery('INSERT INTO '. \rex::getTablePrefix() ."url_generator_profile (`namespace`, `article_id`, `clang_id`, `table_name`, `table_parameters`, `relation_1_table_name`, `relation_1_table_parameters`, `relation_2_table_name`, `relation_2_table_parameters`, `relation_3_table_name`, `relation_3_table_parameters`, `createdate`, `createuser`, `updatedate`, `updateuser`) VALUES
     		('production_line_id', "
             . $article_id .', '
@@ -956,7 +1013,7 @@ if (d2u_machinery_should_install($d2uMachineryAction, 'used_machines')) {
         $clang_id = 1 === count(rex_clang::getAllIds()) ? rex_clang::getStartId() : 0;
         $article_id_rent = rex_config::get('d2u_machinery', 'used_machine_article_id_rent', rex_article::getSiteStartArticleId());
         $article_id_sale = rex_config::get('d2u_machinery', 'used_machine_article_id_sale', rex_article::getSiteStartArticleId());
-        $sql->setQuery('DELETE FROM '. \rex::getTablePrefix() ."url_generator_profile WHERE `namespace` = 'used_rent_machine_id';");
+        d2u_machinery_delete_url_profile_by_namespace('used_rent_machine_id');
         $sql->setQuery('INSERT INTO '. \rex::getTablePrefix() ."url_generator_profile (`namespace`, `article_id`, `clang_id`, `table_name`, `table_parameters`, `relation_1_table_name`, `relation_1_table_parameters`, `relation_2_table_name`, `relation_2_table_parameters`, `relation_3_table_name`, `relation_3_table_parameters`, `createdate`, `createuser`, `updatedate`, `updateuser`) VALUES
     		('used_rent_machine_id', "
             . $article_id_rent .', '
@@ -966,7 +1023,7 @@ if (d2u_machinery_should_install($d2uMachineryAction, 'used_machines')) {
             . "'relation_1_xxx_1_xxx_". rex::getTablePrefix() ."d2u_machinery_categories_lang', "
             . "'{\"column_id\":\"category_id\",\"column_clang_id\":\"clang_id\",\"column_segment_part_1\":\"name\",\"column_segment_part_2_separator\":\"\\/\",\"column_segment_part_2\":\"\",\"column_segment_part_3_separator\":\"\\/\",\"column_segment_part_3\":\"\"}', "
             . "'', '[]', '', '[]', CURRENT_TIMESTAMP, '". (rex::getUser() instanceof rex_user ? rex::getUser()->getValue('login') : '') ."', CURRENT_TIMESTAMP, '". (rex::getUser() instanceof rex_user ? rex::getUser()->getValue('login') : '') ."');");
-        $sql->setQuery('DELETE FROM '. \rex::getTablePrefix() ."url_generator_profile WHERE `namespace` = 'used_rent_category_id';");
+        d2u_machinery_delete_url_profile_by_namespace('used_rent_category_id');
         $sql->setQuery('INSERT INTO '. \rex::getTablePrefix() ."url_generator_profile (`namespace`, `article_id`, `clang_id`, `table_name`, `table_parameters`, `relation_1_table_name`, `relation_1_table_parameters`, `relation_2_table_name`, `relation_2_table_parameters`, `relation_3_table_name`, `relation_3_table_parameters`, `createdate`, `createuser`, `updatedate`, `updateuser`) VALUES
     		('used_rent_category_id', "
             . $article_id_rent .', '
@@ -974,7 +1031,7 @@ if (d2u_machinery_should_install($d2uMachineryAction, 'used_machines')) {
             . "'1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_used_machine_categories_rent', "
             . "'{\"column_id\":\"category_id\",\"column_clang_id\":\"clang_id\",\"restriction_1_column\":\"\",\"restriction_1_comparison_operator\":\"=\",\"restriction_1_value\":\"\",\"restriction_2_logical_operator\":\"\",\"restriction_2_column\":\"\",\"restriction_2_comparison_operator\":\"=\",\"restriction_2_value\":\"\",\"restriction_3_logical_operator\":\"\",\"restriction_3_column\":\"\",\"restriction_3_comparison_operator\":\"=\",\"restriction_3_value\":\"\",\"column_segment_part_1\":\"name\",\"column_segment_part_2_separator\":\"\\/\",\"column_segment_part_2\":\"\",\"column_segment_part_3_separator\":\"\\/\",\"column_segment_part_3\":\"\",\"relation_1_column\":\"\",\"relation_1_position\":\"BEFORE\",\"relation_2_column\":\"\",\"relation_2_position\":\"BEFORE\",\"relation_3_column\":\"\",\"relation_3_position\":\"BEFORE\",\"append_user_paths\":\"\",\"append_structure_categories\":\"0\",\"column_seo_title\":\"seo_title\",\"column_seo_description\":\"seo_description\",\"column_seo_image\":\"picture\",\"sitemap_add\":\"1\",\"sitemap_frequency\":\"weekly\",\"sitemap_priority\":\"0.7\",\"column_sitemap_lastmod\":\"updatedate\"}', "
             . "'', '[]', '', '[]', '', '[]', CURRENT_TIMESTAMP, '". (rex::getUser() instanceof rex_user ? rex::getUser()->getValue('login') : '') ."', CURRENT_TIMESTAMP, '". (rex::getUser() instanceof rex_user ? rex::getUser()->getValue('login') : '') ."');");
-        $sql->setQuery('DELETE FROM '. \rex::getTablePrefix() ."url_generator_profile WHERE `namespace` = 'used_sale_machine_id';");
+        d2u_machinery_delete_url_profile_by_namespace('used_sale_machine_id');
         $sql->setQuery('INSERT INTO '. \rex::getTablePrefix() ."url_generator_profile (`namespace`, `article_id`, `clang_id`, `table_name`, `table_parameters`, `relation_1_table_name`, `relation_1_table_parameters`, `relation_2_table_name`, `relation_2_table_parameters`, `relation_3_table_name`, `relation_3_table_parameters`, `createdate`, `createuser`, `updatedate`, `updateuser`) VALUES
     		('used_sale_machine_id', "
             . $article_id_sale .', '
@@ -984,7 +1041,7 @@ if (d2u_machinery_should_install($d2uMachineryAction, 'used_machines')) {
             . "'relation_1_xxx_1_xxx_". rex::getTablePrefix() ."d2u_machinery_categories_lang', "
             . "'{\"column_id\":\"category_id\",\"column_clang_id\":\"clang_id\",\"column_segment_part_1\":\"name\",\"column_segment_part_2_separator\":\"\\/\",\"column_segment_part_2\":\"\",\"column_segment_part_3_separator\":\"\\/\",\"column_segment_part_3\":\"\"}', "
             . "'', '[]', '', '[]', CURRENT_TIMESTAMP, '". (rex::getUser() instanceof rex_user ? rex::getUser()->getValue('login') : '') ."', CURRENT_TIMESTAMP, '". (rex::getUser() instanceof rex_user ? rex::getUser()->getValue('login') : '') ."');");
-        $sql->setQuery('DELETE FROM '. \rex::getTablePrefix() ."url_generator_profile WHERE `namespace` = 'used_sale_category_id';");
+        d2u_machinery_delete_url_profile_by_namespace('used_sale_category_id');
         $sql->setQuery('INSERT INTO '. \rex::getTablePrefix() ."url_generator_profile (`namespace`, `article_id`, `clang_id`, `table_name`, `table_parameters`, `relation_1_table_name`, `relation_1_table_parameters`, `relation_2_table_name`, `relation_2_table_parameters`, `relation_3_table_name`, `relation_3_table_parameters`, `createdate`, `createuser`, `updatedate`, `updateuser`) VALUES
     		('used_sale_category_id', "
             . $article_id_sale .', '
@@ -992,6 +1049,9 @@ if (d2u_machinery_should_install($d2uMachineryAction, 'used_machines')) {
             . "'1_xxx_". rex::getTablePrefix() ."d2u_machinery_url_used_machine_categories_sale', "
             . "'{\"column_id\":\"category_id\",\"column_clang_id\":\"clang_id\",\"restriction_1_column\":\"\",\"restriction_1_comparison_operator\":\"=\",\"restriction_1_value\":\"\",\"restriction_2_logical_operator\":\"\",\"restriction_2_column\":\"\",\"restriction_2_comparison_operator\":\"=\",\"restriction_2_value\":\"\",\"restriction_3_logical_operator\":\"\",\"restriction_3_column\":\"\",\"restriction_3_comparison_operator\":\"=\",\"restriction_3_value\":\"\",\"column_segment_part_1\":\"name\",\"column_segment_part_2_separator\":\"\\/\",\"column_segment_part_2\":\"\",\"column_segment_part_3_separator\":\"\\/\",\"column_segment_part_3\":\"\",\"relation_1_column\":\"\",\"relation_1_position\":\"BEFORE\",\"relation_2_column\":\"\",\"relation_2_position\":\"BEFORE\",\"relation_3_column\":\"\",\"relation_3_position\":\"BEFORE\",\"append_user_paths\":\"\",\"append_structure_categories\":\"0\",\"column_seo_title\":\"seo_title\",\"column_seo_description\":\"seo_description\",\"column_seo_image\":\"picture\",\"sitemap_add\":\"1\",\"sitemap_frequency\":\"always\",\"sitemap_priority\":\"0.7\",\"column_sitemap_lastmod\":\"updatedate\"}', "
             . "'', '[]', '', '[]', '', '[]', CURRENT_TIMESTAMP, '". (rex::getUser() instanceof rex_user ? rex::getUser()->getValue('login') : '') ."', CURRENT_TIMESTAMP, '". (rex::getUser() instanceof rex_user ? rex::getUser()->getValue('login') : '') ."');");
-        \TobiasKrais\D2UHelper\BackendHelper::generateUrlCache();
+        \TobiasKrais\D2UHelper\BackendHelper::generateUrlCache('used_rent_machine_id');
+        \TobiasKrais\D2UHelper\BackendHelper::generateUrlCache('used_rent_category_id');
+        \TobiasKrais\D2UHelper\BackendHelper::generateUrlCache('used_sale_machine_id');
+        \TobiasKrais\D2UHelper\BackendHelper::generateUrlCache('used_sale_category_id');
     }
 }
