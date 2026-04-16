@@ -2,6 +2,10 @@
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_machinery" target="_blank">GitHub Repository</a> melden.</p>
 
 <h2>Changelog</h2>
+<p>1.7.1-DEV:</p>
+<ul>
+	<li>...</li>
+</ul>
 <p>1.7.0:</p>
 <ul>
 	<li>Neues Maschinenfeld <code>additional_machine_ids</code> / "Ergänzende Maschinen" inkl. Backend-Auswahl, Frontend-Wildcard und neuem Reiter in den Ausgabemodulen hinzugefügt.</li>
