@@ -257,11 +257,12 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 }
 
 if ('' === $func) {
-    $list = rex_list::factory('SELECT used_machine_id, manufacturer, machines.name AS machinename, year_built, product_number, categories.name AS categoryname, offer_type, online_status '
+    $query = 'SELECT used_machine_id, manufacturer, machines.name AS machinename, year_built, product_number, categories.name AS categoryname, offer_type, online_status '
         . 'FROM '. \rex::getTablePrefix() .'d2u_machinery_used_machines AS machines '
         . 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_categories_lang AS categories '
             . 'ON machines.category_id = categories.category_id AND categories.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' '
-        . 'ORDER BY machines.name ASC', 100);
+        ;
+    $list = rex_list::factory(query: $query, rowsPerPage: 100, defaultSort: ['machinename' => 'ASC']);
     $list->addTableAttribute('class', 'table-striped table-hover');
 
     $tdIcon = '<i class="rex-icon fa-truck"></i>';
@@ -274,21 +275,28 @@ if ('' === $func) {
 
     $list->setColumnLabel('used_machine_id', rex_i18n::msg('id'));
     $list->setColumnLayout('used_machine_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id" data-title="' . rex_i18n::msg('id') . '">###VALUE###</td>']);
+    $list->setColumnSortable('used_machine_id');
 
     $list->setColumnLabel('manufacturer', rex_i18n::msg('d2u_machinery_used_machines_manufacturer'));
     $list->setColumnParams('manufacturer', ['func' => 'edit', 'entry_id' => '###used_machine_id###']);
+    $list->setColumnSortable('manufacturer');
 
     $list->setColumnLabel('product_number', rex_i18n::msg('d2u_machinery_used_machines_product_number'));
     $list->setColumnParams('product_number', ['func' => 'edit', 'entry_id' => '###used_machine_id###']);
+    $list->setColumnSortable('product_number');
 
     $list->setColumnLabel('machinename', rex_i18n::msg('d2u_helper_name'));
     $list->setColumnParams('machinename', ['func' => 'edit', 'entry_id' => '###used_machine_id###']);
+    $list->setColumnSortable('machinename');
 
     $list->setColumnLabel('year_built', rex_i18n::msg('d2u_machinery_used_machines_year_built'));
+    $list->setColumnSortable('year_built');
 
     $list->setColumnLabel('categoryname', rex_i18n::msg('d2u_helper_category'));
+    $list->setColumnSortable('categoryname');
 
     $list->setColumnLabel('offer_type', rex_i18n::msg('d2u_machinery_used_machines_offer_type'));
+    $list->setColumnSortable('offer_type');
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);

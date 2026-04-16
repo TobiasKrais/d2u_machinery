@@ -48,6 +48,7 @@ d2u_machinery_category_usage_area = Verwendeter Prozess
 
 d2u_machinery_machine = Maschine
 d2u_machinery_machine_alternatives = Alternative Maschinen
+d2u_machinery_machine_additional_machines = Ergänzende Maschinen
 d2u_machinery_benefits_long = Vorteile auf einen Blick (lang)
 d2u_machinery_benefits_short = Vorteile auf einen Blick (kurz)
 d2u_machinery_machine_depth = Tiefe (mm)
@@ -240,6 +241,8 @@ d2u_machinery_options_no_options_found = Es wurden noch keine Optionen angelegt.
 d2u_machinery_machine_steel_extension = Stahlverarbeitung
 
 d2u_machinery_steel_automation_degrees = Automatisierungsgrade
+d2u_machinery_steel_automation_delete_unused = Nicht verwendete Automatisierungsgrade löschen
+d2u_machinery_steel_automation_delete_unused_success = Automatisierungsgrade gelöscht.
 d2u_machinery_steel_material_class = Materialklassen
 d2u_machinery_steel_procedures = Fertigungsverfahren
 d2u_machinery_steel_processes = Arbeitsprozesse

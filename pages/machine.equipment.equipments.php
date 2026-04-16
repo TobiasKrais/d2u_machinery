@@ -189,9 +189,8 @@ if ('' === $func) {
     $query = 'SELECT equipments.equipment_id, name, article_number, online_status '
         . 'FROM '. \rex::getTablePrefix() .'d2u_machinery_equipments AS equipments '
         . 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_equipments_lang AS lang '
-            . 'ON equipments.equipment_id = lang.equipment_id AND lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' '
-        . 'ORDER BY name ASC';
-    $list = rex_list::factory($query, 1000);
+			. 'ON equipments.equipment_id = lang.equipment_id AND lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' ';
+        $list = rex_list::factory(query: $query, rowsPerPage: 1000, defaultSort: ['name' => 'ASC']);
 
     $list->addTableAttribute('class', 'table-striped table-hover');
 
@@ -205,12 +204,15 @@ if ('' === $func) {
 
     $list->setColumnLabel('equipment_id', rex_i18n::msg('id'));
     $list->setColumnLayout('equipment_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
+    $list->setColumnSortable('equipment_id');
 
     $list->setColumnLabel('name', rex_i18n::msg('d2u_helper_name'));
     $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###equipment_id###']);
+    $list->setColumnSortable('name');
 
     $list->setColumnLabel('article_number', rex_i18n::msg('d2u_machinery_machine_product_number'));
     $list->setColumnParams('article_number', ['func' => 'edit', 'entry_id' => '###equipment_id###']);
+    $list->setColumnSortable('article_number');
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);

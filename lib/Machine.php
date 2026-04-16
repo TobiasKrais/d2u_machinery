@@ -48,6 +48,9 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
     /** @var int[] IDs of alternative machines */
     public array $alternative_machine_ids = [];
 
+    /** @var int[] IDs of additional machines */
+    public array $additional_machine_ids = [];
+
     /** @var int[] Machine feature ids */
     public array $feature_ids = [];
 
@@ -469,6 +472,8 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
             $this->category = new Category((int) $result->getValue('category_id'), $clang_id);
             $alternative_machine_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('alternative_machine_ids')), PREG_GREP_INVERT);
             $this->alternative_machine_ids = is_array($alternative_machine_ids) ? array_map('intval', $alternative_machine_ids) : [];
+            $additional_machine_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('additional_machine_ids')), PREG_GREP_INVERT);
+            $this->additional_machine_ids = is_array($additional_machine_ids) ? array_map('intval', $additional_machine_ids) : [];
             $this->product_number = (string) $result->getValue('product_number');
             $this->article_id_software = (int) $result->getValue('article_id_software');
             $this->article_id_service = (int) $result->getValue('article_id_service');
@@ -866,13 +871,13 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
     }
 
     /**
-     * Gets the machines referring to this machine as alternate machine.
-     * @return Machine[] machines referring to this machine as alternate machine
+     * Gets the machines referring to this machine as alternative or additional machine.
+     * @return Machine[] machines referring to this machine as alternative or additional machine
      */
     public function getReferringMachines()
     {
         $query = 'SELECT machine_id FROM '. \rex::getTablePrefix() .'d2u_machinery_machines '
-            ."WHERE alternative_machine_ids LIKE '%|". $this->machine_id ."|%'";
+            ."WHERE alternative_machine_ids LIKE '%|". $this->machine_id ."|%' OR additional_machine_ids LIKE '%|". $this->machine_id ."|%'";
         $result = \rex_sql::factory();
         $result->setQuery($query);
 
@@ -1966,6 +1971,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
                     ."pics = '". implode(',', $this->pics) ."', "
                     .'category_id = '. ($this->category instanceof Category ? $this->category->category_id : 0) .', '
                     ."alternative_machine_ids = '|". implode('|', $this->alternative_machine_ids) ."|', "
+                    ."additional_machine_ids = '|". implode('|', $this->additional_machine_ids) ."|', "
                     ."product_number = '". $this->product_number ."', "
                     ."article_id_software = '". $this->article_id_software ."', "
                     ."article_id_service = '". $this->article_id_service ."', "

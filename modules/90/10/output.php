@@ -163,6 +163,15 @@ if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['opti
         rex_redirect(rex_article::getNotfoundArticleId(), rex_clang::getCurrentId());
     }
     echo '<div class="col-12">';
+    echo '<div class="subhead-nav">';
+    echo '<ul class="nav nav-pills">';
+    echo '<li class="nav-item"><a data-bs-toggle="tab" class="nav-link active" href="#tab_overview">'. \Sprog\Wildcard::get('d2u_machinery_overview') .'<div class="active-navi-pill"></div></a></li>';
+    if ('lightbox' === $picture_type) {
+        echo '<li class="nav-item"><a data-bs-toggle="tab" class="nav-link" href="#tab_pics">'. \Sprog\Wildcard::get('d2u_machinery_pics') .'<div class="active-navi-pill"></div></a></li>';
+    }
+    echo '<li class="nav-item"><a data-bs-toggle="tab" class="nav-link" href="#tab_request"><span class="fa-icon fa-envelope-o d-block d-lg-none" title="'. \Sprog\Wildcard::get('d2u_machinery_request') .'"></span><span class="d-none d-lg-block">'. \Sprog\Wildcard::get('d2u_machinery_request') .'</span><div class="active-navi-pill"></div></a></li>';
+    echo '</ul>';
+    echo '</div>';
     echo '<div class="tab-content">';
 
     // Overview
@@ -172,8 +181,7 @@ if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['opti
         // Slider picture(s)
         echo '<div class="col-12 col-md-6 abstand">';
         if ('lightbox' === $picture_type || 1 === count($used_machine->pics)) {
-            echo '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
-                $used_machine->pics[0] .'" alt='. $used_machine->name .' style="max-width:100%;">';
+            echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $used_machine->pics[0]) .'" alt='. $used_machine->name .' style="max-width:100%;">';
         } else {
             // Slider
             echo '<div id="machineCarousel" class="carousel carousel-fade slide" data-bs-ride="carousel">';
@@ -197,8 +205,7 @@ if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['opti
                 }
                 echo '">';
                 echo '<div class=".carousel-img-holder">';
-                echo '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
-                $used_machine->pics[$i] .'" alt='. $used_machine->name .'>';
+                echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $used_machine->pics[$i]) .'" alt='. $used_machine->name .'>';
                 echo '</div>';
                 echo '</div>';
             }
@@ -353,12 +360,12 @@ if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['opti
         echo '<div class="row">';
         foreach ($used_machine->pics as $pic) {
             $media = rex_media::get($pic);
-            echo '<a href="index.php?rex_media_type='. $type_detail .'&rex_media_file='. $pic .'" data-d2u-gallery="gallery-'. $lightbox_id .'" class="col-6 col-sm-4 col-lg-3"';
+            echo '<a href="'. rex_media_manager::getUrl($type_detail, $pic) .'" data-d2u-gallery="gallery-'. $lightbox_id .'" class="col-6 col-sm-4 col-lg-3"';
             if ($media instanceof rex_media) {
                 echo ' data-title="'. $media->getValue('title') .'"';
             }
             echo ' onclick="event.preventDefault(); d2uLightboxOpen(\'gallery-'. $lightbox_id .'\', this);">';
-            echo '<img src="index.php?rex_media_type='. $type_thumb .'&rex_media_file='. $pic .'" class="img-fluid gallery-pic-box"';
+            echo '<img src="'. rex_media_manager::getUrl($type_thumb, $pic) .'" class="img-fluid gallery-pic-box"';
             if ($media instanceof rex_media) {
                 echo ' alt="'. $media->getValue('title') .'" title="'. $media->getValue('title') .'"';
             }
@@ -457,9 +464,22 @@ if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['opti
 } else {
     // Categories
     echo '<div class="col-12">';
-    echo '<div class="tab-content">';
+    echo '<div class="subhead-nav">';
+    echo '<ul class="nav nav-pills">';
 
     $current_article = rex_article::getCurrent();
+    $class_active = ' active';
+    if ($current_article instanceof rex_article && $current_article->getId() === (int) $d2u_machinery->getConfig('used_machine_article_id_sale')) {
+        echo '<li class="nav-item"><a data-bs-toggle="tab" class="nav-link'. $class_active .'" href="#tab_sale">'. \Sprog\Wildcard::get('d2u_machinery_used_machines_offers_sale') .'<div class="active-navi-pill"></div></a></li>';
+        $class_active = '';
+    }
+    if ($current_article instanceof rex_article && $current_article->getId() === (int) $d2u_machinery->getConfig('used_machine_article_id_rent')) {
+        echo '<li class="nav-item"><a data-bs-toggle="tab" class="nav-link'. $class_active .'" href="#tab_rent">'. \Sprog\Wildcard::get('d2u_machinery_used_machines_offers_rent') .'<div class="active-navi-pill"></div></a></li>';
+    }
+    echo '</ul>';
+    echo '</div>';
+    echo '<div class="tab-content">';
+
     $class_active = ' active show';
     if ($current_article instanceof rex_article && $current_article->getId() === (int) $d2u_machinery->getConfig('used_machine_article_id_sale')) {
         // Sale offers

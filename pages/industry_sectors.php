@@ -185,9 +185,8 @@ if ('' === $func) {
 	$query = 'SELECT industry_sectors.industry_sector_id, name, online_status '
 		. 'FROM '. rex::getTablePrefix() .'d2u_machinery_industry_sectors AS industry_sectors '
 		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_industry_sectors_lang AS lang '
-			. 'ON industry_sectors.industry_sector_id = lang.industry_sector_id AND lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' '
-		. 'ORDER BY name ASC';
-	$list = rex_list::factory($query, 1000);
+			. 'ON industry_sectors.industry_sector_id = lang.industry_sector_id AND lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' ';
+	$list = rex_list::factory(query: $query, rowsPerPage: 1000, defaultSort: ['name' => 'ASC']);
 	$list->addTableAttribute('class', 'table-striped table-hover');
 
 	$tdIcon = '<i class="rex-icon fa-industry"></i>';
@@ -199,8 +198,10 @@ if ('' === $func) {
 	$list->setColumnParams($thIcon, ['func' => 'edit', 'entry_id' => '###industry_sector_id###']);
 	$list->setColumnLabel('industry_sector_id', rex_i18n::msg('id'));
 	$list->setColumnLayout('industry_sector_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
+	$list->setColumnSortable('industry_sector_id');
 	$list->setColumnLabel('name', rex_i18n::msg('d2u_helper_name'));
 	$list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###industry_sector_id###']);
+	$list->setColumnSortable('name');
 	$list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
 	$list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
 	$list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###industry_sector_id###']);

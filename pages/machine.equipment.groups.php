@@ -173,9 +173,8 @@ if ('' === $func) {
     $query = 'SELECT equipment_groups.group_id, name, priority '
         . 'FROM '. \rex::getTablePrefix() .'d2u_machinery_equipment_groups AS equipment_groups '
         . 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_equipment_groups_lang AS lang '
-            . 'ON equipment_groups.group_id = lang.group_id AND lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' '
-        . 'ORDER BY name ASC';
-    $list = rex_list::factory($query, 1000);
+			. 'ON equipment_groups.group_id = lang.group_id AND lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' ';
+        $list = rex_list::factory(query: $query, rowsPerPage: 1000, defaultSort: ['name' => 'ASC']);
 
     foreach ($equipmentPageParams as $paramName => $paramValue) {
         $list->addParam($paramName, $paramValue);
@@ -193,11 +192,14 @@ if ('' === $func) {
 
     $list->setColumnLabel('group_id', rex_i18n::msg('id'));
     $list->setColumnLayout('group_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
+    $list->setColumnSortable('group_id');
 
     $list->setColumnLabel('name', rex_i18n::msg('d2u_helper_name'));
     $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###group_id###']);
+    $list->setColumnSortable('name');
 
     $list->setColumnLabel('priority', rex_i18n::msg('header_priority'));
+    $list->setColumnSortable('priority');
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);

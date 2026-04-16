@@ -18,7 +18,7 @@ class Module
         $modules = [];
         $modules[] = new \TobiasKrais\D2UHelper\Module('90-1',
             'D2U Machinery Addon - Hauptausgabe (BS4, deprecated)',
-            19);
+            20);
         if (Extension::isActive('industry_sectors')) {
             $modules[] = new \TobiasKrais\D2UHelper\Module('90-2',
                 'D2U Machinery Addon - Branchen (BS4, deprecated)',
@@ -42,7 +42,7 @@ class Module
         }
         $modules[] = new \TobiasKrais\D2UHelper\Module('90-7',
             'D2U Machinery Addon - Hauptausgabe (BS5)',
-            1);
+            2);
         if (Extension::isActive('industry_sectors')) {
             $modules[] = new \TobiasKrais\D2UHelper\Module('90-8',
                 'D2U Machinery Addon - Branchen (BS5)',
@@ -54,7 +54,7 @@ class Module
         if (Extension::isActive('used_machines')) {
             $modules[] = new \TobiasKrais\D2UHelper\Module('90-10',
                 'D2U Machinery Addon - Gebrauchtmaschinen (BS5)',
-                1);
+                2);
         }
         $modules[] = new \TobiasKrais\D2UHelper\Module('90-11',
             'D2U Machinery Addon - Box Beratungshinweis (BS5)',

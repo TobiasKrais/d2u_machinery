@@ -58,6 +58,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
 				$machine->category = new Category($form['category_id'], $rex_clang->getId());
 			}
 			$machine->alternative_machine_ids = $form['alternative_machine_ids'] ?? [];
+			$machine->additional_machine_ids = $form['additional_machine_ids'] ?? [];
 			$machine->online_status = array_key_exists('online_status', $form) ? 'online' : 'offline';
 			$machine->article_id_service = (int) $input_link['article_id_service'];
 			$machine->article_id_software = (int) $input_link['article_id_software'];
@@ -413,6 +414,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 								}
 							}
 							BackendHelper::form_select('d2u_machinery_machine_alternatives', 'form[alternative_machine_ids][]', $options_alt_machines, $machine->alternative_machine_ids, 10, true, $readonly);
+							BackendHelper::form_select('d2u_machinery_machine_additional_machines', 'form[additional_machine_ids][]', $options_alt_machines, $machine->additional_machine_ids, 10, true, $readonly);
 							BackendHelper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', 'online' === $machine->online_status, $readonly);
 							BackendHelper::form_linkfield('d2u_machinery_machine_software', 'article_id_software', $machine->article_id_software, (int) rex_config::get('d2u_helper', 'default_lang'), $readonly);
 							BackendHelper::form_linkfield('d2u_machinery_machine_service', 'article_id_service', $machine->article_id_service, (int) rex_config::get('d2u_helper', 'default_lang'), $readonly);
@@ -852,11 +854,11 @@ if ('' === $func) {
 		. 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_categories_lang AS category '
 			. 'ON machine.category_id = category.category_id AND category.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' ';
 	if ('priority' === rex_config::get('d2u_machinery', 'default_machine_sort')) {
-		$query .= 'ORDER BY priority ASC';
+		$defaultSort = ['priority' => 'ASC'];
 	} else {
-		$query .= 'ORDER BY machine.name ASC';
+		$defaultSort = ['name' => 'ASC'];
 	}
-	$list = rex_list::factory($query, 1000);
+	$list = rex_list::factory(query: $query, rowsPerPage: 1000, defaultSort: $defaultSort);
 
 	$list->addTableAttribute('class', 'table-striped table-hover');
 
@@ -869,13 +871,17 @@ if ('' === $func) {
 	$list->setColumnParams($thIcon, ['func' => 'edit', 'entry_id' => '###machine_id###']);
 
 	$list->setColumnLabel('machine_id', rex_i18n::msg('id'));
+	$list->setColumnSortable('machine_id');
 
 	$list->setColumnLabel('name', rex_i18n::msg('d2u_helper_name'));
 	$list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###machine_id###']);
+	$list->setColumnSortable('name');
 
 	$list->setColumnLabel('categoryname', rex_i18n::msg('d2u_helper_category'));
+	$list->setColumnSortable('categoryname');
 
 	$list->setColumnLabel('priority', rex_i18n::msg('header_priority'));
+	$list->setColumnSortable('priority');
 
 	$list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
 	$list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);

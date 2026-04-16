@@ -172,8 +172,7 @@ if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['opti
         // Slider picture(s)
         echo '<div class="col-12 col-md-6 abstand">';
         if ('lightbox' === $picture_type || 1 === count($used_machine->pics)) {
-            echo '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
-                $used_machine->pics[0] .'" alt='. $used_machine->name .' style="max-width:100%;">';
+            echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $used_machine->pics[0]) .'" alt='. $used_machine->name .' style="max-width:100%;">';
         } else {
             // Slider
             echo '<div id="machineCarousel" class="carousel carousel-fade slide" data-ride="carousel">';
@@ -197,8 +196,7 @@ if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['opti
                 }
                 echo '">';
                 echo '<div class=".carousel-img-holder">';
-                echo '<img src="index.php?rex_media_type=d2u_machinery_list_tile&rex_media_file='.
-                $used_machine->pics[$i] .'" alt='. $used_machine->name .'>';
+                echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $used_machine->pics[$i]) .'" alt='. $used_machine->name .'>';
                 echo '</div>';
                 echo '</div>';
             }
@@ -353,12 +351,12 @@ if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['opti
         echo '<div class="row">';
         foreach ($used_machine->pics as $pic) {
             $media = rex_media::get($pic);
-            echo '<a href="index.php?rex_media_type='. $type_detail .'&rex_media_file='. $pic .'" data-toggle="lightbox'. $lightbox_id .'" data-gallery="example-gallery'. $lightbox_id .'" class="col-6 col-sm-4 col-lg-3"';
+            echo '<a href="'. rex_media_manager::getUrl($type_detail, $pic) .'" data-toggle="lightbox'. $lightbox_id .'" data-gallery="example-gallery'. $lightbox_id .'" class="col-6 col-sm-4 col-lg-3"';
             if ($media instanceof rex_media) {
                 echo ' data-title="'. $media->getValue('title') .'"';
             }
             echo '>';
-            echo '<img src="index.php?rex_media_type='. $type_thumb .'&rex_media_file='. $pic .'" class="img-fluid gallery-pic-box"';
+            echo '<img src="'. rex_media_manager::getUrl($type_thumb, $pic) .'" class="img-fluid gallery-pic-box"';
             if ($media instanceof rex_media) {
                 echo ' alt="'. $media->getValue('title') .'" title="'. $media->getValue('title') .'"';
             }

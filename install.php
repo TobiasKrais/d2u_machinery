@@ -43,6 +43,7 @@ if (null === $d2uMachineryAction) {
         ->ensureColumn(new \rex_sql_column('pics', 'TEXT', true))
         ->ensureColumn(new \rex_sql_column('category_id', 'INT(11)', true))
         ->ensureColumn(new \rex_sql_column('alternative_machine_ids', 'TEXT', true))
+        ->ensureColumn(new \rex_sql_column('additional_machine_ids', 'TEXT', true))
         ->ensureColumn(new \rex_sql_column('product_number', 'VARCHAR(50)', true))
         ->ensureColumn(new \rex_sql_column('article_id_software', 'INT(11)', true))
         ->ensureColumn(new \rex_sql_column('article_id_service', 'INT(11)', true))
@@ -222,6 +223,8 @@ if (null === $d2uMachineryAction) {
     }
     $d2u_module_manager = new \TobiasKrais\D2UHelper\ModuleManager(\TobiasKrais\D2UMachinery\Module::getModules(), '', 'd2u_machinery');
     $d2u_module_manager->autoupdate();
+
+    $d2uMachineryAction = array_keys(array_filter(Extension::getStates()));
 
 }
 

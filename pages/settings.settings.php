@@ -199,7 +199,8 @@ if (\TobiasKrais\D2UMachinery\Extension::isActive('used_machines') && ((int) rex
                             'export',
                         ];
                         $extensionsWithSettings = ['export', 'industry_sectors', 'production_lines', 'used_machines', 'machine_usage_area_extension'];
-                        $renderExtensionToggle = static function (string $extensionKey) use ($extensionsWithSettings): void {
+                        $exportSettingsEnabled = \TobiasKrais\D2UMachinery\Extension::isActive('used_machines') && \TobiasKrais\D2UMachinery\Extension::isActive('export');
+                        $renderExtensionToggle = static function (string $extensionKey) use ($extensionsWithSettings, $exportSettingsEnabled): void {
                             $configKey = \TobiasKrais\D2UMachinery\Extension::getConfigKey($extensionKey);
 
                             if (in_array($extensionKey, $extensionsWithSettings, true)) {
@@ -213,7 +214,7 @@ if (\TobiasKrais\D2UMachinery\Extension::isActive('used_machines') && ((int) rex
                                 echo '<div id="d2u-machinery-'. $extensionKey .'-settings" style="padding: 8px 0 0 28px;">';
                                 if ('export' === $extensionKey) {
                                     BackendHelper::form_checkbox('d2u_machinery_export_settings_autoexport', 'settings[export_autoexport]', 'active', 'active' === rex_config::get('d2u_machinery', 'export_autoexport'));
-                                    BackendHelper::form_input('d2u_machinery_export_settings_email', 'settings[export_failure_email]', (string) rex_config::get('d2u_machinery', 'export_failure_email'), true, false, 'email');
+                                    BackendHelper::form_input('d2u_machinery_export_settings_email', 'settings[export_failure_email]', (string) rex_config::get('d2u_machinery', 'export_failure_email'), $exportSettingsEnabled, false, 'email');
                                 } elseif ('industry_sectors' === $extensionKey) {
                                     BackendHelper::form_linkfield('d2u_machinery_industry_sectors_article', '5', (int) rex_config::get('d2u_machinery', 'industry_sectors_article_id'), (int) rex_config::get('d2u_helper', 'default_lang', rex_clang::getStartId()));
                                 } elseif ('production_lines' === $extensionKey) {
@@ -256,28 +257,41 @@ if (\TobiasKrais\D2UMachinery\Extension::isActive('used_machines') && ((int) rex
                     ?>
                     <p><strong><?= rex_i18n::msg('d2u_machinery_extensions_deactivate_warning') ?></strong></p>
                     <script>
-                        function toggleExtensionSubSettings(extensionKey) {
-                            const checkbox = $('input[name="settings\\[extension_' + extensionKey + '\]"]');
+                        function setSubSettingsState(extensionKey, isEnabled) {
                             const settingsBlock = $('#d2u-machinery-' + extensionKey + '-settings');
 
-                            if (checkbox.is(':checked')) {
+                            settingsBlock.find('input, select, textarea, button').prop('disabled', !isEnabled);
+
+                            if (isEnabled) {
                                 settingsBlock.show();
                             } else {
                                 settingsBlock.hide();
                             }
                         }
 
+                        function toggleExtensionSubSettings(extensionKey) {
+                            const checkbox = $('input[name="settings\\[extension_' + extensionKey + '\]"]');
+                            setSubSettingsState(extensionKey, checkbox.is(':checked'));
+                        }
+
                         function toggleExportExtensionVisibility() {
                             const usedMachinesCheckbox = $('input[name="settings\\[extension_used_machines\\]"]');
                             const exportRow = $('#d2u-machinery-extension-export');
                             const exportCheckbox = $('input[name="settings\\[extension_export\\]"]');
+                            const isVisible = usedMachinesCheckbox.is(':checked');
 
-                            if (usedMachinesCheckbox.is(':checked')) {
+                            if (isVisible) {
+                                exportCheckbox.prop('disabled', false);
                                 exportRow.show();
                             } else {
                                 exportCheckbox.prop('checked', false);
-                                $('#d2u-machinery-export-settings').hide();
+                                exportCheckbox.prop('disabled', true);
+                                setSubSettingsState('export', false);
                                 exportRow.hide();
+                            }
+
+                            if (isVisible) {
+                                toggleExtensionSubSettings('export');
                             }
                         }
 

@@ -213,8 +213,8 @@ if ('' === $func) {
         . 'FROM '. \rex::getTablePrefix() .'d2u_machinery_steel_supply AS supplys '
         . 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_steel_supply_lang AS lang '
             . 'ON supplys.supply_id = lang.supply_id AND lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' '
-        . 'ORDER BY priority ASC ';
-    $list = rex_list::factory($query, 1000);
+        ;
+    $list = rex_list::factory(query: $query, rowsPerPage: 1000, defaultSort: ['priority' => 'ASC']);
 
     $list->addTableAttribute('class', 'table-striped table-hover');
 
@@ -228,15 +228,18 @@ if ('' === $func) {
 
     $list->setColumnLabel('supply_id', rex_i18n::msg('id'));
     $list->setColumnLayout('supply_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
+    $list->setColumnSortable('supply_id');
 
     $list->setColumnLabel('name', rex_i18n::msg('d2u_helper_name'));
     $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###supply_id###']);
+    $list->setColumnSortable('name');
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
     $list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###supply_id###']);
 
     $list->setColumnLabel('priority', rex_i18n::msg('header_priority'));
+    $list->setColumnSortable('priority');
 
     $list->removeColumn('online_status');
     if (\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {

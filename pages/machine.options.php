@@ -191,8 +191,8 @@ if ('' === $func) {
 		. 'FROM '. rex::getTablePrefix() .'d2u_machinery_options AS options '
 		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_options_lang AS lang '
 			. 'ON options.option_id = lang.option_id AND lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' '
-		. 'ORDER BY name, priority ASC';
-	$list = rex_list::factory($query, 1000);
+		;
+	$list = rex_list::factory(query: $query, rowsPerPage: 1000, defaultSort: ['name' => 'ASC', 'priority' => 'ASC']);
 	$list->addTableAttribute('class', 'table-striped table-hover');
 	$tdIcon = '<i class="rex-icon  fa-plug"></i>';
 	$thIcon = '';
@@ -203,8 +203,10 @@ if ('' === $func) {
 	$list->setColumnParams($thIcon, ['func' => 'edit', 'entry_id' => '###option_id###']);
 	$list->setColumnLabel('option_id', rex_i18n::msg('id'));
 	$list->setColumnLayout('option_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
+	$list->setColumnSortable('option_id');
 	$list->setColumnLabel('name', rex_i18n::msg('d2u_helper_name'));
 	$list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###option_id###']);
+	$list->setColumnSortable('name');
 	$list->setColumnLabel('category_ids', rex_i18n::msg('d2u_helper_categories'));
 	$list->setColumnFormat('category_ids', 'custom', static function ($params) {
 		$listParams = $params['list'];
@@ -221,6 +223,7 @@ if ('' === $func) {
 		return implode(', ', $catNames);
 	});
 	$list->setColumnLabel('priority', rex_i18n::msg('header_priority'));
+	$list->setColumnSortable('priority');
 	$list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
 	$list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
 	$list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###option_id###']);

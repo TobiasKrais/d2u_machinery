@@ -2,6 +2,12 @@
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_machinery" target="_blank">GitHub Repository</a> melden.</p>
 
 <h2>Changelog</h2>
+<p>1.7.0:</p>
+<ul>
+	<li>Neues Maschinenfeld <code>additional_machine_ids</code> / "Ergänzende Maschinen" inkl. Backend-Auswahl, Frontend-Wildcard und neuem Reiter in den Ausgabemodulen hinzugefügt.</li>
+	<li>Backend-Listen im Addon sortierbar gemacht und Standardsortierungen von SQL-Queries auf <code>rex_list</code>-<code>defaultSort</code> umgestellt.</li>
+	<li>Beim Installieren oder Reinstallieren des Hauptaddons werden Erweiterungstabellen nur noch für aktivierte Erweiterungen nachgezogen; Legacy-Plugin-Wrapper bleiben gezielt auf ihre jeweilige Erweiterung beschränkt.</li>
+</ul>
 <p>1.6.0:</p>
 <ul>
 	<li>Vorbereitung auf Version 2 / R6: Folgende Klassen werden ab Version 2 dieses Addons umbenannt. Schon jetzt stehen die neuen Klassen fuer die Uebergangszeit zur Verfuegung und die alten Klassennamen werden in <code>lib/deprecated_helper_classes.php</code> auf die neuen Klassen gemappt:

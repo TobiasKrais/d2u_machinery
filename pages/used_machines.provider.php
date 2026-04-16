@@ -210,9 +210,8 @@ if ('edit' === $func || 'add' === $func) {
 
 if ('' === $func) {
     $query = 'SELECT provider_id, name, type, online_status '
-        .'FROM '. \rex::getTablePrefix() .'d2u_machinery_export_provider '
-        .'ORDER BY name';
-    $list = rex_list::factory($query, 1000);
+        .'FROM '. \rex::getTablePrefix() .'d2u_machinery_export_provider ';
+    $list = rex_list::factory(query: $query, rowsPerPage: 1000, defaultSort: ['name' => 'ASC']);
 
     $list->addTableAttribute('class', 'table-striped table-hover');
 
@@ -223,11 +222,14 @@ if ('' === $func) {
 
     $list->setColumnLabel('provider_id', rex_i18n::msg('id'));
     $list->setColumnLayout('provider_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
+    $list->setColumnSortable('provider_id');
 
     $list->setColumnLabel('name', rex_i18n::msg('d2u_helper_name'));
     $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###provider_id###']);
+    $list->setColumnSortable('name');
 
     $list->setColumnLabel('type', rex_i18n::msg('d2u_machinery_export_type'));
+    $list->setColumnSortable('type');
 
     $list->removeColumn('online_status');
     $list->addColumn(rex_i18n::msg('status_online'), '<a class="rex-###online_status###" href="' . rex_url::currentBackendPage(array_merge($usedMachinesPageParams, ['func' => 'changestatus'])) . '&entry_id=###provider_id###"><i class="rex-icon rex-icon-###online_status###"></i> ###online_status###</a>');

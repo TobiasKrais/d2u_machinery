@@ -180,9 +180,8 @@ if ('' === $func) {
     $query = 'SELECT profiles.profile_id, internal_name '
         . 'FROM '. \rex::getTablePrefix() .'d2u_machinery_steel_profile AS profiles '
         . 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_steel_profile_lang AS lang '
-            . 'ON profiles.profile_id = lang.profile_id AND lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' '
-        . 'ORDER BY name ASC';
-    $list = rex_list::factory($query, 1000);
+			. 'ON profiles.profile_id = lang.profile_id AND lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' ';
+        $list = rex_list::factory(query: $query, rowsPerPage: 1000, defaultSort: ['internal_name' => 'ASC']);
     foreach ($steelProcessingPageParams as $paramName => $paramValue) {
         $list->addParam($paramName, $paramValue);
     }
@@ -199,9 +198,11 @@ if ('' === $func) {
 
     $list->setColumnLabel('profile_id', rex_i18n::msg('id'));
     $list->setColumnLayout('profile_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
+    $list->setColumnSortable('profile_id');
 
     $list->setColumnLabel('internal_name', rex_i18n::msg('d2u_machinery_internal_name'));
     $list->setColumnParams('internal_name', ['func' => 'edit', 'entry_id' => '###profile_id###']);
+    $list->setColumnSortable('internal_name');
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);

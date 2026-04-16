@@ -180,9 +180,8 @@ if ('' === $func) {
     $query = 'SELECT processs.process_id, internal_name '
         . 'FROM '. \rex::getTablePrefix() .'d2u_machinery_steel_process AS processs '
         . 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_steel_process_lang AS lang '
-            . 'ON processs.process_id = lang.process_id AND lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' '
-        . 'ORDER BY name ASC';
-    $list = rex_list::factory($query, 1000);
+			. 'ON processs.process_id = lang.process_id AND lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' ';
+        $list = rex_list::factory(query: $query, rowsPerPage: 1000, defaultSort: ['internal_name' => 'ASC']);
     foreach ($steelProcessingPageParams as $paramName => $paramValue) {
         $list->addParam($paramName, $paramValue);
     }
@@ -199,9 +198,11 @@ if ('' === $func) {
 
     $list->setColumnLabel('process_id', rex_i18n::msg('id'));
     $list->setColumnLayout('process_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
+    $list->setColumnSortable('process_id');
 
     $list->setColumnLabel('internal_name', rex_i18n::msg('d2u_machinery_internal_name'));
     $list->setColumnParams('internal_name', ['func' => 'edit', 'entry_id' => '###process_id###']);
+    $list->setColumnSortable('internal_name');
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);

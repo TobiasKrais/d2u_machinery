@@ -18,6 +18,7 @@ class LangHelper extends \TobiasKrais\D2UHelper\ALangHelper
     public $replacements_english = [
         'd2u_machinery_advantages' => 'Benefits at a glance',
         'd2u_machinery_alternative_machines' => 'Alternative Machines',
+        'd2u_machinery_additional_machines' => 'Supplementary Machines',
         'd2u_machinery_back_machine_list' => 'Go back to machine list',
         'd2u_machinery_consultation_heading' => 'Let us advise you',
         'd2u_machinery_consultation_hint' => 'Together we will find the best solution for you.<br><b>Please contact us.</b>',
@@ -206,6 +207,7 @@ class LangHelper extends \TobiasKrais\D2UHelper\ALangHelper
     protected array $replacements_german = [
         'd2u_machinery_advantages' => 'Vorteile auf einen Blick',
         'd2u_machinery_alternative_machines' => 'Alternative Maschinen',
+        'd2u_machinery_additional_machines' => 'Ergänzende Maschinen',
         'd2u_machinery_back_machine_list' => 'Zurück zur Maschinenliste',
         'd2u_machinery_consultation_heading' => 'Lassen Sie sich beraten',
         'd2u_machinery_consultation_hint' => 'Wir bieten für Ihren Bedarf die optimale Lösung.<br><b>Nehmen Sie Kontakt mit uns auf.</b>',
@@ -394,6 +396,7 @@ class LangHelper extends \TobiasKrais\D2UHelper\ALangHelper
     protected array $replacements_french = [
         'd2u_machinery_advantages' => 'Les avantages en un coup d\'œil',
         'd2u_machinery_alternative_machines' => 'Machines alternatives',
+        'd2u_machinery_additional_machines' => 'Machines complementaires',
         'd2u_machinery_back_machine_list' => 'Retour à la liste des machines',
         'd2u_machinery_consultation_heading' => 'Laissez vous conseiller',
         'd2u_machinery_consultation_hint' => 'Nous fournissons la solution optimale à vos besoins.<br><b>Contactez-nous.</b>',
@@ -576,6 +579,7 @@ class LangHelper extends \TobiasKrais\D2UHelper\ALangHelper
     protected array $replacements_spanish = [
         'd2u_machinery_advantages' => 'Ventajas de un vistazo',
         'd2u_machinery_alternative_machines' => 'Máquinas alternativas',
+        'd2u_machinery_additional_machines' => 'Máquinas complementarias',
         'd2u_machinery_back_machine_list' => 'Volver a la lista de máquinas',
         'd2u_machinery_consultation_heading' => 'Déjese asesorar',
         'd2u_machinery_consultation_hint' => 'Brindamos la solución óptima para sus necesidades.<br><b>Contáctenos.</b>',
@@ -716,6 +720,7 @@ class LangHelper extends \TobiasKrais\D2UHelper\ALangHelper
     protected array $replacements_dutch = [
         'd2u_machinery_advantages' => 'Voordelen in een oogopslag',
         'd2u_machinery_alternative_machines' => 'Alternatieve machines',
+        'd2u_machinery_additional_machines' => 'Aanvullende machines',
         'd2u_machinery_back_machine_list' => 'Terug naar de machinelijst',
         'd2u_machinery_consultation_heading' => 'Laat ons u adviseren',
         'd2u_machinery_consultation_hint' => 'Wij bieden de optimale oplossing voor uw behoeften.<br><b>Neem contact met ons op.</b>',
@@ -856,6 +861,7 @@ class LangHelper extends \TobiasKrais\D2UHelper\ALangHelper
     protected array $replacements_russian = [
         'd2u_machinery_advantages' => 'Основные преимущества',
         'd2u_machinery_alternative_machines' => 'Альтернативные станки',
+        'd2u_machinery_additional_machines' => 'Дополняющие станки',
         'd2u_machinery_back_machine_list' => 'Вернуться к списку оборудования',
         'd2u_machinery_consultation_heading' => 'Получите консультацию специалиста',
         'd2u_machinery_consultation_hint' => 'Мы предлагаем оптимальное решение для Вашего производства.<br><b>Свяжитесь с нами.</b>',
@@ -1000,6 +1006,7 @@ class LangHelper extends \TobiasKrais\D2UHelper\ALangHelper
     protected array $replacements_portuguese = [
         'd2u_machinery_advantages' => 'Resumo das vantagens',
         'd2u_machinery_alternative_machines' => 'Máquinas alternativas',
+        'd2u_machinery_additional_machines' => 'Máquinas complementares',
         'd2u_machinery_back_machine_list' => 'De volta à lista de máquinas',
         'd2u_machinery_consultation_heading' => 'Vamos orientá-lo',
         'd2u_machinery_consultation_hint' => 'Fornecemos a solução ideal para suas necessidades.<br><b>Entre em contato.</b>',
@@ -1140,6 +1147,7 @@ class LangHelper extends \TobiasKrais\D2UHelper\ALangHelper
     protected array $replacements_chinese = [
         'd2u_machinery_advantages' => '显而易见的优势',
         'd2u_machinery_alternative_machines' => '替代机器',
+        'd2u_machinery_additional_machines' => '补充机器',
         'd2u_machinery_back_machine_list' => '回到機器列表',
         'd2u_machinery_consultation_heading' => '请获取建议',
         'd2u_machinery_consultation_hint' => '我們為您的需求提供最佳解決方案。<br><b>聯繫我們。</b>',

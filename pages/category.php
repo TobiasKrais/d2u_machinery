@@ -297,11 +297,11 @@ if ('' === $func) {
         . 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_categories_lang AS parents_lang '
             . 'ON categories.parent_category_id = parents_lang.category_id AND parents_lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' ';
     if ('priority' === rex_config::get('d2u_machinery', 'default_category_sort')) {
-        $query .= 'ORDER BY priority ASC';
+        $defaultSort = ['priority' => 'ASC'];
     } else {
-        $query .= 'ORDER BY categoryname ASC';
+        $defaultSort = ['categoryname' => 'ASC'];
     }
-    $list = rex_list::factory($query, 1000);
+    $list = rex_list::factory(query: $query, rowsPerPage: 1000, defaultSort: $defaultSort);
 
     $list->addTableAttribute('class', 'table-striped table-hover');
 
@@ -315,13 +315,17 @@ if ('' === $func) {
 
     $list->setColumnLabel('category_id', rex_i18n::msg('id'));
     $list->setColumnLayout('category_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
+    $list->setColumnSortable('category_id');
 
     $list->setColumnLabel('categoryname', rex_i18n::msg('d2u_helper_name'));
     $list->setColumnParams('categoryname', ['func' => 'edit', 'entry_id' => '###category_id###']);
+    $list->setColumnSortable('categoryname');
 
     $list->setColumnLabel('parentname', rex_i18n::msg('d2u_machinery_category_parent'));
+    $list->setColumnSortable('parentname');
 
     $list->setColumnLabel('priority', rex_i18n::msg('header_priority'));
+    $list->setColumnSortable('priority');
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);

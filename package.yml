@@ -1,5 +1,5 @@
 package: d2u_machinery
-version: '1.6.0'
+version: '1.7.0'
 author: Tobias Krais
 supportpage: http://github.com/tobiaskrais/d2u_machinery
 
@@ -45,7 +45,7 @@ page:
                 export: { title: 'translate:d2u_machinery_export', icon: rex-icon fa-upload, perm: 'd2u_machinery[used_machines]' }
                 provider: { title: 'translate:d2u_machinery_export_provider', icon: rex-icon fa-globe, perm: 'd2u_machinery[used_machines]' }
         settings:
-            icon: rex-icon fa-navicon
+            icon: rex-icon rex-icon-system
             title: ''
             itemClass: pull-right
             subpages:

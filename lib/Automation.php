@@ -160,6 +160,28 @@ class Automation implements \TobiasKrais\D2UHelper\ITranslationHelper
     }
 
     /**
+     * returned all unused objects in database.
+     * @return bool|Automation[] Array with unused automations
+     */
+    public static function getUnused()
+    {
+        $automations = self::getAll((int) rex_config::get('d2u_helper', 'default_lang', \rex_clang::getStartId()));
+
+        foreach ($automations as $automation) {
+            if (count($automation->getReferringMachines()) > 0) {
+                unset($automations[$automation->automation_id]);
+            }
+        }
+
+        if (count($automations) > 0) {
+            return $automations;
+        }
+
+        return false;
+
+    }
+
+    /**
      * Updates or inserts the object into database.
      * @return bool true if successful
      */
