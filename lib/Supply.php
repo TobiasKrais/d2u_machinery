@@ -285,8 +285,8 @@ class Supply implements \TobiasKrais\D2UHelper\ITranslationHelper
     private function setPriority($delete = false): void
     {
         // Pull priorities from database
-        $query = 'SELECT supply_id, priority FROM '. \rex::getTablePrefix() .'d2u_machinery_steel_supply '
-            .'WHERE supply_id <> '. $this->supply_id .' ORDER BY priority';
+        $query = 'SELECT supply_id FROM '. \rex::getTablePrefix() .'d2u_machinery_steel_supply '
+            .'WHERE supply_id <> '. $this->supply_id .' ORDER BY priority, supply_id';
         $result = \rex_sql::factory();
         $result->setQuery($query);
 
@@ -302,7 +302,7 @@ class Supply implements \TobiasKrais\D2UHelper\ITranslationHelper
 
         $objects = [];
         for ($i = 0; $i < $result->getRows(); ++$i) {
-            $objects[$result->getValue('priority')] = $result->getValue('supply_id');
+            $objects[] = (int) $result->getValue('supply_id');
             $result->next();
         }
         array_splice($objects, $this->priority - 1, 0, [$this->supply_id]);

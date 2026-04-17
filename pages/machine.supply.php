@@ -107,6 +107,21 @@ elseif ('changestatus' === $func) {
     header('Location: '. rex_url::currentBackendPage($pageParams));
     exit;
 }
+elseif ('priority_down' === $func || 'priority_up' === $func) {
+    $supply = new Supply($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'));
+    $supply->supply_id = $entry_id; // Ensure correct ID in case language has no object
+
+    if ('priority_down' === $func) {
+        ++$supply->priority;
+        $supply->save();
+    } elseif ($supply->priority > 1) {
+        --$supply->priority;
+        $supply->save();
+    }
+
+    header('Location: '. BackendHelper::getCurrentBackendPage(array_merge($pageParams, ['message' => 'd2u_helper_priority_changed']), ['func', 'entry_id']));
+    exit;
+}
 
 // Eingabeformular
 if ('edit' === $func || 'add' === $func) {
@@ -209,7 +224,8 @@ if ('edit' === $func || 'add' === $func) {
 }
 
 if ('' === $func) {
-    $query = 'SELECT supplys.supply_id, name, online_status, priority '
+    $query = 'SELECT supplys.supply_id, name, online_status, priority, '
+        . '(SELECT MAX(priority) FROM '. \rex::getTablePrefix() .'d2u_machinery_steel_supply) AS max_priority '
         . 'FROM '. \rex::getTablePrefix() .'d2u_machinery_steel_supply AS supplys '
         . 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_steel_supply_lang AS lang '
             . 'ON supplys.supply_id = lang.supply_id AND lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' '
@@ -240,6 +256,18 @@ if ('' === $func) {
 
     $list->setColumnLabel('priority', rex_i18n::msg('header_priority'));
     $list->setColumnSortable('priority');
+    $list->setColumnFormat('priority', 'custom', static function ($params) use ($pageParams) {
+        $listParams = $params['list'];
+
+        return BackendHelper::getPriorityButtons(
+            (int) $listParams->getValue('supply_id'),
+            (int) $listParams->getValue('priority'),
+            (int) $listParams->getValue('max_priority'),
+            $pageParams
+        );
+    });
+
+    $list->removeColumn('max_priority');
 
     $list->removeColumn('online_status');
     if (\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {

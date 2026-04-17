@@ -112,6 +112,21 @@ elseif ('delete_unused' === $func) {
 
     $func = '';
 }
+elseif ('priority_down' === $func || 'priority_up' === $func) {
+    $feature = new Feature($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'));
+    $feature->feature_id = $entry_id; // Ensure correct ID in case language has no object
+
+    if ('priority_down' === $func) {
+        ++$feature->priority;
+        $feature->save();
+    } elseif ($feature->priority > 1) {
+        --$feature->priority;
+        $feature->save();
+    }
+
+    header('Location: '. BackendHelper::getCurrentBackendPage(['message' => 'd2u_helper_priority_changed'], ['func', 'entry_id']));
+    exit;
+}
 
 // Eingabeformular
 if ('edit' === $func || 'add' === $func) {
@@ -221,7 +236,8 @@ if ('edit' === $func || 'add' === $func) {
 }
 
 if ('' === $func) {
-    $query = 'SELECT features.feature_id, name, category_ids, priority '
+    $query = 'SELECT features.feature_id, name, category_ids, priority, '
+        . '(SELECT MAX(priority) FROM '. \rex::getTablePrefix() .'d2u_machinery_features) AS max_priority '
         . 'FROM '. \rex::getTablePrefix() .'d2u_machinery_features AS features '
         . 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_features_lang AS lang '
             . 'ON features.feature_id = lang.feature_id AND lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' '
@@ -264,6 +280,17 @@ if ('' === $func) {
 
     $list->setColumnLabel('priority', rex_i18n::msg('header_priority'));
     $list->setColumnSortable('priority');
+    $list->setColumnFormat('priority', 'custom', static function ($params) {
+        $listParams = $params['list'];
+
+        return BackendHelper::getPriorityButtons(
+            (int) $listParams->getValue('feature_id'),
+            (int) $listParams->getValue('priority'),
+            (int) $listParams->getValue('max_priority')
+        );
+    });
+
+    $list->removeColumn('max_priority');
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);

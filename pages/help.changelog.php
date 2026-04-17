@@ -2,8 +2,10 @@
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_machinery" target="_blank">GitHub Repository</a> melden.</p>
 
 <h2>Changelog</h2>
-<p>1.7.1-DEV:</p>
+<p>1.7.1:</p>
 <ul>
+	<li>Bugfix: Prioritäten werden bei Kategorien, Maschinen, Merkmalen, Optionen, Einsatzbereichen, Ausstattungsgruppen und Automatisierungen nach dem Speichern wieder stabil neu durchnummeriert, auch wenn in der Datenbank bereits doppelte Werte vorhanden sind.</li>
+	<li>Die Priorität von Kategorien, Maschinen, Merkmalen, Optionen, Einsatzbereichen, Ausstattungsgruppen und Automatisierungen kann in den Backend-Listen jetzt direkt per Hoch-/Runter-Buttons geändert werden.</li>
 	<li>Beim Addon-Update werden bestehende URL-Profile vor dem Neuanlegen zuerst mitsamt ihren generierten URLs entfernt, damit keine verwaisten URL-Einträge für Branchen, Produktionslinien und weitere Profiltypen zurückbleiben.</li>
 	<li>Die URL-Cache-Regenerierung im Installer wurde von globalen Rebuilds auf gezielte Namespace-Updates umgestellt, damit beim Update keine noch veralteten Profildefinitionen mit fehlenden Views angesprochen werden.</li>
 	<li>Veraltete URL-Profile inaktiver Erweiterungen werden jetzt bereits zu Beginn des Installers entfernt, damit globale URL-Rebuilds im REDAXO-Updateprozess keine nicht mehr vorhandenen Extension-Views wie Produktionslinien mehr ansprechen.</li>

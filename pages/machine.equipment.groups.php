@@ -79,6 +79,21 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_VALIDATE_INT) || '
 
     $func = '';
 }
+elseif ('priority_down' === $func || 'priority_up' === $func) {
+    $equipment_group = new EquipmentGroup($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'));
+    $equipment_group->group_id = $entry_id; // Ensure correct ID in case language has no object
+
+    if ('priority_down' === $func) {
+        ++$equipment_group->priority;
+        $equipment_group->save();
+    } elseif ($equipment_group->priority > 1) {
+        --$equipment_group->priority;
+        $equipment_group->save();
+    }
+
+    header('Location: '. BackendHelper::getCurrentBackendPage(array_merge($equipmentPageParams, ['message' => 'd2u_helper_priority_changed']), ['func', 'entry_id']));
+    exit;
+}
 
 if ('edit' === $func || 'add' === $func) {
 ?>
@@ -170,7 +185,8 @@ if ('edit' === $func || 'add' === $func) {
 }
 
 if ('' === $func) {
-    $query = 'SELECT equipment_groups.group_id, name, priority '
+    $query = 'SELECT equipment_groups.group_id, name, priority, '
+        . '(SELECT MAX(priority) FROM '. \rex::getTablePrefix() .'d2u_machinery_equipment_groups) AS max_priority '
         . 'FROM '. \rex::getTablePrefix() .'d2u_machinery_equipment_groups AS equipment_groups '
         . 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_equipment_groups_lang AS lang '
 			. 'ON equipment_groups.group_id = lang.group_id AND lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' ';
@@ -200,6 +216,18 @@ if ('' === $func) {
 
     $list->setColumnLabel('priority', rex_i18n::msg('header_priority'));
     $list->setColumnSortable('priority');
+    $list->setColumnFormat('priority', 'custom', static function ($params) use ($equipmentPageParams) {
+        $listParams = $params['list'];
+
+        return BackendHelper::getPriorityButtons(
+            (int) $listParams->getValue('group_id'),
+            (int) $listParams->getValue('priority'),
+            (int) $listParams->getValue('max_priority'),
+            $equipmentPageParams
+        );
+    });
+
+    $list->removeColumn('max_priority');
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);

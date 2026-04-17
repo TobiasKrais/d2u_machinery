@@ -281,8 +281,8 @@ class Feature implements \TobiasKrais\D2UHelper\ITranslationHelper
     private function setPriority($delete = false): void
     {
         // Pull priorities from database
-        $query = 'SELECT feature_id, priority FROM '. \rex::getTablePrefix() .'d2u_machinery_features '
-            .'WHERE feature_id <> '. $this->feature_id .' ORDER BY priority';
+        $query = 'SELECT feature_id FROM '. \rex::getTablePrefix() .'d2u_machinery_features '
+            .'WHERE feature_id <> '. $this->feature_id .' ORDER BY priority, feature_id';
         $result = \rex_sql::factory();
         $result->setQuery($query);
 
@@ -298,7 +298,7 @@ class Feature implements \TobiasKrais\D2UHelper\ITranslationHelper
 
         $features = [];
         for ($i = 0; $i < $result->getRows(); ++$i) {
-            $features[$result->getValue('priority')] = $result->getValue('feature_id');
+            $features[] = (int) $result->getValue('feature_id');
             $result->next();
         }
         array_splice($features, $this->priority - 1, 0, [$this->feature_id]);

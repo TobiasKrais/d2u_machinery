@@ -86,6 +86,20 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_VALIDATE_INT) || '
 		echo rex_view::success(count($options) .' ' . rex_i18n::msg('d2u_machinery_options_delete_unused_success') . $message);
 	}
 	$func = '';
+} elseif ('priority_down' === $func || 'priority_up' === $func) {
+	$option = new Option($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'));
+	$option->option_id = $entry_id;
+
+	if ('priority_down' === $func) {
+		++$option->priority;
+		$option->save();
+	} elseif ($option->priority > 1) {
+		--$option->priority;
+		$option->save();
+	}
+
+	header('Location: '. BackendHelper::getCurrentBackendPage(['message' => 'd2u_helper_priority_changed'], ['func', 'entry_id']));
+	exit;
 }
 
 if ('edit' === $func || 'add' === $func) {
@@ -187,7 +201,8 @@ if ('edit' === $func || 'add' === $func) {
 }
 
 if ('' === $func) {
-	$query = 'SELECT options.option_id, name, category_ids, priority '
+	$query = 'SELECT options.option_id, name, category_ids, priority, '
+		. '(SELECT MAX(priority) FROM '. rex::getTablePrefix() .'d2u_machinery_options) AS max_priority '
 		. 'FROM '. rex::getTablePrefix() .'d2u_machinery_options AS options '
 		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_machinery_options_lang AS lang '
 			. 'ON options.option_id = lang.option_id AND lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' '
@@ -224,6 +239,17 @@ if ('' === $func) {
 	});
 	$list->setColumnLabel('priority', rex_i18n::msg('header_priority'));
 	$list->setColumnSortable('priority');
+	$list->setColumnFormat('priority', 'custom', static function ($params) {
+		$listParams = $params['list'];
+
+		return BackendHelper::getPriorityButtons(
+			(int) $listParams->getValue('option_id'),
+			(int) $listParams->getValue('priority'),
+			(int) $listParams->getValue('max_priority')
+		);
+	});
+
+	$list->removeColumn('max_priority');
 	$list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
 	$list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
 	$list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###option_id###']);

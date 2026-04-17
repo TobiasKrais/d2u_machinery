@@ -2188,8 +2188,8 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
     private function setPriority($delete = false): void
     {
         // Pull prios from database
-        $query = 'SELECT machine_id, priority FROM '. \rex::getTablePrefix() .'d2u_machinery_machines '
-            .'WHERE machine_id <> '. $this->machine_id .' ORDER BY priority';
+        $query = 'SELECT machine_id FROM '. \rex::getTablePrefix() .'d2u_machinery_machines '
+            .'WHERE machine_id <> '. $this->machine_id .' ORDER BY priority, machine_id';
         $result = \rex_sql::factory();
         $result->setQuery($query);
 
@@ -2205,7 +2205,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
 
         $machines = [];
         for ($i = 0; $i < $result->getRows(); ++$i) {
-            $machines[$result->getValue('priority')] = $result->getValue('machine_id');
+            $machines[] = (int) $result->getValue('machine_id');
             $result->next();
         }
         array_splice($machines, $this->priority - 1, 0, [$this->machine_id]);

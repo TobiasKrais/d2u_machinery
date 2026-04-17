@@ -234,8 +234,8 @@ class EquipmentGroup implements \TobiasKrais\D2UHelper\ITranslationHelper
     private function setPriority($delete = false): void
     {
         // Pull priorities from database
-        $query = 'SELECT group_id, priority FROM '. \rex::getTablePrefix() .'d2u_machinery_equipment_groups '
-            .'WHERE group_id <> '. $this->group_id .' ORDER BY priority';
+        $query = 'SELECT group_id FROM '. \rex::getTablePrefix() .'d2u_machinery_equipment_groups '
+            .'WHERE group_id <> '. $this->group_id .' ORDER BY priority, group_id';
         $result = \rex_sql::factory();
         $result->setQuery($query);
 
@@ -251,7 +251,7 @@ class EquipmentGroup implements \TobiasKrais\D2UHelper\ITranslationHelper
 
         $equipment_groups = [];
         for ($i = 0; $i < $result->getRows(); ++$i) {
-            $equipment_groups[$result->getValue('priority')] = $result->getValue('group_id');
+            $equipment_groups[] = (int) $result->getValue('group_id');
             $result->next();
         }
         array_splice($equipment_groups, $this->priority - 1, 0, [$this->group_id]);

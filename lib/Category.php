@@ -732,8 +732,8 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper
     private function setPriority($delete = false): void
     {
         // Pull prios from database
-        $query = 'SELECT category_id, priority FROM '. \rex::getTablePrefix() .'d2u_machinery_categories '
-            .'WHERE category_id <> '. $this->category_id .' ORDER BY priority';
+        $query = 'SELECT category_id FROM '. \rex::getTablePrefix() .'d2u_machinery_categories '
+            .'WHERE category_id <> '. $this->category_id .' ORDER BY priority, category_id';
         $result = \rex_sql::factory();
         $result->setQuery($query);
 
@@ -749,7 +749,7 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper
 
         $categories = [];
         for ($i = 0; $i < $result->getRows(); ++$i) {
-            $categories[$result->getValue('priority')] = $result->getValue('category_id');
+            $categories[] = (int) $result->getValue('category_id');
             $result->next();
         }
         array_splice($categories, $this->priority - 1, 0, [$this->category_id]);

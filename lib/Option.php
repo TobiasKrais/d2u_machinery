@@ -281,8 +281,8 @@ class Option implements \TobiasKrais\D2UHelper\ITranslationHelper
     private function setPriority($delete = false): void
     {
         // Pull priorities from database
-        $query = 'SELECT option_id, priority FROM '. \rex::getTablePrefix() .'d2u_machinery_options '
-            .'WHERE option_id <> '. $this->option_id .' ORDER BY priority';
+        $query = 'SELECT option_id FROM '. \rex::getTablePrefix() .'d2u_machinery_options '
+            .'WHERE option_id <> '. $this->option_id .' ORDER BY priority, option_id';
         $result = \rex_sql::factory();
         $result->setQuery($query);
 
@@ -298,7 +298,7 @@ class Option implements \TobiasKrais\D2UHelper\ITranslationHelper
 
         $options = [];
         for ($i = 0; $i < $result->getRows(); ++$i) {
-            $options[$result->getValue('priority')] = $result->getValue('option_id');
+            $options[] = (int) $result->getValue('option_id');
             $result->next();
         }
         array_splice($options, $this->priority - 1, 0, [$this->option_id]);

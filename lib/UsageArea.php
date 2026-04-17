@@ -234,8 +234,8 @@ class UsageArea implements \TobiasKrais\D2UHelper\ITranslationHelper
     private function setPriority($delete = false): void
     {
         // Pull prios from database
-        $query = 'SELECT usage_area_id, priority FROM '. \rex::getTablePrefix() .'d2u_machinery_usage_areas '
-            .'WHERE usage_area_id <> '. $this->usage_area_id .' ORDER BY priority';
+        $query = 'SELECT usage_area_id FROM '. \rex::getTablePrefix() .'d2u_machinery_usage_areas '
+            .'WHERE usage_area_id <> '. $this->usage_area_id .' ORDER BY priority, usage_area_id';
         $result = \rex_sql::factory();
         $result->setQuery($query);
 
@@ -251,7 +251,7 @@ class UsageArea implements \TobiasKrais\D2UHelper\ITranslationHelper
 
         $usage_areas = [];
         for ($i = 0; $i < $result->getRows(); ++$i) {
-            $usage_areas[$result->getValue('priority')] = $result->getValue('usage_area_id');
+            $usage_areas[] = (int) $result->getValue('usage_area_id');
             $result->next();
         }
         array_splice($usage_areas, $this->priority - 1, 0, [$this->usage_area_id]);
