@@ -14,7 +14,7 @@ Nach der Installation in Redaxo sollten folgende Schritte ausgeführt werden:
 
 ## Erweiterungen
 
-Seit Version 1.6 werden die frueheren Plugins zentral als Erweiterungen innerhalb des Addons verwaltet. Die Fachlogik, Backend-Seiten sowie Installations- und Update-Routinen liegen direkt im Hauptaddon. Um die Komplexitaet des Addons so gering wie moeglich zu halten, **sollte eine Erweiterung nur aktiviert werden, wenn sie auch benoetigt wird**.
+Seit Version 1.6 werden die früheren Plugins zentral als Erweiterungen innerhalb des Addons verwaltet. Die Fachlogik, Backend-Seiten sowie Installations- und Update-Routinen liegen direkt im Hauptaddon. Um die Komplexität des Addons so gering wie möglich zu halten, **sollte eine Erweiterung nur aktiviert werden, wenn sie auch benötigt wird**.
 
 ### Abfrage von Erweiterungen
 
@@ -22,11 +22,11 @@ Bis Version 1.5 wurde in der Regel das jeweilige Plugin direkt abgefragt. Typisc
 
 ```php
 if (rex_plugin::get('d2u_machinery', 'used_machines')->isAvailable()) {
-    // Funktion der frueheren used_machines-Erweiterung verwenden
+    // Funktion der früheren used_machines-Erweiterung verwenden
 }
 ```
 
-Seit Version 1.6 wird nicht mehr das Plugin, sondern die integrierte Erweiterung des Hauptaddons abgefragt. Dafuer gibt es die zentrale Extension-Verwaltung:
+Seit Version 1.6 wird nicht mehr das Plugin, sondern die integrierte Erweiterung des Hauptaddons abgefragt. Dafür gibt es die zentrale Extension-Verwaltung:
 
 ```php
 use TobiasKrais\D2UMachinery\Extension;
@@ -36,9 +36,9 @@ if (Extension::isActive('used_machines')) {
 }
 ```
 
-Die Schluessel entsprechen in der Regel den frueheren Plugin-Namen, zum Beispiel `contacts`, `equipment`, `industry_sectors`, `production_lines`, `service_options`, `used_machines` oder `export`.
+Die Schlüssel entsprechen in der Regel den früheren Plugin-Namen, zum Beispiel `contacts`, `equipment`, `industry_sectors`, `production_lines`, `service_options`, `used_machines` oder `export`.
 
-Fuer Altinstallationen bleiben auch Wrapper fuer ehemalige Plugins ohne eigene Backend-Seite erhalten, zum Beispiel `machine_construction_equipment_extension`.
+Für Altinstallationen bleiben auch Wrapper für ehemalige Plugins ohne eigene Backend-Seite erhalten, zum Beispiel `machine_construction_equipment_extension`.
 
 ### Kontakte (contacts)
 
