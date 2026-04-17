@@ -205,6 +205,7 @@ if ('' === $func) {
 	$list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
 	$list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
 	$list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###industry_sector_id###']);
+
 	$list->removeColumn('online_status');
 	if (rex::getUser() instanceof rex_user && (rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
 		$list->addColumn(rex_i18n::msg('status_online'), '<a class="rex-###online_status###" href="' . rex_url::currentBackendPage(['func' => 'changestatus']) . '&entry_id=###industry_sector_id###"><i class="rex-icon rex-icon-###online_status###"></i> ###online_status###</a>');
@@ -214,6 +215,13 @@ if ('' === $func) {
 		$list->setColumnParams(rex_i18n::msg('delete_module'), ['func' => 'delete', 'entry_id' => '###industry_sector_id###']);
 		$list->addLinkAttribute(rex_i18n::msg('delete_module'), 'data-confirm', rex_i18n::msg('d2u_helper_confirm_delete'));
 	}
+	$list->addColumn(rex_i18n::msg('d2u_helper_open_frontend'), '');
+	$list->setColumnLayout(rex_i18n::msg('d2u_helper_open_frontend'), ['', '<td class="rex-table-action">###VALUE###</td>']);
+	$list->setColumnFormat(rex_i18n::msg('d2u_helper_open_frontend'), 'custom', static function ($params) {
+		$listParams = $params['list'];
+
+		return BackendHelper::getFrontendLinkButton((new \TobiasKrais\D2UMachinery\IndustrySector((int) $listParams->getValue('industry_sector_id'), (int) rex_config::get('d2u_helper', 'default_lang')))->getUrl());
+	});
 	$list->setNoRowsMessage(rex_i18n::msg('d2u_machinery_industry_sectors_no_industry_sectors_found'));
 	$fragment = new rex_fragment();
 	$fragment->setVar('title', rex_i18n::msg('d2u_machinery_industry_sectors'), false);

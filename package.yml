@@ -63,7 +63,7 @@ requires:
     php: '>=8.0'
     redaxo: '>=5.10.0'
     packages:
-        d2u_helper: '>=2.1.4'
+        d2u_helper: '>=2.2.1'
         media_manager: '>=2.3'
         sprog: '>=1.0.0'
         url: '>=2.0'
