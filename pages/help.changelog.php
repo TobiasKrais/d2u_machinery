@@ -2,6 +2,10 @@
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_machinery" target="_blank">GitHub Repository</a> melden.</p>
 
 <h2>Changelog</h2>
+<p>1.7.2-DEV:</p>
+<ul>
+	<li>...</li>
+</ul>
 <p>1.7.1:</p>
 <ul>
 	<li>Bugfix: Prioritäten werden bei Kategorien, Maschinen, Merkmalen, Optionen, Einsatzbereichen, Ausstattungsgruppen und Automatisierungen nach dem Speichern wieder stabil neu durchnummeriert, auch wenn in der Datenbank bereits doppelte Werte vorhanden sind.</li>
