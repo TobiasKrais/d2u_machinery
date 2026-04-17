@@ -11,10 +11,10 @@ Nur projektspezifische Regeln, die für KI-Arbeit relevant sind.
 
 ## Wichtige Projekthinweise
 
-- Backend-Translation-Keys müssen in allen Sprachdateien unter `lang/` synchron bleiben. Aktuell: `de_de`, `en_gb`, `nl_nl`.
+- Backend-Translation-Keys müssen in allen Sprachdateien unter `lang/` synchron bleiben.
 - Legacy-Plugin-Verzeichnisse unter `plugins/` nur für Rückwärtskompatibilität nutzen. Keine neuen separaten Plugin-Libs, Pages oder Install-/Update-Logik anlegen.
-- Wenn Module unter `modules/90/*` geändert werden, Changelog in `pages/help.changelog.php` prüfen oder aktualisieren.
-- Die Revisionsnummer in `lib/Module.php` nur einmal pro Release erhöhen. Wenn die Zielversion im Changelog bereits `-DEV` trägt, innerhalb derselben Entwicklungsphase nicht erneut hochzählen.
+- Wenn Module unter `modules/90/*` geändert werden, Changelog in `pages/help.changelog.php` prüfen oder aktualisieren und die Revisionsnummer in `lib/Module.php` nur einmal pro Release erhöhen.
+- Versionshinweise für Module: Wenn die Zielversion im Changelog bereits `-DEV` trägt, innerhalb derselben Entwicklungsphase keine weitere Revisionsnummer für dasselbe Modul hochzählen. Erst mit der nächsten Release-Version wieder erneut erhöhen.
 - In Changelog-Dateien, AGENTS.md und README.md sind Umlaute erlaubt und müssen nicht auf ASCII umgeschrieben werden.
 
 ## Pflege
