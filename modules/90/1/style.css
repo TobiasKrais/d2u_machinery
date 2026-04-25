@@ -69,13 +69,13 @@
     border-left: 15px solid transparent;
     border-right: 15px solid transparent;
     border-top: 3px solid transparent;
-	border-bottom: 12px solid var(--article-color-h);
+	border-bottom: 12px solid var(--article-color-bg);
     margin: 0 auto;
     width: 30px;
 }
 .subhead-nav .nav-pills .active, .subhead-nav .nav-pills .show > .nav-link {
     background-color: transparent;
-	color: var(--article-color-h);
+	color: var(--article-color-bg);
 }
 .techdata td, .downloads, .inactive-cell, .consultation, .deliverybox, .block-box {
 	background-color: var(--article-color-box);
