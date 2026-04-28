@@ -8,11 +8,26 @@ $func = rex_request('func', 'string');
 $entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
 
+$csrfToken = BackendHelper::getPageCsrfToken();
+$invalidCsrf = false;
+if ((
+	1 === (int) filter_input(INPUT_POST, 'btn_save')
+	|| 1 === (int) filter_input(INPUT_POST, 'btn_apply')
+	|| 1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_VALIDATE_INT)
+	|| in_array($func, ['delete', 'changestatus'], true)
+) && !$csrfToken->isValid()) {
+	echo rex_view::error(rex_i18n::msg('csrf_token_invalid'));
+	$invalidCsrf = true;
+	if (in_array($func, ['delete', 'changestatus'], true)) {
+		$func = '';
+	}
+}
+
 if ('' !== $message) {
 	echo rex_view::success(rex_i18n::msg($message));
 }
 
-if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input(INPUT_POST, 'btn_apply')) {
+if (!$invalidCsrf && (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input(INPUT_POST, 'btn_apply'))) {
 	$form = rex_post('form', 'array', []);
 	$input_media = rex_post('REX_INPUT_MEDIA', 'array', []);
 
@@ -49,7 +64,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
 	}
 	exit;
 }
-if (1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_VALIDATE_INT) || 'delete' === $func) {
+if ((!$invalidCsrf && 1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_VALIDATE_INT)) || 'delete' === $func) {
 	$serviceOptionId = $entry_id;
 	if (0 === $serviceOptionId) {
 		$form = rex_post('form', 'array', []);
@@ -81,7 +96,8 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_VALIDATE_INT) || '
 
 if ('edit' === $func || 'add' === $func) {
 ?>
-	<form action="<?= rex_url::currentBackendPage() ?>" method="post">
+	<form action="<?= BackendHelper::getCurrentBackendPage([], ['message', 'message_type']) ?>" method="post">
+		<?= $csrfToken->getHiddenField() ?>
 		<div class="panel panel-edit">
 			<header class="panel-heading"><div class="panel-title"><?= rex_i18n::msg('d2u_machinery_service_options') ?></div></header>
 			<div class="panel-body">
@@ -190,11 +206,11 @@ if ('' === $func) {
 	$list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###service_option_id###']);
 	$list->removeColumn('online_status');
 	if (rex::getUser() instanceof rex_user && (rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
-		$list->addColumn(rex_i18n::msg('status_online'), '<a class="rex-###online_status###" href="' . rex_url::currentBackendPage(['func' => 'changestatus']) . '&entry_id=###service_option_id###"><i class="rex-icon rex-icon-###online_status###"></i> ###online_status###</a>');
+		$list->addColumn(rex_i18n::msg('status_online'), '<a class="rex-###online_status###" href="' . BackendHelper::getCurrentBackendPage(['func' => 'changestatus', 'entry_id' => '###service_option_id###'], [], true) . '"><i class="rex-icon rex-icon-###online_status###"></i> ###online_status###</a>');
 		$list->setColumnLayout(rex_i18n::msg('status_online'), ['', '<td class="rex-table-action">###VALUE###</td>']);
 		$list->addColumn(rex_i18n::msg('delete_module'), '<i class="rex-icon rex-icon-delete"></i> ' . rex_i18n::msg('delete'));
 		$list->setColumnLayout(rex_i18n::msg('delete_module'), ['', '<td class="rex-table-action">###VALUE###</td>']);
-		$list->setColumnParams(rex_i18n::msg('delete_module'), ['func' => 'delete', 'entry_id' => '###service_option_id###']);
+		$list->setColumnParams(rex_i18n::msg('delete_module'), ['func' => 'delete', 'entry_id' => '###service_option_id###'] + $csrfToken->getUrlParams());
 		$list->addLinkAttribute(rex_i18n::msg('delete_module'), 'data-confirm', rex_i18n::msg('d2u_helper_confirm_delete'));
 	}
 	$list->setNoRowsMessage(rex_i18n::msg('d2u_machinery_service_options_no_service_options_found'));

@@ -27,13 +27,28 @@ $func = rex_request('func', 'string');
 $entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
 
+$csrfToken = BackendHelper::getPageCsrfToken();
+$invalidCsrf = false;
+if ((
+	1 === (int) filter_input(INPUT_POST, 'btn_save')
+	|| 1 === (int) filter_input(INPUT_POST, 'btn_apply')
+	|| 1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_VALIDATE_INT)
+	|| in_array($func, ['delete', 'changestatus'], true)
+) && !$csrfToken->isValid()) {
+	echo rex_view::error(rex_i18n::msg('csrf_token_invalid'));
+	$invalidCsrf = true;
+	if (in_array($func, ['delete', 'changestatus'], true)) {
+		$func = '';
+	}
+}
+
 // Print message
 if ('' !== $message) {
 	echo rex_view::success(rex_i18n::msg($message));
 }
 
 // save settings
-if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input(INPUT_POST, 'btn_apply')) {
+if (!$invalidCsrf && (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input(INPUT_POST, 'btn_apply'))) {
 	$form = rex_post('form', 'array', []);
 
 	// Media fields and links need special treatment
@@ -312,7 +327,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
 	exit;
 }
 // Delete
-if (1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_VALIDATE_INT) || 'delete' === $func) {
+if ((!$invalidCsrf && 1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_VALIDATE_INT)) || 'delete' === $func) {
 	$machine_id = $entry_id;
 	if (0 === $machine_id) {
 		$form = rex_post('form', 'array', []);
@@ -388,7 +403,8 @@ elseif ('priority_down' === $func || 'priority_up' === $func) {
 if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 	$machine = new Machine($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'));
 ?>
-	<form action="<?= rex_url::currentBackendPage() ?>" method="post">
+	<form action="<?= BackendHelper::getCurrentBackendPage([], ['message', 'message_type']) ?>" method="post">
+		<?= $csrfToken->getHiddenField() ?>
 		<div class="panel panel-edit">
 			<header class="panel-heading"><div class="panel-title"><?= rex_i18n::msg('d2u_machinery_machine') ?></div></header>
 			<div class="panel-body">
@@ -916,7 +932,7 @@ if ('' === $func) {
 
 	$list->removeColumn('online_status');
 	if (\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
-		$list->addColumn(rex_i18n::msg('status_online'), '<a class="rex-###online_status###" href="' . rex_url::currentBackendPage(['func' => 'changestatus']) . '&entry_id=###machine_id###"><i class="rex-icon rex-icon-###online_status###"></i> ###online_status###</a>');
+		$list->addColumn(rex_i18n::msg('status_online'), '<a class="rex-###online_status###" href="' . BackendHelper::getCurrentBackendPage(['func' => 'changestatus', 'entry_id' => '###machine_id###'], [], true) . '"><i class="rex-icon rex-icon-###online_status###"></i> ###online_status###</a>');
 		$list->setColumnLayout(rex_i18n::msg('status_online'), ['', '<td class="rex-table-action">###VALUE###</td>']);
 
 		$list->addColumn(rex_i18n::msg('d2u_helper_clone'), '<i class="rex-icon fa-copy"></i> ' . rex_i18n::msg('d2u_helper_clone'));
@@ -925,7 +941,7 @@ if ('' === $func) {
 
 		$list->addColumn(rex_i18n::msg('delete_module'), '<i class="rex-icon rex-icon-delete"></i> ' . rex_i18n::msg('delete'));
 		$list->setColumnLayout(rex_i18n::msg('delete_module'), ['', '<td class="rex-table-action">###VALUE###</td>']);
-		$list->setColumnParams(rex_i18n::msg('delete_module'), ['func' => 'delete', 'entry_id' => '###machine_id###']);
+		$list->setColumnParams(rex_i18n::msg('delete_module'), ['func' => 'delete', 'entry_id' => '###machine_id###'] + $csrfToken->getUrlParams());
 		$list->addLinkAttribute(rex_i18n::msg('delete_module'), 'data-confirm', rex_i18n::msg('d2u_helper_confirm_delete'));
 	}
 

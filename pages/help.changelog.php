@@ -4,6 +4,7 @@
 <h2>Changelog</h2>
 <p>1.7.2-DEV:</p>
 <ul>
+	<li>Backend: CSRF-Schutz fuer Speichern-, Loesch- und Statusaktionen der Branchen-, Maschinen- und Serviceoptions-Verwaltung ergaenzt.</li>
 	<li>...</li>
 </ul>
 <p>1.7.1:</p>
