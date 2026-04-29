@@ -1,5 +1,6 @@
 <?php
 
+use TobiasKrais\D2UHelper\BackendHelper;
 use TobiasKrais\D2UMachinery\ExportedUsedMachine;
 use TobiasKrais\D2UMachinery\Provider;
 use TobiasKrais\D2UMachinery\UsedMachine;
@@ -9,24 +10,31 @@ $provider_id = (int) rex_request('provider_id', 'int');
 $used_machine_id = (int) rex_request('used_machine_id', 'int');
 $usedMachinesPageParams = isset($usedMachinesPageParams) && is_array($usedMachinesPageParams) ? $usedMachinesPageParams : [];
 
+$csrfToken = BackendHelper::getPageCsrfToken();
+$invalidCsrf = false;
+if ('' !== $func && !$csrfToken->isValid()) {
+    echo rex_view::error(rex_i18n::msg('csrf_token_invalid'));
+    $invalidCsrf = true;
+}
+
 /*
  * Do actions
  */
-if ('online' === $func) {
+if (!$invalidCsrf && 'online' === $func) {
     // Add to next export
     $export_used_machine = new ExportedUsedMachine($used_machine_id, $provider_id);
     $export_used_machine->addToExport();
-} elseif ('offline' === $func) {
+} elseif (!$invalidCsrf && 'offline' === $func) {
     // Remove to next export
     $export_used_machine = new ExportedUsedMachine($used_machine_id, $provider_id);
     $export_used_machine->removeFromExport();
-} elseif ('all_online' === $func) {
+} elseif (!$invalidCsrf && 'all_online' === $func) {
     // Add all to next export
     ExportedUsedMachine::addAllToExport($provider_id);
-} elseif ('all_offline' === $func) {
+} elseif (!$invalidCsrf && 'all_offline' === $func) {
     // Remove all from next export
     ExportedUsedMachine::removeAllFromExport($provider_id);
-} elseif ('export' === $func) {
+} elseif (!$invalidCsrf && 'export' === $func) {
     // Export
     $provider = new Provider($provider_id);
     $error = $provider->export();
@@ -83,7 +91,7 @@ if (count($providers) > 0) {
     foreach ($providers as $provider) {
         echo '<td>';
         if ($provider->isExportPossible()) {
-            echo "<a href='". rex_url::currentBackendPage(array_merge($usedMachinesPageParams, ['func' => 'export', 'provider_id' => $provider->provider_id])) ."'>"
+            echo "<a href='". rex_url::currentBackendPage(array_merge($usedMachinesPageParams, ['func' => 'export', 'provider_id' => $provider->provider_id], $csrfToken->getUrlParams())) ."'>"
                 . "<button class='btn btn-apply'>". rex_i18n::msg('d2u_machinery_export_start') .'</button></a>';
         }
         echo '</td>';
@@ -108,7 +116,7 @@ if (count($providers) > 0) {
         echo '<tr>';
         echo '<td><i>'. rex_i18n::msg('d2u_machinery_export_all_online') .'</i></td>';
         foreach ($providers as $provider) {
-                echo '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(array_merge($usedMachinesPageParams, ['func' => 'all_online', 'provider_id' => $provider->provider_id]))
+                echo '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(array_merge($usedMachinesPageParams, ['func' => 'all_online', 'provider_id' => $provider->provider_id], $csrfToken->getUrlParams()))
                     .'" class="rex-online"><i class="rex-icon rex-icon-online"></i> '. rex_i18n::msg('status_online') .'</a></td>';
         }
         echo '</tr>';
@@ -116,7 +124,7 @@ if (count($providers) > 0) {
         echo '<tr>';
         echo '<td><i>'. rex_i18n::msg('d2u_machinery_export_all_offline') .'</i></td>';
         foreach ($providers as $provider) {
-                echo '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(array_merge($usedMachinesPageParams, ['func' => 'all_offline', 'provider_id' => $provider->provider_id]))
+                echo '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(array_merge($usedMachinesPageParams, ['func' => 'all_offline', 'provider_id' => $provider->provider_id], $csrfToken->getUrlParams()))
                     .'" class="rex-offline"><i class="rex-icon rex-icon-offline"></i> '. rex_i18n::msg('status_offline') .'</a></td>';
         }
         echo '</tr>';
@@ -138,10 +146,10 @@ if (count($providers) > 0) {
                 } else {
                     $exported_used_machine = new ExportedUsedMachine($used_machine->used_machine_id, $provider->provider_id);
                     if ($exported_used_machine->isSetForExport()) {
-                        echo '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(array_merge($usedMachinesPageParams, ['func' => 'offline', 'provider_id' => $provider->provider_id, 'used_machine_id' => $used_machine->used_machine_id]))
+                        echo '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(array_merge($usedMachinesPageParams, ['func' => 'offline', 'provider_id' => $provider->provider_id, 'used_machine_id' => $used_machine->used_machine_id], $csrfToken->getUrlParams()))
                             .'" class="rex-online"><i class="rex-icon rex-icon-online"></i> '. rex_i18n::msg('status_online') .'</a></td>';
                     } else {
-                        echo '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(array_merge($usedMachinesPageParams, ['func' => 'online', 'provider_id' => $provider->provider_id, 'used_machine_id' => $used_machine->used_machine_id]))
+                        echo '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(array_merge($usedMachinesPageParams, ['func' => 'online', 'provider_id' => $provider->provider_id, 'used_machine_id' => $used_machine->used_machine_id], $csrfToken->getUrlParams()))
                             .'" class="rex-offline"><i class="rex-icon rex-icon-offline"></i> '. rex_i18n::msg('status_offline') .'</a></td>';
                     }
                 }

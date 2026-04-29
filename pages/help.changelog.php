@@ -5,7 +5,8 @@
 <p>1.7.2-DEV:</p>
 <ul>
 	<li>Backend: CSRF-Schutz fuer Speichern-, Loesch- und Statusaktionen der Branchen-, Maschinen- und Serviceoptions-Verwaltung ergaenzt.</li>
-	<li>...</li>
+	<li>Backend: CSRF-Schutz fuer den Export gebrauchter Maschinen (Exportprovider, Online/Offline-Schalter) ergaenzt.</li>
+	<li>Backend: CSRF-Schutz fuer Modul-Installation, -Update und -Deinstallation auf der Setup-Seite ergaenzt.</li>
 </ul>
 <p>1.7.1:</p>
 <ul>
