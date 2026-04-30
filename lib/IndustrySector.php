@@ -333,18 +333,22 @@ class IndustrySector implements \TobiasKrais\D2UHelper\ITranslationHelper
         // saving the rest
         if (0 === $this->industry_sector_id || $pre_save_object !== $this) {
             $query = \rex::getTablePrefix() .'d2u_machinery_industry_sectors SET '
-                    ."online_status = '". $this->online_status ."', "
-                    ."icon = '". $this->icon ."', "
-                    ."pic = '". $this->pic ."' ";
+                    .'online_status = :online_status, '
+                    .'icon = :icon, '
+                    .'pic = :pic ';
 
             if (0 === $this->industry_sector_id) {
                 $query = 'INSERT INTO '. $query;
             } else {
-                $query = 'UPDATE '. $query .' WHERE industry_sector_id = '. $this->industry_sector_id;
+                $query = 'UPDATE '. $query .' WHERE industry_sector_id = '. (int) $this->industry_sector_id;
             }
 
             $result = \rex_sql::factory();
-            $result->setQuery($query);
+            $result->setQuery($query, [
+                ':online_status' => $this->online_status,
+                ':icon' => $this->icon,
+                ':pic' => $this->pic,
+            ]);
             if (0 === $this->industry_sector_id) {
                 $this->industry_sector_id = (int) $result->getLastId();
                 $error = $result->hasError();
@@ -357,17 +361,25 @@ class IndustrySector implements \TobiasKrais\D2UHelper\ITranslationHelper
             $pre_save_object = new self($this->industry_sector_id, $this->clang_id);
             if ($pre_save_object !== $this) {
                 $query = 'REPLACE INTO '. \rex::getTablePrefix() .'d2u_machinery_industry_sectors_lang SET '
-                        ."industry_sector_id = '". $this->industry_sector_id ."', "
-                        ."clang_id = '". $this->clang_id ."', "
-                        ."name = '". addslashes($this->name) ."', "
-                        ."teaser = '". addslashes(htmlspecialchars($this->teaser)) ."', "
-                        ."description = '". addslashes(htmlspecialchars($this->description)) ."', "
-                        ."translation_needs_update = '". $this->translation_needs_update ."', "
+                        .'industry_sector_id = :industry_sector_id, '
+                        .'clang_id = :clang_id, '
+                        .'name = :name, '
+                        .'teaser = :teaser, '
+                        .'description = :description, '
+                        .'translation_needs_update = :tnu, '
                         .'updatedate = CURRENT_TIMESTAMP, '
-                        ."updateuser = '". (\rex::getUser() instanceof rex_user ? \rex::getUser()->getLogin() : '') ."' ";
+                        .'updateuser = :updateuser ';
 
                 $result = \rex_sql::factory();
-                $result->setQuery($query);
+                $result->setQuery($query, [
+                    ':industry_sector_id' => $this->industry_sector_id,
+                    ':clang_id' => $this->clang_id,
+                    ':name' => $this->name,
+                    ':teaser' => htmlspecialchars($this->teaser),
+                    ':description' => htmlspecialchars($this->description),
+                    ':tnu' => $this->translation_needs_update,
+                    ':updateuser' => \rex::getUser() instanceof rex_user ? \rex::getUser()->getLogin() : '',
+                ]);
                 $error = $result->hasError();
 
                 if (!$error && $pre_save_object->name !== $this->name) {

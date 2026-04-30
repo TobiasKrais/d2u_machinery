@@ -194,17 +194,20 @@ class AgitatorType implements \TobiasKrais\D2UHelper\ITranslationHelper
         // saving the rest
         if (0 === $this->agitator_type_id || $pre_save_agitator_type !== $this) {
             $query = \rex::getTablePrefix() .'d2u_machinery_agitator_types SET '
-                    ."agitator_ids = '|". implode('|', $this->agitator_ids) ."|', "
-                    ."pic = '". $this->pic ."' ";
+                    .'agitator_ids = :agitator_ids, '
+                    .'pic = :pic ';
 
             if (0 === $this->agitator_type_id) {
                 $query = 'INSERT INTO '. $query;
             } else {
-                $query = 'UPDATE '. $query .' WHERE agitator_type_id = '. $this->agitator_type_id;
+                $query = 'UPDATE '. $query .' WHERE agitator_type_id = '. (int) $this->agitator_type_id;
             }
 
             $result = \rex_sql::factory();
-            $result->setQuery($query);
+            $result->setQuery($query, [
+                ':agitator_ids' => '|' . implode('|', $this->agitator_ids) . '|',
+                ':pic' => $this->pic,
+            ]);
             if (0 === $this->agitator_type_id) {
                 $this->agitator_type_id = (int) $result->getLastId();
                 $error = $result->hasError();
@@ -216,13 +219,18 @@ class AgitatorType implements \TobiasKrais\D2UHelper\ITranslationHelper
             $pre_save_agitator_type = new self($this->agitator_type_id, $this->clang_id);
             if ($pre_save_agitator_type !== $this) {
                 $query = 'REPLACE INTO '. \rex::getTablePrefix() .'d2u_machinery_agitator_types_lang SET '
-                        ."agitator_type_id = '". $this->agitator_type_id ."', "
-                        ."clang_id = '". $this->clang_id ."', "
-                        ."name = '". addslashes($this->name) ."', "
-                        ."translation_needs_update = '". $this->translation_needs_update ."' ";
+                        .'agitator_type_id = :agitator_type_id, '
+                        .'clang_id = :clang_id, '
+                        .'name = :name, '
+                        .'translation_needs_update = :tnu ';
 
                 $result = \rex_sql::factory();
-                $result->setQuery($query);
+                $result->setQuery($query, [
+                    ':agitator_type_id' => $this->agitator_type_id,
+                    ':clang_id' => $this->clang_id,
+                    ':name' => $this->name,
+                    ':tnu' => $this->translation_needs_update,
+                ]);
                 $error = $result->hasError();
             }
         }

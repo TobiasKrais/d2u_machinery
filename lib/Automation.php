@@ -195,15 +195,15 @@ class Automation implements \TobiasKrais\D2UHelper\ITranslationHelper
         // saving the rest
         if (0 === $this->automation_id || $pre_save_automation !== $this) {
             $query = \rex::getTablePrefix() .'d2u_machinery_steel_automation SET '
-                    ."internal_name = '". $this->internal_name ."' ";
+                    .'internal_name = :internal_name ';
             if (0 === $this->automation_id) {
                 $query = 'INSERT INTO '. $query;
             } else {
-                $query = 'UPDATE '. $query .' WHERE automation_id = '. $this->automation_id;
+                $query = 'UPDATE '. $query .' WHERE automation_id = '. (int) $this->automation_id;
             }
 
             $result = \rex_sql::factory();
-            $result->setQuery($query);
+            $result->setQuery($query, [':internal_name' => $this->internal_name]);
             if (0 === $this->automation_id) {
                 $this->automation_id = (int) $result->getLastId();
                 $error = $result->hasError();
@@ -215,13 +215,18 @@ class Automation implements \TobiasKrais\D2UHelper\ITranslationHelper
             $pre_save_automation = new self($this->automation_id, $this->clang_id);
             if ($pre_save_automation !== $this) {
                 $query = 'REPLACE INTO '. \rex::getTablePrefix() .'d2u_machinery_steel_automation_lang SET '
-                        ."automation_id = '". $this->automation_id ."', "
-                        ."clang_id = '". $this->clang_id ."', "
-                        ."name = '". addslashes($this->name) ."', "
-                        ."translation_needs_update = '". $this->translation_needs_update ."' ";
+                        .'automation_id = :automation_id, '
+                        .'clang_id = :clang_id, '
+                        .'name = :name, '
+                        .'translation_needs_update = :tnu ';
 
                 $result = \rex_sql::factory();
-                $result->setQuery($query);
+                $result->setQuery($query, [
+                    ':automation_id' => $this->automation_id,
+                    ':clang_id' => $this->clang_id,
+                    ':name' => $this->name,
+                    ':tnu' => $this->translation_needs_update,
+                ]);
                 $error = $result->hasError();
             }
         }

@@ -231,11 +231,11 @@ class Option implements \TobiasKrais\D2UHelper\ITranslationHelper
         // saving the rest
         if (0 === $this->option_id || $pre_save_option !== $this) {
             $query = \rex::getTablePrefix() .'d2u_machinery_options SET '
-                    ."pic = '". $this->pic ."', "
-                    ."category_ids = '|". implode('|', $this->category_ids) ."|', "
-                    .'priority = '. $this->priority .' ';
+                    .'pic = :pic, '
+                    .'category_ids = :category_ids, '
+                    .'priority = '. (int) $this->priority .' ';
             if (\rex_addon::get('d2u_videos') instanceof rex_addon && \rex_addon::get('d2u_videos')->isAvailable() && false !== $this->video) {
-                $query .= ', video_id = '. ($this->video instanceof Video ? $this->video->video_id : 0);
+                $query .= ', video_id = '. ($this->video instanceof Video ? (int) $this->video->video_id : 0);
             } else {
                 $query .= ', video_id = NULL';
             }
@@ -243,11 +243,14 @@ class Option implements \TobiasKrais\D2UHelper\ITranslationHelper
             if (0 === $this->option_id) {
                 $query = 'INSERT INTO '. $query;
             } else {
-                $query = 'UPDATE '. $query .' WHERE option_id = '. $this->option_id;
+                $query = 'UPDATE '. $query .' WHERE option_id = '. (int) $this->option_id;
             }
 
             $result = \rex_sql::factory();
-            $result->setQuery($query);
+            $result->setQuery($query, [
+                ':pic' => $this->pic,
+                ':category_ids' => '|' . implode('|', $this->category_ids) . '|',
+            ]);
             if (0 === $this->option_id) {
                 $this->option_id = (int) $result->getLastId();
                 $error = $result->hasError();
@@ -259,14 +262,20 @@ class Option implements \TobiasKrais\D2UHelper\ITranslationHelper
             $pre_save_option = new self($this->option_id, $this->clang_id);
             if ($pre_save_option !== $this) {
                 $query = 'REPLACE INTO '. \rex::getTablePrefix() .'d2u_machinery_options_lang SET '
-                        ."option_id = '". $this->option_id ."', "
-                        ."clang_id = '". $this->clang_id ."', "
-                        ."name = '". addslashes($this->name) ."', "
-                        ."description = '". addslashes(htmlspecialchars($this->description)) ."', "
-                        ."translation_needs_update = '". $this->translation_needs_update ."' ";
+                        .'option_id = :option_id, '
+                        .'clang_id = :clang_id, '
+                        .'name = :name, '
+                        .'description = :description, '
+                        .'translation_needs_update = :tnu ';
 
                 $result = \rex_sql::factory();
-                $result->setQuery($query);
+                $result->setQuery($query, [
+                    ':option_id' => $this->option_id,
+                    ':clang_id' => $this->clang_id,
+                    ':name' => $this->name,
+                    ':description' => htmlspecialchars($this->description),
+                    ':tnu' => $this->translation_needs_update,
+                ]);
                 $error = $result->hasError();
             }
         }

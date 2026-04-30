@@ -470,26 +470,39 @@ class UsedMachine implements \TobiasKrais\D2UHelper\ITranslationHelper
         $regenerate_urls = false;
         if (0 === $this->used_machine_id || $pre_save_object !== $this) {
             $query = \rex::getTablePrefix() .'d2u_machinery_used_machines SET '
-                    ."name = '". addslashes($this->name) ."', "
-                    .'category_id = '. ($this->category instanceof Category ? $this->category->category_id : 0) .', '
-                    ."offer_type = '". $this->offer_type ."', "
-                    ."availability = '". $this->availability ."', "
-                    ."product_number = '". $this->product_number ."', "
-                    ."manufacturer = '". $this->manufacturer ."', "
-                    .'year_built = '. $this->year_built .', '
-                    .'price = '. $this->price .', '
-                    ."currency_code = '". $this->currency_code ."', "
-                    .'vat = '. $this->vat .', '
-                    ."online_status = '". $this->online_status ."', "
-                    ."pics = '". implode(',', $this->pics) ."', "
-                    .'machine_id = '. ($this->machine instanceof Machine ? $this->machine->machine_id : 0) .', '
-                    ."location = '". $this->location ."', "
-                    ."external_url = '". $this->external_url ."' ";
+                    .'name = :name, '
+                    .'category_id = '. ($this->category instanceof Category ? (int) $this->category->category_id : 0) .', '
+                    .'offer_type = :offer_type, '
+                    .'availability = :availability, '
+                    .'product_number = :product_number, '
+                    .'manufacturer = :manufacturer, '
+                    .'year_built = '. (int) $this->year_built .', '
+                    .'price = '. (float) $this->price .', '
+                    .'currency_code = :currency_code, '
+                    .'vat = '. (float) $this->vat .', '
+                    .'online_status = :online_status, '
+                    .'pics = :pics, '
+                    .'machine_id = '. ($this->machine instanceof Machine ? (int) $this->machine->machine_id : 0) .', '
+                    .'location = :location, '
+                    .'external_url = :external_url ';
+            $params = [
+                ':name' => $this->name,
+                ':offer_type' => $this->offer_type,
+                ':availability' => $this->availability,
+                ':product_number' => $this->product_number,
+                ':manufacturer' => $this->manufacturer,
+                ':currency_code' => $this->currency_code,
+                ':online_status' => $this->online_status,
+                ':pics' => implode(',', $this->pics),
+                ':location' => $this->location,
+                ':external_url' => $this->external_url,
+            ];
             if (\TobiasKrais\D2UMachinery\Extension::isActive('contacts')) {
-                $query .= ', contact_id = '. ($this->contact instanceof Contact ? $this->contact->contact_id : 0) .' ';
+                $query .= ', contact_id = '. ($this->contact instanceof Contact ? (int) $this->contact->contact_id : 0) .' ';
             }
             if (\rex_addon::get('d2u_videos') instanceof rex_addon && \rex_addon::get('d2u_videos')->isAvailable() && count($this->videos) > 0) {
-                $query .= ", video_ids = '|". implode('|', array_keys($this->videos)) ."|' ";
+                $query .= ', video_ids = :video_ids ';
+                $params[':video_ids'] = '|' . implode('|', array_keys($this->videos)) . '|';
             } else {
                 $query .= ", video_ids = '' ";
             }
@@ -497,10 +510,10 @@ class UsedMachine implements \TobiasKrais\D2UHelper\ITranslationHelper
             if (0 === $this->used_machine_id) {
                 $query = 'INSERT INTO '. $query;
             } else {
-                $query = 'UPDATE '. $query .' WHERE used_machine_id = '. $this->used_machine_id;
+                $query = 'UPDATE '. $query .' WHERE used_machine_id = '. (int) $this->used_machine_id;
             }
             $result = \rex_sql::factory();
-            $result->setQuery($query);
+            $result->setQuery($query, $params);
             if (0 === $this->used_machine_id) {
                 $this->used_machine_id = (int) $result->getLastId();
                 $error = $result->hasError();
@@ -516,16 +529,24 @@ class UsedMachine implements \TobiasKrais\D2UHelper\ITranslationHelper
             $pre_save_object = new self($this->used_machine_id, $this->clang_id);
             if ($pre_save_object !== $this) {
                 $query = 'REPLACE INTO '. \rex::getTablePrefix() .'d2u_machinery_used_machines_lang SET '
-                        ."used_machine_id = '". $this->used_machine_id ."', "
-                        ."clang_id = '". $this->clang_id ."', "
-                        ."teaser = '". htmlspecialchars(addslashes($this->teaser)) ."', "
-                        ."description = '". htmlspecialchars(addslashes($this->description)) ."', "
-                        ."downloads = '". implode(',', $this->downloads) ."', "
-                        ."translation_needs_update = '". $this->translation_needs_update ."', "
+                        .'used_machine_id = :used_machine_id, '
+                        .'clang_id = :clang_id, '
+                        .'teaser = :teaser, '
+                        .'description = :description, '
+                        .'downloads = :downloads, '
+                        .'translation_needs_update = :tnu, '
                         .'updatedate = CURRENT_TIMESTAMP, '
-                        ."updateuser = '". (\rex::getUser() instanceof rex_user ? \rex::getUser()->getLogin() : '') ."' ";
+                        .'updateuser = :updateuser ';
                 $result = \rex_sql::factory();
-                $result->setQuery($query);
+                $result->setQuery($query, [
+                    ':used_machine_id' => $this->used_machine_id,
+                    ':clang_id' => $this->clang_id,
+                    ':teaser' => htmlspecialchars($this->teaser),
+                    ':description' => htmlspecialchars($this->description),
+                    ':downloads' => implode(',', $this->downloads),
+                    ':tnu' => $this->translation_needs_update,
+                    ':updateuser' => \rex::getUser() instanceof rex_user ? \rex::getUser()->getLogin() : '',
+                ]);
                 $error = $result->hasError();
             }
         }

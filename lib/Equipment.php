@@ -210,18 +210,21 @@ class Equipment implements \TobiasKrais\D2UHelper\ITranslationHelper
         // saving the rest
         if (0 === $this->equipment_id || $pre_save_object !== $this) {
             $query = \rex::getTablePrefix() .'d2u_machinery_equipments SET '
-                    ."article_number = '". $this->article_number ."', "
-                    .'group_id = '. ($this->group instanceof EquipmentGroup ? $this->group->group_id : 0) .', '
-                    ."online_status = '". $this->online_status ."' ";
+                    .'article_number = :article_number, '
+                    .'group_id = '. ($this->group instanceof EquipmentGroup ? (int) $this->group->group_id : 0) .', '
+                    .'online_status = :online_status ';
 
             if (0 === $this->equipment_id) {
                 $query = 'INSERT INTO '. $query;
             } else {
-                $query = 'UPDATE '. $query .' WHERE equipment_id = '. $this->equipment_id;
+                $query = 'UPDATE '. $query .' WHERE equipment_id = '. (int) $this->equipment_id;
             }
 
             $result = \rex_sql::factory();
-            $result->setQuery($query);
+            $result->setQuery($query, [
+                ':article_number' => $this->article_number,
+                ':online_status' => $this->online_status,
+            ]);
             if (0 === $this->equipment_id) {
                 $this->equipment_id = (int) $result->getLastId();
                 $error = $result->hasError();
@@ -233,13 +236,18 @@ class Equipment implements \TobiasKrais\D2UHelper\ITranslationHelper
             $pre_save_object = new self($this->equipment_id, $this->clang_id);
             if ($pre_save_object !== $this) {
                 $query = 'REPLACE INTO '. \rex::getTablePrefix() .'d2u_machinery_equipments_lang SET '
-                        ."equipment_id = '". $this->equipment_id ."', "
-                        ."clang_id = '". $this->clang_id ."', "
-                        ."name = '". addslashes($this->name) ."', "
-                        ."translation_needs_update = '". $this->translation_needs_update ."' ";
+                        .'equipment_id = :equipment_id, '
+                        .'clang_id = :clang_id, '
+                        .'name = :name, '
+                        .'translation_needs_update = :tnu ';
 
                 $result = \rex_sql::factory();
-                $result->setQuery($query);
+                $result->setQuery($query, [
+                    ':equipment_id' => $this->equipment_id,
+                    ':clang_id' => $this->clang_id,
+                    ':name' => $this->name,
+                    ':tnu' => $this->translation_needs_update,
+                ]);
                 $error = $result->hasError();
             }
         }

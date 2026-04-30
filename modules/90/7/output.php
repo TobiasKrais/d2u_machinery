@@ -25,11 +25,11 @@ if (!function_exists('print_categories')) {
                 echo '<a href="'. $category->getUrl() .'" class="bluebox">';
                 echo '<div class="box" data-height-watch>';
                 if ('' !== $category->pic || '' !== $category->pic_lang) {
-                    echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', '' !== $category->pic_lang ? $category->pic_lang : $category->pic) .'" alt="'. $category->name .'">';
+                    echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', '' !== $category->pic_lang ? $category->pic_lang : $category->pic) .'" alt="'. rex_escape($category->name) .'">';
                 } else {
                     echo '<img src="'.	rex_addon::get('d2u_machinery')->getAssetsUrl('white_tile.gif') .'" alt="Placeholder">';
                 }
-                echo '<div>'. $category->name .'</div>';
+                echo '<div>'. rex_escape($category->name) .'</div>';
                 echo '</div>';
                 echo '</a>';
                 echo '</div>';
@@ -100,11 +100,11 @@ if (!function_exists('print_industry_sectors')) {
                 echo '<a href="'. $industry_sector->getUrl() .'" class="bluebox">';
                 echo '<div class="box" data-height-watch>';
                 if ('' !== $industry_sector->pic) {
-                    echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $industry_sector->pic) .'" alt="'. $industry_sector->name .'">';
+                    echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $industry_sector->pic) .'" alt="'. rex_escape($industry_sector->name) .'">';
                 } else {
                     echo '<img src="'.	rex_addon::get('d2u_machinery')->getAssetsUrl('white_tile.gif') .'" alt="Placeholder">';
                 }
-                echo '<div>'. $industry_sector->name .'</div>';
+                echo '<div>'. rex_escape($industry_sector->name) .'</div>';
                 echo '</div>';
                 echo '</a>';
                 echo '</div>';
@@ -187,7 +187,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
     if (count($child_categories) > 0) {
         // Print child categories
         echo '<div class="col-12 abstand">';
-        echo '<h1>'. $category->name .'</h1>';
+        echo '<h1>'. rex_escape($category->name) .'</h1>';
         echo '</div>';
         print_categories($child_categories);
     } else {
@@ -227,7 +227,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
                 echo '<thead><tr><td></td>';
                 foreach ($usage_areas as $usage_area) {
                     echo '<td class="inactive-cell">';
-                    echo '<div class="vertical usage-area-name">'. $usage_area->name .'</div></td>';
+                    echo '<div class="vertical usage-area-name">'. rex_escape($usage_area->name) .'</div></td>';
                 }
                 echo '</tr></thead>';
                 echo '<tbody>';
@@ -541,7 +541,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '<div id="tab_agitator" class="tab-pane fade machine-tab">';
         $agitator_type = new AgitatorType($machine->agitator_type_id, $machine->clang_id);
         echo '<div class="row">';
-        echo '<div class="col-12"><h3>'. $agitator_type->name .'</h3><br><br></div>';
+        echo '<div class="col-12"><h3>'. rex_escape($agitator_type->name) .'</h3><br><br></div>';
         echo '</div>';
         $agitators = $agitator_type->getAgitators();
         foreach ($agitators as $agitator) {
@@ -549,15 +549,15 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '<div class="col-12 col-md-6 col-lg-2">';
             if ('' !== $agitator->pic) {
                 echo '<a href="'. rex_media_manager::getUrl('d2u_helper_gallery_detail', $agitator->pic) .'" '
-                    .'data-d2u-gallery="example-galleryagitator" data-title="'. $agitator->name .'" onclick="event.preventDefault(); d2uLightboxOpen(\'example-galleryagitator\', this);">';
-                echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_features', $agitator->pic) .'" alt='. $agitator->name .' class="featurepic">';
+                    .'data-d2u-gallery="example-galleryagitator" data-title="'. rex_escape($agitator->name) .'" onclick="event.preventDefault(); d2uLightboxOpen(\'example-galleryagitator\', this);">';
+                echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_features', $agitator->pic) .'" alt='. rex_escape($agitator->name) .' class="featurepic">';
                 echo '</a>';
             }
             echo '</div>';
 
             echo '<div class="col-12 col-md-6 col-lg-10">';
             echo '<div class="block-box">';
-            echo '<p><b>'. $agitator->name .'</b></p>';
+            echo '<p><b>'. rex_escape($agitator->name) .'</b></p>';
             echo TobiasKrais\D2UHelper\FrontendHelper::prepareEditorField($agitator->description);
             echo '</div>';
             echo '</div>';
@@ -579,14 +579,14 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
                 echo '<a href="'. rex_media_manager::getUrl('d2u_helper_gallery_detail', $feature->pic) .'" '
                     .'data-d2u-gallery="example-galleryfeatures" data-title="'. $feature->name.'" onclick="event.preventDefault(); d2uLightboxOpen(\'example-galleryfeatures\', this);">';
                 echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_features', $feature->pic) .'" class="img-fluid featurepic"'
-                    .' alt="'. $feature->name .'" title="'. $feature->name .'">';
+                    .' alt="'. rex_escape($feature->name) .'" title="'. rex_escape($feature->name) .'">';
                 echo '</a>';
             }
             echo '</div>';
 
             echo '<div class="col-12 col-sm-8 col-md-9 col-lg-10">';
             echo '<div class="block-box">';
-            echo '<p><b>'. $feature->name .'</b></p>';
+            echo '<p><b>'. rex_escape($feature->name) .'</b></p>';
             echo TobiasKrais\D2UHelper\FrontendHelper::prepareEditorField($feature->description);
             echo '</div>';
             echo '</div>';
@@ -664,7 +664,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '<tbody>';
         foreach ($usage_areas as $usage_area) {
             echo '<tr>';
-            echo '<td class="inactive-cell usage-area-name">'. $usage_area->name .'</td>';
+            echo '<td class="inactive-cell usage-area-name">'. rex_escape($usage_area->name) .'</td>';
             if (in_array($usage_area->usage_area_id, $machine->usage_area_ids, true)) {
                 echo '<td class="active-cell"></td>';
             } else {
@@ -780,13 +780,13 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
             if ('' !== $service_option->picture) {
                 echo '<a href="'. rex_media_manager::getUrl('d2u_helper_gallery_detail', $service_option->picture) .'" '
                     .'data-d2u-gallery="example-galleryservice" data-title="'. $service_option->name.'" onclick="event.preventDefault(); d2uLightboxOpen(\'example-galleryservice\', this);">';
-                echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_features', $service_option->picture) .'" alt='. $service_option->name .' class="featurepic">';
+                echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_features', $service_option->picture) .'" alt='. rex_escape($service_option->name) .' class="featurepic">';
                 echo '</a>';
             }
             echo '</div>';
             echo '<div class="col-12 col-md-6 col-lg-10">';
             echo '<div class="block-box">';
-            echo '<p><b>'. $service_option->name .'</b></p>';
+            echo '<p><b>'. rex_escape($service_option->name) .'</b></p>';
             echo TobiasKrais\D2UHelper\FrontendHelper::prepareEditorField($service_option->description);
             echo '</div>';
             echo '</div>';
@@ -821,7 +821,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
                 echo '<a href="'. rex_media_manager::getUrl('d2u_helper_gallery_detail', $equipment_group->picture) .'" '
                     .'data-d2u-gallery="example-galleryequipment" data-title="'. $equipment_group->name.'" onclick="event.preventDefault(); d2uLightboxOpen(\'example-galleryequipment\', this);">';
                 echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_features', $equipment_group->picture) .'" class="img-fluid featurepic"'
-                    .' alt="'. $equipment_group->name .'" title="'. $equipment_group->name .'">';
+                    .' alt="'. rex_escape($equipment_group->name) .'" title="'. rex_escape($equipment_group->name) .'">';
                 echo '</a>';
             }
             echo '</div>';
@@ -830,7 +830,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '<div class="row">';
             echo '<div class="col-12">';
             echo '<div class="block-box">';
-            echo '<h3>'. $equipment_group->name .'</h3>';
+            echo '<h3>'. rex_escape($equipment_group->name) .'</h3>';
             echo '<p>'. TobiasKrais\D2UHelper\FrontendHelper::prepareEditorField($equipment_group->description) .'</p>';
             echo '</div>';
             echo '</div>';
@@ -838,7 +838,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
             ksort($current_equipments);
             foreach ($current_equipments as $current_equipment) {
                 echo '<div class="col-12">';
-                echo '<div class="block-box"><b>'. $current_equipment->name .'</b>';
+                echo '<div class="block-box"><b>'. rex_escape($current_equipment->name) .'</b>';
                 if ('' !== $current_equipment->article_number) {
                     echo ' ('. \Sprog\Wildcard::get('d2u_machinery_equipment_artno') .' '. $current_equipment->article_number .')';
                 }
@@ -859,9 +859,9 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
     echo '<div id="tab_request" class="tab-pane fade machine-tab">';
     echo '<div class="row">';
     echo '<div class="col-12 col-md-8">';
-    $form_data = 'hidden|machine_name|'. $machine->name .'|REQUEST
+    $form_data = 'hidden|machine_name|'. rex_escape($machine->name) .'|REQUEST
 
-			html||<h3> '. \Sprog\Wildcard::get('d2u_machinery_request') .': '. $machine->name .'</h3><br>
+			html||<h3> '. \Sprog\Wildcard::get('d2u_machinery_request') .': '. rex_escape($machine->name) .'</h3><br>
 			text|vorname|'. \Sprog\Wildcard::get('d2u_helper_module_form_first_name') .'
 			text|name|'. \Sprog\Wildcard::get('d2u_helper_module_form_last_name') .' *|||{"required":"required"}
 			text|company|'. \Sprog\Wildcard::get('d2u_machinery_form_company') .'

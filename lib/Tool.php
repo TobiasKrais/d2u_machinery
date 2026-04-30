@@ -173,15 +173,15 @@ class Tool implements \TobiasKrais\D2UHelper\ITranslationHelper
         // saving the rest
         if (0 === $this->tool_id || $pre_save_tool !== $this) {
             $query = \rex::getTablePrefix() .'d2u_machinery_steel_tool SET '
-                    ."internal_name = '". $this->internal_name ."' ";
+                    .'internal_name = :internal_name ';
             if (0 === $this->tool_id) {
                 $query = 'INSERT INTO '. $query;
             } else {
-                $query = 'UPDATE '. $query .' WHERE tool_id = '. $this->tool_id;
+                $query = 'UPDATE '. $query .' WHERE tool_id = '. (int) $this->tool_id;
             }
 
             $result = \rex_sql::factory();
-            $result->setQuery($query);
+            $result->setQuery($query, [':internal_name' => $this->internal_name]);
             if (0 === $this->tool_id) {
                 $this->tool_id = (int) $result->getLastId();
                 $error = $result->hasError();
@@ -193,13 +193,18 @@ class Tool implements \TobiasKrais\D2UHelper\ITranslationHelper
             $pre_save_tool = new self($this->tool_id, $this->clang_id);
             if ($pre_save_tool !== $this) {
                 $query = 'REPLACE INTO '. \rex::getTablePrefix() .'d2u_machinery_steel_tool_lang SET '
-                        ."tool_id = '". $this->tool_id ."', "
-                        ."clang_id = '". $this->clang_id ."', "
-                        ."name = '". addslashes($this->name) ."', "
-                        ."translation_needs_update = '". $this->translation_needs_update ."' ";
+                        .'tool_id = :tool_id, '
+                        .'clang_id = :clang_id, '
+                        .'name = :name, '
+                        .'translation_needs_update = :tnu ';
 
                 $result = \rex_sql::factory();
-                $result->setQuery($query);
+                $result->setQuery($query, [
+                    ':tool_id' => $this->tool_id,
+                    ':clang_id' => $this->clang_id,
+                    ':name' => $this->name,
+                    ':tnu' => $this->translation_needs_update,
+                ]);
                 $error = $result->hasError();
             }
         }

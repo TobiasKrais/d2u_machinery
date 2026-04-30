@@ -27,9 +27,9 @@ if (!function_exists('print_used_machine_categories')) {
                 echo '<div class="box" data-height-watch>';
                 if ('' !== $category->pic || '' !== $category->pic_lang) {
                     echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', '' !== $category->pic_lang ? $category->pic_lang : $category->pic)
-                        .'" alt="'. $category->name .'">';
+                        .'" alt="'. rex_escape($category->name) .'">';
                 }
-                echo '<div>'. $category->name .'</div>';
+                echo '<div>'. rex_escape($category->name) .'</div>';
                 echo '</div>';
                 echo '</a>';
                 echo '</div>';
@@ -91,9 +91,9 @@ if (!function_exists('print_used_machines')) {
             echo '<a href="'. $used_machine->getUrl(false) .'">';
             echo '<div class="box" data-height-watch>';
             if (count($used_machine->pics) > 0 && '' !== $used_machine->pics[0]) {
-                echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $used_machine->pics[0])	 .'" alt="'. $used_machine->name .'">';
+                echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $used_machine->pics[0])	 .'" alt="'. rex_escape($used_machine->name) .'">';
             }
-            echo '<div><b>'. $used_machine->manufacturer .' '. $used_machine->name .'</b></div>';
+            echo '<div><b>'. $used_machine->manufacturer .' '. rex_escape($used_machine->name) .'</b></div>';
             if ('show' === (string) $d2u_machinery->getConfig('show_teaser', 'hide')) {
                 echo '<div class="teaser">'. nl2br($used_machine->teaser) .'</div>';
             }
@@ -132,7 +132,7 @@ if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['opti
     if (count($child_categories) > 0) {
         // Print child categories
         echo '<div class="col-12 abstand">';
-        echo '<h1>'. $category->name .'</h1>';
+        echo '<h1>'. rex_escape($category->name) .'</h1>';
         echo '</div>';
         print_used_machine_categories($child_categories);
     } else {
@@ -181,7 +181,7 @@ if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['opti
         // Slider picture(s)
         echo '<div class="col-12 col-md-6 abstand">';
         if ('lightbox' === $picture_type || 1 === count($used_machine->pics)) {
-            echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $used_machine->pics[0]) .'" alt='. $used_machine->name .' style="max-width:100%;">';
+            echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $used_machine->pics[0]) .'" alt='. rex_escape($used_machine->name) .' style="max-width:100%;">';
         } else {
             // Slider
             echo '<div id="machineCarousel" class="carousel carousel-fade slide" data-bs-ride="carousel">';
@@ -205,7 +205,7 @@ if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['opti
                 }
                 echo '">';
                 echo '<div class=".carousel-img-holder">';
-                echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $used_machine->pics[$i]) .'" alt='. $used_machine->name .'>';
+                echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $used_machine->pics[$i]) .'" alt='. rex_escape($used_machine->name) .'>';
                 echo '</div>';
                 echo '</div>';
             }
@@ -383,9 +383,9 @@ if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['opti
     echo '<div id="tab_request" class="tab-pane fade machine-tab">';
     echo '<div class="row">';
     echo '<div class="col-12 col-md-8 abstand">';
-    $form_data = 'hidden|machine_name|'. $used_machine->manufacturer .' '. $used_machine->name .' (Gebrauchtmaschine)|REQUEST
+    $form_data = 'hidden|machine_name|'. $used_machine->manufacturer .' '. rex_escape($used_machine->name) .' (Gebrauchtmaschine)|REQUEST
 
-			html||<h3> '. \Sprog\Wildcard::get('d2u_machinery_request') .': '. $used_machine->name .'</h3><br>
+			html||<h3> '. \Sprog\Wildcard::get('d2u_machinery_request') .': '. rex_escape($used_machine->name) .'</h3><br>
 			text|vorname|'. \Sprog\Wildcard::get('d2u_helper_module_form_first_name') .'
 			text|name|'. \Sprog\Wildcard::get('d2u_helper_module_form_last_name') .' *|||{"required":"required"}
 			text|company|'. \Sprog\Wildcard::get('d2u_machinery_form_company') .'

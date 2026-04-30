@@ -242,21 +242,22 @@ function rex_d2u_machinery_media_is_in_use(rex_extension_point $ep)
 {
     $warning = $ep->getSubject();
     $params = $ep->getParams();
-    $filename = addslashes($params['filename']);
+    $filename = (string) $params['filename'];
+    $filenameLike = '%' . str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $filename) . '%';
 
     // Machines
     $sql_machine = \rex_sql::factory();
     $sql_machine->setQuery('SELECT lang.machine_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_machines_lang` AS lang '
         .'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_machines` AS machines ON lang.machine_id = machines.machine_id '
-        .'WHERE FIND_IN_SET("'. $filename .'", pdfs) OR FIND_IN_SET("'. $filename .'", pics) OR description LIKE "%'. $filename .'%" OR benefits_short LIKE "%'. $filename .'%" OR benefits_long LIKE "%'. $filename .'%" OR leaflet = "'. $filename .'"'
-        . (Extension::isActive('machine_construction_equipment_extension') ? 'OR FIND_IN_SET("'. $filename .'", pictures_delivery_set) ' : '')
-        .'GROUP BY machine_id');
+        .'WHERE FIND_IN_SET(:filename, pdfs) OR FIND_IN_SET(:filename, pics) OR description LIKE :filenameLike OR benefits_short LIKE :filenameLike OR benefits_long LIKE :filenameLike OR leaflet = :filename'
+        . (Extension::isActive('machine_construction_equipment_extension') ? ' OR FIND_IN_SET(:filename, pictures_delivery_set) ' : '')
+        .'GROUP BY machine_id', [':filename' => $filename, ':filenameLike' => $filenameLike]);
 
     // Categories
     $sql_categories = \rex_sql::factory();
     $sql_categories->setQuery('SELECT lang.category_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_categories_lang` AS lang '
         .'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_categories` AS categories ON lang.category_id = categories.category_id '
-        .'WHERE pic = "'. $filename .'" OR pic_usage = "'. $filename .'" OR pic_lang = "'. $filename .'" OR FIND_IN_SET("'. $filename .'", pdfs) OR description LIKE "%'. $filename .'%"');
+        .'WHERE pic = :filename OR pic_usage = :filename OR pic_lang = :filename OR FIND_IN_SET(:filename, pdfs) OR description LIKE :filenameLike', [':filename' => $filename, ':filenameLike' => $filenameLike]);
 
     // Prepare warnings
     // Machines
@@ -302,11 +303,11 @@ function rex_d2u_machinery_contacts_media_is_in_use(rex_extension_point $ep)
 {
     $warning = $ep->getSubject();
     $params = $ep->getParams();
-    $filename = addslashes($params['filename']);
+    $filename = (string) $params['filename'];
 
     $sql_contacts = rex_sql::factory();
     $sql_contacts->setQuery('SELECT contact_id, name FROM `' . rex::getTablePrefix() . 'd2u_machinery_contacts` '
-        .'WHERE picture = "'. $filename .'"');
+        .'WHERE picture = :filename', [':filename' => $filename]);
 
     for ($i = 0; $i < $sql_contacts->getRows(); ++$i) {
         $message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/contacts&func=edit&entry_id='.
@@ -353,12 +354,12 @@ function rex_d2u_machinery_equipment_media_is_in_use(rex_extension_point $ep)
 {
     $warning = $ep->getSubject();
     $params = $ep->getParams();
-    $filename = addslashes($params['filename']);
+    $filename = (string) $params['filename'];
 
     $sql = \rex_sql::factory();
     $sql->setQuery('SELECT lang.group_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_equipment_groups_lang` AS lang '
         .'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_equipment_groups` AS equipment_groups ON lang.group_id = equipment_groups.group_id '
-        .'WHERE picture = "'. $filename .'" AND clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang'));
+        .'WHERE picture = :filename AND clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang'), [':filename' => $filename]);
 
     for ($i = 0; $i < $sql->getRows(); ++$i) {
         $message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/machine/equipment&equipment_subpage=equipment_group&func=edit&entry_id='.
@@ -422,12 +423,12 @@ function rex_d2u_machinery_industry_sectors_media_is_in_use(rex_extension_point 
 {
     $warning = $ep->getSubject();
     $params = $ep->getParams();
-    $filename = addslashes($params['filename']);
+    $filename = (string) $params['filename'];
 
     $sql = \rex_sql::factory();
     $sql->setQuery('SELECT lang.industry_sector_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_industry_sectors_lang` AS lang '
         .'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_industry_sectors` AS sectors ON lang.industry_sector_id = sectors.industry_sector_id '
-        .'WHERE (pic = "'. $filename .'" OR icon = "'. $filename .'") AND clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang'));
+        .'WHERE (pic = :filename OR icon = :filename) AND clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang'), [':filename' => $filename]);
 
     for ($i = 0; $i < $sql->getRows(); ++$i) {
         $message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/industry_sectors&func=edit&entry_id='.
@@ -473,17 +474,17 @@ function rex_d2u_machinery_agitators_media_is_in_use(rex_extension_point $ep)
 {
     $warning = $ep->getSubject();
     $params = $ep->getParams();
-    $filename = addslashes($params['filename']);
+    $filename = (string) $params['filename'];
 
     $sql_agitator_types = \rex_sql::factory();
     $sql_agitator_types->setQuery('SELECT lang.agitator_type_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_agitator_types_lang` AS lang '
         .'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_agitator_types` AS types ON lang.agitator_type_id = types.agitator_type_id '
-        .'WHERE pic = "'. $filename .'" AND clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang'));
+        .'WHERE pic = :filename AND clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang'), [':filename' => $filename]);
 
     $sql_agitators = \rex_sql::factory();
     $sql_agitators->setQuery('SELECT lang.agitator_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_agitators_lang` AS lang '
         .'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_agitators` AS types ON lang.agitator_id = types.agitator_id '
-        .'WHERE pic = "'. $filename .'" AND clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang'));
+        .'WHERE pic = :filename AND clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang'), [':filename' => $filename]);
 
     for ($i = 0; $i < $sql_agitator_types->getRows(); ++$i) {
         $message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/machine/agitators&agitator_subpage=agitator_type&func=edit&entry_id='.
@@ -533,12 +534,12 @@ function rex_d2u_machinery_certificates_media_is_in_use(rex_extension_point $ep)
 {
     $warning = $ep->getSubject();
     $params = $ep->getParams();
-    $filename = addslashes($params['filename']);
+    $filename = (string) $params['filename'];
 
     $sql = \rex_sql::factory();
     $sql->setQuery('SELECT lang.certificate_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_certificates_lang` AS lang '
         .'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_certificates` AS certificates ON lang.certificate_id = certificates.certificate_id '
-        .'WHERE pic = "'. $filename .'" AND clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang'));
+        .'WHERE pic = :filename AND clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang'), [':filename' => $filename]);
 
     for ($i = 0; $i < $sql->getRows(); ++$i) {
         $message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/machine/certificates&func=edit&entry_id='.
@@ -580,12 +581,12 @@ function rex_d2u_machinery_features_media_is_in_use(rex_extension_point $ep)
 {
     $warning = $ep->getSubject();
     $params = $ep->getParams();
-    $filename = addslashes($params['filename']);
+    $filename = (string) $params['filename'];
 
     $sql = \rex_sql::factory();
     $sql->setQuery('SELECT lang.feature_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_features_lang` AS lang '
         .'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_features` AS features ON lang.feature_id = features.feature_id '
-        .'WHERE pic = "'. $filename .'" AND clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang'));
+        .'WHERE pic = :filename AND clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang'), [':filename' => $filename]);
 
     for ($i = 0; $i < $sql->getRows(); ++$i) {
         $message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/machine/features&func=edit&entry_id='.
@@ -627,12 +628,12 @@ function rex_d2u_machinery_options_media_is_in_use(rex_extension_point $ep)
 {
     $warning = $ep->getSubject();
     $params = $ep->getParams();
-    $filename = addslashes($params['filename']);
+    $filename = (string) $params['filename'];
 
     $sql = \rex_sql::factory();
     $sql->setQuery('SELECT lang.option_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_options_lang` AS lang '
         .'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_options` AS options ON lang.option_id = options.option_id '
-        .'WHERE pic = "'. $filename .'" AND clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang'));
+        .'WHERE pic = :filename AND clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang'), [':filename' => $filename]);
 
     for ($i = 0; $i < $sql->getRows(); ++$i) {
         $message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/machine/options&func=edit&entry_id='.
@@ -702,13 +703,13 @@ function rex_d2u_machinery_steel_processing_media_is_in_use(rex_extension_point 
 {
     $warning = $ep->getSubject();
     $params = $ep->getParams();
-    $filename = addslashes($params['filename']);
+    $filename = (string) $params['filename'];
 
     $sql_machine = \rex_sql::factory();
     $sql_machine->setQuery('SELECT lang.supply_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_steel_supply_lang` AS lang '
         .'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_steel_supply` AS supplies ON lang.supply_id = supplies.supply_id '
-        .'WHERE pic = "'. $filename .'" '
-        .'GROUP BY supply_id');
+        .'WHERE pic = :filename '
+        .'GROUP BY supply_id', [':filename' => $filename]);
 
     for ($i = 0; $i < $sql_machine->getRows(); ++$i) {
         $message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/machine/supply&func=edit&entry_id='.
@@ -769,13 +770,14 @@ function rex_d2u_machinery_production_lines_media_is_in_use(rex_extension_point 
 {
     $warning = $ep->getSubject();
     $params = $ep->getParams();
-    $filename = addslashes($params['filename']);
+    $filename = (string) $params['filename'];
+    $filenameLike = '%' . str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $filename) . '%';
 
     $sql = \rex_sql::factory();
     $sql->setQuery('SELECT lang.production_line_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_production_lines_lang` AS lang '
         .'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_production_lines` AS `lines` ON lang.production_line_id = `lines`.production_line_id '
-        .'WHERE FIND_IN_SET("'. $filename .'", pictures) OR FIND_IN_SET("'. $filename .'", pictures) OR link_picture = "'. $filename .'" OR description_long LIKE "%'. $filename .'%" OR description_short LIKE "%'. $filename .'%"'
-        .'GROUP BY production_line_id');
+        .'WHERE FIND_IN_SET(:filename, pictures) OR FIND_IN_SET(:filename, pictures) OR link_picture = :filename OR description_long LIKE :filenameLike OR description_short LIKE :filenameLike '
+        .'GROUP BY production_line_id', [':filename' => $filename, ':filenameLike' => $filenameLike]);
 
     for ($i = 0; $i < $sql->getRows(); ++$i) {
         $message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/production_lines&func=edit&entry_id='.
@@ -817,12 +819,12 @@ function rex_d2u_machinery_service_options_media_is_in_use(rex_extension_point $
 {
     $warning = $ep->getSubject();
     $params = $ep->getParams();
-    $filename = addslashes($params['filename']);
+    $filename = (string) $params['filename'];
 
     $sql = \rex_sql::factory();
     $sql->setQuery('SELECT lang.service_option_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_service_options_lang` AS lang '
         .'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_service_options` AS service_option ON lang.service_option_id = service_option.service_option_id '
-        .'WHERE picture = "'. $filename .'" AND clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang'));
+        .'WHERE picture = :filename AND clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang'), [':filename' => $filename]);
 
     for ($i = 0; $i < $sql->getRows(); ++$i) {
         $message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/machine/service_options&func=edit&entry_id='.
@@ -890,12 +892,12 @@ function rex_d2u_machinery_used_machines_media_is_in_use(rex_extension_point $ep
 {
     $warning = $ep->getSubject();
     $params = $ep->getParams();
-    $filename = addslashes($params['filename']);
+    $filename = (string) $params['filename'];
 
     $sql = \rex_sql::factory();
     $sql->setQuery('SELECT lang.used_machine_id, manufacturer, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_used_machines_lang` AS lang '
         .'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_used_machines` AS used_machines ON lang.used_machine_id = used_machines.used_machine_id '
-        .'WHERE FIND_IN_SET("'. $filename .'", pics) AND clang_id = '. \rex_config::get('d2u_helper', 'default_lang', \rex_clang::getStartId()));
+        .'WHERE FIND_IN_SET(:filename, pics) AND clang_id = '. (int) \rex_config::get('d2u_helper', 'default_lang', \rex_clang::getStartId()), [':filename' => $filename]);
 
     for ($i = 0; $i < $sql->getRows(); ++$i) {
         $message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/used_machines/used_machines&func=edit&entry_id='.

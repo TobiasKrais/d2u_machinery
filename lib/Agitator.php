@@ -177,16 +177,16 @@ class Agitator implements \TobiasKrais\D2UHelper\ITranslationHelper
         // saving the rest
         if (0 === $this->agitator_id || $pre_save_agitator !== $this) {
             $query = \rex::getTablePrefix() .'d2u_machinery_agitators SET '
-                    ."pic = '". $this->pic ."' ";
+                    .'pic = :pic ';
 
             if (0 === $this->agitator_id) {
                 $query = 'INSERT INTO '. $query;
             } else {
-                $query = 'UPDATE '. $query .' WHERE agitator_id = '. $this->agitator_id;
+                $query = 'UPDATE '. $query .' WHERE agitator_id = '. (int) $this->agitator_id;
             }
 
             $result = \rex_sql::factory();
-            $result->setQuery($query);
+            $result->setQuery($query, [':pic' => $this->pic]);
             if (0 === $this->agitator_id) {
                 $this->agitator_id = (int) $result->getLastId();
                 $error = $result->hasError();
@@ -198,14 +198,20 @@ class Agitator implements \TobiasKrais\D2UHelper\ITranslationHelper
             $pre_save_agitator = new self($this->agitator_id, $this->clang_id);
             if ($pre_save_agitator !== $this) {
                 $query = 'REPLACE INTO '. \rex::getTablePrefix() .'d2u_machinery_agitators_lang SET '
-                        ."agitator_id = '". $this->agitator_id ."', "
-                        ."clang_id = '". $this->clang_id ."', "
-                        ."name = '". addslashes($this->name) ."', "
-                        ."description = '". addslashes(htmlspecialchars($this->description)) ."', "
-                        ."translation_needs_update = '". $this->translation_needs_update ."' ";
+                        .'agitator_id = :agitator_id, '
+                        .'clang_id = :clang_id, '
+                        .'name = :name, '
+                        .'description = :description, '
+                        .'translation_needs_update = :tnu ';
 
                 $result = \rex_sql::factory();
-                $result->setQuery($query);
+                $result->setQuery($query, [
+                    ':agitator_id' => $this->agitator_id,
+                    ':clang_id' => $this->clang_id,
+                    ':name' => $this->name,
+                    ':description' => htmlspecialchars($this->description),
+                    ':tnu' => $this->translation_needs_update,
+                ]);
                 $error = $result->hasError();
             }
         }

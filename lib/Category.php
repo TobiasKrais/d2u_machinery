@@ -635,23 +635,34 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper
 
         if (0 === $this->category_id || $pre_save_object !== $this) {
             $query = \rex::getTablePrefix() .'d2u_machinery_categories SET '
-                    ."parent_category_id = '". ($this->parent_category instanceof self ? $this->parent_category->category_id : 0) ."', "
-                    ."priority = '". $this->priority ."', "
-                    ."pic = '". $this->pic ."', "
-                    ."pic_usage = '". $this->pic_usage ."', "
-                    ."reference_ids = '". implode(',', $this->reference_ids) ."' ";
+                    .'parent_category_id = '. ($this->parent_category instanceof self ? (int) $this->parent_category->category_id : 0) .', '
+                    .'priority = '. (int) $this->priority .', '
+                    .'pic = :pic, '
+                    .'pic_usage = :pic_usage, '
+                    .'reference_ids = :reference_ids ';
+            $params = [
+                ':pic' => $this->pic,
+                ':pic_usage' => $this->pic_usage,
+                ':reference_ids' => implode(',', $this->reference_ids),
+            ];
             if (Extension::isActive('export')) {
-                $query .= ", export_europemachinery_category_id = '". $this->export_europemachinery_category_id ."', "
-                    ."export_europemachinery_category_name = '". $this->export_europemachinery_category_name ."', "
-                    ."export_machinerypark_category_id = '". $this->export_machinerypark_category_id ."', "
-                    ."export_mascus_category_name = '". $this->export_mascus_category_name ."' ";
+                $query .= ', export_europemachinery_category_id = :export_europemachinery_category_id, '
+                    .'export_europemachinery_category_name = :export_europemachinery_category_name, '
+                    .'export_machinerypark_category_id = :export_machinerypark_category_id, '
+                    .'export_mascus_category_name = :export_mascus_category_name ';
+                $params[':export_europemachinery_category_id'] = $this->export_europemachinery_category_id;
+                $params[':export_europemachinery_category_name'] = $this->export_europemachinery_category_name;
+                $params[':export_machinerypark_category_id'] = $this->export_machinerypark_category_id;
+                $params[':export_mascus_category_name'] = $this->export_mascus_category_name;
             }
             if (Extension::isActive('machine_agitator_extension')) {
-                $query .= ", show_agitators = '". $this->show_agitators ."' ";
+                $query .= ', show_agitators = :show_agitators ';
+                $params[':show_agitators'] = $this->show_agitators;
             }
 
             if (\rex_addon::get('d2u_videos') instanceof rex_addon && \rex_addon::get('d2u_videos')->isAvailable() && count($this->videos) > 0) {
-                $query .= ", video_ids = '|". implode('|', array_keys($this->videos)) ."|' ";
+                $query .= ', video_ids = :video_ids ';
+                $params[':video_ids'] = '|' . implode('|', array_keys($this->videos)) . '|';
             } else {
                 $query .= ", video_ids = '' ";
             }
@@ -659,11 +670,11 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper
             if (0 === $this->category_id) {
                 $query = 'INSERT INTO '. $query;
             } else {
-                $query = 'UPDATE '. $query .' WHERE category_id = '. $this->category_id;
+                $query = 'UPDATE '. $query .' WHERE category_id = '. (int) $this->category_id;
             }
 
             $result = \rex_sql::factory();
-            $result->setQuery($query);
+            $result->setQuery($query, $params);
             if (0 === $this->category_id) {
                 $this->category_id = (int) $result->getLastId();
                 $error = $result->hasError();
@@ -676,20 +687,31 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper
             $pre_save_object = new self($this->category_id, $this->clang_id);
             if ($pre_save_object !== $this) {
                 $query = 'REPLACE INTO '. \rex::getTablePrefix() .'d2u_machinery_categories_lang SET '
-                        ."category_id = '". $this->category_id ."', "
-                        ."clang_id = '". $this->clang_id ."', "
-                        ."name = '". addslashes(htmlspecialchars($this->name)) ."', "
-                        ."description = '". addslashes(htmlspecialchars($this->description)) ."', "
-                        ."teaser = '". addslashes(htmlspecialchars($this->teaser)) ."', "
-                        ."usage_area = '". addslashes(htmlspecialchars($this->usage_area)) ."', "
-                        ."pic_lang = '". $this->pic_lang ."', "
-                        ."pdfs = '". implode(',', $this->pdfs) ."', "
-                        ."translation_needs_update = '". $this->translation_needs_update ."', "
+                        .'category_id = :category_id, '
+                        .'clang_id = :clang_id, '
+                        .'name = :name, '
+                        .'description = :description, '
+                        .'teaser = :teaser, '
+                        .'usage_area = :usage_area, '
+                        .'pic_lang = :pic_lang, '
+                        .'pdfs = :pdfs, '
+                        .'translation_needs_update = :tnu, '
                         .'updatedate = CURRENT_TIMESTAMP, '
-                        ."updateuser = '". (\rex::getUser() instanceof rex_user ? \rex::getUser()->getLogin() : '') ."' ";
+                        .'updateuser = :updateuser ';
 
                 $result = \rex_sql::factory();
-                $result->setQuery($query);
+                $result->setQuery($query, [
+                    ':category_id' => $this->category_id,
+                    ':clang_id' => $this->clang_id,
+                    ':name' => htmlspecialchars($this->name),
+                    ':description' => htmlspecialchars($this->description),
+                    ':teaser' => htmlspecialchars($this->teaser),
+                    ':usage_area' => htmlspecialchars($this->usage_area),
+                    ':pic_lang' => $this->pic_lang,
+                    ':pdfs' => implode(',', $this->pdfs),
+                    ':tnu' => $this->translation_needs_update,
+                    ':updateuser' => \rex::getUser() instanceof rex_user ? \rex::getUser()->getLogin() : '',
+                ]);
                 $error = $result->hasError();
 
                 if (!$error && $pre_save_object->name !== $this->name) {

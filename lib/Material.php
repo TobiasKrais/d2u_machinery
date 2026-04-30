@@ -173,15 +173,15 @@ class Material implements \TobiasKrais\D2UHelper\ITranslationHelper
         // saving the rest
         if (0 === $this->material_id || $pre_save_material !== $this) {
             $query = \rex::getTablePrefix() .'d2u_machinery_steel_material SET '
-                    ."internal_name = '". $this->internal_name ."' ";
+                    .'internal_name = :internal_name ';
             if (0 === $this->material_id) {
                 $query = 'INSERT INTO '. $query;
             } else {
-                $query = 'UPDATE '. $query .' WHERE material_id = '. $this->material_id;
+                $query = 'UPDATE '. $query .' WHERE material_id = '. (int) $this->material_id;
             }
 
             $result = \rex_sql::factory();
-            $result->setQuery($query);
+            $result->setQuery($query, [':internal_name' => $this->internal_name]);
             if (0 === $this->material_id) {
                 $this->material_id = (int) $result->getLastId();
                 $error = $result->hasError();
@@ -193,13 +193,18 @@ class Material implements \TobiasKrais\D2UHelper\ITranslationHelper
             $pre_save_material = new self($this->material_id, $this->clang_id);
             if ($pre_save_material !== $this) {
                 $query = 'REPLACE INTO '. \rex::getTablePrefix() .'d2u_machinery_steel_material_lang SET '
-                        ."material_id = '". $this->material_id ."', "
-                        ."clang_id = '". $this->clang_id ."', "
-                        ."name = '". addslashes($this->name) ."', "
-                        ."translation_needs_update = '". $this->translation_needs_update ."' ";
+                        .'material_id = :material_id, '
+                        .'clang_id = :clang_id, '
+                        .'name = :name, '
+                        .'translation_needs_update = :tnu ';
 
                 $result = \rex_sql::factory();
-                $result->setQuery($query);
+                $result->setQuery($query, [
+                    ':material_id' => $this->material_id,
+                    ':clang_id' => $this->clang_id,
+                    ':name' => $this->name,
+                    ':tnu' => $this->translation_needs_update,
+                ]);
                 $error = $result->hasError();
             }
         }

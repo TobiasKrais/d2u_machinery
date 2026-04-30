@@ -362,30 +362,43 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper
         // saving the rest
         if (0 === $this->production_line_id || $pre_save_object !== $this) {
             $query = \rex::getTablePrefix() .'d2u_machinery_production_lines SET '
-                    ."complementary_machine_ids = '|". implode('|', $this->complementary_machine_ids) ."|', "
-                    ."line_code = '". $this->line_code ."', "
-                    ."machine_ids = '|". implode('|', $this->machine_ids) ."|', "
-                    ."online_status = '". $this->online_status ."', "
-                    ."pictures = '". implode(',', $this->pictures) ."', "
-                    ."link_picture = '". $this->link_picture ."', "
-                    ."usp_ids = '|". implode('|', $this->usp_ids) ."|', "
-                    ."video_ids = '|". implode('|', $this->video_ids) ."|', "
-                    ."reference_ids = '". implode(',', $this->reference_ids) ."' ";
+                    .'complementary_machine_ids = :complementary_machine_ids, '
+                    .'line_code = :line_code, '
+                    .'machine_ids = :machine_ids, '
+                    .'online_status = :online_status, '
+                    .'pictures = :pictures, '
+                    .'link_picture = :link_picture, '
+                    .'usp_ids = :usp_ids, '
+                    .'video_ids = :video_ids, '
+                    .'reference_ids = :reference_ids ';
+            $params = [
+                ':complementary_machine_ids' => '|' . implode('|', $this->complementary_machine_ids) . '|',
+                ':line_code' => $this->line_code,
+                ':machine_ids' => '|' . implode('|', $this->machine_ids) . '|',
+                ':online_status' => $this->online_status,
+                ':pictures' => implode(',', $this->pictures),
+                ':link_picture' => $this->link_picture,
+                ':usp_ids' => '|' . implode('|', $this->usp_ids) . '|',
+                ':video_ids' => '|' . implode('|', $this->video_ids) . '|',
+                ':reference_ids' => implode(',', $this->reference_ids),
+            ];
             if (\TobiasKrais\D2UMachinery\Extension::isActive('industry_sectors')) {
-                $query .= ", industry_sector_ids = '|". implode('|', $this->industry_sector_ids) ."|' ";
+                $query .= ', industry_sector_ids = :industry_sector_ids ';
+                $params[':industry_sector_ids'] = '|' . implode('|', $this->industry_sector_ids) . '|';
             }
             if (\TobiasKrais\D2UMachinery\Extension::isActive('machine_steel_automation_extension')) {
-                $query .= ", automation_supply_ids = '|". implode('|', $this->automation_supply_ids) ."|' ";
+                $query .= ', automation_supply_ids = :automation_supply_ids ';
+                $params[':automation_supply_ids'] = '|' . implode('|', $this->automation_supply_ids) . '|';
             }
 
             if (0 === $this->production_line_id) {
                 $query = 'INSERT INTO '. $query;
             } else {
-                $query = 'UPDATE '. $query .' WHERE production_line_id = '. $this->production_line_id;
+                $query = 'UPDATE '. $query .' WHERE production_line_id = '. (int) $this->production_line_id;
             }
 
             $result = \rex_sql::factory();
-            $result->setQuery($query);
+            $result->setQuery($query, $params);
             if (0 === $this->production_line_id) {
                 $this->production_line_id = (int) $result->getLastId();
                 $error = $result->hasError();
@@ -398,18 +411,27 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper
             $pre_save_object = new self($this->production_line_id, $this->clang_id);
             if ($pre_save_object !== $this) {
                 $query = 'REPLACE INTO '. \rex::getTablePrefix() .'d2u_machinery_production_lines_lang SET '
-                        ."production_line_id = '". $this->production_line_id ."', "
-                        ."clang_id = '". $this->clang_id ."', "
-                        ."description_long = '". addslashes($this->description_long) ."', "
-                        ."description_short = '". addslashes($this->description_short) ."', "
-                        ."name = '". addslashes($this->name) ."', "
-                        ."teaser = '". addslashes($this->teaser) ."', "
-                        ."translation_needs_update = '". $this->translation_needs_update ."', "
+                        .'production_line_id = :production_line_id, '
+                        .'clang_id = :clang_id, '
+                        .'description_long = :description_long, '
+                        .'description_short = :description_short, '
+                        .'name = :name, '
+                        .'teaser = :teaser, '
+                        .'translation_needs_update = :tnu, '
                         .'updatedate = CURRENT_TIMESTAMP, '
-                        ."updateuser = '". (\rex::getUser() instanceof rex_user ? \rex::getUser()->getLogin() : '') ."' ";
+                        .'updateuser = :updateuser ';
 
                 $result = \rex_sql::factory();
-                $result->setQuery($query);
+                $result->setQuery($query, [
+                    ':production_line_id' => $this->production_line_id,
+                    ':clang_id' => $this->clang_id,
+                    ':description_long' => $this->description_long,
+                    ':description_short' => $this->description_short,
+                    ':name' => $this->name,
+                    ':teaser' => $this->teaser,
+                    ':tnu' => $this->translation_needs_update,
+                    ':updateuser' => \rex::getUser() instanceof rex_user ? \rex::getUser()->getLogin() : '',
+                ]);
                 $error = $result->hasError();
 
                 if (!$error && $pre_save_object->name !== $this->name) {

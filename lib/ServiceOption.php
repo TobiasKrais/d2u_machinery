@@ -218,17 +218,20 @@ class ServiceOption implements \TobiasKrais\D2UHelper\ITranslationHelper
         // saving the rest
         if (0 === $this->service_option_id || $pre_save_service_option !== $this) {
             $query = \rex::getTablePrefix() .'d2u_machinery_service_options SET '
-                    ."online_status = '". $this->online_status ."', "
-                    ."picture = '". $this->picture ."' ";
+                    .'online_status = :online_status, '
+                    .'picture = :picture ';
 
             if (0 === $this->service_option_id) {
                 $query = 'INSERT INTO '. $query;
             } else {
-                $query = 'UPDATE '. $query .' WHERE service_option_id = '. $this->service_option_id;
+                $query = 'UPDATE '. $query .' WHERE service_option_id = '. (int) $this->service_option_id;
             }
 
             $result = \rex_sql::factory();
-            $result->setQuery($query);
+            $result->setQuery($query, [
+                ':online_status' => $this->online_status,
+                ':picture' => $this->picture,
+            ]);
             if (0 === $this->service_option_id) {
                 $this->service_option_id = (int) $result->getLastId();
                 $error = $result->hasError();
@@ -240,16 +243,23 @@ class ServiceOption implements \TobiasKrais\D2UHelper\ITranslationHelper
             $pre_save_service_option = new self($this->service_option_id, $this->clang_id);
             if ($pre_save_service_option !== $this) {
                 $query = 'REPLACE INTO '. \rex::getTablePrefix() .'d2u_machinery_service_options_lang SET '
-                        ."service_option_id = '". $this->service_option_id ."', "
-                        ."clang_id = '". $this->clang_id ."', "
-                        ."name = '". addslashes($this->name) ."', "
-                        ."description = '". addslashes(htmlspecialchars($this->description)) ."', "
-                        ."translation_needs_update = '". $this->translation_needs_update ."', "
+                        .'service_option_id = :service_option_id, '
+                        .'clang_id = :clang_id, '
+                        .'name = :name, '
+                        .'description = :description, '
+                        .'translation_needs_update = :tnu, '
                         .'updatedate = CURRENT_TIMESTAMP, '
-                        ."updateuser = '". (\rex::getUser() instanceof rex_user ? \rex::getUser()->getLogin() : '') ."' ";
+                        .'updateuser = :updateuser ';
 
                 $result = \rex_sql::factory();
-                $result->setQuery($query);
+                $result->setQuery($query, [
+                    ':service_option_id' => $this->service_option_id,
+                    ':clang_id' => $this->clang_id,
+                    ':name' => $this->name,
+                    ':description' => htmlspecialchars($this->description),
+                    ':tnu' => $this->translation_needs_update,
+                    ':updateuser' => \rex::getUser() instanceof rex_user ? \rex::getUser()->getLogin() : '',
+                ]);
                 $error = $result->hasError();
             }
         }

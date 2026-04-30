@@ -235,11 +235,11 @@ class Supply implements \TobiasKrais\D2UHelper\ITranslationHelper
         // saving the rest
         if (0 === $this->supply_id || $pre_save_supply !== $this) {
             $query = \rex::getTablePrefix() .'d2u_machinery_steel_supply SET '
-                    ."online_status = '". $this->online_status ."', "
-                    ."pic = '". $this->pic ."', "
-                    .'priority = '. $this->priority .' ';
+                    .'online_status = :online_status, '
+                    .'pic = :pic, '
+                    .'priority = '. (int) $this->priority .' ';
             if (\rex_addon::get('d2u_videos') instanceof rex_addon && \rex_addon::get('d2u_videos')->isAvailable() && $this->video instanceof Video) {
-                $query .= ', video_id = '. $this->video->video_id;
+                $query .= ', video_id = '. (int) $this->video->video_id;
             } else {
                 $query .= ', video_id = NULL';
             }
@@ -247,11 +247,14 @@ class Supply implements \TobiasKrais\D2UHelper\ITranslationHelper
             if (0 === $this->supply_id) {
                 $query = 'INSERT INTO '. $query;
             } else {
-                $query = 'UPDATE '. $query .' WHERE supply_id = '. $this->supply_id;
+                $query = 'UPDATE '. $query .' WHERE supply_id = '. (int) $this->supply_id;
             }
 
             $result = \rex_sql::factory();
-            $result->setQuery($query);
+            $result->setQuery($query, [
+                ':online_status' => $this->online_status,
+                ':pic' => $this->pic,
+            ]);
             if (0 === $this->supply_id) {
                 $this->supply_id = (int) $result->getLastId();
                 $error = $result->hasError();
@@ -263,14 +266,20 @@ class Supply implements \TobiasKrais\D2UHelper\ITranslationHelper
             $pre_save_supply = new self($this->supply_id, $this->clang_id);
             if ($pre_save_supply !== $this) {
                 $query = 'REPLACE INTO '. \rex::getTablePrefix() .'d2u_machinery_steel_supply_lang SET '
-                        ."supply_id = '". $this->supply_id ."', "
-                        ."clang_id = '". $this->clang_id ."', "
-                        ."name = '". addslashes($this->name) ."', "
-                        ."description = '". addslashes($this->description) ."', "
-                        ."translation_needs_update = '". $this->translation_needs_update ."' ";
+                        .'supply_id = :supply_id, '
+                        .'clang_id = :clang_id, '
+                        .'name = :name, '
+                        .'description = :description, '
+                        .'translation_needs_update = :tnu ';
 
                 $result = \rex_sql::factory();
-                $result->setQuery($query);
+                $result->setQuery($query, [
+                    ':supply_id' => $this->supply_id,
+                    ':clang_id' => $this->clang_id,
+                    ':name' => $this->name,
+                    ':description' => $this->description,
+                    ':tnu' => $this->translation_needs_update,
+                ]);
                 $error = $result->hasError();
             }
         }

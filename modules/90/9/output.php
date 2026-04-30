@@ -52,11 +52,11 @@ foreach (Category::getAll(rex_clang::getCurrentId()) as $category) {
     echo '<a href="'. $category->getUrl(false, $article_id_link) .'" class="bluebox">';
     echo '<div class="box same-height">';
     if ('' !== $category->pic || '' !== $category->pic_lang) {
-        echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', '' !== $category->pic_lang ? $category->pic_lang : $category->pic) .'" alt="'. $category->name .'">';
+        echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', '' !== $category->pic_lang ? $category->pic_lang : $category->pic) .'" alt="'. rex_escape($category->name) .'">';
     } else {
         echo '<img src="'.	rex_addon::get('d2u_machinery')->getAssetsUrl('white_tile.gif') .'" alt="Placeholder">';
     }
-    echo '<div>'. $category->name .'</div>';
+    echo '<div>'. rex_escape($category->name) .'</div>';
     echo '</div>';
     echo '</a>';
     echo '</div>';

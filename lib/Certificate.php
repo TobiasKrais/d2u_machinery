@@ -177,16 +177,16 @@ class Certificate implements \TobiasKrais\D2UHelper\ITranslationHelper
         // saving the rest
         if (0 === $this->certificate_id || $pre_save_certificate !== $this) {
             $query = \rex::getTablePrefix() .'d2u_machinery_certificates SET '
-                    ."pic = '". $this->pic ."' ";
+                    .'pic = :pic ';
 
             if (0 === $this->certificate_id) {
                 $query = 'INSERT INTO '. $query;
             } else {
-                $query = 'UPDATE '. $query .' WHERE certificate_id = '. $this->certificate_id;
+                $query = 'UPDATE '. $query .' WHERE certificate_id = '. (int) $this->certificate_id;
             }
 
             $result = \rex_sql::factory();
-            $result->setQuery($query);
+            $result->setQuery($query, [':pic' => $this->pic]);
             if (0 === $this->certificate_id) {
                 $this->certificate_id = (int) $result->getLastId();
                 $error = $result->hasError();
@@ -198,14 +198,20 @@ class Certificate implements \TobiasKrais\D2UHelper\ITranslationHelper
             $pre_save_certificate = new self($this->certificate_id, $this->clang_id);
             if ($pre_save_certificate !== $this) {
                 $query = 'REPLACE INTO '. \rex::getTablePrefix() .'d2u_machinery_certificates_lang SET '
-                        ."certificate_id = '". $this->certificate_id ."', "
-                        ."clang_id = '". $this->clang_id ."', "
-                        ."name = '". addslashes($this->name) ."', "
-                        ."description = '". $this->description ."', "
-                        ."translation_needs_update = '". $this->translation_needs_update ."' ";
+                        .'certificate_id = :certificate_id, '
+                        .'clang_id = :clang_id, '
+                        .'name = :name, '
+                        .'description = :description, '
+                        .'translation_needs_update = :tnu ';
 
                 $result = \rex_sql::factory();
-                $result->setQuery($query);
+                $result->setQuery($query, [
+                    ':certificate_id' => $this->certificate_id,
+                    ':clang_id' => $this->clang_id,
+                    ':name' => $this->name,
+                    ':description' => $this->description,
+                    ':tnu' => $this->translation_needs_update,
+                ]);
                 $error = $result->hasError();
             }
         }

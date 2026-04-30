@@ -173,15 +173,15 @@ class Welding implements \TobiasKrais\D2UHelper\ITranslationHelper
         // saving the rest
         if (0 === $this->welding_id || $pre_save_welding !== $this) {
             $query = \rex::getTablePrefix() .'d2u_machinery_steel_welding SET '
-                    ."internal_name = '". $this->internal_name ."' ";
+                    .'internal_name = :internal_name ';
             if (0 === $this->welding_id) {
                 $query = 'INSERT INTO '. $query;
             } else {
-                $query = 'UPDATE '. $query .' WHERE welding_id = '. $this->welding_id;
+                $query = 'UPDATE '. $query .' WHERE welding_id = '. (int) $this->welding_id;
             }
 
             $result = \rex_sql::factory();
-            $result->setQuery($query);
+            $result->setQuery($query, [':internal_name' => $this->internal_name]);
             if (0 === $this->welding_id) {
                 $this->welding_id = (int) $result->getLastId();
                 $error = $result->hasError();
@@ -193,13 +193,18 @@ class Welding implements \TobiasKrais\D2UHelper\ITranslationHelper
             $pre_save_welding = new self($this->welding_id, $this->clang_id);
             if ($pre_save_welding !== $this) {
                 $query = 'REPLACE INTO '. \rex::getTablePrefix() .'d2u_machinery_steel_welding_lang SET '
-                        ."welding_id = '". $this->welding_id ."', "
-                        ."clang_id = '". $this->clang_id ."', "
-                        ."name = '". addslashes($this->name) ."', "
-                        ."translation_needs_update = '". $this->translation_needs_update ."' ";
+                        .'welding_id = :welding_id, '
+                        .'clang_id = :clang_id, '
+                        .'name = :name, '
+                        .'translation_needs_update = :tnu ';
 
                 $result = \rex_sql::factory();
-                $result->setQuery($query);
+                $result->setQuery($query, [
+                    ':welding_id' => $this->welding_id,
+                    ':clang_id' => $this->clang_id,
+                    ':name' => $this->name,
+                    ':tnu' => $this->translation_needs_update,
+                ]);
                 $error = $result->hasError();
             }
         }

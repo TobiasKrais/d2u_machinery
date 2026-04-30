@@ -20,9 +20,9 @@ if (!function_exists('print_used_machines_top_offers')) {
             echo '<a href="'. $used_machine->getUrl(false) .'">';
             echo '<div class="box" data-height-watch>';
             if (count($used_machine->pics) > 0 && '' !== $used_machine->pics[0]) {
-                echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $used_machine->pics[0])	 .'" alt="'. $used_machine->name .'">';
+                echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $used_machine->pics[0])	 .'" alt="'. rex_escape($used_machine->name) .'">';
             }
-            echo '<div><b>'. $used_machine->manufacturer .' '. $used_machine->name .'</b></div>';
+            echo '<div><b>'. $used_machine->manufacturer .' '. rex_escape($used_machine->name) .'</b></div>';
             if ('show' === $d2u_machinery->getConfig('show_teaser', 'hide')) {
                 echo '<div class="teaser">'. nl2br($used_machine->teaser) .'</div>';
             }

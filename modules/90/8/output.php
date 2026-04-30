@@ -16,11 +16,11 @@ use TobiasKrais\D2UMachinery\IndustrySector;
             echo '<a href="'. $industry_sector->getUrl() .'" class="bluebox">';
             echo '<div class="box same-height">';
             if ('' !== $industry_sector->pic) {
-                echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $industry_sector->pic) .'" alt="'. $industry_sector->name .'">';
+                echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $industry_sector->pic) .'" alt="'. rex_escape($industry_sector->name) .'">';
             } else {
                 echo '<img src="'.	rex_addon::get('d2u_machinery')->getAssetsUrl('white_tile.gif') .'" alt="Placeholder">';
             }
-            echo '<div>'. $industry_sector->name .'</div>';
+            echo '<div>'. rex_escape($industry_sector->name) .'</div>';
             echo '</div>';
             echo '</a>';
             echo '</div>';

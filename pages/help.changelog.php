@@ -4,9 +4,12 @@
 <h2>Changelog</h2>
 <p>1.7.2-DEV:</p>
 <ul>
-	<li>Backend: CSRF-Schutz fuer Speichern-, Loesch- und Statusaktionen der Branchen-, Maschinen- und Serviceoptions-Verwaltung ergaenzt.</li>
-	<li>Backend: CSRF-Schutz fuer den Export gebrauchter Maschinen (Exportprovider, Online/Offline-Schalter) ergaenzt.</li>
-	<li>Backend: CSRF-Schutz fuer Modul-Installation, -Update und -Deinstallation auf der Setup-Seite ergaenzt.</li>
+	<li>Backend: CSRF-Schutz für Speichern-, Lösch- und Statusaktionen der Branchen-, Maschinen- und Serviceoptions-Verwaltung ergänzt.</li>
+	<li>Backend: CSRF-Schutz für den Export gebrauchter Maschinen (Exportprovider, Online/Offline-Schalter) ergänzt.</li>
+	<li>Backend: CSRF-Schutz für Modul-Installation, -Update und -Deinstallation auf der Setup-Seite ergänzt.</li>
+	<li>Security: Alle media-is-in-use-Extension-Points in <code>boot.php</code> (Maschinen, Kategorien, Kontakte, Ausstattungsgruppen, Branchen, Rührwerke, Zertifikate, Merkmale, Optionen, Stahlversorgung, Produktionslinien, Serviceoptionen, gebrauchte Maschinen) verwenden jetzt gebundene Parameter statt SQL-String-Konkatenation mit <code>addslashes()</code>.</li>
+	<li>Security: Alle <code>save()</code>-Methoden in <code>lib/*.php</code> (Maschinen, Kategorien, Kontakte, Branchen, Produktionslinien, gebrauchte Maschinen, USPs, Optionen, Merkmale, Ausstattungen, Ausstattungsgruppen, Serviceoptionen, Zertifikate, Rührwerke, Rührwerktypen, Einsatzbereiche, Stahlversorgung sowie Stahl-Material/Profil/Tool/Welding/Process/Procedure/Automation) verwenden jetzt gebundene Parameter statt SQL-String-Konkatenation mit <code>addslashes()</code>.</li>
+	<li>Security: Modul-Ausgaben (<code>modules/90/1-12/output.php</code>) härten Backend-Eingaben gegen XSS via <code>rex_escape()</code> für Maschinen-Namen, Titel und weitere Backend-Felder in HTML- und Attributausgaben.</li>
 </ul>
 <p>1.7.1:</p>
 <ul>

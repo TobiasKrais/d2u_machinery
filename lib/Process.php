@@ -173,15 +173,15 @@ class Process implements \TobiasKrais\D2UHelper\ITranslationHelper
         // saving the rest
         if (0 === $this->process_id || $pre_save_process !== $this) {
             $query = \rex::getTablePrefix() .'d2u_machinery_steel_process SET '
-                    ."internal_name = '". $this->internal_name ."' ";
+                    .'internal_name = :internal_name ';
             if (0 === $this->process_id) {
                 $query = 'INSERT INTO '. $query;
             } else {
-                $query = 'UPDATE '. $query .' WHERE process_id = '. $this->process_id;
+                $query = 'UPDATE '. $query .' WHERE process_id = '. (int) $this->process_id;
             }
 
             $result = \rex_sql::factory();
-            $result->setQuery($query);
+            $result->setQuery($query, [':internal_name' => $this->internal_name]);
             if (0 === $this->process_id) {
                 $this->process_id = (int) $result->getLastId();
                 $error = $result->hasError();
@@ -193,13 +193,18 @@ class Process implements \TobiasKrais\D2UHelper\ITranslationHelper
             $pre_save_process = new self($this->process_id, $this->clang_id);
             if ($pre_save_process !== $this) {
                 $query = 'REPLACE INTO '. \rex::getTablePrefix() .'d2u_machinery_steel_process_lang SET '
-                        ."process_id = '". $this->process_id ."', "
-                        ."clang_id = '". $this->clang_id ."', "
-                        ."name = '". addslashes($this->name) ."', "
-                        ."translation_needs_update = '". $this->translation_needs_update ."' ";
+                        .'process_id = :process_id, '
+                        .'clang_id = :clang_id, '
+                        .'name = :name, '
+                        .'translation_needs_update = :tnu ';
 
                 $result = \rex_sql::factory();
-                $result->setQuery($query);
+                $result->setQuery($query, [
+                    ':process_id' => $this->process_id,
+                    ':clang_id' => $this->clang_id,
+                    ':name' => $this->name,
+                    ':tnu' => $this->translation_needs_update,
+                ]);
                 $error = $result->hasError();
             }
         }

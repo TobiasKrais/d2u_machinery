@@ -1966,8 +1966,9 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
 
         $regenerate_urls = false;
         if (0 === $this->machine_id || $pre_save_object !== $this) {
+            $main_params = [':name' => $this->name];
             $query = \rex::getTablePrefix() .'d2u_machinery_machines SET '
-                    ."name = '". addslashes($this->name) ."', "
+                    .'name = :name, '
                     ."pics = '". implode(',', $this->pics) ."', "
                     .'category_id = '. ($this->category instanceof Category ? $this->category->category_id : 0) .', '
                     ."alternative_machine_ids = '|". implode('|', $this->alternative_machine_ids) ."|', "
@@ -2122,10 +2123,10 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
             if (0 === $this->machine_id) {
                 $query = 'INSERT INTO '. $query;
             } else {
-                $query = 'UPDATE '. $query .' WHERE machine_id = '. $this->machine_id;
+                $query = 'UPDATE '. $query .' WHERE machine_id = '. (int) $this->machine_id;
             }
             $result = \rex_sql::factory();
-            $result->setQuery($query);
+            $result->setQuery($query, $main_params);
             if (0 === $this->machine_id) {
                 $this->machine_id = (int) $result->getLastId();
                 $error = $result->hasError();
@@ -2145,28 +2146,40 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
             $pre_save_object = new self($this->machine_id, $this->clang_id);
             if ($pre_save_object !== $this) {
                 $query = 'REPLACE INTO '. \rex::getTablePrefix() .'d2u_machinery_machines_lang SET '
-                        ."machine_id = '". $this->machine_id ."', "
-                        ."clang_id = '". $this->clang_id ."', "
-                        ."lang_name = '". addslashes($this->lang_name) ."', "
-                        ."teaser = '". addslashes(htmlspecialchars($this->teaser)) ."', "
-                        ."description = '". addslashes(htmlspecialchars($this->description)) ."', "
-                        ."benefits_long = '". addslashes(htmlspecialchars($this->benefits_long)) ."', "
-                        ."benefits_short = '". addslashes(htmlspecialchars($this->benefits_short)) ."', "
+                        .'machine_id = :machine_id, '
+                        .'clang_id = :clang_id, '
+                        .'lang_name = :lang_name, '
+                        .'teaser = :teaser, '
+                        .'description = :description, '
+                        .'benefits_long = :benefits_long, '
+                        .'benefits_short = :benefits_short, '
                         ."leaflet = '". $this->leaflet ."', "
                         ."pdfs = '". implode(',', $this->pdfs) ."', "
                         ."translation_needs_update = '". $this->translation_needs_update ."', "
                         .'updatedate = CURRENT_TIMESTAMP, '
                         ."updateuser = '". (\rex::getUser() instanceof rex_user ? \rex::getUser()->getLogin() : '') ."' ";
+                $lang_params = [
+                    ':machine_id' => $this->machine_id,
+                    ':clang_id' => $this->clang_id,
+                    ':lang_name' => $this->lang_name,
+                    ':teaser' => htmlspecialchars($this->teaser),
+                    ':description' => htmlspecialchars($this->description),
+                    ':benefits_long' => htmlspecialchars($this->benefits_long),
+                    ':benefits_short' => htmlspecialchars($this->benefits_short),
+                ];
                 if (Extension::isActive('machine_construction_equipment_extension')) {
                     $query .= ", container_connection_port = '". $this->container_connection_port ."' "
                         .", container_conveying_wave = '". $this->container_conveying_wave ."' "
                         .", description_technical = '". $this->description_technical ."' "
-                        .", delivery_set_basic = '". addslashes(htmlspecialchars($this->delivery_set_basic)) ."' "
-                        .", delivery_set_conversion = '". addslashes(htmlspecialchars($this->delivery_set_conversion)) ."' "
-                        .", delivery_set_full = '". addslashes(htmlspecialchars($this->delivery_set_full)) ."' ";
+                        .', delivery_set_basic = :delivery_set_basic '
+                        .', delivery_set_conversion = :delivery_set_conversion '
+                        .', delivery_set_full = :delivery_set_full ';
+                    $lang_params[':delivery_set_basic'] = htmlspecialchars($this->delivery_set_basic);
+                    $lang_params[':delivery_set_conversion'] = htmlspecialchars($this->delivery_set_conversion);
+                    $lang_params[':delivery_set_full'] = htmlspecialchars($this->delivery_set_full);
                 }
                 $result = \rex_sql::factory();
-                $result->setQuery($query);
+                $result->setQuery($query, $lang_params);
                 $error = $result->hasError();
 
                 if (!$error && $pre_save_object->lang_name !== $this->lang_name) {

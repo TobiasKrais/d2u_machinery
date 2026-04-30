@@ -185,16 +185,16 @@ class USP implements \TobiasKrais\D2UHelper\ITranslationHelper
         // saving the rest
         if (0 === $this->usp_id || $pre_save_object !== $this) {
             $query = \rex::getTablePrefix() .'d2u_machinery_production_lines_usps SET '
-                    ."picture = '". $this->picture ."' ";
+                    .'picture = :picture ';
 
             if (0 === $this->usp_id) {
                 $query = 'INSERT INTO '. $query;
             } else {
-                $query = 'UPDATE '. $query .' WHERE usp_id = '. $this->usp_id;
+                $query = 'UPDATE '. $query .' WHERE usp_id = '. (int) $this->usp_id;
             }
 
             $result = \rex_sql::factory();
-            $result->setQuery($query);
+            $result->setQuery($query, [':picture' => $this->picture]);
             if (0 === $this->usp_id) {
                 $this->usp_id = (int) $result->getLastId();
                 $error = $result->hasError();
@@ -207,16 +207,23 @@ class USP implements \TobiasKrais\D2UHelper\ITranslationHelper
             $pre_save_object = new self($this->usp_id, $this->clang_id);
             if ($pre_save_object !== $this) {
                 $query = 'REPLACE INTO '. \rex::getTablePrefix() .'d2u_machinery_production_lines_usps_lang SET '
-                        ."usp_id = '". $this->usp_id ."', "
-                        ."clang_id = '". $this->clang_id ."', "
-                        ."name = '". addslashes($this->name) ."', "
-                        ."teaser = '". addslashes($this->teaser) ."', "
-                        ."translation_needs_update = '". $this->translation_needs_update ."', "
+                        .'usp_id = :usp_id, '
+                        .'clang_id = :clang_id, '
+                        .'name = :name, '
+                        .'teaser = :teaser, '
+                        .'translation_needs_update = :tnu, '
                         .'updatedate = CURRENT_TIMESTAMP, '
-                        ."updateuser = '". (\rex::getUser() instanceof rex_user ? \rex::getUser()->getLogin() : '') ."' ";
+                        .'updateuser = :updateuser ';
 
                 $result = \rex_sql::factory();
-                $result->setQuery($query);
+                $result->setQuery($query, [
+                    ':usp_id' => $this->usp_id,
+                    ':clang_id' => $this->clang_id,
+                    ':name' => $this->name,
+                    ':teaser' => $this->teaser,
+                    ':tnu' => $this->translation_needs_update,
+                    ':updateuser' => \rex::getUser() instanceof rex_user ? \rex::getUser()->getLogin() : '',
+                ]);
                 $error = $result->hasError();
 
                 if (!$error && $pre_save_object->name !== $this->name) {

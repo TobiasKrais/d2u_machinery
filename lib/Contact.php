@@ -142,19 +142,24 @@ class Contact
 
         if (0 === $this->contact_id || $pre_save_contact !== $this) {
             $query = rex::getTablePrefix() .'d2u_machinery_contacts SET '
-                    ."email = '". $this->email ."', "
-                    ."name = '". addslashes($this->name) ."', "
-                    ."phone = '". $this->phone ."', "
-                    ."picture = '". (str_contains($this->picture, 'noavatar.jpg') ? '' : $this->picture) ."' ";
+                    .'email = :email, '
+                    .'name = :name, '
+                    .'phone = :phone, '
+                    .'picture = :picture ';
 
             if (0 === $this->contact_id) {
                 $query = 'INSERT INTO '. $query;
             } else {
-                $query = 'UPDATE '. $query .' WHERE contact_id = '. $this->contact_id;
+                $query = 'UPDATE '. $query .' WHERE contact_id = '. (int) $this->contact_id;
             }
 
             $result = rex_sql::factory();
-            $result->setQuery($query);
+            $result->setQuery($query, [
+                ':email' => $this->email,
+                ':name' => $this->name,
+                ':phone' => $this->phone,
+                ':picture' => str_contains($this->picture, 'noavatar.jpg') ? '' : $this->picture,
+            ]);
             if (0 === $this->contact_id) {
                 $this->contact_id = (int) $result->getLastId();
                 $saved = !$result->hasError();

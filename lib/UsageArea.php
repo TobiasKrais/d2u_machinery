@@ -191,17 +191,20 @@ class UsageArea implements \TobiasKrais\D2UHelper\ITranslationHelper
 
         if (0 === $this->usage_area_id || $pre_save_usage_area !== $this) {
             $query = \rex::getTablePrefix() .'d2u_machinery_usage_areas SET '
-                    ."category_ids = '|". implode('|', $this->category_ids) ."|', "
-                    ."priority = '". $this->priority ."' ";
+                    .'category_ids = :category_ids, '
+                    .'priority = :priority ';
 
             if (0 === $this->usage_area_id) {
                 $query = 'INSERT INTO '. $query;
             } else {
-                $query = 'UPDATE '. $query .' WHERE usage_area_id = '. $this->usage_area_id;
+                $query = 'UPDATE '. $query .' WHERE usage_area_id = '. (int) $this->usage_area_id;
             }
 
             $result = \rex_sql::factory();
-            $result->setQuery($query);
+            $result->setQuery($query, [
+                ':category_ids' => '|' . implode('|', $this->category_ids) . '|',
+                ':priority' => $this->priority,
+            ]);
             if (0 === $this->usage_area_id) {
                 $this->usage_area_id = (int) $result->getLastId();
                 $error = $result->hasError();
@@ -213,13 +216,18 @@ class UsageArea implements \TobiasKrais\D2UHelper\ITranslationHelper
             $pre_save_usage_area = new self($this->usage_area_id, $this->clang_id);
             if ($pre_save_usage_area !== $this) {
                 $query = 'REPLACE INTO '. \rex::getTablePrefix() .'d2u_machinery_usage_areas_lang SET '
-                        ."usage_area_id = '". $this->usage_area_id ."', "
-                        ."clang_id = '". $this->clang_id ."', "
-                        ."name = '". addslashes($this->name) ."', "
-                        ."translation_needs_update = '". $this->translation_needs_update ."' ";
+                        .'usage_area_id = :usage_area_id, '
+                        .'clang_id = :clang_id, '
+                        .'name = :name, '
+                        .'translation_needs_update = :tnu ';
 
                 $result = \rex_sql::factory();
-                $result->setQuery($query);
+                $result->setQuery($query, [
+                    ':usage_area_id' => $this->usage_area_id,
+                    ':clang_id' => $this->clang_id,
+                    ':name' => $this->name,
+                    ':tnu' => $this->translation_needs_update,
+                ]);
                 $error = $result->hasError();
             }
         }
