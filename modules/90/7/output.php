@@ -139,13 +139,13 @@ if (!function_exists('print_machines')) {
                 echo '<a href="'. $machine->getUrl() .'" class="bluebox">';
                 echo '<div class="box" data-height-watch>';
                 if (count($machine->pics) > 0 && '' !== $machine->pics[0]) {
-                    echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $machine->pics[0]) .'" alt="'. ('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'">';
+                    echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $machine->pics[0]) .'" alt="'. rex_escape('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'">';
                 } else {
                     echo '<img src="'.	rex_addon::get('d2u_machinery')->getAssetsUrl('white_tile.gif') .'" alt="Placeholder">';
                 }
-                echo '<div><b>'. ('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'</b></div>';
+                echo '<div><b>'. rex_escape('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'</b></div>';
                 if ($d2u_machinery->hasConfig('show_teaser') && 'show' === (string) $d2u_machinery->getConfig('show_teaser')) {
-                    echo '<div class="teaser">'. nl2br($machine->teaser) .'</div>';
+                    echo '<div class="teaser">'. nl2br(rex_escape($machine->teaser)) .'</div>';
                 }
                 echo '</div>';
                 echo '</a>';
@@ -235,11 +235,11 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
                     echo '<tr><td>';
                     echo '<a href="'. $machine->getUrl() .'"><div class="comparison-header">';
                     if (count($machine->pics) > 0 && '' !== $machine->pics[0]) {
-                        echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $machine->pics[0]) .'" alt='. ('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'>';
+                        echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $machine->pics[0]) .'" alt="'. rex_escape('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'">';
                     } else {
                         echo '<img src="'.	rex_addon::get('d2u_machinery')->getAssetsUrl('white_tile.gif') .'" alt="Placeholder">';
                     }
-                    echo '<br><b>'. ('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'</b></div></a></td>';
+                    echo '<br><b>'. rex_escape('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'</b></div></a></td>';
                     foreach ($usage_areas as $usage_area) {
                         if (in_array($usage_area->usage_area_id, $machine->usage_area_ids, true)) {
                             echo '<td class="active-cell"></td>';
@@ -259,11 +259,11 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
                     echo '<td valign="bottom" align="center">';
                     echo '<a href="'. $machine->getUrl() .'"><div class="comparison-header">';
                     if (count($machine->pics) > 0 && '' !== $machine->pics[0]) {
-                        echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $machine->pics[0]) .'" alt='. ('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'>';
+                        echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $machine->pics[0]) .'" alt="'. rex_escape('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'">';
                     } else {
                         echo '<img src="'.	rex_addon::get('d2u_machinery')->getAssetsUrl('white_tile.gif') .'" alt="Placeholder">';
                     }
-                    echo '<br><b>'. ('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'</b></div></a></td>';
+                    echo '<br><b>'. rex_escape('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'</b></div></a></td>';
                 }
                 echo '</tr></thead>';
                 echo '<tbody>';
@@ -299,11 +299,11 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '<td valign="bottom" align="center">';
             echo '<a href="'. $machine->getUrl() .'"><div class="comparison-header">';
             if (count($machine->pics) > 0 && '' !== $machine->pics[0]) {
-                echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $machine->pics[0]) .'" alt='. ('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'>';
+                echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $machine->pics[0]) .'" alt="'. rex_escape('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'">';
             } else {
                 echo '<img src="'.	rex_addon::get('d2u_machinery')->getAssetsUrl('white_tile.gif') .'" alt="Placeholder">';
             }
-            echo '<br><b>'. ('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'</b></div></a></td>';
+            echo '<br><b>'. rex_escape('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'</b></div></a></td>';
         }
         echo '</tr></thead>';
         echo '<tbody>';
@@ -348,7 +348,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
 
     echo '<div class="col-12">';
     echo '<div class="col-12 abstand">';
-    echo '<h1>'. ('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'</h1>';
+    echo '<h1>'. rex_escape('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'</h1>';
     echo '</div>';
     echo '<div class="subhead-nav">';
     echo '<ul class="nav nav-pills">';
@@ -396,7 +396,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
         // Picture(s)
         echo '<div class="col-12 col-md-6">';
         if (1 === count($machine->pics)) {
-            echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $machine->pics[0]) .'" alt="'. ('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'" style="max-width:100%;">';
+            echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $machine->pics[0]) .'" alt="'. rex_escape('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'" style="max-width:100%;">';
         } else {
             // Slider
             echo '<div id="machineCarousel" class="carousel carousel-fade slide" data-bs-ride="carousel" data-bs-pause="hover">';
@@ -420,7 +420,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
                     echo ' active';
                 }
                 echo '">';
-                echo '<img class="d-block w-100" src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $machine->pics[$i]) .'" alt="'. ('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'">';
+                echo '<img class="d-block w-100" src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $machine->pics[$i]) .'" alt="'. rex_escape('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'">';
                 echo '</div>';
             }
             echo '</div>';
@@ -471,7 +471,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '<div class="col-12 col-md-6">';
             echo '<h3>'. \Sprog\Wildcard::get('d2u_machinery_alternative_machines') .'</h3>';
             foreach ($alternative_machines as $alternative_machine) {
-                echo '<a href="'. $alternative_machine->getUrl() .'"><div class="downloads">'. ('' === $alternative_machine->lang_name ? $alternative_machine->name : $alternative_machine->lang_name) .'</div></a>';
+                echo '<a href="'. $alternative_machine->getUrl() .'"><div class="downloads">'. rex_escape('' === $alternative_machine->lang_name ? $alternative_machine->name : $alternative_machine->lang_name) .'</div></a>';
             }
             echo '</div>';
         }
@@ -503,7 +503,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '<h3>'. \Sprog\Wildcard::get('d2u_machinery_software') .'</h3>';
         $article = rex_article::get($machine->article_id_software, $machine->clang_id);
         if ($article instanceof rex_article) {
-            echo '<a href="'. rex_getUrl($machine->article_id_software, $machine->clang_id).'"><div class="downloads">'. $article->getValue('name') .'</div></a>';
+            echo '<a href="'. rex_escape(rex_getUrl($machine->article_id_software, $machine->clang_id)).'"><div class="downloads">'. rex_escape((string) $article->getValue('name')) .'</div></a>';
         }
         echo '</div>';
     }
@@ -514,7 +514,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '<h3>'. \Sprog\Wildcard::get('d2u_machinery_service') .'</h3>';
         $article = rex_article::get($machine->article_id_service, $machine->clang_id);
         if ($article instanceof rex_article) {
-            echo '<a href="'. rex_getUrl($machine->article_id_service, $machine->clang_id).'"><div class="downloads">'. $article->getValue('name') .'</div></a>';
+            echo '<a href="'. rex_escape(rex_getUrl($machine->article_id_service, $machine->clang_id)).'"><div class="downloads">'. rex_escape((string) $article->getValue('name')) .'</div></a>';
         }
         echo '</div>';
     }
@@ -526,7 +526,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
         foreach ($machine->article_ids_references as $article_id_reference) {
             $article = rex_article::get($article_id_reference, $machine->clang_id);
             if ($article instanceof rex_article) {
-                echo '<a href="'. rex_getUrl($article_id_reference, $machine->clang_id) .'"><div class="downloads">'. $article->getValue('name') .'</div></a>';
+                echo '<a href="'. rex_escape(rex_getUrl($article_id_reference, $machine->clang_id)) .'"><div class="downloads">'. rex_escape((string) $article->getValue('name')) .'</div></a>';
             }
         }
         echo '</ul>';
@@ -605,15 +605,15 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
             if (count($additional_machine->pics) > 0 && '' !== $additional_machine->pics[0]) {
                 echo '<a href="'. $additional_machine->getUrl() .'">';
                 echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_features', $additional_machine->pics[0]) .'" class="img-fluid featurepic"'
-                    .' alt="'. ('' === $additional_machine->lang_name ? $additional_machine->name : $additional_machine->lang_name) .'" title="'. ('' === $additional_machine->lang_name ? $additional_machine->name : $additional_machine->lang_name) .'">';
+                    .' alt="'. rex_escape('' === $additional_machine->lang_name ? $additional_machine->name : $additional_machine->lang_name) .'" title="'. rex_escape('' === $additional_machine->lang_name ? $additional_machine->name : $additional_machine->lang_name) .'">';
                 echo '</a>';
             }
             echo '</div>';
 
             echo '<div class="col-12 col-sm-8 col-md-9 col-lg-10">';
             echo '<div class="block-box">';
-            echo '<p><b><a href="'. $additional_machine->getUrl() .'">'. ('' === $additional_machine->lang_name ? $additional_machine->name : $additional_machine->lang_name) .'</a></b></p>';
-            echo nl2br($additional_machine->teaser);
+            echo '<p><b><a href="'. $additional_machine->getUrl() .'">'. rex_escape('' === $additional_machine->lang_name ? $additional_machine->name : $additional_machine->lang_name) .'</a></b></p>';
+            echo nl2br(rex_escape($additional_machine->teaser));
             echo '</div>';
             echo '</div>';
 
@@ -657,9 +657,9 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '<td valign="bottom" align="center">';
         echo '<a href="'. $machine->getUrl() .'"><div class="comparison-header">';
         if (count($machine->pics) > 0 && '' !== $machine->pics[0]) {
-            echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $machine->pics[0]) .'" alt='. ('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'>';
+            echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $machine->pics[0]) .'" alt="'. rex_escape('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'">';
         }
-        echo '<br><b>'. ('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'</b></div></a></td>';
+        echo '<br><b>'. rex_escape('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'</b></div></a></td>';
         echo '</tr></thead>';
         echo '<tbody>';
         foreach ($usage_areas as $usage_area) {
@@ -723,7 +723,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
         if (count($machine->pictures_delivery_set) > 0) {
             echo '<div class="col-12 '. $class .'"><div class="deliverysets"><div class="deliverybox">';
             if (1 === count($machine->pictures_delivery_set)) {
-                echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_construction_equipment_delivery_set_slider', $machine->pictures_delivery_set[0]) .'" alt="'. ('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'" style="max-width:100%;">';
+                echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_construction_equipment_delivery_set_slider', $machine->pictures_delivery_set[0]) .'" alt="'. rex_escape('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'" style="max-width:100%;">';
             } else {
                 // Slider
                 echo '<div id="deliverysetCarousel" class="carousel carousel-fade slide" data-bs-ride="carousel" data-bs-pause="hover">';
@@ -747,7 +747,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
                         echo ' active';
                     }
                     echo '">';
-                    echo '<img class="d-block w-100" src="'. rex_media_manager::getUrl('d2u_machinery_construction_equipment_delivery_set_slider', $machine->pictures_delivery_set[$i]) .'" alt="'. ('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'">';
+                    echo '<img class="d-block w-100" src="'. rex_media_manager::getUrl('d2u_machinery_construction_equipment_delivery_set_slider', $machine->pictures_delivery_set[$i]) .'" alt="'. rex_escape('' === $machine->lang_name ? $machine->name : $machine->lang_name) .'">';
                     echo '</div>';
                 }
                 echo '</div>';
@@ -922,9 +922,9 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '<script>'. PHP_EOL;
         echo '	$(\'button[type="submit"]\').click(function(e) {'. PHP_EOL;
         echo "		ga('send', 'event', {". PHP_EOL;
-        echo "			eventCategory: '". rex_config::get('d2u_machinery', 'analytics_event_category') ."',". PHP_EOL;
-        echo "			eventAction:  '". rex_config::get('d2u_machinery', 'analytics_event_action') ."',". PHP_EOL;
-        echo "			eventLabel: '". $machine->name ."',". PHP_EOL;
+        echo "			eventCategory: '". rex_escape((string) rex_config::get('d2u_machinery', 'analytics_event_category'), 'js') ."',". PHP_EOL;
+        echo "			eventAction:  '". rex_escape((string) rex_config::get('d2u_machinery', 'analytics_event_action'), 'js') ."',". PHP_EOL;
+        echo "			eventLabel: '". rex_escape((string) $machine->name, 'js') ."',". PHP_EOL;
         echo "			transport: 'beacon'". PHP_EOL;
         echo '		});'. PHP_EOL;
         echo '	});'. PHP_EOL;

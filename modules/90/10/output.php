@@ -95,7 +95,7 @@ if (!function_exists('print_used_machines')) {
             }
             echo '<div><b>'. $used_machine->manufacturer .' '. rex_escape($used_machine->name) .'</b></div>';
             if ('show' === (string) $d2u_machinery->getConfig('show_teaser', 'hide')) {
-                echo '<div class="teaser">'. nl2br($used_machine->teaser) .'</div>';
+                echo '<div class="teaser">'. nl2br(rex_escape($used_machine->teaser)) .'</div>';
             }
             echo '</div>';
             echo '</a>';
