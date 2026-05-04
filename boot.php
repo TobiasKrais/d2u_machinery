@@ -246,18 +246,36 @@ function rex_d2u_machinery_media_is_in_use(rex_extension_point $ep)
     $filenameLike = '%' . str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $filename) . '%';
 
     // Machines
+    $machineQueryParams = [
+        ':filenamePdfs' => $filename,
+        ':filenamePics' => $filename,
+        ':filenameDescriptionLike' => $filenameLike,
+        ':filenameBenefitsShortLike' => $filenameLike,
+        ':filenameBenefitsLongLike' => $filenameLike,
+        ':filenameLeaflet' => $filename,
+    ];
+    if (Extension::isActive('machine_construction_equipment_extension')) {
+        $machineQueryParams[':filenamePicturesDeliverySet'] = $filename;
+    }
     $sql_machine = \rex_sql::factory();
     $sql_machine->setQuery('SELECT lang.machine_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_machines_lang` AS lang '
         .'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_machines` AS machines ON lang.machine_id = machines.machine_id '
-        .'WHERE FIND_IN_SET(:filename, pdfs) OR FIND_IN_SET(:filename, pics) OR description LIKE :filenameLike OR benefits_short LIKE :filenameLike OR benefits_long LIKE :filenameLike OR leaflet = :filename'
-        . (Extension::isActive('machine_construction_equipment_extension') ? ' OR FIND_IN_SET(:filename, pictures_delivery_set) ' : '')
-        .'GROUP BY machine_id', [':filename' => $filename, ':filenameLike' => $filenameLike]);
+        .'WHERE FIND_IN_SET(:filenamePdfs, pdfs) OR FIND_IN_SET(:filenamePics, pics) OR description LIKE :filenameDescriptionLike OR benefits_short LIKE :filenameBenefitsShortLike OR benefits_long LIKE :filenameBenefitsLongLike OR leaflet = :filenameLeaflet'
+        . (Extension::isActive('machine_construction_equipment_extension') ? ' OR FIND_IN_SET(:filenamePicturesDeliverySet, pictures_delivery_set)' : '')
+        .' GROUP BY machine_id', $machineQueryParams);
 
     // Categories
+    $categoryQueryParams = [
+        ':filenamePic' => $filename,
+        ':filenamePicUsage' => $filename,
+        ':filenamePicLang' => $filename,
+        ':filenamePdfs' => $filename,
+        ':filenameDescriptionLike' => $filenameLike,
+    ];
     $sql_categories = \rex_sql::factory();
     $sql_categories->setQuery('SELECT lang.category_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_categories_lang` AS lang '
         .'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_categories` AS categories ON lang.category_id = categories.category_id '
-        .'WHERE pic = :filename OR pic_usage = :filename OR pic_lang = :filename OR FIND_IN_SET(:filename, pdfs) OR description LIKE :filenameLike', [':filename' => $filename, ':filenameLike' => $filenameLike]);
+        .'WHERE pic = :filenamePic OR pic_usage = :filenamePicUsage OR pic_lang = :filenamePicLang OR FIND_IN_SET(:filenamePdfs, pdfs) OR description LIKE :filenameDescriptionLike', $categoryQueryParams);
 
     // Prepare warnings
     // Machines

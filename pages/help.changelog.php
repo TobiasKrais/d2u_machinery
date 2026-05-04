@@ -4,6 +4,7 @@
 <h2>Changelog</h2>
 <p>1.7.2-DEV:</p>
 <ul>
+	<li>Bugfix: Die Media-Usage-Prüfung in <code>boot.php</code> verwendet für Maschinen- und Kategorien-Abfragen jetzt eindeutige SQL-Platzhalter und ein korrekt getrenntes <code>GROUP BY</code>, damit das Löschen von Dateien im Medienpool nicht mehr mit <code>SQLSTATE[HY093]</code> fehlschlägt.</li>
 	<li>Backend: CSRF-Schutz für Speichern-, Lösch- und Statusaktionen der Branchen-, Maschinen- und Serviceoptions-Verwaltung ergänzt.</li>
 	<li>Backend: CSRF-Schutz für den Export gebrauchter Maschinen (Exportprovider, Online/Offline-Schalter) ergänzt.</li>
 	<li>Backend: CSRF-Schutz für Modul-Installation, -Update und -Deinstallation auf der Setup-Seite ergänzt.</li>
