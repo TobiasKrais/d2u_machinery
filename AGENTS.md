@@ -1,23 +1,23 @@
 # D2U Machinery - Agent Notes
 
-Nur projektspezifische Regeln, die für KI-Arbeit relevant sind.
+Rules only. Short. Actionable.
 
-## Kernregeln
+## Core Rules
 
-- Namespace für Addon-Klassen: `TobiasKrais\D2UMachinery`
-- Einrückung: 4 Spaces in PHP-Klassen, Tabs in Moduldateien
-- Kommentare nur auf Englisch
-- Frontend-Labels über `Sprog\Wildcard::get()`, Backend-Labels über `rex_i18n::msg()` mit Keys aus `lang/`
+- Namespace: `TobiasKrais\D2UMachinery`
+- PHP classes: 4 spaces. Module files: tabs
+- Comments only in English
+- Frontend labels via `Sprog\Wildcard::get()`, backend labels via `rex_i18n::msg()` with keys from `lang/`
 
-## Wichtige Projekthinweise
+## When Changing
 
-- Backend-Translation-Keys müssen in allen Sprachdateien unter `lang/` synchron bleiben.
-- Legacy-Plugin-Verzeichnisse unter `plugins/` nur für Rückwärtskompatibilität nutzen. Keine neuen separaten Plugin-Libs, Pages oder Install-/Update-Logik anlegen.
-- Wenn Module unter `modules/90/*` geändert werden, Changelog in `pages/help.changelog.php` prüfen oder aktualisieren und die Revisionsnummer in `lib/Module.php` nur einmal pro Release erhöhen.
-- Versionshinweise für Module: Wenn die Zielversion im Changelog bereits `-DEV` trägt, innerhalb derselben Entwicklungsphase keine weitere Revisionsnummer für dasselbe Modul hochzählen. Erst mit der nächsten Release-Version wieder erneut erhöhen.
-- In Changelog-Dateien, AGENTS.md und README.md echte Umlaute (ä, ö, ü, Ä, Ö, Ü, ß) verwenden und nicht als ae/oe/ue/Ae/Oe/Ue/ss umschreiben.
+- Keep backend translation keys in sync across all files under `lang/`
+- Keep legacy directories under `plugins/` for backward compatibility only. Do not add new separate plugin libs, pages, or install/update logic.
+- For changes under `modules/90/*`: check or update changelog in `pages/help.changelog.php`
+- Raise revision in `lib/Module.php` only once per release
+- If target version in changelog already has `-DEV`: do not raise again in same phase
+- Use real umlauts in changelog files, AGENTS.md, and README.md
 
-## Pflege
+## Maintenance
 
-- Diese Datei kurz und handlungsorientiert halten.
-- Neue Einträge nur aufnehmen, wenn sie wiederkehrende Stolperfallen, verbindliche Projektkonventionen oder agentenrelevante Workflows betreffen.
+- Keep only recurring pitfalls, fixed conventions, and agent-relevant workflows here
