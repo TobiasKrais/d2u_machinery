@@ -2,8 +2,9 @@
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_machinery" target="_blank">GitHub Repository</a> melden.</p>
 
 <h2>Changelog</h2>
-<p>1.7.2-DEV:</p>
+<p>1.7.2:</p>
 <ul>
+	<li>Bugfix: Maschinen laden verknüpfte D2U-Videos im Backend jetzt auch ohne aktivierte Kontakt-Erweiterung wieder korrekt, sodass gespeicherte <code>video_ids</code> wie <code>|4|</code> in der Mehrfachauswahl angezeigt werden.</li>
 	<li>Bugfix: Die Media-Usage-Prüfung in <code>boot.php</code> verwendet für Maschinen- und Kategorien-Abfragen jetzt eindeutige SQL-Platzhalter und ein korrekt getrenntes <code>GROUP BY</code>, damit das Löschen von Dateien im Medienpool nicht mehr mit <code>SQLSTATE[HY093]</code> fehlschlägt.</li>
 	<li>Backend: CSRF-Schutz für Speichern-, Lösch- und Statusaktionen der Branchen-, Maschinen- und Serviceoptions-Verwaltung ergänzt.</li>
 	<li>Backend: CSRF-Schutz für den Export gebrauchter Maschinen (Exportprovider, Online/Offline-Schalter) ergänzt.</li>

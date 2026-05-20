@@ -693,7 +693,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
             }
 
             // Videos
-            if (Extension::isActive('contacts') && \rex_addon::get('d2u_videos')->isAvailable() && '' !== $result->getValue('video_ids')) {
+            if (\rex_addon::get('d2u_videos')->isAvailable() && '' !== $result->getValue('video_ids')) {
                 $video_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('video_ids')), PREG_GREP_INVERT);
                 if (is_array($video_ids)) {
                     foreach ($video_ids as $video_id) {
