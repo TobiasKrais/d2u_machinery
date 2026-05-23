@@ -2,6 +2,10 @@
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_machinery" target="_blank">GitHub Repository</a> melden.</p>
 
 <h2>Changelog</h2>
+<p>1.7.3-DEV:</p>
+<ul>
+	<li>Backend: Abbrechen-Buttons in den Formularen fuer Kontakte, Branchen, Maschinen, Optionen, Serviceoptionen, Kategorien, Produktionslinien, Zertifikate, Ausstattungen, Rührwerke, Einsatzbereiche, Stahlverarbeitungs-Stammdaten und gebrauchte Maschinen fuehren jetzt wieder zur Liste.</li>
+</ul>
 <p>1.7.2:</p>
 <ul>
 	<li>Bugfix: Maschinen laden verknüpfte D2U-Videos im Backend jetzt auch ohne aktivierte Kontakt-Erweiterung wieder korrekt, sodass gespeicherte <code>video_ids</code> wie <code>|4|</code> in der Mehrfachauswahl angezeigt werden.</li>
