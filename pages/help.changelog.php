@@ -2,6 +2,10 @@
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_machinery" target="_blank">GitHub Repository</a> melden.</p>
 
 <h2>Changelog</h2>
+<p>1.7.4-DEV:</p>
+<ul>
+	<li>...</li>
+</ul>
 <p>1.7.3:</p>
 <ul>
 	<li>Backend: Abbrechen-Buttons in den Formularen fuer Kontakte, Branchen, Maschinen, Optionen, Serviceoptionen, Kategorien, Produktionslinien, Zertifikate, Ausstattungen, Rührwerke, Einsatzbereiche, Stahlverarbeitungs-Stammdaten und gebrauchte Maschinen fuehren jetzt wieder zur Liste.</li>
