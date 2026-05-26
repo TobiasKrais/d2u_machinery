@@ -2,7 +2,7 @@
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_machinery" target="_blank">GitHub Repository</a> melden.</p>
 
 <h2>Changelog</h2>
-<p>1.7.3-DEV:</p>
+<p>1.7.3:</p>
 <ul>
 	<li>Backend: Abbrechen-Buttons in den Formularen fuer Kontakte, Branchen, Maschinen, Optionen, Serviceoptionen, Kategorien, Produktionslinien, Zertifikate, Ausstattungen, Rührwerke, Einsatzbereiche, Stahlverarbeitungs-Stammdaten und gebrauchte Maschinen fuehren jetzt wieder zur Liste.</li>
 	<li>D2U-Videos-Integration erweitert: Das Addon reagiert jetzt auf <code>D2U_VIDEO_IN_USE</code> und blockiert das Löschen verknüpfter Videos mit Direktlinks zu Maschinen, Kategorien, Features, Optionen, Automatisierungen, Produktionslinien und Gebrauchtmaschinen.</li>
