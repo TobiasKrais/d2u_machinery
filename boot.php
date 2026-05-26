@@ -54,6 +54,7 @@ if (\rex::isBackend() && is_object(\rex::getUser())) {
 if (\rex::isBackend()) {
     rex_extension::register('ART_PRE_DELETED', rex_d2u_machinery_article_is_in_use(...));
     rex_extension::register('CLANG_DELETED', rex_d2u_machinery_clang_deleted(...));
+    rex_extension::register('D2U_VIDEO_IN_USE', rex_d2u_machinery_video_is_in_use(...));
     rex_extension::register('MEDIA_IS_IN_USE', rex_d2u_machinery_media_is_in_use(...));
 
     if (Extension::isActive('contacts')) {
@@ -307,6 +308,99 @@ function rex_d2u_machinery_media_is_in_use(rex_extension_point $ep)
         if (!in_array($message, $warning, true)) {
             $warning[] = $message;
         }
+    }
+
+    return $warning;
+}
+
+/**
+ * Checks if video is used by this addon.
+ * @param rex_extension_point<array<string>> $ep Redaxo extension point
+ * @return array<string> Warning message as array
+ */
+function rex_d2u_machinery_video_is_in_use(rex_extension_point $ep): array
+{
+    $warning = $ep->getSubject();
+    $params = $ep->getParams();
+    $video_id = (int) $params['video_id'];
+    $video_id_pipe = '%|'. $video_id .'|%';
+
+    $sql_machine = \rex_sql::factory();
+    $sql_machine->setQuery('SELECT lang.machine_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_machines_lang` AS lang '
+        .'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_machines` AS machines ON lang.machine_id = machines.machine_id '
+        .'WHERE machines.video_ids LIKE :video_id_pipe GROUP BY lang.machine_id', [':video_id_pipe' => $video_id_pipe]);
+    $warning = rex_d2u_machinery_add_video_usage_warnings($warning, $sql_machine, 'machine_id', 'name', 'index.php?page=d2u_machinery/machine/machine&func=edit&entry_id=', rex_i18n::msg('d2u_machinery_meta_machines'));
+
+    $sql_categories = \rex_sql::factory();
+    $sql_categories->setQuery('SELECT lang.category_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_categories_lang` AS lang '
+        .'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_categories` AS categories ON lang.category_id = categories.category_id '
+        .'WHERE categories.video_ids LIKE :video_id_pipe GROUP BY lang.category_id', [':video_id_pipe' => $video_id_pipe]);
+    $warning = rex_d2u_machinery_add_video_usage_warnings($warning, $sql_categories, 'category_id', 'name', 'index.php?page=d2u_machinery/category&func=edit&entry_id=', rex_i18n::msg('d2u_helper_categories'));
+
+    if (Extension::isActive('machine_features_extension')) {
+        $sql_features = \rex_sql::factory();
+        $sql_features->setQuery('SELECT lang.feature_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_features_lang` AS lang '
+            .'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_features` AS features ON lang.feature_id = features.feature_id '
+            .'WHERE features.video_id = :video_id GROUP BY lang.feature_id', [':video_id' => $video_id]);
+        $warning = rex_d2u_machinery_add_video_usage_warnings($warning, $sql_features, 'feature_id', 'name', 'index.php?page=d2u_machinery/machine/features&func=edit&entry_id=', rex_i18n::msg('d2u_machinery_features'));
+    }
+
+    if (Extension::isActive('machine_options_extension')) {
+        $sql_options = \rex_sql::factory();
+        $sql_options->setQuery('SELECT lang.option_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_options_lang` AS lang '
+            .'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_options` AS options ON lang.option_id = options.option_id '
+            .'WHERE options.video_id = :video_id GROUP BY lang.option_id', [':video_id' => $video_id]);
+        $warning = rex_d2u_machinery_add_video_usage_warnings($warning, $sql_options, 'option_id', 'name', 'index.php?page=d2u_machinery/machine/options&func=edit&entry_id=', rex_i18n::msg('d2u_machinery_options'));
+    }
+
+    if (Extension::isActive('machine_steel_automation_extension')) {
+        $sql_supplies = \rex_sql::factory();
+        $sql_supplies->setQuery('SELECT lang.supply_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_steel_supply_lang` AS lang '
+            .'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_steel_supply` AS supplies ON lang.supply_id = supplies.supply_id '
+            .'WHERE supplies.video_id = :video_id GROUP BY lang.supply_id', [':video_id' => $video_id]);
+        $warning = rex_d2u_machinery_add_video_usage_warnings($warning, $sql_supplies, 'supply_id', 'name', 'index.php?page=d2u_machinery/machine/supply&func=edit&entry_id=', rex_i18n::msg('d2u_machinery_steel_supply'));
+    }
+
+    if (Extension::isActive('production_lines')) {
+        $sql_production_lines = \rex_sql::factory();
+        $sql_production_lines->setQuery('SELECT lang.production_line_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_production_lines_lang` AS lang '
+            .'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_production_lines` AS production_lines ON lang.production_line_id = production_lines.production_line_id '
+            .'WHERE production_lines.video_ids LIKE :video_id_pipe GROUP BY lang.production_line_id', [':video_id_pipe' => $video_id_pipe]);
+        $warning = rex_d2u_machinery_add_video_usage_warnings($warning, $sql_production_lines, 'production_line_id', 'name', 'index.php?page=d2u_machinery/production_lines/lines&func=edit&entry_id=', rex_i18n::msg('d2u_machinery_production_lines'));
+    }
+
+    if (Extension::isActive('used_machines')) {
+        $sql_used_machines = \rex_sql::factory();
+        $sql_used_machines->setQuery('SELECT used_machine_id, manufacturer, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_used_machines` '
+            .'WHERE video_ids LIKE :video_id_pipe', [':video_id_pipe' => $video_id_pipe]);
+        for ($i = 0; $i < $sql_used_machines->getRows(); ++$i) {
+            $message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/used_machines/used_machines&func=edit&entry_id='.
+                $sql_used_machines->getValue('used_machine_id') .'\')">'. rex_i18n::msg('d2u_machinery_rights_all') .' - '. rex_i18n::msg('d2u_machinery_used_machines') .': '. $sql_used_machines->getValue('manufacturer') .' '. $sql_used_machines->getValue('name') .'</a>';
+            if (!in_array($message, $warning, true)) {
+                $warning[] = $message;
+            }
+            $sql_used_machines->next();
+        }
+    }
+
+    return $warning;
+}
+
+/**
+ * Adds video usage warnings from SQL result.
+ * @param array<string> $warning Warning messages
+ * @return array<string> Warning messages
+ */
+function rex_d2u_machinery_add_video_usage_warnings(array $warning, rex_sql $sql, string $id_field, string $name_field, string $page_url, string $label): array
+{
+    $page_url = preg_replace('/^index\.php\?page=/', '', $page_url) ?? $page_url;
+
+    for ($i = 0; $i < $sql->getRows(); ++$i) {
+        $message = '<a href="?page='. rex_escape($page_url) . $sql->getValue($id_field) .'">'. rex_i18n::msg('d2u_machinery_rights_all') .' - '. $label .': '. $sql->getValue($name_field) .'</a>';
+        if (!in_array($message, $warning, true)) {
+            $warning[] = $message;
+        }
+        $sql->next();
     }
 
     return $warning;
