@@ -2,7 +2,11 @@
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_machinery" target="_blank">GitHub Repository</a> melden.</p>
 
 <h2>Changelog</h2>
-<p>1.7.4-DEV:</p>
+<p>1.7.5-DEV:</p>
+<ul>
+	<li>...</li>
+</ul>
+<p>1.7.4:</p>
 <ul>
 	<li>Bugfix: Das Export-Logfile (<code>AExport</code>) wurde wegen eines überzähligen Arguments an <code>rex_path::addonData()</code> auf das Export-Verzeichnis statt auf die Logdatei gesetzt, wodurch das Schreiben des Export-Logs fehlschlug. Der Dateipfad wird jetzt korrekt zusammengesetzt.</li>
 	<li>Intern: Fehlender führender Backslash im <code>@return</code>-Docblock von <code>Module::getModules()</code> korrigiert (<code>\TobiasKrais\D2UHelper\Module</code>), damit der Typ korrekt aufgelöst wird (keine Verhaltensänderung).</li>
