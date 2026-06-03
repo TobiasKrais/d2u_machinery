@@ -11,7 +11,7 @@ class Module
 {
     /**
      * Get modules offered by this addon.
-     * @return array<int,TobiasKrais\D2UHelper\Module> Modules offered by this addon
+     * @return array<int,\TobiasKrais\D2UHelper\Module> Modules offered by this addon
      */
     public static function getModules()
     {

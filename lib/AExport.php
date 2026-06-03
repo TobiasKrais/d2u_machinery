@@ -36,7 +36,7 @@ abstract class AExport
         if (!file_exists(rex_path::addonData('d2u_machinery', 'export'))) {
             rex_dir::create(rex_path::addonData('d2u_machinery', 'export'));
         }
-        $this->log_file = rex_path::addonData('d2u_machinery', 'export', 'export_'. date('Y-m-d_H-i-s', time()) .'_'. $this->provider->type .'.log');
+        $this->log_file = rex_path::addonData('d2u_machinery', 'export/export_'. date('Y-m-d_H-i-s', time()) .'_'. $this->provider->type .'.log');
     }
 
     /**

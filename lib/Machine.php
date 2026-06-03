@@ -851,7 +851,6 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
     /**
      * Get reference objects reffering to this machine.
      * @return array<int,Reference> array with Reference objects
-     * @throws InvalidArgumentException 
      */
     public function getReferences(): array
     {

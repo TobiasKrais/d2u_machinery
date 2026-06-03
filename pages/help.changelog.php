@@ -4,7 +4,9 @@
 <h2>Changelog</h2>
 <p>1.7.4-DEV:</p>
 <ul>
-	<li>...</li>
+	<li>Bugfix: Das Export-Logfile (<code>AExport</code>) wurde wegen eines überzähligen Arguments an <code>rex_path::addonData()</code> auf das Export-Verzeichnis statt auf die Logdatei gesetzt, wodurch das Schreiben des Export-Logs fehlschlug. Der Dateipfad wird jetzt korrekt zusammengesetzt.</li>
+	<li>Intern: Fehlender führender Backslash im <code>@return</code>-Docblock von <code>Module::getModules()</code> korrigiert (<code>\TobiasKrais\D2UHelper\Module</code>), damit der Typ korrekt aufgelöst wird (keine Verhaltensänderung).</li>
+	<li>Intern: Überzähligen <code>@throws InvalidArgumentException</code>-Docblock aus <code>getReferences()</code> in <code>Category</code>, <code>Machine</code> und <code>ProductionLine</code> entfernt (Methode wirft keine solche Exception; keine Verhaltensänderung).</li>
 </ul>
 <p>1.7.3:</p>
 <ul>
