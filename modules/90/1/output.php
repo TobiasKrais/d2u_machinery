@@ -503,7 +503,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
             if ('' !== $agitator->pic) {
                 echo '<a href="'. rex_media_manager::getUrl('d2u_helper_gallery_detail', $agitator->pic) .'" '
                     .'data-toggle="lightbox_agitator" data-gallery="example-galleryagitator" data-title="'. rex_escape($agitator->name) .'">';
-                echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_features', $agitator->pic) .'" alt='. rex_escape($agitator->name) .' class="featurepic">';
+                echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_features', $agitator->pic) .'" alt="'. rex_escape($agitator->name) .'" class="featurepic">';
                 echo '</a>';
             }
             echo '</div>';
@@ -749,7 +749,7 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
             if ('' !== $service_option->picture) {
                 echo '<a href="'. rex_media_manager::getUrl('d2u_helper_gallery_detail', $service_option->picture) .'" '
                     .'data-toggle="lightbox_service" data-gallery="example-galleryservice" data-title="'. $service_option->name.'">';
-                echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_features', $service_option->picture) .'" alt='. rex_escape($service_option->name) .' class="featurepic">';
+                echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_features', $service_option->picture) .'" alt="'. rex_escape($service_option->name) .'" class="featurepic">';
                 echo '</a>';
             }
             echo '</div>';

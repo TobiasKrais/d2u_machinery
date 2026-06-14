@@ -4,7 +4,7 @@
 <h2>Changelog</h2>
 <p>1.7.5-DEV:</p>
 <ul>
-	<li>...</li>
+	<li>Barrierefreiheit: Fehlerhafte (nicht in Anführungszeichen gesetzte) <code>alt</code>-Attribute in den Modulen 90-1, 90-4, 90-7 und 90-10 korrigiert – Bildbeschreibungen mit Leerzeichen erzeugen jetzt gültiges HTML. Galerie-Bilder erhalten zudem ein leeres <code>alt</code>, wenn kein Medientitel vorhanden ist.</li>
 </ul>
 <p>1.7.4:</p>
 <ul>

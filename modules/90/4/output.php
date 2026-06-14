@@ -172,7 +172,7 @@ if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['opti
         // Slider picture(s)
         echo '<div class="col-12 col-md-6 abstand">';
         if ('lightbox' === $picture_type || 1 === count($used_machine->pics)) {
-            echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $used_machine->pics[0]) .'" alt='. rex_escape($used_machine->name) .' style="max-width:100%;">';
+            echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $used_machine->pics[0]) .'" alt="'. rex_escape($used_machine->name) .'" style="max-width:100%;">';
         } else {
             // Slider
             echo '<div id="machineCarousel" class="carousel carousel-fade slide" data-ride="carousel">';
@@ -196,7 +196,7 @@ if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['opti
                 }
                 echo '">';
                 echo '<div class=".carousel-img-holder">';
-                echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $used_machine->pics[$i]) .'" alt='. rex_escape($used_machine->name) .'>';
+                echo '<img src="'. rex_media_manager::getUrl('d2u_machinery_list_tile', $used_machine->pics[$i]) .'" alt="'. rex_escape($used_machine->name) .'">';
                 echo '</div>';
                 echo '</div>';
             }
@@ -359,6 +359,8 @@ if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['opti
             echo '<img src="'. rex_media_manager::getUrl($type_thumb, $pic) .'" class="img-fluid gallery-pic-box"';
             if ($media instanceof rex_media) {
                 echo ' alt="'. $media->getValue('title') .'" title="'. $media->getValue('title') .'"';
+            } else {
+                echo ' alt=""';
             }
             echo '>';
             echo '</a>';
