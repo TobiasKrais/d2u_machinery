@@ -128,7 +128,7 @@ class UsageArea implements \TobiasKrais\D2UHelper\ITranslationHelper
     public function getMachines()
     {
         $query = 'SELECT machine_id FROM '. \rex::getTablePrefix() .'d2u_machinery_machines '
-            ."WHERE usage_area_ids LIKE '%|". $this->usage_area_id ."|%'";
+            ."WHERE usage_area_ids LIKE '%|". (int) $this->usage_area_id ."|%'";
         $result = \rex_sql::factory();
         $result->setQuery($query);
 

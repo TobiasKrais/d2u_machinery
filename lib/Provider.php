@@ -422,35 +422,55 @@ class Provider
         $this->clang_id = 0 === $this->clang_id ? (int) (rex_config::get('d2u_helper', 'default_lang', rex_clang::getStartId())) : $this->clang_id;
 
         $query = \rex::getTablePrefix() .'d2u_machinery_export_provider SET '
-                ."name = '". $this->name ."', "
-                ."type = '". $this->type ."', "
-                .'clang_id = '. $this->clang_id .', '
-                ."company_name = '". $this->company_name ."', "
-                ."company_email = '". $this->company_email ."', "
-                ."customer_number = '". $this->customer_number ."', "
-                ."media_manager_type = '". $this->media_manager_type ."', "
-                ."online_status = '". $this->online_status ."', "
-                ."ftp_server = '". $this->ftp_server ."', "
-                ."ftp_username = '". $this->ftp_username ."', "
-                ."ftp_password = '". $this->ftp_password ."', "
-                ."ftp_filename = '". $this->ftp_filename ."', "
-                ."social_app_id = '". $this->social_app_id ."', "
-                ."social_app_secret = '". $this->social_app_secret ."', "
-                ."social_access_token = '". $this->social_access_token ."', "
-                ."social_access_token_valid_until = '". $this->social_access_token_valid_until ."', "
-                ."social_refresh_token = '". $this->social_refresh_token ."', "
-                ."social_refresh_token_valid_until = '". $this->social_refresh_token_valid_until ."', "
-                ."linkedin_type = '". $this->linkedin_type ."', "
-                ."linkedin_id = '". $this->linkedin_id ."' ";
+                .'name = :name, '
+                .'type = :type, '
+                .'clang_id = '. (int) $this->clang_id .', '
+                .'company_name = :company_name, '
+                .'company_email = :company_email, '
+                .'customer_number = :customer_number, '
+                .'media_manager_type = :media_manager_type, '
+                .'online_status = :online_status, '
+                .'ftp_server = :ftp_server, '
+                .'ftp_username = :ftp_username, '
+                .'ftp_password = :ftp_password, '
+                .'ftp_filename = :ftp_filename, '
+                .'social_app_id = :social_app_id, '
+                .'social_app_secret = :social_app_secret, '
+                .'social_access_token = :social_access_token, '
+                .'social_access_token_valid_until = :social_access_token_valid_until, '
+                .'social_refresh_token = :social_refresh_token, '
+                .'social_refresh_token_valid_until = :social_refresh_token_valid_until, '
+                .'linkedin_type = :linkedin_type, '
+                .'linkedin_id = :linkedin_id ';
 
         if (0 === $this->provider_id) {
             $query = 'INSERT INTO '. $query;
         } else {
-            $query = 'UPDATE '. $query .' WHERE provider_id = '. $this->provider_id;
+            $query = 'UPDATE '. $query .' WHERE provider_id = '. (int) $this->provider_id;
         }
 
         $result = \rex_sql::factory();
-        $result->setQuery($query);
+        $result->setQuery($query, [
+            ':name' => $this->name,
+            ':type' => $this->type,
+            ':company_name' => $this->company_name,
+            ':company_email' => $this->company_email,
+            ':customer_number' => $this->customer_number,
+            ':media_manager_type' => $this->media_manager_type,
+            ':online_status' => $this->online_status,
+            ':ftp_server' => $this->ftp_server,
+            ':ftp_username' => $this->ftp_username,
+            ':ftp_password' => $this->ftp_password,
+            ':ftp_filename' => $this->ftp_filename,
+            ':social_app_id' => $this->social_app_id,
+            ':social_app_secret' => $this->social_app_secret,
+            ':social_access_token' => $this->social_access_token,
+            ':social_access_token_valid_until' => $this->social_access_token_valid_until,
+            ':social_refresh_token' => $this->social_refresh_token,
+            ':social_refresh_token_valid_until' => $this->social_refresh_token_valid_until,
+            ':linkedin_type' => $this->linkedin_type,
+            ':linkedin_id' => $this->linkedin_id,
+        ]);
         if (0 === $this->provider_id) {
             $this->provider_id = (int) $result->getLastId();
         }
@@ -475,14 +495,21 @@ class Provider
     public function setTokens($social_access_token, $social_access_token_valid_until, $social_refresh_token, $social_refresh_token_valid_until)
     {
         $query = 'UPDATE '. \rex::getTablePrefix() .'d2u_machinery_export_provider SET '
-                ."social_access_token = '". $social_access_token ."', "
-                ."social_access_token_valid_until = '". $social_access_token_valid_until ."', "
-                ."social_refresh_token = '". $social_refresh_token ."', "
-                ."social_refresh_token_valid_until = '". $social_refresh_token_valid_until ."' "
-                ."WHERE company_email = '". $this->company_email ."' "
-                ."AND social_app_id = '". $this->social_app_id ."' ";
+                .'social_access_token = :social_access_token, '
+                .'social_access_token_valid_until = :social_access_token_valid_until, '
+                .'social_refresh_token = :social_refresh_token, '
+                .'social_refresh_token_valid_until = :social_refresh_token_valid_until '
+                .'WHERE company_email = :company_email '
+                .'AND social_app_id = :social_app_id ';
         $result = \rex_sql::factory();
-        $result->setQuery($query);
+        $result->setQuery($query, [
+            ':social_access_token' => $social_access_token,
+            ':social_access_token_valid_until' => $social_access_token_valid_until,
+            ':social_refresh_token' => $social_refresh_token,
+            ':social_refresh_token_valid_until' => $social_refresh_token_valid_until,
+            ':company_email' => $this->company_email,
+            ':social_app_id' => $this->social_app_id,
+        ]);
 
         if ($result->hasError()) {
             return false;

@@ -114,7 +114,7 @@ class Profile implements \TobiasKrais\D2UHelper\ITranslationHelper
     public function getReferringMachines()
     {
         $query = 'SELECT machine_id FROM '. \rex::getTablePrefix() .'d2u_machinery_machines '
-            ."WHERE profile_ids LIKE '%|". $this->profile_id ."|%'";
+            ."WHERE profile_ids LIKE '%|". (int) $this->profile_id ."|%'";
         $result = \rex_sql::factory();
         $result->setQuery($query);
 

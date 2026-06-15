@@ -145,7 +145,7 @@ class Feature implements \TobiasKrais\D2UHelper\ITranslationHelper
     public function getReferringMachines()
     {
         $query = 'SELECT machine_id FROM '. \rex::getTablePrefix() .'d2u_machinery_machines '
-            ."WHERE feature_ids LIKE '%|". $this->feature_id ."|%'";
+            ."WHERE feature_ids LIKE '%|". (int) $this->feature_id ."|%'";
         $result = \rex_sql::factory();
         $result->setQuery($query);
 

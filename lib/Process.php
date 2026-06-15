@@ -114,7 +114,7 @@ class Process implements \TobiasKrais\D2UHelper\ITranslationHelper
     public function getReferringMachines()
     {
         $query = 'SELECT machine_id FROM '. \rex::getTablePrefix() .'d2u_machinery_machines '
-            ."WHERE process_ids LIKE '%|". $this->process_id ."|%'";
+            ."WHERE process_ids LIKE '%|". (int) $this->process_id ."|%'";
         $result = \rex_sql::factory();
         $result->setQuery($query);
 

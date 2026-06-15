@@ -114,7 +114,7 @@ class Material implements \TobiasKrais\D2UHelper\ITranslationHelper
     public function getReferringMachines()
     {
         $query = 'SELECT machine_id FROM '. \rex::getTablePrefix() .'d2u_machinery_machines '
-            ."WHERE material_ids LIKE '%|". $this->material_id ."|%'";
+            ."WHERE material_ids LIKE '%|". (int) $this->material_id ."|%'";
         $result = \rex_sql::factory();
         $result->setQuery($query);
 

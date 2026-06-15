@@ -118,7 +118,7 @@ class Certificate implements \TobiasKrais\D2UHelper\ITranslationHelper
     public function getReferringMachines()
     {
         $query = 'SELECT machine_id FROM '. \rex::getTablePrefix() .'d2u_machinery_machines '
-            ."WHERE certificate_ids LIKE '%|". $this->certificate_id ."|%'";
+            ."WHERE certificate_ids LIKE '%|". (int) $this->certificate_id ."|%'";
         $result = \rex_sql::factory();
         $result->setQuery($query);
 

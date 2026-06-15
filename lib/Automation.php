@@ -114,7 +114,7 @@ class Automation implements \TobiasKrais\D2UHelper\ITranslationHelper
     public function getReferringMachines()
     {
         $query = 'SELECT machine_id FROM '. \rex::getTablePrefix() .'d2u_machinery_machines '
-            ."WHERE automation_automationgrade_ids LIKE '%|". $this->automation_id ."|%'";
+            ."WHERE automation_automationgrade_ids LIKE '%|". (int) $this->automation_id ."|%'";
         $result = \rex_sql::factory();
         $result->setQuery($query);
 

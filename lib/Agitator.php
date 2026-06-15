@@ -118,7 +118,7 @@ class Agitator implements \TobiasKrais\D2UHelper\ITranslationHelper
     public function getReferringAgitatorTypes()
     {
         $query = 'SELECT agitator_type_id FROM '. \rex::getTablePrefix() .'d2u_machinery_agitator_types '
-            ."WHERE agitator_ids LIKE '%|". $this->agitator_id ."|%'";
+            ."WHERE agitator_ids LIKE '%|". (int) $this->agitator_id ."|%'";
         $result = \rex_sql::factory();
         $result->setQuery($query);
 

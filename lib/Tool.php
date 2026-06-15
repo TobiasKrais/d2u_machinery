@@ -114,7 +114,7 @@ class Tool implements \TobiasKrais\D2UHelper\ITranslationHelper
     public function getReferringMachines()
     {
         $query = 'SELECT machine_id FROM '. \rex::getTablePrefix() .'d2u_machinery_machines '
-            ."WHERE tool_ids LIKE '%|". $this->tool_id ."|%'";
+            ."WHERE tool_ids LIKE '%|". (int) $this->tool_id ."|%'";
         $result = \rex_sql::factory();
         $result->setQuery($query);
 

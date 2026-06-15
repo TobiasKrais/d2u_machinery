@@ -198,15 +198,15 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper
                 foreach (rex_clang::getAllIds() as $clang_id) {
                     $lang_object = new self($this->production_line_id, $clang_id);
                     $query_forward = 'DELETE FROM '. \rex::getTablePrefix() .'yrewrite_forward '
-                        ."WHERE extern = '". $lang_object->getUrl(true) ."'";
+                        .'WHERE extern = :extern';
                     $result_forward = \rex_sql::factory();
-                    $result_forward->setQuery($query_forward);
+                    $result_forward->setQuery($query_forward, [':extern' => $lang_object->getUrl(true)]);
                 }
             } else {
                 $query_forward = 'DELETE FROM '. \rex::getTablePrefix() .'yrewrite_forward '
-                    ."WHERE extern = '". $this->getUrl(true) ."'";
+                    .'WHERE extern = :extern';
                 $result_forward = \rex_sql::factory();
-                $result_forward->setQuery($query_forward);
+                $result_forward->setQuery($query_forward, [':extern' => $this->getUrl(true)]);
             }
         }
     }

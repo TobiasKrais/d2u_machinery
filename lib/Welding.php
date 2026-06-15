@@ -114,7 +114,7 @@ class Welding implements \TobiasKrais\D2UHelper\ITranslationHelper
     public function getReferringMachines()
     {
         $query = 'SELECT machine_id FROM '. \rex::getTablePrefix() .'d2u_machinery_machines '
-            ."WHERE welding_process_ids LIKE '%|". $this->welding_id ."|%'";
+            ."WHERE welding_process_ids LIKE '%|". (int) $this->welding_id ."|%'";
         $result = \rex_sql::factory();
         $result->setQuery($query);
 

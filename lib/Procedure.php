@@ -114,7 +114,7 @@ class Procedure implements \TobiasKrais\D2UHelper\ITranslationHelper
     public function getReferringMachines()
     {
         $query = 'SELECT machine_id FROM '. \rex::getTablePrefix() .'d2u_machinery_machines '
-            ."WHERE procedure_ids LIKE '%|". $this->procedure_id ."|%'";
+            ."WHERE procedure_ids LIKE '%|". (int) $this->procedure_id ."|%'";
         $result = \rex_sql::factory();
         $result->setQuery($query);
 

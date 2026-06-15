@@ -145,15 +145,15 @@ class IndustrySector implements \TobiasKrais\D2UHelper\ITranslationHelper
                 foreach (rex_clang::getAllIds() as $clang_id) {
                     $lang_object = new self($this->industry_sector_id, $clang_id);
                     $query_forward = 'DELETE FROM '. \rex::getTablePrefix() .'yrewrite_forward '
-                        ."WHERE extern = '". $lang_object->getUrl(true) ."'";
+                        .'WHERE extern = :extern';
                     $result_forward = \rex_sql::factory();
-                    $result_forward->setQuery($query_forward);
+                    $result_forward->setQuery($query_forward, [':extern' => $lang_object->getUrl(true)]);
                 }
             } else {
                 $query_forward = 'DELETE FROM '. \rex::getTablePrefix() .'yrewrite_forward '
-                    ."WHERE extern = '". $this->getUrl(true) ."'";
+                    .'WHERE extern = :extern';
                 $result_forward = \rex_sql::factory();
-                $result_forward->setQuery($query_forward);
+                $result_forward->setQuery($query_forward, [':extern' => $this->getUrl(true)]);
             }
         }
     }
@@ -191,7 +191,7 @@ class IndustrySector implements \TobiasKrais\D2UHelper\ITranslationHelper
     public function getMachines($online_only = false)
     {
         $query = 'SELECT machine_id FROM '. \rex::getTablePrefix() .'d2u_machinery_machines '
-            ."WHERE industry_sector_ids LIKE '%|". $this->industry_sector_id ."|%'";
+            ."WHERE industry_sector_ids LIKE '%|". (int) $this->industry_sector_id ."|%'";
         $result = \rex_sql::factory();
         $result->setQuery($query);
 
@@ -218,7 +218,7 @@ class IndustrySector implements \TobiasKrais\D2UHelper\ITranslationHelper
         $production_lines = [];
         if (\TobiasKrais\D2UMachinery\Extension::isActive('production_lines')) {
             $query = 'SELECT production_line_id FROM '. \rex::getTablePrefix() .'d2u_machinery_production_lines '
-                ."WHERE industry_sector_ids LIKE '%|". $this->industry_sector_id ."|%'";
+                ."WHERE industry_sector_ids LIKE '%|". (int) $this->industry_sector_id ."|%'";
             $result = \rex_sql::factory();
             $result->setQuery($query);
 
@@ -306,7 +306,7 @@ class IndustrySector implements \TobiasKrais\D2UHelper\ITranslationHelper
             . 'FROM '. \rex::getTablePrefix() .'d2u_machinery_machines_lang AS lang '
             .'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_machines AS machines '
                     .'ON lang.machine_id = machines.machine_id '
-            ."WHERE industry_sector_ids LIKE '%|". $this->industry_sector_id ."|%' AND clang_id = ". $this->clang_id
+            ."WHERE industry_sector_ids LIKE '%|". (int) $this->industry_sector_id ."|%' AND clang_id = ". (int) $this->clang_id
             .($ignore_offlines ? ' AND online_status = "online"' : '');
         $result = \rex_sql::factory();
         $result->setQuery($query);

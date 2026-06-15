@@ -5,6 +5,8 @@
 <p>1.7.5-DEV:</p>
 <ul>
 	<li>Barrierefreiheit: Fehlerhafte (nicht in Anführungszeichen gesetzte) <code>alt</code>-Attribute in den Modulen 90-1, 90-4, 90-7 und 90-10 korrigiert – Bildbeschreibungen mit Leerzeichen erzeugen jetzt gültiges HTML. Galerie-Bilder erhalten zudem ein leeres <code>alt</code>, wenn kein Medientitel vorhanden ist.</li>
+	<li>Security/Bugfix: Saemtliche SQL-Abfragen in den <code>lib/</code>-Datenklassen verwenden jetzt gebundene Parameter bzw. <code>int</code>-Casts statt SQL-String-Konkatenation. Betroffen sind insbesondere <code>Provider::save()</code> und <code>Provider::setTokens()</code> (FTP- und OAuth-/Social-Zugangsdaten), <code>Machine::save()</code> (rund 100 Felder inkl. Plugin-Erweiterungen) und <code>ExportedUsedMachine::save()</code> sowie die zahlreichen <code>WHERE ... LIKE</code>- und <code>WHERE extern = ...</code>-Abfragen in Category, UsedMachine, IndustrySector, ProductionLine und den Beziehungsklassen. Verhindert SQL-Injection und <code>rex_sql_exception</code> bei Werten mit Anfuehrungszeichen.</li>
+	<li>Security: In <code>Machine.php</code> (technische Daten der Construction-Equipment-Erweiterung) werden Kategorie-Name und -URL im verlinkten Maschinentechnik-Eintrag jetzt mit <code>rex_escape()</code> ausgegeben (XSS-Haertung).</li>
 </ul>
 <p>1.7.4:</p>
 <ul>

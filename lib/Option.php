@@ -145,7 +145,7 @@ class Option implements \TobiasKrais\D2UHelper\ITranslationHelper
     public function getReferringMachines()
     {
         $query = 'SELECT machine_id FROM '. \rex::getTablePrefix() .'d2u_machinery_machines '
-            ."WHERE option_ids LIKE '%|". $this->option_id ."|%'";
+            ."WHERE option_ids LIKE '%|". (int) $this->option_id ."|%'";
         $result = \rex_sql::factory();
         $result->setQuery($query);
 

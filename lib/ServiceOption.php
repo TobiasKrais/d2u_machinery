@@ -156,7 +156,7 @@ class ServiceOption implements \TobiasKrais\D2UHelper\ITranslationHelper
     public function getReferringMachines($online_only = false)
     {
         $query = 'SELECT machine_id FROM '. \rex::getTablePrefix() .'d2u_machinery_machines '
-            ."WHERE service_option_ids LIKE '%|". $this->service_option_id ."|%'";
+            ."WHERE service_option_ids LIKE '%|". (int) $this->service_option_id ."|%'";
         $result = \rex_sql::factory();
         $result->setQuery($query);
 

@@ -121,7 +121,7 @@ class USP implements \TobiasKrais\D2UHelper\ITranslationHelper
         $query = 'SELECT production_lines.production_line_id FROM '. \rex::getTablePrefix() .'d2u_machinery_production_lines AS production_lines '
             .'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_production_lines_lang AS lang '
                 .' ON production_lines.production_line_id = lang.production_line_id AND lang.clang_id = '. $this->clang_id .' '
-            ."WHERE usp_ids LIKE '%|". $this->usp_id ."|%' ";
+            ."WHERE usp_ids LIKE '%|". (int) $this->usp_id ."|%' ";
         $query .= 'ORDER BY name';
 
         $result = \rex_sql::factory();

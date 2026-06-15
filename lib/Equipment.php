@@ -151,7 +151,7 @@ class Equipment implements \TobiasKrais\D2UHelper\ITranslationHelper
     public function getReferringMachines()
     {
         $query = 'SELECT machine_id FROM '. \rex::getTablePrefix() .'d2u_machinery_machines '
-            ."WHERE equipment_ids LIKE '%|". $this->equipment_id ."|%'";
+            ."WHERE equipment_ids LIKE '%|". (int) $this->equipment_id ."|%'";
         $result = \rex_sql::factory();
         $result->setQuery($query);
 

@@ -234,15 +234,15 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper
                 foreach (rex_clang::getAllIds() as $clang_id) {
                     $lang_object = new self($this->category_id, $clang_id);
                     $query_forward = 'DELETE FROM '. \rex::getTablePrefix() .'yrewrite_forward '
-                        ."WHERE extern = '". $lang_object->getUrl(true) ."'";
+                        .'WHERE extern = :extern';
                     $result_forward = \rex_sql::factory();
-                    $result_forward->setQuery($query_forward);
+                    $result_forward->setQuery($query_forward, [':extern' => $lang_object->getUrl(true)]);
                 }
             } else {
                 $query_forward = 'DELETE FROM '. \rex::getTablePrefix() .'yrewrite_forward '
-                    ."WHERE extern = '". $this->getUrl(true) ."'";
+                    .'WHERE extern = :extern';
                 $result_forward = \rex_sql::factory();
-                $result_forward->setQuery($query_forward);
+                $result_forward->setQuery($query_forward, [':extern' => $this->getUrl(true)]);
             }
         }
     }
@@ -423,16 +423,18 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper
             $query = 'SELECT lang.used_machine_id FROM '. \rex::getTablePrefix() .'d2u_machinery_used_machines_lang AS lang '
                 .'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_used_machines AS used_machines '
                     .'ON lang.used_machine_id = used_machines.used_machine_id '
-                .'WHERE category_id = '. $this->category_id .' AND clang_id = '. $this->clang_id .' ';
+                .'WHERE category_id = '. (int) $this->category_id .' AND clang_id = '. (int) $this->clang_id .' ';
+            $query_params = [];
             if ($online_only) {
                 $query .= "AND online_status = 'online' ";
             }
             if ('' !== $this->offer_type) {
-                $query .= "AND offer_type = '". $this->offer_type ."' ";
+                $query .= 'AND offer_type = :offer_type ';
+                $query_params[':offer_type'] = $this->offer_type;
             }
             $query .= 'ORDER BY manufacturer, name';
             $result = \rex_sql::factory();
-            $result->setQuery($query);
+            $result->setQuery($query, $query_params);
 
             for ($i = 0; $i < $result->getRows(); ++$i) {
                 $usedMachines[] = new UsedMachine((int) $result->getValue('used_machine_id'), $this->clang_id);
@@ -584,16 +586,18 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper
             $query = 'SELECT lang.used_machine_id FROM '. \rex::getTablePrefix() .'d2u_machinery_used_machines_lang AS lang '
                 .'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_used_machines AS used_machines '
                     .'ON lang.used_machine_id = used_machines.used_machine_id '
-                .'WHERE category_id = '. $this->category_id .' AND clang_id = '. $this->clang_id .' ';
+                .'WHERE category_id = '. (int) $this->category_id .' AND clang_id = '. (int) $this->clang_id .' ';
+            $query_params = [];
             if ($ignore_offlines) {
                 $query .= "AND online_status = 'online' ";
             }
             if ('' !== $this->offer_type) {
-                $query .= "AND offer_type = '". $this->offer_type ."' ";
+                $query .= 'AND offer_type = :offer_type ';
+                $query_params[':offer_type'] = $this->offer_type;
             }
 
             $result = \rex_sql::factory();
-            $result->setQuery($query);
+            $result->setQuery($query, $query_params);
 
             if ($result->getRows() > 0) {
                 return true;

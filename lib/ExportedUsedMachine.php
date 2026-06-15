@@ -206,14 +206,18 @@ class ExportedUsedMachine
     public function save()
     {
         $query = 'REPLACE INTO '. \rex::getTablePrefix() .'d2u_machinery_export_machines SET '
-                .'used_machine_id = '. $this->used_machine_id .', '
-                .'provider_id = '. $this->provider_id .', '
-                ."export_action = '". $this->export_action ."', "
-                ."provider_import_id = '". $this->provider_import_id ."', "
-                ."export_timestamp = '". $this->export_timestamp ."'";
+                .'used_machine_id = '. (int) $this->used_machine_id .', '
+                .'provider_id = '. (int) $this->provider_id .', '
+                .'export_action = :export_action, '
+                .'provider_import_id = :provider_import_id, '
+                .'export_timestamp = :export_timestamp';
 
         $result = \rex_sql::factory();
-        $result->setQuery($query);
+        $result->setQuery($query, [
+            ':export_action' => $this->export_action,
+            ':provider_import_id' => $this->provider_import_id,
+            ':export_timestamp' => $this->export_timestamp,
+        ]);
 
         return !$result->hasError();
     }

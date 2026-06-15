@@ -775,15 +775,15 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
                 foreach (rex_clang::getAllIds() as $clang_id) {
                     $lang_object = new self($this->machine_id, $clang_id);
                     $query_forward = 'DELETE FROM '. \rex::getTablePrefix() .'yrewrite_forward '
-                        ."WHERE extern = '". $lang_object->getUrl(true) ."'";
+                        .'WHERE extern = :extern';
                     $result_forward = \rex_sql::factory();
-                    $result_forward->setQuery($query_forward);
+                    $result_forward->setQuery($query_forward, [':extern' => $lang_object->getUrl(true)]);
                 }
             } else {
                 $query_forward = 'DELETE FROM '. \rex::getTablePrefix() .'yrewrite_forward '
-                    ."WHERE extern = '". $this->getUrl(true) ."'";
+                    .'WHERE extern = :extern';
                 $result_forward = \rex_sql::factory();
-                $result_forward->setQuery($query_forward);
+                $result_forward->setQuery($query_forward, [':extern' => $this->getUrl(true)]);
             }
         }
     }
@@ -876,7 +876,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
     public function getReferringMachines()
     {
         $query = 'SELECT machine_id FROM '. \rex::getTablePrefix() .'d2u_machinery_machines '
-            ."WHERE alternative_machine_ids LIKE '%|". $this->machine_id ."|%' OR additional_machine_ids LIKE '%|". $this->machine_id ."|%'";
+            ."WHERE alternative_machine_ids LIKE '%|". (int) $this->machine_id ."|%' OR additional_machine_ids LIKE '%|". (int) $this->machine_id ."|%'";
         $result = \rex_sql::factory();
         $result->setQuery($query);
 
@@ -896,7 +896,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
     {
         if (Extension::isActive('production_lines')) {
             $query = 'SELECT production_line_id FROM '. \rex::getTablePrefix() .'d2u_machinery_production_lines '
-                ."WHERE machine_ids LIKE '%|". $this->machine_id ."|%' OR complementary_machine_ids LIKE '%|". $this->machine_id ."|%'";
+                ."WHERE machine_ids LIKE '%|". (int) $this->machine_id ."|%' OR complementary_machine_ids LIKE '%|". (int) $this->machine_id ."|%'";
             $result = \rex_sql::factory();
             $result->setQuery($query);
 
@@ -1252,7 +1252,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
             if (false !== $this->category) {
                 $tech_data[] = [
                     'description' => \Sprog\Wildcard::get('d2u_machinery_construction_equipment_machine_technique'),
-                    'value' => '<a href="'. $this->category->getUrl() .'">'. $this->category->name .'</a>',
+                    'value' => '<a href="'. \rex_escape($this->category->getUrl(), 'html_attr') .'">'. \rex_escape($this->category->name) .'</a>',
                     'unit' => '',
                 ];
             }
@@ -1968,153 +1968,246 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
             $main_params = [':name' => $this->name];
             $query = \rex::getTablePrefix() .'d2u_machinery_machines SET '
                     .'name = :name, '
-                    ."pics = '". implode(',', $this->pics) ."', "
-                    .'category_id = '. ($this->category instanceof Category ? $this->category->category_id : 0) .', '
-                    ."alternative_machine_ids = '|". implode('|', $this->alternative_machine_ids) ."|', "
-                    ."additional_machine_ids = '|". implode('|', $this->additional_machine_ids) ."|', "
-                    ."product_number = '". $this->product_number ."', "
-                    ."article_id_software = '". $this->article_id_software ."', "
-                    ."article_id_service = '". $this->article_id_service ."', "
-                    ."article_ids_references = '". implode(',', $this->article_ids_references) ."', "
-                    ."reference_ids = '". implode(',', $this->reference_ids) ."', "
-                    ."online_status = '". $this->online_status ."', "
-                    ."engine_power = '". $this->engine_power ."', "
-                    ."engine_power_frequency_controlled = '". ($this->engine_power_frequency_controlled ? 'true' : 'false') ."', "
-                    ."length = '". $this->length ."', "
-                    ."width = '". $this->width ."', "
-                    ."height = '". $this->height ."', "
-                    ."depth = '". $this->depth ."', "
-                    ."weight = '". $this->weight ."', "
-                    ."operating_voltage_v = '". $this->operating_voltage_v ."', "
-                    ."operating_voltage_hz = '". $this->operating_voltage_hz ."', "
-                    ."operating_voltage_a = '". $this->operating_voltage_a ."' ";
+                    .'pics = :pics, '
+                    .'category_id = '. ($this->category instanceof Category ? (int) $this->category->category_id : 0) .', '
+                    .'alternative_machine_ids = :alternative_machine_ids, '
+                    .'additional_machine_ids = :additional_machine_ids, '
+                    .'product_number = :product_number, '
+                    .'article_id_software = :article_id_software, '
+                    .'article_id_service = :article_id_service, '
+                    .'article_ids_references = :article_ids_references, '
+                    .'reference_ids = :reference_ids, '
+                    .'online_status = :online_status, '
+                    .'engine_power = :engine_power, '
+                    .'engine_power_frequency_controlled = :engine_power_frequency_controlled, '
+                    .'length = :length, '
+                    .'width = :width, '
+                    .'height = :height, '
+                    .'depth = :depth, '
+                    .'weight = :weight, '
+                    .'operating_voltage_v = :operating_voltage_v, '
+                    .'operating_voltage_hz = :operating_voltage_hz, '
+                    .'operating_voltage_a = :operating_voltage_a ';
+            $main_params[':pics'] = implode(',', $this->pics);
+            $main_params[':alternative_machine_ids'] = '|'. implode('|', $this->alternative_machine_ids) .'|';
+            $main_params[':additional_machine_ids'] = '|'. implode('|', $this->additional_machine_ids) .'|';
+            $main_params[':product_number'] = $this->product_number;
+            $main_params[':article_id_software'] = $this->article_id_software;
+            $main_params[':article_id_service'] = $this->article_id_service;
+            $main_params[':article_ids_references'] = implode(',', $this->article_ids_references);
+            $main_params[':reference_ids'] = implode(',', $this->reference_ids);
+            $main_params[':online_status'] = $this->online_status;
+            $main_params[':engine_power'] = $this->engine_power;
+            $main_params[':engine_power_frequency_controlled'] = $this->engine_power_frequency_controlled ? 'true' : 'false';
+            $main_params[':length'] = $this->length;
+            $main_params[':width'] = $this->width;
+            $main_params[':height'] = $this->height;
+            $main_params[':depth'] = $this->depth;
+            $main_params[':weight'] = $this->weight;
+            $main_params[':operating_voltage_v'] = $this->operating_voltage_v;
+            $main_params[':operating_voltage_hz'] = $this->operating_voltage_hz;
+            $main_params[':operating_voltage_a'] = $this->operating_voltage_a;
             if (Extension::isActive('contacts')) {
-                $query .= ', contact_id = '. ($this->contact instanceof Contact ? $this->contact->contact_id : 0) .' ';
+                $query .= ', contact_id = '. ($this->contact instanceof Contact ? (int) $this->contact->contact_id : 0) .' ';
             }
             if (Extension::isActive('equipment')) {
-                $query .= ", equipment_ids = '|". implode('|', $this->equipment_ids) ."|' ";
+                $query .= ', equipment_ids = :equipment_ids ';
+                $main_params[':equipment_ids'] = '|'. implode('|', $this->equipment_ids) .'|';
             }
             if (Extension::isActive('industry_sectors')) {
-                $query .= ", industry_sector_ids = '|". implode('|', $this->industry_sector_ids) ."|' ";
+                $query .= ', industry_sector_ids = :industry_sector_ids ';
+                $main_params[':industry_sector_ids'] = '|'. implode('|', $this->industry_sector_ids) .'|';
             }
             if (Extension::isActive('machine_agitator_extension')) {
-                $query .= ', agitator_type_id = '. $this->agitator_type_id .' '
-                    .', viscosity = '. $this->viscosity .' ';
+                $query .= ', agitator_type_id = '. (int) $this->agitator_type_id .' '
+                    .', viscosity = '. (int) $this->viscosity .' ';
             }
             if (Extension::isActive('machine_certificates_extension')) {
-                $query .= ", certificate_ids = '|". implode('|', $this->certificate_ids) ."|' ";
+                $query .= ', certificate_ids = :certificate_ids ';
+                $main_params[':certificate_ids'] = '|'. implode('|', $this->certificate_ids) .'|';
             }
             if (Extension::isActive('machine_construction_equipment_extension')) {
-                $query .= ", airless_hose_connection = '". $this->airless_hose_connection ."' "
-                    .', airless_hose_diameter = '. $this->airless_hose_diameter .' '
-                    .', airless_hose_length = '. $this->airless_hose_length .' '
-                    .", airless_nozzle_size = '". $this->airless_nozzle_size ."' "
-                    .", container_capacity = '". $this->container_capacity ."' "
-                    .", container_capacity_unit = '". $this->container_capacity_unit ."' "
-                    .", container_mixing_performance = '". $this->container_mixing_performance ."' "
-                    .', container_waterconnect_pressure = '. $this->container_waterconnect_pressure .' '
-                    .", container_waterconnect_diameter = '". $this->container_waterconnect_diameter ."' "
-                    .', container_weight_empty = '. ($this->container_weight_empty > 0 ? $this->container_weight_empty : 0) .' '
-                    .", cutters_cutting_depth = '". $this->cutters_cutting_depth ."' "
-                    .', cutters_cutting_length = '. ($this->cutters_cutting_length > 0 ? $this->cutters_cutting_length : 0) .' '
-                    .", cutters_rod_length = '". $this->cutters_rod_length ."' "
-                    .', floor_beam_power_on_concrete = '. ($this->floor_beam_power_on_concrete > 0 ? $this->floor_beam_power_on_concrete : 0) .' '
-                    .', floor_dust_extraction_connection = '. ($this->floor_dust_extraction_connection > 0 ? $this->floor_dust_extraction_connection : 0) .' '
-                    .", floor_feedrate = '". $this->floor_feedrate ."' "
-                    .", floor_filter_connection = '". $this->floor_filter_connection ."' "
-                    .", floor_rotations = '". $this->floor_rotations ."' "
-                    .", floor_working_pressure = '". $this->floor_working_pressure ."' "
-                    .', floor_working_width = '. $this->floor_working_width .' '
-                    .', grinder_grinding_plate = '. $this->grinder_grinding_plate .' '
-                    .', grinder_grinding_wheel = '. $this->grinder_grinding_wheel .' '
-                    .", grinder_rotational_frequency = '". $this->grinder_rotational_frequency ."' "
-                    .", grinder_sanding = '". $this->grinder_sanding ."' "
-                    .', grinder_vacuum_connection = '. $this->grinder_vacuum_connection .' '
-                    .", operating_pressure = '". $this->operating_pressure ."' "
-                    .", pictures_delivery_set = '". implode(',', $this->pictures_delivery_set) ."' "
-                    .', pump_conveying_distance = '. ($this->pump_conveying_distance > 0 ? $this->pump_conveying_distance : 0) .' '
-                    .', pump_filling = '. ($this->pump_filling > 0 ? $this->pump_filling : 0) .' '
-                    .", pump_flow_volume = '". $this->pump_flow_volume ."' "
-                    .", pump_grain_size = '". $this->pump_grain_size ."' "
-                    .", pump_material_container = '". $this->pump_material_container ."' "
-                    .', pump_pressure_height = '. ($this->pump_pressure_height > 0 ? $this->pump_pressure_height : 0) .' '
-                    .', waste_water_capacity = '. ($this->waste_water_capacity > 0 ? $this->waste_water_capacity : 0) .' ';
+                $query .= ', airless_hose_connection = :airless_hose_connection '
+                    .', airless_hose_diameter = '. (int) $this->airless_hose_diameter .' '
+                    .', airless_hose_length = '. (int) $this->airless_hose_length .' '
+                    .', airless_nozzle_size = :airless_nozzle_size '
+                    .', container_capacity = :container_capacity '
+                    .', container_capacity_unit = :container_capacity_unit '
+                    .', container_mixing_performance = :container_mixing_performance '
+                    .', container_waterconnect_pressure = '. (int) $this->container_waterconnect_pressure .' '
+                    .', container_waterconnect_diameter = :container_waterconnect_diameter '
+                    .', container_weight_empty = '. ($this->container_weight_empty > 0 ? (int) $this->container_weight_empty : 0) .' '
+                    .', cutters_cutting_depth = :cutters_cutting_depth '
+                    .', cutters_cutting_length = '. ($this->cutters_cutting_length > 0 ? (int) $this->cutters_cutting_length : 0) .' '
+                    .', cutters_rod_length = :cutters_rod_length '
+                    .', floor_beam_power_on_concrete = '. ($this->floor_beam_power_on_concrete > 0 ? (int) $this->floor_beam_power_on_concrete : 0) .' '
+                    .', floor_dust_extraction_connection = '. ($this->floor_dust_extraction_connection > 0 ? (int) $this->floor_dust_extraction_connection : 0) .' '
+                    .', floor_feedrate = :floor_feedrate '
+                    .', floor_filter_connection = :floor_filter_connection '
+                    .', floor_rotations = :floor_rotations '
+                    .', floor_working_pressure = :floor_working_pressure '
+                    .', floor_working_width = '. (int) $this->floor_working_width .' '
+                    .', grinder_grinding_plate = '. (int) $this->grinder_grinding_plate .' '
+                    .', grinder_grinding_wheel = '. (int) $this->grinder_grinding_wheel .' '
+                    .', grinder_rotational_frequency = :grinder_rotational_frequency '
+                    .', grinder_sanding = :grinder_sanding '
+                    .', grinder_vacuum_connection = '. (int) $this->grinder_vacuum_connection .' '
+                    .', operating_pressure = :operating_pressure '
+                    .', pictures_delivery_set = :pictures_delivery_set '
+                    .', pump_conveying_distance = '. ($this->pump_conveying_distance > 0 ? (int) $this->pump_conveying_distance : 0) .' '
+                    .', pump_filling = '. ($this->pump_filling > 0 ? (int) $this->pump_filling : 0) .' '
+                    .', pump_flow_volume = :pump_flow_volume '
+                    .', pump_grain_size = :pump_grain_size '
+                    .', pump_material_container = :pump_material_container '
+                    .', pump_pressure_height = '. ($this->pump_pressure_height > 0 ? (int) $this->pump_pressure_height : 0) .' '
+                    .', waste_water_capacity = '. ($this->waste_water_capacity > 0 ? (int) $this->waste_water_capacity : 0) .' ';
+                $main_params[':airless_hose_connection'] = $this->airless_hose_connection;
+                $main_params[':airless_nozzle_size'] = $this->airless_nozzle_size;
+                $main_params[':container_capacity'] = $this->container_capacity;
+                $main_params[':container_capacity_unit'] = $this->container_capacity_unit;
+                $main_params[':container_mixing_performance'] = $this->container_mixing_performance;
+                $main_params[':container_waterconnect_diameter'] = $this->container_waterconnect_diameter;
+                $main_params[':cutters_cutting_depth'] = $this->cutters_cutting_depth;
+                $main_params[':cutters_rod_length'] = $this->cutters_rod_length;
+                $main_params[':floor_feedrate'] = $this->floor_feedrate;
+                $main_params[':floor_filter_connection'] = $this->floor_filter_connection;
+                $main_params[':floor_rotations'] = $this->floor_rotations;
+                $main_params[':floor_working_pressure'] = $this->floor_working_pressure;
+                $main_params[':grinder_rotational_frequency'] = $this->grinder_rotational_frequency;
+                $main_params[':grinder_sanding'] = $this->grinder_sanding;
+                $main_params[':operating_pressure'] = $this->operating_pressure;
+                $main_params[':pictures_delivery_set'] = implode(',', $this->pictures_delivery_set);
+                $main_params[':pump_flow_volume'] = $this->pump_flow_volume;
+                $main_params[':pump_grain_size'] = $this->pump_grain_size;
+                $main_params[':pump_material_container'] = $this->pump_material_container;
             }
             if (Extension::isActive('service_options')) {
-                $query .= ", service_option_ids = '|". implode('|', $this->service_option_ids) ."|' ";
+                $query .= ', service_option_ids = :service_option_ids ';
+                $main_params[':service_option_ids'] = '|'. implode('|', $this->service_option_ids) .'|';
             }
             if (Extension::isActive('machine_features_extension')) {
-                $query .= ", feature_ids = '|". implode('|', $this->feature_ids) ."|' ";
+                $query .= ', feature_ids = :feature_ids ';
+                $main_params[':feature_ids'] = '|'. implode('|', $this->feature_ids) .'|';
             }
             if (Extension::isActive('machine_options_extension')) {
-                $query .= ", option_ids = '|". implode('|', $this->option_ids) ."|' ";
+                $query .= ', option_ids = :option_ids ';
+                $main_params[':option_ids'] = '|'. implode('|', $this->option_ids) .'|';
             }
             if (Extension::isActive('machine_steel_processing_extension')) {
-                $query .= ", process_ids = '|". implode('|', array_keys($this->processes)) ."|' "
-                    .", procedure_ids = '|". implode('|', array_keys($this->procedures)) ."|' "
-                    .", material_ids = '|". implode('|', array_keys($this->materials)) ."|' "
-                    .", tool_ids = '|". implode('|', array_keys($this->tools)) ."|' "
-                    .", automation_automationgrade_ids = '|". implode('|', array_keys($this->automation_automationgrades)) ."|' "
-                    .", workspace = '". $this->workspace ."' "
-                    .", workspace_square = '". $this->workspace_square ."' "
-                    .", workspace_flat = '". $this->workspace_flat ."' "
-                    .", workspace_plate = '". $this->workspace_plate ."' "
-                    .", workspace_profile = '". $this->workspace_profile ."' "
-                    .", workspace_angle_steel = '". $this->workspace_angle_steel ."' "
-                    .", workspace_round = '". $this->workspace_round ."' "
-                    .", workspace_min = '". $this->workspace_min ."' "
-                    .", sheet_width = '". $this->sheet_width ."' "
-                    .", sheet_length = '". $this->sheet_length ."' "
-                    .", sheet_thickness = '". $this->sheet_thickness ."' "
-                    .", tool_changer_locations = '". $this->tool_changer_locations ."' "
-                    .', drilling_unit_below = '. ($this->drilling_unit_below > 0 ? $this->drilling_unit_below : 0) .' '
-                    .", drilling_unit_vertical = '". $this->drilling_unit_vertical ."' "
-                    .", drilling_unit_horizontal = '". $this->drilling_unit_horizontal ."' "
-                    .", drilling_diameter = '". $this->drilling_diameter ."' "
-                    .", drilling_tools_axis = '". $this->drilling_tools_axis ."' "
-                    .", drilling_axis_drive_power = '". $this->drilling_axis_drive_power ."' "
-                    .", drilling_rpm_speed = '". $this->drilling_rpm_speed ."' "
-                    .", saw_blade = '". $this->saw_blade ."' "
-                    .", saw_band = '". $this->saw_band ."' "
-                    .", saw_band_tilt = '". $this->saw_band_tilt ."' "
-                    .", saw_cutting_speed = '". $this->saw_cutting_speed ."' "
-                    .", saw_miter = '". $this->saw_miter ."' "
-                    .', bevel_angle = '. $this->bevel_angle .' '
-                    .", punching_diameter = '". $this->punching_diameter ."' "
-                    .', punching_power = '. $this->punching_power .' '
-                    .", punching_tools = '". $this->punching_tools ."' "
-                    .', shaving_unit_angle_steel_single_cut = '. $this->shaving_unit_angle_steel_single_cut .' '
-                    .", profile_ids = '|". implode('|', array_keys($this->profiles)) ."|' "
-                    .", carrier_width = '". $this->carrier_width ."' "
-                    .", carrier_height = '". $this->carrier_height ."' "
-                    .', carrier_weight = '. $this->carrier_weight .' '
-                    .", flange_thickness = '". $this->flange_thickness ."' "
-                    .", web_thickness = '". $this->web_thickness ."' "
-                    .", component_length = '". $this->component_length ."' "
-                    .', component_weight = '. $this->component_weight .' '
-                    .", welding_process_ids = '|". implode('|', array_keys($this->weldings)) ."|' "
-                    .', welding_thickness = '. $this->welding_thickness .' '
-                    .", welding_wire_thickness = '". $this->welding_wire_thickness ."' "
-                    .", beam_continuous_opening = '". $this->beam_continuous_opening ."' "
-                    .', beam_turbines = '. $this->beam_turbines .' '
-                    .", beam_turbine_power = '". $this->beam_turbine_power ."' "
-                    .", beam_color_guns = '". $this->beam_color_guns ."' "
+                $query .= ', process_ids = :process_ids '
+                    .', procedure_ids = :procedure_ids '
+                    .', material_ids = :material_ids '
+                    .', tool_ids = :tool_ids '
+                    .', automation_automationgrade_ids = :automation_automationgrade_ids '
+                    .', workspace = :workspace '
+                    .', workspace_square = :workspace_square '
+                    .', workspace_flat = :workspace_flat '
+                    .', workspace_plate = :workspace_plate '
+                    .', workspace_profile = :workspace_profile '
+                    .', workspace_angle_steel = :workspace_angle_steel '
+                    .', workspace_round = :workspace_round '
+                    .', workspace_min = :workspace_min '
+                    .', sheet_width = :sheet_width '
+                    .', sheet_length = :sheet_length '
+                    .', sheet_thickness = :sheet_thickness '
+                    .', tool_changer_locations = :tool_changer_locations '
+                    .', drilling_unit_below = '. ($this->drilling_unit_below > 0 ? (int) $this->drilling_unit_below : 0) .' '
+                    .', drilling_unit_vertical = :drilling_unit_vertical '
+                    .', drilling_unit_horizontal = :drilling_unit_horizontal '
+                    .', drilling_diameter = :drilling_diameter '
+                    .', drilling_tools_axis = :drilling_tools_axis '
+                    .', drilling_axis_drive_power = :drilling_axis_drive_power '
+                    .', drilling_rpm_speed = :drilling_rpm_speed '
+                    .', saw_blade = :saw_blade '
+                    .', saw_band = :saw_band '
+                    .', saw_band_tilt = :saw_band_tilt '
+                    .', saw_cutting_speed = :saw_cutting_speed '
+                    .', saw_miter = :saw_miter '
+                    .', bevel_angle = '. (int) $this->bevel_angle .' '
+                    .', punching_diameter = :punching_diameter '
+                    .', punching_power = '. (int) $this->punching_power .' '
+                    .', punching_tools = :punching_tools '
+                    .', shaving_unit_angle_steel_single_cut = '. (int) $this->shaving_unit_angle_steel_single_cut .' '
+                    .', profile_ids = :profile_ids '
+                    .', carrier_width = :carrier_width '
+                    .', carrier_height = :carrier_height '
+                    .', carrier_weight = '. (int) $this->carrier_weight .' '
+                    .', flange_thickness = :flange_thickness '
+                    .', web_thickness = :web_thickness '
+                    .', component_length = :component_length '
+                    .', component_weight = '. (int) $this->component_weight .' '
+                    .', welding_process_ids = :welding_process_ids '
+                    .', welding_thickness = '. (int) $this->welding_thickness .' '
+                    .', welding_wire_thickness = :welding_wire_thickness '
+                    .', beam_continuous_opening = :beam_continuous_opening '
+                    .', beam_turbines = '. (int) $this->beam_turbines .' '
+                    .', beam_turbine_power = :beam_turbine_power '
+                    .', beam_color_guns = :beam_color_guns '
                 ;
+                $main_params[':process_ids'] = '|'. implode('|', array_keys($this->processes)) .'|';
+                $main_params[':procedure_ids'] = '|'. implode('|', array_keys($this->procedures)) .'|';
+                $main_params[':material_ids'] = '|'. implode('|', array_keys($this->materials)) .'|';
+                $main_params[':tool_ids'] = '|'. implode('|', array_keys($this->tools)) .'|';
+                $main_params[':automation_automationgrade_ids'] = '|'. implode('|', array_keys($this->automation_automationgrades)) .'|';
+                $main_params[':workspace'] = $this->workspace;
+                $main_params[':workspace_square'] = $this->workspace_square;
+                $main_params[':workspace_flat'] = $this->workspace_flat;
+                $main_params[':workspace_plate'] = $this->workspace_plate;
+                $main_params[':workspace_profile'] = $this->workspace_profile;
+                $main_params[':workspace_angle_steel'] = $this->workspace_angle_steel;
+                $main_params[':workspace_round'] = $this->workspace_round;
+                $main_params[':workspace_min'] = $this->workspace_min;
+                $main_params[':sheet_width'] = $this->sheet_width;
+                $main_params[':sheet_length'] = $this->sheet_length;
+                $main_params[':sheet_thickness'] = $this->sheet_thickness;
+                $main_params[':tool_changer_locations'] = $this->tool_changer_locations;
+                $main_params[':drilling_unit_vertical'] = $this->drilling_unit_vertical;
+                $main_params[':drilling_unit_horizontal'] = $this->drilling_unit_horizontal;
+                $main_params[':drilling_diameter'] = $this->drilling_diameter;
+                $main_params[':drilling_tools_axis'] = $this->drilling_tools_axis;
+                $main_params[':drilling_axis_drive_power'] = $this->drilling_axis_drive_power;
+                $main_params[':drilling_rpm_speed'] = $this->drilling_rpm_speed;
+                $main_params[':saw_blade'] = $this->saw_blade;
+                $main_params[':saw_band'] = $this->saw_band;
+                $main_params[':saw_band_tilt'] = $this->saw_band_tilt;
+                $main_params[':saw_cutting_speed'] = $this->saw_cutting_speed;
+                $main_params[':saw_miter'] = $this->saw_miter;
+                $main_params[':punching_diameter'] = $this->punching_diameter;
+                $main_params[':punching_tools'] = $this->punching_tools;
+                $main_params[':profile_ids'] = '|'. implode('|', array_keys($this->profiles)) .'|';
+                $main_params[':carrier_width'] = $this->carrier_width;
+                $main_params[':carrier_height'] = $this->carrier_height;
+                $main_params[':flange_thickness'] = $this->flange_thickness;
+                $main_params[':web_thickness'] = $this->web_thickness;
+                $main_params[':component_length'] = $this->component_length;
+                $main_params[':welding_process_ids'] = '|'. implode('|', array_keys($this->weldings)) .'|';
+                $main_params[':welding_wire_thickness'] = $this->welding_wire_thickness;
+                $main_params[':beam_continuous_opening'] = $this->beam_continuous_opening;
+                $main_params[':beam_turbine_power'] = $this->beam_turbine_power;
+                $main_params[':beam_color_guns'] = $this->beam_color_guns;
 
                 if (Extension::isActive('machine_steel_automation_extension')) {
-                    $query .= ", automation_supply_single_stroke = '". $this->automation_supply_single_stroke ."' "
-                        .", automation_supply_multi_stroke = '". $this->automation_supply_multi_stroke ."' "
-                        .", automation_feedrate = '". $this->automation_feedrate ."' "
-                        .", automation_feedrate_sawblade = '". $this->automation_feedrate_sawblade ."' "
-                        .", automation_rush_leader_flyback = '". $this->automation_rush_leader_flyback ."' "
-                        .", automation_supply_ids = '|". implode('|', $this->automation_supply_ids) ."|' ";
+                    $query .= ', automation_supply_single_stroke = :automation_supply_single_stroke '
+                        .', automation_supply_multi_stroke = :automation_supply_multi_stroke '
+                        .', automation_feedrate = :automation_feedrate '
+                        .', automation_feedrate_sawblade = :automation_feedrate_sawblade '
+                        .', automation_rush_leader_flyback = :automation_rush_leader_flyback '
+                        .', automation_supply_ids = :automation_supply_ids ';
+                    $main_params[':automation_supply_single_stroke'] = $this->automation_supply_single_stroke;
+                    $main_params[':automation_supply_multi_stroke'] = $this->automation_supply_multi_stroke;
+                    $main_params[':automation_feedrate'] = $this->automation_feedrate;
+                    $main_params[':automation_feedrate_sawblade'] = $this->automation_feedrate_sawblade;
+                    $main_params[':automation_rush_leader_flyback'] = $this->automation_rush_leader_flyback;
+                    $main_params[':automation_supply_ids'] = '|'. implode('|', $this->automation_supply_ids) .'|';
                 }
             }
             if (Extension::isActive('machine_usage_area_extension')) {
-                $query .= ", usage_area_ids = '|". implode('|', $this->usage_area_ids) ."|' ";
+                $query .= ', usage_area_ids = :usage_area_ids ';
+                $main_params[':usage_area_ids'] = '|'. implode('|', $this->usage_area_ids) .'|';
             }
             if (\rex_addon::get('d2u_videos') instanceof rex_addon && \rex_addon::get('d2u_videos')->isAvailable() && count($this->videos) > 0) {
-                $query .= ", video_ids = '|". implode('|', array_keys($this->videos)) ."|' ";
+                $query .= ', video_ids = :video_ids ';
+                $main_params[':video_ids'] = '|'. implode('|', array_keys($this->videos)) .'|';
             } else {
                 $query .= ", video_ids = '' ";
             }
@@ -2152,11 +2245,11 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
                         .'description = :description, '
                         .'benefits_long = :benefits_long, '
                         .'benefits_short = :benefits_short, '
-                        ."leaflet = '". $this->leaflet ."', "
-                        ."pdfs = '". implode(',', $this->pdfs) ."', "
-                        ."translation_needs_update = '". $this->translation_needs_update ."', "
+                        .'leaflet = :leaflet, '
+                        .'pdfs = :pdfs, '
+                        .'translation_needs_update = :translation_needs_update, '
                         .'updatedate = CURRENT_TIMESTAMP, '
-                        ."updateuser = '". (\rex::getUser() instanceof rex_user ? \rex::getUser()->getLogin() : '') ."' ";
+                        .'updateuser = :updateuser ';
                 $lang_params = [
                     ':machine_id' => $this->machine_id,
                     ':clang_id' => $this->clang_id,
@@ -2165,14 +2258,21 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
                     ':description' => htmlspecialchars($this->description),
                     ':benefits_long' => htmlspecialchars($this->benefits_long),
                     ':benefits_short' => htmlspecialchars($this->benefits_short),
+                    ':leaflet' => $this->leaflet,
+                    ':pdfs' => implode(',', $this->pdfs),
+                    ':translation_needs_update' => $this->translation_needs_update,
+                    ':updateuser' => \rex::getUser() instanceof rex_user ? \rex::getUser()->getLogin() : '',
                 ];
                 if (Extension::isActive('machine_construction_equipment_extension')) {
-                    $query .= ", container_connection_port = '". $this->container_connection_port ."' "
-                        .", container_conveying_wave = '". $this->container_conveying_wave ."' "
-                        .", description_technical = '". $this->description_technical ."' "
+                    $query .= ', container_connection_port = :container_connection_port '
+                        .', container_conveying_wave = :container_conveying_wave '
+                        .', description_technical = :description_technical '
                         .', delivery_set_basic = :delivery_set_basic '
                         .', delivery_set_conversion = :delivery_set_conversion '
                         .', delivery_set_full = :delivery_set_full ';
+                    $lang_params[':container_connection_port'] = $this->container_connection_port;
+                    $lang_params[':container_conveying_wave'] = $this->container_conveying_wave;
+                    $lang_params[':description_technical'] = htmlspecialchars($this->description_technical);
                     $lang_params[':delivery_set_basic'] = htmlspecialchars($this->delivery_set_basic);
                     $lang_params[':delivery_set_conversion'] = htmlspecialchars($this->delivery_set_conversion);
                     $lang_params[':delivery_set_full'] = htmlspecialchars($this->delivery_set_full);
