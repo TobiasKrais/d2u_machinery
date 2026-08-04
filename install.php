@@ -212,7 +212,9 @@ if (null === $d2uMachineryAction) {
     }
 
     // Insert frontend translations
-    if (!class_exists(\TobiasKrais\D2UMachinery\LangHelper::class)) {
+    // class_exists WITHOUT autoload so the new class is loaded from the temp
+    // update folder during an addon update (see the module update note above).
+    if (!class_exists(\TobiasKrais\D2UMachinery\LangHelper::class, false)) {
         require_once __DIR__ . DIRECTORY_SEPARATOR .'lib'. DIRECTORY_SEPARATOR .'LangHelper.php';
     }
     \TobiasKrais\D2UMachinery\LangHelper::factory()->install();
@@ -272,7 +274,13 @@ if (null === $d2uMachineryAction) {
     }
 
     // Update modules
-    if (!class_exists(\TobiasKrais\D2UMachinery\Module::class)) {
+    // class_exists must run WITHOUT autoload (second arg false): during an addon
+    // update this file runs from the temp ".new.d2u_machinery" folder while the
+    // old classes are still registered in the autoloader. With autoloading
+    // enabled the old Module class would be loaded from the old path and
+    // Module::getModules() would return the old module definitions, so modules
+    // would not update until a manual reinstall.
+    if (!class_exists(\TobiasKrais\D2UMachinery\Module::class, false)) {
         require_once __DIR__ . DIRECTORY_SEPARATOR .'lib'. DIRECTORY_SEPARATOR .'Module.php';
     }
     if (!class_exists(\TobiasKrais\D2UHelper\ModuleManager::class)) {
