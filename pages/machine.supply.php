@@ -104,14 +104,18 @@ if ((!$invalidCsrf && 1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_
 
     // Check if object is used
     $referring_machines = $supply->getReferringMachines();
+    $referring_marker_lines = $supply->getReferringProductionLinesByMarker();
 
     // If not used, delete
-    if (0 === count($referring_machines)) {
+    if (0 === count($referring_machines) && 0 === count($referring_marker_lines)) {
         $supply->delete();
     } else {
         $message = '<ul>';
         foreach ($referring_machines as $referring_machine) {
             $message .= '<li><a href="index.php?page=d2u_machinery/machine/machine&func=edit&entry_id='. $referring_machine->machine_id .'">'. $referring_machine->name.'</a></li>';
+        }
+        foreach ($referring_marker_lines as $referring_marker_line) {
+            $message .= '<li><a href="index.php?page=d2u_machinery/production_line&func=edit&entry_id='. $referring_marker_line->production_line_id .'">'. $referring_marker_line->name.'</a></li>';
         }
         $message .= '</ul>';
 

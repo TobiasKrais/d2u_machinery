@@ -184,6 +184,28 @@ class Supply implements \TobiasKrais\D2UHelper\ITranslationHelper
     }
 
     /**
+     * Gets the production lines using this supply as an image marker.
+     * @return ProductionLine[] production lines referring to this supply via marker
+     */
+    public function getReferringProductionLinesByMarker()
+    {
+        if (!\TobiasKrais\D2UMachinery\Extension::isActive('production_lines')) {
+            return [];
+        }
+        $query = 'SELECT production_line_id FROM '. \rex::getTablePrefix() .'d2u_machinery_production_lines '
+            .'WHERE markers LIKE \'%"type":"supply","id":'. (int) $this->supply_id .'}%\'';
+        $result = \rex_sql::factory();
+        $result->setQuery($query);
+
+        $production_lines = [];
+        for ($i = 0; $i < $result->getRows(); ++$i) {
+            $production_lines[] = new ProductionLine((int) $result->getValue('production_line_id'), $this->clang_id);
+            $result->next();
+        }
+        return $production_lines;
+    }
+
+    /**
      * Get objects concerning translation updates.
      * @param int $clang_id Redaxo language ID
      * @param string $type 'update' or 'missing'

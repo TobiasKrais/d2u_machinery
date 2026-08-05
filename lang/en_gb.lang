@@ -339,6 +339,11 @@ d2u_machinery_production_lines_no_production_lines_found = No production lines f
 d2u_machinery_production_lines_complementary_machines = Complementary machines
 d2u_machinery_production_lines_line_code = Line code
 d2u_machinery_production_lines_link_picture = Picture containing detailed links
+d2u_machinery_production_lines_markers = Markers on the picture
+d2u_machinery_production_lines_marker_machine = Machine
+d2u_machinery_production_lines_marker_supply = Supply
+d2u_machinery_production_lines_marker_hint = Click on the picture to add a marker. Drag a marker to move it.
+d2u_machinery_production_lines_marker_no_image = Please choose and save a picture first, then you can place markers.
 d2u_machinery_production_lines_usp = Unique selling points
 d2u_machinery_production_lines_usps_no_usps_found = No unique selling points found.
 

@@ -339,6 +339,11 @@ d2u_machinery_production_lines_no_production_lines_found = Geen productielijnen 
 d2u_machinery_production_lines_complementary_machines = Aanvullende machines
 d2u_machinery_production_lines_line_code = Lijncode
 d2u_machinery_production_lines_link_picture = Afbeelding met detailbeschrijvingen
+d2u_machinery_production_lines_markers = Markeringen op de afbeelding
+d2u_machinery_production_lines_marker_machine = Machine
+d2u_machinery_production_lines_marker_supply = Toelevering
+d2u_machinery_production_lines_marker_hint = Klik op de afbeelding om een markering te plaatsen. Sleep een markering om deze te verplaatsen.
+d2u_machinery_production_lines_marker_no_image = Kies en bewaar eerst een afbeelding, daarna kunt u markeringen plaatsen.
 d2u_machinery_production_lines_usp = Unieke verkoopargumenten
 d2u_machinery_production_lines_usps_no_usps_found = Geen unieke verkoopargumenten gevonden.
 

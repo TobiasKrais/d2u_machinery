@@ -338,6 +338,11 @@ d2u_machinery_production_lines_no_production_lines_found = Es wurden noch keine 
 d2u_machinery_production_lines_complementary_machines = Weitere mögliche Maschinen
 d2u_machinery_production_lines_line_code = Liniencode
 d2u_machinery_production_lines_link_picture = Bild mit Detailbeschreibungen
+d2u_machinery_production_lines_markers = Marker auf dem Bild
+d2u_machinery_production_lines_marker_machine = Maschine
+d2u_machinery_production_lines_marker_supply = Zulieferung
+d2u_machinery_production_lines_marker_hint = Auf das Bild klicken, um einen Marker zu setzen. Marker zum Verschieben ziehen.
+d2u_machinery_production_lines_marker_no_image = Bitte zuerst ein Bild wählen und speichern, danach können Marker gesetzt werden.
 d2u_machinery_production_lines_usp = Alleinstellungsmerkmale
 d2u_machinery_production_lines_usps_no_usps_found = Es wurden noch keine Alleinstellungsmerkmale angelegt.
 

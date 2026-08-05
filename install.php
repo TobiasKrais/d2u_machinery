@@ -857,6 +857,7 @@ if (d2u_machinery_should_install($d2uMachineryAction, 'production_lines')) {
         ->ensureColumn(new \rex_sql_column('machine_ids', 'VARCHAR(255)', true))
         ->ensureColumn(new \rex_sql_column('pictures', 'TEXT', true))
         ->ensureColumn(new \rex_sql_column('link_picture', 'TEXT', true))
+        ->ensureColumn(new \rex_sql_column('markers', 'TEXT', true))
         ->ensureColumn(new \rex_sql_column('usp_ids', 'VARCHAR(255)', true))
         ->ensureColumn(new \rex_sql_column('reference_ids', 'TEXT', true))
         ->ensureColumn(new \rex_sql_column('video_ids', 'VARCHAR(255)', true))

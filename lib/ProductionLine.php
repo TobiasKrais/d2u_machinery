@@ -51,6 +51,9 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper
     /** @var string Picture file name with links */
     public string $link_picture = '';
 
+    /** @var string JSON with markers on the main picture. Each marker: {"x":pct,"y":pct,"type":"machine|supply","id":id} */
+    public string $markers = '';
+
     /** @var int[] Array with IDs from d2u_references addon */
     public array $reference_ids = [];
 
@@ -120,6 +123,7 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper
             $pictures = preg_grep('/^\s*$/s', explode(',', (string) $result->getValue('pictures')), PREG_GREP_INVERT);
             $this->pictures = is_array($pictures) ? $pictures : [];
             $this->link_picture = (string) $result->getValue('link_picture');
+            $this->markers = (string) $result->getValue('markers');
             $this->teaser = stripslashes((string) $result->getValue('teaser'));
             if ('' !== $result->getValue('translation_needs_update') && null !== $result->getValue('translation_needs_update')) {
                 $this->translation_needs_update = (string) $result->getValue('translation_needs_update');
@@ -133,6 +137,94 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper
             $reference_ids = preg_grep('/^\s*$/s', explode(',', (string) $result->getValue('reference_ids')), PREG_GREP_INVERT);
             $this->reference_ids = is_array($reference_ids) ? array_map('intval', array_filter($reference_ids, 'is_numeric')) : [];
         }
+    }
+
+    /**
+     * Normalizes the markers JSON to a compact, search-friendly form with fixed
+     * key order (x, y, type, id). Invalid entries are dropped.
+     * @param string $json raw markers JSON
+     * @return string normalized JSON, empty string if no valid markers
+     */
+    public static function normalizeMarkersJson(string $json): string
+    {
+        $data = json_decode($json, true);
+        if (!is_array($data)) {
+            return '';
+        }
+        $markers = [];
+        foreach ($data as $marker) {
+            if (!is_array($marker) || !isset($marker['type'], $marker['id'])) {
+                continue;
+            }
+            $id = (int) $marker['id'];
+            if ($id <= 0) {
+                continue;
+            }
+            $markers[] = [
+                'x' => round((float) ($marker['x'] ?? 0), 2),
+                'y' => round((float) ($marker['y'] ?? 0), 2),
+                'type' => 'supply' === $marker['type'] ? 'supply' : 'machine',
+                'id' => $id,
+            ];
+        }
+        return count($markers) > 0 ? (string) json_encode($markers) : '';
+    }
+
+    /**
+     * Returns the markers with resolved target data (machine or supply). Markers
+     * pointing to a deleted or empty target are skipped.
+     * @return array<int,array{x:float,y:float,type:string,id:int,name:string,teaser:string,image:string,url:string}>
+     */
+    public function getMarkers(): array
+    {
+        $data = json_decode($this->markers, true);
+        if (!is_array($data)) {
+            return [];
+        }
+        $markers = [];
+        foreach ($data as $marker) {
+            if (!is_array($marker) || !isset($marker['type'], $marker['id'])) {
+                continue;
+            }
+            $id = (int) $marker['id'];
+            if ($id <= 0) {
+                continue;
+            }
+            $name = '';
+            $teaser = '';
+            $image = '';
+            $url = '';
+            if ('supply' === $marker['type']) {
+                $supply = new Supply($id, $this->clang_id);
+                if ($supply->supply_id > 0) {
+                    $name = $supply->name;
+                    $teaser = $supply->description;
+                    $image = $supply->pic;
+                }
+            } else {
+                $machine = new Machine($id, $this->clang_id);
+                if ($machine->machine_id > 0) {
+                    $name = $machine->name;
+                    $teaser = $machine->teaser;
+                    $image = $machine->pics[0] ?? '';
+                    $url = $machine->getUrl();
+                }
+            }
+            if ('' === $name) {
+                continue;
+            }
+            $markers[] = [
+                'x' => (float) ($marker['x'] ?? 0),
+                'y' => (float) ($marker['y'] ?? 0),
+                'type' => 'supply' === $marker['type'] ? 'supply' : 'machine',
+                'id' => $id,
+                'name' => $name,
+                'teaser' => $teaser,
+                'image' => $image,
+                'url' => $url,
+            ];
+        }
+        return $markers;
     }
 
     /**
@@ -367,6 +459,7 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper
                     .'online_status = :online_status, '
                     .'pictures = :pictures, '
                     .'link_picture = :link_picture, '
+                    .'markers = :markers, '
                     .'usp_ids = :usp_ids, '
                     .'video_ids = :video_ids, '
                     .'reference_ids = :reference_ids ';
@@ -377,6 +470,7 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper
                 ':online_status' => $this->online_status,
                 ':pictures' => implode(',', $this->pictures),
                 ':link_picture' => $this->link_picture,
+                ':markers' => self::normalizeMarkersJson($this->markers),
                 ':usp_ids' => '|' . implode('|', $this->usp_ids) . '|',
                 ':video_ids' => '|' . implode('|', $this->video_ids) . '|',
                 ':reference_ids' => implode(',', $this->reference_ids),

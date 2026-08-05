@@ -913,6 +913,30 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
     }
 
     /**
+     * Gets the production lines using this machine as an image marker.
+     * @return ProductionLine[] production lines referring to this machine via marker
+     */
+    public function getReferringProductionLinesByMarker()
+    {
+        if (Extension::isActive('production_lines')) {
+            $query = 'SELECT production_line_id FROM '. \rex::getTablePrefix() .'d2u_machinery_production_lines '
+                .'WHERE markers LIKE \'%"type":"machine","id":'. (int) $this->machine_id .'}%\'';
+            $result = \rex_sql::factory();
+            $result->setQuery($query);
+
+            $production_lines = [];
+            for ($i = 0; $i < $result->getRows(); ++$i) {
+                $production_lines[] = new ProductionLine((int) $result->getValue('production_line_id'), $this->clang_id);
+                $result->next();
+            }
+            return $production_lines;
+        }
+
+        return [];
+
+    }
+
+    /**
      * Gets the used machines referring to this machine.
      * @return UsedMachine[] used machines referring to this machine
      */

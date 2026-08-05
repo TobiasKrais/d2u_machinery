@@ -60,9 +60,9 @@ if (!$invalidCsrf && (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === 
             $production_line->industry_sector_ids = $form['industry_sector_ids'] ?? [];
             $production_line->line_code = $form['line_code'];
             $production_line->machine_ids = $form['machine_ids'] ?? [];
-            $pictures = preg_grep('/^\s*$/s', explode(',', $input_media_list[1]), PREG_GREP_INVERT);
-            $production_line->pictures = is_array($pictures) ? $pictures : [];
-            $production_line->link_picture = $input_media[1];
+            $production_line->pictures = '' !== ($input_media[2] ?? '') ? [$input_media[2]] : [];
+            $production_line->link_picture = $input_media[1] ?? '';
+            $production_line->markers = $form['markers'] ?? '';
             $production_line->usp_ids = $form['usp_ids'] ?? [];
             $production_line->video_ids = $form['video_ids'] ?? [];
             if (rex_addon::get('d2u_references')->isAvailable()) {
@@ -155,7 +155,43 @@ if ('edit' === $func || 'add' === $func) {
                             }
 
                             BackendHelper::form_input('d2u_machinery_production_lines_line_code', 'form[line_code]', $production_line->line_code, false, $readonly, 'text');
-                            BackendHelper::form_imagelistfield('d2u_helper_pictures', 1, $production_line->pictures, $readonly);
+                            BackendHelper::form_mediafield('d2u_helper_pictures', '2', $production_line->pictures[0] ?? '', $readonly);
+
+                            // Marker editor for the main picture
+                            $marker_machines = [];
+                            foreach (Machine::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $marker_machine) {
+                                $marker_machines[] = ['id' => $marker_machine->machine_id, 'name' => $marker_machine->name];
+                            }
+                            $marker_supplies = [];
+                            $marker_supply_active = \TobiasKrais\D2UMachinery\Extension::isActive('machine_steel_automation_extension');
+                            if ($marker_supply_active) {
+                                foreach (Supply::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $marker_supply) {
+                                    $marker_supplies[] = ['id' => $marker_supply->supply_id, 'name' => $marker_supply->name];
+                                }
+                            }
+                            $marker_image_url = count($production_line->pictures) > 0 ? rex_url::media($production_line->pictures[0]) : '';
+                            usort($marker_machines, static fn(array $a, array $b): int => strcasecmp((string) $a['name'], (string) $b['name']));
+                            usort($marker_supplies, static fn(array $a, array $b): int => strcasecmp((string) $a['name'], (string) $b['name']));
+                            echo '<div class="form-group"><label class="control-label">'. rex_i18n::msg('d2u_machinery_production_lines_markers') .'</label>';
+                            if ('' !== $marker_image_url) {
+                                echo '<div id="d2u-marker-editor"'
+                                    .' data-readonly="'. ($readonly ? '1' : '0') .'"'
+                                    ." data-machines='". rex_escape((string) json_encode($marker_machines)) ."'"
+                                    ." data-supplies='". rex_escape((string) json_encode($marker_supplies)) ."'"
+                                    .' data-supply-active="'. ($marker_supply_active ? '1' : '0') .'"'
+                                    .' data-label-type-machine="'. rex_escape(rex_i18n::msg('d2u_machinery_production_lines_marker_machine')) .'"'
+                                    .' data-label-type-supply="'. rex_escape(rex_i18n::msg('d2u_machinery_production_lines_marker_supply')) .'"'
+                                    .' data-label-delete="'. rex_escape(rex_i18n::msg('form_delete')) .'">'
+                                    .'<div class="d2u-marker-stage"><img src="'. rex_escape($marker_image_url) .'" alt="" class="d2u-marker-image"></div>'
+                                    .'<p class="rex-note">'. rex_i18n::msg('d2u_machinery_production_lines_marker_hint') .'</p>'
+                                    .'<div class="d2u-marker-list"></div>'
+                                    .'</div>';
+                            } else {
+                                echo '<p class="rex-note">'. rex_i18n::msg('d2u_machinery_production_lines_marker_no_image') .'</p>';
+                            }
+                            echo '<input type="hidden" name="form[markers]" id="d2u-marker-data" value="'. rex_escape($production_line->markers) .'">';
+                            echo '</div>';
+
                             BackendHelper::form_mediafield('d2u_machinery_production_lines_link_picture', '1', $production_line->link_picture, $readonly);
                             if (\rex_addon::get('d2u_videos')->isAvailable()) {
                                 $options = [];
@@ -266,6 +302,147 @@ if ('edit' === $func || 'add' === $func) {
 		</div>
 	</form>
 	<br>
+	<style>
+		#d2u-marker-editor .d2u-marker-stage { position: relative; display: inline-block; max-width: 100%; line-height: 0; }
+		#d2u-marker-editor .d2u-marker-image { max-width: 100%; height: auto; display: block; }
+		#d2u-marker-editor .d2u-marker-dot { position: absolute; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; background: #f9b000; color: #00121a; border: 2px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,.4); font-size: 12px; font-weight: 700; line-height: 22px; text-align: center; cursor: move; z-index: 2; }
+		#d2u-marker-editor .d2u-marker-list { margin-top: 12px; }
+		#d2u-marker-editor .d2u-marker-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+		#d2u-marker-editor .d2u-marker-index { width: 26px; height: 26px; border-radius: 50%; background: #f9b000; color: #00121a; text-align: center; line-height: 26px; font-weight: 700; flex: 0 0 auto; }
+		#d2u-marker-editor .d2u-marker-row select { flex: 1 1 180px; }
+	</style>
+	<script>
+		(function () {
+			var editor = document.getElementById('d2u-marker-editor');
+			if (!editor) { return; }
+			var dataField = document.getElementById('d2u-marker-data');
+			var stage = editor.querySelector('.d2u-marker-stage');
+			var listEl = editor.querySelector('.d2u-marker-list');
+			var readonly = editor.getAttribute('data-readonly') === '1';
+			var supplyActive = editor.getAttribute('data-supply-active') === '1';
+			var machines = JSON.parse(editor.getAttribute('data-machines') || '[]');
+			var supplies = JSON.parse(editor.getAttribute('data-supplies') || '[]');
+			var labelMachine = editor.getAttribute('data-label-type-machine') || 'Machine';
+			var labelSupply = editor.getAttribute('data-label-type-supply') || 'Supply';
+			var labelDelete = editor.getAttribute('data-label-delete') || 'Delete';
+			var markers = [];
+			try { markers = JSON.parse(dataField.value || '[]'); } catch (e) { markers = []; }
+			if (!Array.isArray(markers)) { markers = []; }
+
+			function optionsFor(type) { return type === 'supply' ? supplies : machines; }
+
+			function serialize() {
+				dataField.value = JSON.stringify(markers.map(function (m) {
+					return { x: Math.round(m.x * 100) / 100, y: Math.round(m.y * 100) / 100, type: m.type, id: parseInt(m.id, 10) };
+				}));
+			}
+
+			function fillObjSel(sel, type, id) {
+				sel.innerHTML = '';
+				optionsFor(type).forEach(function (o) {
+					var opt = document.createElement('option');
+					opt.value = o.id;
+					opt.textContent = o.name + ' (ID: ' + o.id + ')';
+					if (parseInt(o.id, 10) === parseInt(id, 10)) { opt.selected = true; }
+					sel.appendChild(opt);
+				});
+			}
+
+			function attachDrag(dot, index) {
+				dot.addEventListener('mousedown', function (e) {
+					e.preventDefault();
+					function move(ev) {
+						var rect = stage.getBoundingClientRect();
+						var x = Math.max(0, Math.min(100, ((ev.clientX - rect.left) / rect.width) * 100));
+						var y = Math.max(0, Math.min(100, ((ev.clientY - rect.top) / rect.height) * 100));
+						markers[index].x = x;
+						markers[index].y = y;
+						dot.style.left = x + '%';
+						dot.style.top = y + '%';
+					}
+					function up() {
+						document.removeEventListener('mousemove', move);
+						document.removeEventListener('mouseup', up);
+						serialize();
+					}
+					document.addEventListener('mousemove', move);
+					document.addEventListener('mouseup', up);
+				});
+			}
+
+			function render() {
+				Array.prototype.slice.call(stage.querySelectorAll('.d2u-marker-dot')).forEach(function (d) { d.parentNode.removeChild(d); });
+				listEl.innerHTML = '';
+				markers.forEach(function (m, i) {
+					var dot = document.createElement('div');
+					dot.className = 'd2u-marker-dot';
+					dot.style.left = m.x + '%';
+					dot.style.top = m.y + '%';
+					dot.textContent = (i + 1);
+					stage.appendChild(dot);
+					if (!readonly) { attachDrag(dot, i); }
+
+					var row = document.createElement('div');
+					row.className = 'd2u-marker-row';
+					var idx = document.createElement('span');
+					idx.className = 'd2u-marker-index';
+					idx.textContent = (i + 1);
+					row.appendChild(idx);
+
+					var typeSel = document.createElement('select');
+					typeSel.className = 'form-control';
+					var oM = document.createElement('option'); oM.value = 'machine'; oM.textContent = labelMachine; typeSel.appendChild(oM);
+					if (supplyActive) { var oS = document.createElement('option'); oS.value = 'supply'; oS.textContent = labelSupply; typeSel.appendChild(oS); }
+					typeSel.value = m.type;
+					row.appendChild(typeSel);
+
+					var objSel = document.createElement('select');
+					objSel.className = 'form-control';
+					fillObjSel(objSel, m.type, m.id);
+					row.appendChild(objSel);
+
+					var del = document.createElement('button');
+					del.type = 'button';
+					del.className = 'btn btn-delete';
+					del.innerHTML = '<i class="rex-icon fa-trash"></i>';
+					del.title = labelDelete;
+					del.setAttribute('aria-label', labelDelete);
+					row.appendChild(del);
+
+					if (readonly) {
+						typeSel.disabled = true; objSel.disabled = true; del.disabled = true;
+					} else {
+						typeSel.addEventListener('change', function () {
+							m.type = typeSel.value;
+							var opts = optionsFor(m.type);
+							m.id = opts.length ? opts[0].id : 0;
+							fillObjSel(objSel, m.type, m.id);
+							serialize();
+						});
+						objSel.addEventListener('change', function () { m.id = parseInt(objSel.value, 10); serialize(); });
+						del.addEventListener('click', function () { markers.splice(i, 1); render(); serialize(); });
+					}
+					listEl.appendChild(row);
+				});
+			}
+
+			if (!readonly) {
+				stage.addEventListener('click', function (e) {
+					if (e.target.classList.contains('d2u-marker-dot')) { return; }
+					var rect = stage.getBoundingClientRect();
+					var x = ((e.clientX - rect.left) / rect.width) * 100;
+					var y = ((e.clientY - rect.top) / rect.height) * 100;
+					var opts = optionsFor('machine');
+					markers.push({ x: x, y: y, type: 'machine', id: opts.length ? opts[0].id : 0 });
+					render();
+					serialize();
+				});
+			}
+
+			render();
+			serialize();
+		})();
+	</script>
 	<?php
         echo BackendHelper::getCSS();
         echo BackendHelper::getJS();

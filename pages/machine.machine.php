@@ -351,9 +351,13 @@ if ((!$invalidCsrf && 1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_
 	if (Extension::isActive('production_lines')) {
 		$referring_production_lines = $machine->getReferringProductionLines();
 	}
+	$referring_marker_lines = [];
+	if (Extension::isActive('production_lines')) {
+		$referring_marker_lines = $machine->getReferringProductionLinesByMarker();
+	}
 
 	// If not used, delete
-	if (0 === count($referring_machines) && 0 === count($referring_used_machines)) {
+	if (0 === count($referring_machines) && 0 === count($referring_used_machines) && 0 === count($referring_marker_lines)) {
 		$machine->delete();
 	} else {
 		$message = '<ul>';
@@ -370,6 +374,11 @@ if ((!$invalidCsrf && 1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_
 		if (count($referring_production_lines) > 0) {
 			foreach ($referring_production_lines as $referring_production_line) {
 				$message .= '<li><a href="index.php?page=d2u_machinery/production_line&func=edit&entry_id='. $referring_production_line->production_line_id .'">'. $referring_production_line->name.'</a></li>';
+			}
+		}
+		if (count($referring_marker_lines) > 0) {
+			foreach ($referring_marker_lines as $referring_marker_line) {
+				$message .= '<li><a href="index.php?page=d2u_machinery/production_line&func=edit&entry_id='. $referring_marker_line->production_line_id .'">'. $referring_marker_line->name.'</a></li>';
 			}
 		}
 		$message .= '</ul>';
