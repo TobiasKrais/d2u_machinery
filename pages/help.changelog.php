@@ -2,7 +2,7 @@
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_machinery" target="_blank">GitHub Repository</a> melden.</p>
 
 <h2>Changelog</h2>
-<p>1.7.5-DEV:</p>
+<p>1.7.5:</p>
 <ul>
 	<li>Neu: Produktionslinien besitzen jetzt ein Einzelbild (statt der bisherigen Bilderliste) mit interaktiven Markern. Marker werden per Klick auf das Bild gesetzt, per Drag verschoben und je Marker über getrennte Felder (Typ „Maschine" oder „Zulieferung" sowie Objektauswahl) mit einer Maschine bzw. Zulieferung verknüpft. Gespeichert wird die Position und Verknüpfung als JSON in der neuen Spalte <code>markers</code> der Tabelle <code>rex_d2u_machinery_production_lines</code>.</li>
 	<li>Neu: Beim Löschen einer Maschine oder Zulieferung wird jetzt geprüft, ob sie als Marker in einer Produktionslinie verwendet wird. Ist das der Fall, wird das Löschen mit einem Direktlink zur betroffenen Produktionslinie verhindert (<code>Machine::getReferringProductionLinesByMarker()</code>, <code>Supply::getReferringProductionLinesByMarker()</code>).</li>
