@@ -228,6 +228,39 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper
     }
 
     /**
+     * @api
+     * Returns the unique categories of the machines assigned to this production
+     * line via the markers JSON. Supply markers and machines without a category
+     * are ignored. Categories are deduplicated by their id.
+     * @return array<int,Category> Categories keyed by category id
+     */
+    public function getCategories(): array
+    {
+        $data = json_decode($this->markers, true);
+        if (!is_array($data)) {
+            return [];
+        }
+        $categories = [];
+        foreach ($data as $marker) {
+            if (!is_array($marker) || !isset($marker['type'], $marker['id'])) {
+                continue;
+            }
+            if ('machine' !== $marker['type']) {
+                continue;
+            }
+            $id = (int) $marker['id'];
+            if ($id <= 0) {
+                continue;
+            }
+            $machine = new Machine($id, $this->clang_id);
+            if ($machine->machine_id > 0 && $machine->category instanceof Category) {
+                $categories[$machine->category->category_id] = $machine->category;
+            }
+        }
+        return $categories;
+    }
+
+    /**
      * Changes the online status.
      */
     public function changeStatus(): void
