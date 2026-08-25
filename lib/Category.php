@@ -399,6 +399,10 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper
      */
     public function getProductionLines(bool $online_only = false): array
     {
+        if (!Extension::isActive('production_lines')) {
+            return [];
+        }
+
         return ProductionLine::getForCategoryID($this->category_id, $this->clang_id, $online_only);
     }
 
