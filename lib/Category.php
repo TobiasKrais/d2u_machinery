@@ -362,7 +362,7 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper
     /**
      * Gets the machines of the category.
      * @param bool $online_only true if only online machines should be returned
-     * @return Machine[] Machines in this category
+     * @return array<int,Machine> Machines in this category
      */
     public function getMachines($online_only = false)
     {
@@ -388,6 +388,18 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper
             $result->next();
         }
         return $machines;
+    }
+
+    /**
+     * @api
+     * Gets the production lines that contain at least one machine of this category.
+     * Wrapper around {@link ProductionLine::getForCategoryID()}.
+     * @param bool $online_only true if only online production lines should be returned
+     * @return array<int,ProductionLine> production lines keyed by production line id
+     */
+    public function getProductionLines(bool $online_only = false): array
+    {
+        return ProductionLine::getForCategoryID($this->category_id, $this->clang_id, $online_only);
     }
 
     /**

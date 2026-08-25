@@ -365,6 +365,26 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper
     }
 
     /**
+     * @api
+     * Gets all production lines that contain at least one machine of the given
+     * category, resolved through the markers JSON assignment.
+     * @param int $category_id category id to filter by
+     * @param int $clang_id redaxo clang id
+     * @param bool $online_only true if only online production lines should be returned
+     * @return array<int,ProductionLine> production lines keyed by production line id
+     */
+    public static function getForCategoryID(int $category_id, int $clang_id, bool $online_only = false): array
+    {
+        $production_lines = [];
+        foreach (self::getAll($clang_id, $online_only) as $production_line) {
+            if (array_key_exists($category_id, $production_line->getCategories())) {
+                $production_lines[$production_line->production_line_id] = $production_line;
+            }
+        }
+        return $production_lines;
+    }
+
+    /**
      * Gets the machines referring to this object.
      * @param bool $online_only true if only online machines should be returned
      * @return Machine[] machines referring to this object
