@@ -216,28 +216,28 @@ if ('' === $func) {
     $tdIcon = '<i class="rex-icon fa-arrows-h"></i>';
     $thIcon = '';
     if (\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
-        $thIcon = '<a href="' . $list->getUrl(['func' => 'add']) . '" title="' . rex_i18n::msg('add') . '"><i class="rex-icon rex-icon-add-module"></i></a>';
+        $thIcon = '<a href="' . $list->getUrl(['func' => 'add'] + $productionLinesPageParams) . '" title="' . rex_i18n::msg('add') . '"><i class="rex-icon rex-icon-add-module"></i></a>';
     }
     $list->addColumn($thIcon, $tdIcon, 0, ['<th class="rex-table-icon">###VALUE###</th>', '<td class="rex-table-icon">###VALUE###</td>']);
-    $list->setColumnParams($thIcon, ['func' => 'edit', 'entry_id' => '###usp_id###']);
+    $list->setColumnParams($thIcon, ['func' => 'edit', 'entry_id' => '###usp_id###'] + $productionLinesPageParams);
 
     $list->setColumnLabel('usp_id', rex_i18n::msg('id'));
     $list->setColumnLayout('usp_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
     $list->setColumnSortable('usp_id');
 
     $list->setColumnLabel('name', rex_i18n::msg('d2u_helper_name'));
-    $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###usp_id###']);
+    $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###usp_id###'] + $productionLinesPageParams);
     $list->setColumnSortable('name');
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
-    $list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###usp_id###']);
+    $list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###usp_id###'] + $productionLinesPageParams);
 
     $list->removeColumn('online_status');
     if (\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
         $list->addColumn(rex_i18n::msg('delete_module'), '<i class="rex-icon rex-icon-delete"></i> ' . rex_i18n::msg('delete'));
         $list->setColumnLayout(rex_i18n::msg('delete_module'), ['', '<td class="rex-table-action">###VALUE###</td>']);
-        $list->setColumnParams(rex_i18n::msg('delete_module'), ['func' => 'delete', 'entry_id' => '###usp_id###'] + $csrfToken->getUrlParams());
+        $list->setColumnParams(rex_i18n::msg('delete_module'), ['func' => 'delete', 'entry_id' => '###usp_id###'] + $csrfToken->getUrlParams() + $productionLinesPageParams);
         $list->addLinkAttribute(rex_i18n::msg('delete_module'), 'data-confirm', rex_i18n::msg('d2u_helper_confirm_delete'));
     }
 
