@@ -218,6 +218,9 @@ if ('' === $func) {
         . 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_steel_automation_lang AS lang '
 			. 'ON automations.automation_id = lang.automation_id AND lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' ';
         $list = rex_list::factory(query: $query, rowsPerPage: 1000, defaultSort: ['internal_name' => 'ASC']);
+    foreach ($steelProcessingPageParams as $paramName => $paramValue) {
+        $list->addParam($paramName, $paramValue);
+    }
 
     $list->addTableAttribute('class', 'table-striped table-hover');
 

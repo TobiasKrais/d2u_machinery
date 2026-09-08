@@ -18,7 +18,7 @@ use TobiasKrais\D2UVideos\Video;
 /**
  * Machine Options.
  */
-class Option implements \TobiasKrais\D2UHelper\ITranslationHelper
+class Option implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais\D2UHelper\ITranslateable
 {
     /** @var int Database ID */
     public int $option_id = 0;
@@ -210,6 +210,35 @@ class Option implements \TobiasKrais\D2UHelper\ITranslationHelper
 
         return false;
 
+    }
+
+    public function translateFrom(int $sourceClangId): bool
+    {
+        if ($this->option_id <= 0 || $sourceClangId === $this->clang_id) {
+            return false;
+        }
+
+        $source = new self($this->option_id, $sourceClangId);
+        if ($source->option_id <= 0 || ('' === $source->name && '' === $source->description)) {
+            return false;
+        }
+
+        try {
+            $translated = \TobiasKrais\D2UHelper\AiTranslationHelper::translateFields([
+                'name' => ['value' => $source->name, 'html' => false],
+                'description' => ['value' => $source->description, 'html' => true],
+            ], $sourceClangId, $this->clang_id);
+        } catch (\Throwable $e) {
+            \rex_logger::logException($e);
+            return false;
+        }
+
+        $this->name = $translated['name'];
+        $this->description = $translated['description'];
+        $this->translation_needs_update = 'no';
+
+        // save() returns true on success.
+        return $this->save();
     }
 
     /**

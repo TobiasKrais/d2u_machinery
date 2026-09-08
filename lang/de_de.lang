@@ -347,9 +347,11 @@ d2u_machinery_production_lines_usp = Alleinstellungsmerkmale
 d2u_machinery_production_lines_usps_no_usps_found = Es wurden noch keine Alleinstellungsmerkmale angelegt.
 
 d2u_machinery_service_options = Service
+d2u_machinery_service_option = Service-Option
 d2u_machinery_service_options_no_service_options_found = Es wurden noch keine Service Optionen angelegt.
 
 d2u_machinery_used_machines = Gebrauchtmaschinen
+d2u_machinery_used_machines_rights = D2U Maschinen Addon: Gebrauchtmaschinen
 d2u_machinery_used_machines_article_rent = Gebrauchtmaschinen Artikel Miete
 d2u_machinery_used_machines_article_sale = Gebrauchtmaschinen Artikel Verkauf
 d2u_machinery_used_machines_availability = Verfügbar ab

@@ -15,7 +15,7 @@ use rex_sql;
 /**
  * Certificates.
  */
-class Certificate implements \TobiasKrais\D2UHelper\ITranslationHelper
+class Certificate implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais\D2UHelper\ITranslateable
 {
     /** @var int Database ID */
     public int $certificate_id = 0;
@@ -161,6 +161,35 @@ class Certificate implements \TobiasKrais\D2UHelper\ITranslationHelper
         }
 
         return $objects;
+    }
+
+    public function translateFrom(int $sourceClangId): bool
+    {
+        if ($this->certificate_id <= 0 || $sourceClangId === $this->clang_id) {
+            return false;
+        }
+
+        $source = new self($this->certificate_id, $sourceClangId);
+        if ($source->certificate_id <= 0 || ('' === $source->name && '' === $source->description)) {
+            return false;
+        }
+
+        try {
+            $translated = \TobiasKrais\D2UHelper\AiTranslationHelper::translateFields([
+                'name' => ['value' => $source->name, 'html' => false],
+                'description' => ['value' => $source->description, 'html' => true],
+            ], $sourceClangId, $this->clang_id);
+        } catch (\Throwable $e) {
+            \rex_logger::logException($e);
+            return false;
+        }
+
+        $this->name = $translated['name'];
+        $this->description = $translated['description'];
+        $this->translation_needs_update = 'no';
+
+        // save() returns true on success.
+        return $this->save();
     }
 
     /**

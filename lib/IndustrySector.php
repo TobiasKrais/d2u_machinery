@@ -19,7 +19,7 @@ use rex_yrewrite;
 /**
  * Industry sector.
  */
-class IndustrySector implements \TobiasKrais\D2UHelper\ITranslationHelper
+class IndustrySector implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais\D2UHelper\ITranslateable
 {
     /** @var int Database ID */
     public int $industry_sector_id = 0;
@@ -317,6 +317,37 @@ class IndustrySector implements \TobiasKrais\D2UHelper\ITranslationHelper
 
         return false;
 
+    }
+
+    public function translateFrom(int $sourceClangId): bool
+    {
+        if ($this->industry_sector_id <= 0 || $sourceClangId === $this->clang_id) {
+            return false;
+        }
+
+        $source = new self($this->industry_sector_id, $sourceClangId);
+        if ($source->industry_sector_id <= 0) {
+            return false;
+        }
+
+        try {
+            $translated = \TobiasKrais\D2UHelper\AiTranslationHelper::translateFields([
+                'name' => ['value' => $source->name, 'html' => false],
+                'teaser' => ['value' => $source->teaser, 'html' => true],
+                'description' => ['value' => $source->description, 'html' => true],
+            ], $sourceClangId, $this->clang_id);
+        } catch (\Throwable $e) {
+            \rex_logger::logException($e);
+            return false;
+        }
+
+        $this->name = $translated['name'];
+        $this->teaser = $translated['teaser'];
+        $this->description = $translated['description'];
+        $this->translation_needs_update = 'no';
+
+        // save() returns true on success.
+        return $this->save();
     }
 
     /**

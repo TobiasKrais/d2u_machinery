@@ -22,7 +22,7 @@ use TobiasKrais\D2UReferences\Reference;
 /**
  * Machine.
  */
-class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
+class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais\D2UHelper\ITranslateable
 {
     /** @var int Machine id */
     public int $machine_id = 0;
@@ -1974,6 +1974,48 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper
 
         return $this->url;
 
+    }
+
+    /**
+     * Translate this machine from a source language into its own (target)
+     * language using ai_platform and store the result. The internal name is
+     * shared across languages and is not translated.
+     * @param int $sourceClangId Redaxo clang id of the source language
+     * @return bool true on success
+     */
+    public function translateFrom(int $sourceClangId): bool
+    {
+        if ($this->machine_id <= 0 || $sourceClangId === $this->clang_id) {
+            return false;
+        }
+
+        $source = new self($this->machine_id, $sourceClangId);
+        if ($source->machine_id <= 0) {
+            return false;
+        }
+
+        try {
+            $translated = \TobiasKrais\D2UHelper\AiTranslationHelper::translateFields([
+                'lang_name' => ['value' => $source->lang_name, 'html' => false],
+                'teaser' => ['value' => $source->teaser, 'html' => true],
+                'description' => ['value' => $source->description, 'html' => true],
+                'benefits_long' => ['value' => $source->benefits_long, 'html' => true],
+                'benefits_short' => ['value' => $source->benefits_short, 'html' => true],
+            ], $sourceClangId, $this->clang_id);
+        } catch (\Throwable $e) {
+            \rex_logger::logException($e);
+            return false;
+        }
+
+        $this->lang_name = $translated['lang_name'];
+        $this->teaser = $translated['teaser'];
+        $this->description = $translated['description'];
+        $this->benefits_long = $translated['benefits_long'];
+        $this->benefits_short = $translated['benefits_short'];
+        $this->translation_needs_update = 'no';
+
+        // save() returns true on success.
+        return $this->save();
     }
 
     /**

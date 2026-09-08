@@ -9,7 +9,6 @@ d2u_machinery_extensions_deactivate_warning = Let op: het deactiveren van een ex
 d2u_machinery_meta_machines = Machines
 d2u_machinery_meta_title = D2U Machinery
 
-d2u_machinery_data_all_lang = Algemene gegevens
 d2u_machinery_internal_name = Interne naam
 d2u_machinery_lang_name = Taalspecifieke naam (optioneel)
 d2u_machinery_no_selection = Geen selectie
@@ -348,9 +347,11 @@ d2u_machinery_production_lines_usp = Unieke verkoopargumenten
 d2u_machinery_production_lines_usps_no_usps_found = Geen unieke verkoopargumenten gevonden.
 
 d2u_machinery_service_options = Service
-d2u_machinery_options_no_service_options_found = Geen serviceopties gevonden.
+d2u_machinery_service_option = Serviceoptie
+d2u_machinery_service_options_no_service_options_found = Geen serviceopties gevonden.
 
 d2u_machinery_used_machines = Gebruikte machines
+d2u_machinery_used_machines_rights = D2U Machinery-addon: gebruikte machines
 d2u_machinery_used_machines_article_rent = Artikel gebruikte machines huur
 d2u_machinery_used_machines_article_sale = Artikel gebruikte machines verkoop
 d2u_machinery_used_machines_availability = Beschikbaar vanaf

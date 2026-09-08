@@ -22,7 +22,7 @@ use TobiasKrais\D2UReferences\Reference;
  * @api
  * Production line
  */
-class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper
+class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais\D2UHelper\ITranslateable
 {
     /** @var int Database ID */
     public int $production_line_id = 0;
@@ -490,6 +490,39 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper
     public function isOnline()
     {
         return 'online' === $this->online_status;
+    }
+
+    public function translateFrom(int $sourceClangId): bool
+    {
+        if ($this->production_line_id <= 0 || $sourceClangId === $this->clang_id) {
+            return false;
+        }
+
+        $source = new self($this->production_line_id, $sourceClangId);
+        if ($source->production_line_id <= 0) {
+            return false;
+        }
+
+        try {
+            $translated = \TobiasKrais\D2UHelper\AiTranslationHelper::translateFields([
+                'name' => ['value' => $source->name, 'html' => false],
+                'teaser' => ['value' => $source->teaser, 'html' => true],
+                'description_short' => ['value' => $source->description_short, 'html' => true],
+                'description_long' => ['value' => $source->description_long, 'html' => true],
+            ], $sourceClangId, $this->clang_id);
+        } catch (\Throwable $e) {
+            \rex_logger::logException($e);
+            return false;
+        }
+
+        $this->name = $translated['name'];
+        $this->teaser = $translated['teaser'];
+        $this->description_short = $translated['description_short'];
+        $this->description_long = $translated['description_long'];
+        $this->translation_needs_update = 'no';
+
+        // save() returns true on success.
+        return $this->save();
     }
 
     /**

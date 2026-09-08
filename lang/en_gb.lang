@@ -9,7 +9,6 @@ d2u_machinery_extensions_deactivate_warning = Note: Deactivating an extension re
 d2u_machinery_meta_machines = Machines
 d2u_machinery_meta_title = D2U Machinery
 
-d2u_machinery_data_all_lang = General data
 d2u_machinery_internal_name = Internal name
 d2u_machinery_lang_name = Language specific name (optional)
 d2u_machinery_no_selection = No selection
@@ -348,9 +347,11 @@ d2u_machinery_production_lines_usp = Unique selling points
 d2u_machinery_production_lines_usps_no_usps_found = No unique selling points found.
 
 d2u_machinery_service_options = Service
-d2u_machinery_options_no_service_options_found = No service options found.
+d2u_machinery_service_option = Service option
+d2u_machinery_service_options_no_service_options_found = No service options found.
 
 d2u_machinery_used_machines = Used machines
+d2u_machinery_used_machines_rights = D2U Machinery addon: used machines
 d2u_machinery_used_machines_article_rent = Used machines (rent) article
 d2u_machinery_used_machines_article_sale = Used machines (sale) article
 d2u_machinery_used_machines_availability = Available from

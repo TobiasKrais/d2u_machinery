@@ -20,7 +20,7 @@ use rex_yrewrite;
  * @api
  * Used machine object.
  */
-class UsedMachine implements \TobiasKrais\D2UHelper\ITranslationHelper
+class UsedMachine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais\D2UHelper\ITranslateable
 {
     /** @var int Database ID */
     public int $used_machine_id = 0;
@@ -455,6 +455,35 @@ class UsedMachine implements \TobiasKrais\D2UHelper\ITranslationHelper
 
         return $this->url;
 
+    }
+
+    public function translateFrom(int $sourceClangId): bool
+    {
+        if ($this->used_machine_id <= 0 || $sourceClangId === $this->clang_id) {
+            return false;
+        }
+
+        $source = new self($this->used_machine_id, $sourceClangId);
+        if ($source->used_machine_id <= 0 || ('' === $source->teaser && '' === $source->description)) {
+            return false;
+        }
+
+        try {
+            $translated = \TobiasKrais\D2UHelper\AiTranslationHelper::translateFields([
+                'teaser' => ['value' => $source->teaser, 'html' => true],
+                'description' => ['value' => $source->description, 'html' => true],
+            ], $sourceClangId, $this->clang_id);
+        } catch (\Throwable $e) {
+            \rex_logger::logException($e);
+            return false;
+        }
+
+        $this->teaser = $translated['teaser'];
+        $this->description = $translated['description'];
+        $this->translation_needs_update = 'no';
+
+        // save() returns true on success.
+        return $this->save();
     }
 
     /**

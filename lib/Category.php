@@ -25,7 +25,7 @@ use TobiasKrais\D2UReferences\Reference;
 /**
  * Machine Category.
  */
-class Category implements \TobiasKrais\D2UHelper\ITranslationHelper
+class Category implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais\D2UHelper\ITranslateable
 {
     /** @var int Database ID */
     public int $category_id = 0;
@@ -634,6 +634,45 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper
 
         return true;
 
+    }
+
+    /**
+     * Translate this category from a source language into its own (target)
+     * language using ai_platform and store the result.
+     * @param int $sourceClangId Redaxo clang id of the source language
+     * @return bool true on success
+     */
+    public function translateFrom(int $sourceClangId): bool
+    {
+        if ($this->category_id <= 0 || $sourceClangId === $this->clang_id) {
+            return false;
+        }
+
+        $source = new self($this->category_id, $sourceClangId);
+        if ($source->category_id <= 0) {
+            return false;
+        }
+
+        try {
+            $translated = \TobiasKrais\D2UHelper\AiTranslationHelper::translateFields([
+                'name' => ['value' => $source->name, 'html' => false],
+                'teaser' => ['value' => $source->teaser, 'html' => true],
+                'description' => ['value' => $source->description, 'html' => true],
+                'usage_area' => ['value' => $source->usage_area, 'html' => true],
+            ], $sourceClangId, $this->clang_id);
+        } catch (\Throwable $e) {
+            \rex_logger::logException($e);
+            return false;
+        }
+
+        $this->name = $translated['name'];
+        $this->teaser = $translated['teaser'];
+        $this->description = $translated['description'];
+        $this->usage_area = $translated['usage_area'];
+        $this->translation_needs_update = 'no';
+
+        // save() returns true on success.
+        return $this->save();
     }
 
     /**

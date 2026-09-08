@@ -15,7 +15,7 @@ use rex_sql;
 /**
  * Automation.
  */
-class Automation implements \TobiasKrais\D2UHelper\ITranslationHelper
+class Automation implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais\D2UHelper\ITranslateable
 {
     /** @var int Database ID */
     public int $automation_id = 0;
@@ -179,6 +179,33 @@ class Automation implements \TobiasKrais\D2UHelper\ITranslationHelper
 
         return false;
 
+    }
+
+    public function translateFrom(int $sourceClangId): bool
+    {
+        if ($this->automation_id <= 0 || $sourceClangId === $this->clang_id) {
+            return false;
+        }
+
+        $source = new self($this->automation_id, $sourceClangId);
+        if ($source->automation_id <= 0 || '' === $source->name) {
+            return false;
+        }
+
+        try {
+            $translated = \TobiasKrais\D2UHelper\AiTranslationHelper::translateFields([
+                'name' => ['value' => $source->name, 'html' => false],
+            ], $sourceClangId, $this->clang_id);
+        } catch (\Throwable $e) {
+            \rex_logger::logException($e);
+            return false;
+        }
+
+        $this->name = $translated['name'];
+        $this->translation_needs_update = 'no';
+
+        // save() returns true on success.
+        return $this->save();
     }
 
     /**

@@ -15,7 +15,7 @@ use rex_sql;
 /**
  * Welding.
  */
-class Welding implements \TobiasKrais\D2UHelper\ITranslationHelper
+class Welding implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais\D2UHelper\ITranslateable
 {
     /** @var int Database ID */
     public int $welding_id = 0;
@@ -157,6 +157,33 @@ class Welding implements \TobiasKrais\D2UHelper\ITranslationHelper
         }
 
         return $objects;
+    }
+
+    public function translateFrom(int $sourceClangId): bool
+    {
+        if ($this->welding_id <= 0 || $sourceClangId === $this->clang_id) {
+            return false;
+        }
+
+        $source = new self($this->welding_id, $sourceClangId);
+        if ($source->welding_id <= 0 || '' === $source->name) {
+            return false;
+        }
+
+        try {
+            $translated = \TobiasKrais\D2UHelper\AiTranslationHelper::translateFields([
+                'name' => ['value' => $source->name, 'html' => false],
+            ], $sourceClangId, $this->clang_id);
+        } catch (\Throwable $e) {
+            \rex_logger::logException($e);
+            return false;
+        }
+
+        $this->name = $translated['name'];
+        $this->translation_needs_update = 'no';
+
+        // save() returns true on success.
+        return $this->save();
     }
 
     /**
