@@ -816,12 +816,6 @@ if (d2u_machinery_should_install($d2uMachineryAction, 'machine_steel_automation_
         ->ensureColumn(new \rex_sql_column('automation_rush_leader_flyback', 'VARCHAR(25)'))
         ->ensureColumn(new \rex_sql_column('automation_supply_ids', 'TEXT'))
         ->alter();
-    $sql->setQuery('SHOW TABLES LIKE "'. \rex::getTable('d2u_machinery_production_lines') .'"');
-    if ($sql->getRows() > 0) {
-        \rex_sql_table::get(\rex::getTable('d2u_machinery_production_lines'))
-                ->ensureColumn(new \rex_sql_column('automation_supply_ids', 'TEXT'))
-                ->alter();
-    }
 
 }
 
@@ -851,10 +845,8 @@ if (d2u_machinery_should_install($d2uMachineryAction, 'production_lines')) {
     \rex_sql_table::get(\rex::getTable('d2u_machinery_production_lines'))
         ->ensureColumn(new rex_sql_column('production_line_id', 'int(10) unsigned', false, null, 'auto_increment'))
         ->setPrimaryKey('production_line_id')
-        ->ensureColumn(new \rex_sql_column('complementary_machine_ids', 'VARCHAR(255)', true))
         ->ensureColumn(new \rex_sql_column('industry_sector_ids', 'VARCHAR(255)', true))
         ->ensureColumn(new \rex_sql_column('line_code', 'VARCHAR(50)', true))
-        ->ensureColumn(new \rex_sql_column('machine_ids', 'VARCHAR(255)', true))
         ->ensureColumn(new \rex_sql_column('pictures', 'TEXT', true))
         ->ensureColumn(new \rex_sql_column('link_picture', 'TEXT', true))
         ->ensureColumn(new \rex_sql_column('markers', 'TEXT', true))

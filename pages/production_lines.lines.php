@@ -56,10 +56,8 @@ if (!$invalidCsrf && (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === 
         if (!$production_line instanceof ProductionLine) {
             $production_line = new ProductionLine($production_line_id, $rex_clang->getId());
             $production_line->production_line_id = $production_line_id; // Ensure correct ID in case first language has no object
-            $production_line->complementary_machine_ids = $form['complementary_machine_ids'] ?? [];
             $production_line->industry_sector_ids = $form['industry_sector_ids'] ?? [];
             $production_line->line_code = $form['line_code'];
-            $production_line->machine_ids = $form['machine_ids'] ?? [];
             $production_line->pictures = '' !== ($input_media[2] ?? '') ? [$input_media[2]] : [];
             $production_line->link_picture = $input_media[1] ?? '';
             $production_line->markers = $form['markers'] ?? '';
@@ -69,15 +67,6 @@ if (!$invalidCsrf && (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === 
                 $production_line->reference_ids = $form['reference_ids'] ?? [];
             }
             $production_line->online_status = null === $form['online_status'] || '' === $form['online_status'] ? 'offline' : $form['online_status'];
-            if (\TobiasKrais\D2UMachinery\Extension::isActive('machine_steel_automation_extension')) {
-                $automation_supply_ids = $form['automation_supply_ids'] ?? [];
-                $production_line->automation_supply_ids = [];
-                foreach ($automation_supply_ids as $automation_supply_id) {
-                    if ($automation_supply_id > 0) {
-                        $production_line->automation_supply_ids[] = $automation_supply_id;
-                    }
-                }
-            }
         } else {
             $production_line->clang_id = $rex_clang->getId();
         }
@@ -206,19 +195,6 @@ if ('edit' === $func || 'add' === $func) {
                                     $options_references[$reference->reference_id] = $reference->name;
                                 }
                                 BackendHelper::form_select('d2u_references', 'form[reference_ids][]', $options_references, $production_line->reference_ids, 10, true, $readonly);
-                            }
-                            $option_machines = [];
-                            foreach (Machine::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $machine) {
-                                $option_machines[$machine->machine_id] = $machine->name;
-                            }
-                            BackendHelper::form_select('d2u_machinery_meta_machines', 'form[machine_ids][]', $option_machines, $production_line->machine_ids, 10, true, $readonly);
-                            BackendHelper::form_select('d2u_machinery_production_lines_complementary_machines', 'form[complementary_machine_ids][]', $option_machines, $production_line->complementary_machine_ids, 10, true, $readonly);
-                            if (\TobiasKrais\D2UMachinery\Extension::isActive('machine_steel_automation_extension')) {
-                                $options_supply = [];
-                                foreach (Supply::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $supply) {
-                                    $options_supply[$supply->supply_id] = $supply->priority .' - '. $supply->name .' (ID: '. $supply->supply_id .')';
-                                }
-                                BackendHelper::form_select('d2u_machinery_steel_automation_supplys', 'form[automation_supply_ids][]', $options_supply, $production_line->automation_supply_ids, 4, true, $readonly);
                             }
                             if (\TobiasKrais\D2UMachinery\Extension::isActive('industry_sectors')) {
                                 $options_industry_sectors = [];

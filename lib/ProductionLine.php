@@ -36,15 +36,6 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper, \Tobi
     /** @var int[] Industry sectors ids */
     public array $industry_sector_ids = [];
 
-    /** @var int[] machine ids */
-    public array $machine_ids = [];
-
-    /** @var int[] Complementary machine ids */
-    public array $complementary_machine_ids = [];
-
-    /** @var int[] machine_steel_processing_extension: Automation supply ids */
-    public array $automation_supply_ids = [];
-
     /** @var array<string> Picture file names */
     public array $pictures = [];
 
@@ -103,21 +94,13 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper, \Tobi
 
         if ($num_rows > 0) {
             $this->production_line_id = (int) $result->getValue('production_line_id');
-            $complementary_machine_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('complementary_machine_ids')), PREG_GREP_INVERT);
-            $this->complementary_machine_ids = is_array($complementary_machine_ids) ? array_map('intval', $complementary_machine_ids) : [];
             $this->description_long = stripslashes((string) $result->getValue('description_long'));
             $this->description_short = stripslashes((string) $result->getValue('description_short'));
             if (\TobiasKrais\D2UMachinery\Extension::isActive('industry_sectors')) {
                 $industry_sector_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('industry_sector_ids')), PREG_GREP_INVERT);
                 $this->industry_sector_ids = is_array($industry_sector_ids) ? array_map('intval', $industry_sector_ids) : [];
             }
-            if (\TobiasKrais\D2UMachinery\Extension::isActive('machine_steel_automation_extension')) {
-                $automation_supply_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('automation_supply_ids')), PREG_GREP_INVERT);
-                $this->automation_supply_ids = is_array($automation_supply_ids) ? array_map('intval', $automation_supply_ids) : [];
-            }
             $this->line_code = stripslashes((string) $result->getValue('line_code'));
-            $machine_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('machine_ids')), PREG_GREP_INVERT);
-            $this->machine_ids = is_array($machine_ids) ? array_map('intval', $machine_ids) : [];
             $this->name = stripslashes((string) $result->getValue('name'));
             $this->online_status = (string) $result->getValue('online_status');
             $pictures = preg_grep('/^\s*$/s', explode(',', (string) $result->getValue('pictures')), PREG_GREP_INVERT);
@@ -385,20 +368,32 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper, \Tobi
     }
 
     /**
-     * Gets the machines referring to this object.
+     * Gets the machines referring to this object, resolved through the markers
+     * JSON assignment (marker type "machine").
      * @param bool $online_only true if only online machines should be returned
      * @return Machine[] machines referring to this object
      */
     public function getMachines($online_only = false)
     {
+        $data = json_decode($this->markers, true);
+        if (!is_array($data)) {
+            return [];
+        }
         $machines = [];
-        foreach ($this->machine_ids as $machine_id) {
+        foreach ($data as $marker) {
+            if (!is_array($marker) || !isset($marker['type'], $marker['id']) || 'machine' !== $marker['type']) {
+                continue;
+            }
+            $machine_id = (int) $marker['id'];
+            if ($machine_id <= 0 || isset($machines[$machine_id])) {
+                continue;
+            }
             $machine = new Machine($machine_id, $this->clang_id);
-            if (false === $online_only || ('online' === $machine->online_status)) {
-                $machines[] = $machine;
+            if ($machine->machine_id > 0 && (false === $online_only || 'online' === $machine->online_status)) {
+                $machines[$machine_id] = $machine;
             }
         }
-        return $machines;
+        return array_values($machines);
     }
 
         /**
@@ -539,9 +534,7 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper, \Tobi
         // saving the rest
         if (0 === $this->production_line_id || $pre_save_object !== $this) {
             $query = \rex::getTablePrefix() .'d2u_machinery_production_lines SET '
-                    .'complementary_machine_ids = :complementary_machine_ids, '
                     .'line_code = :line_code, '
-                    .'machine_ids = :machine_ids, '
                     .'online_status = :online_status, '
                     .'pictures = :pictures, '
                     .'link_picture = :link_picture, '
@@ -550,9 +543,7 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper, \Tobi
                     .'video_ids = :video_ids, '
                     .'reference_ids = :reference_ids ';
             $params = [
-                ':complementary_machine_ids' => '|' . implode('|', $this->complementary_machine_ids) . '|',
                 ':line_code' => $this->line_code,
-                ':machine_ids' => '|' . implode('|', $this->machine_ids) . '|',
                 ':online_status' => $this->online_status,
                 ':pictures' => implode(',', $this->pictures),
                 ':link_picture' => $this->link_picture,
@@ -564,10 +555,6 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper, \Tobi
             if (\TobiasKrais\D2UMachinery\Extension::isActive('industry_sectors')) {
                 $query .= ', industry_sector_ids = :industry_sector_ids ';
                 $params[':industry_sector_ids'] = '|' . implode('|', $this->industry_sector_ids) . '|';
-            }
-            if (\TobiasKrais\D2UMachinery\Extension::isActive('machine_steel_automation_extension')) {
-                $query .= ', automation_supply_ids = :automation_supply_ids ';
-                $params[':automation_supply_ids'] = '|' . implode('|', $this->automation_supply_ids) . '|';
             }
 
             if (0 === $this->production_line_id) {

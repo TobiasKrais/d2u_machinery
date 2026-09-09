@@ -104,7 +104,7 @@ if ((!$invalidCsrf && 1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_
 
     // Check if object is used
     $referring_machines = $supply->getReferringMachines();
-    $referring_marker_lines = $supply->getReferringProductionLinesByMarker();
+    $referring_marker_lines = $supply->getReferringProductionLines();
 
     // If not used, delete
     if (0 === count($referring_machines) && 0 === count($referring_marker_lines)) {

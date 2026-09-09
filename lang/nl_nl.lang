@@ -335,7 +335,6 @@ d2u_machinery_production_lines = Productielijnen
 d2u_machinery_production_lines_article = Artikel productielijnen
 d2u_machinery_production_lines_no_production_lines_found = Geen productielijnen gevonden.
 
-d2u_machinery_production_lines_complementary_machines = Aanvullende machines
 d2u_machinery_production_lines_line_code = Lijncode
 d2u_machinery_production_lines_link_picture = Afbeelding met detailbeschrijvingen
 d2u_machinery_production_lines_markers = Markeringen op de afbeelding

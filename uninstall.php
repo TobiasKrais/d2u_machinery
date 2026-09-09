@@ -302,12 +302,6 @@ if (d2u_machinery_should_uninstall($d2uMachineryAction, 'machine_steel_automatio
         ->removeColumn('automation_rush_leader_flyback')
         ->removeColumn('automation_supply_ids')
         ->ensure();
-    $sql->setQuery('SHOW TABLES LIKE "'. \rex::getTable('d2u_machinery_production_lines') .'"');
-    if ($sql->getRows() > 0) {
-        \rex_sql_table::get(\rex::getTable('d2u_machinery_production_lines'))
-            ->removeColumn('automation_supply_ids')
-            ->ensure();
-    }
     $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_steel_supply');
     $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_steel_supply_lang');
 }

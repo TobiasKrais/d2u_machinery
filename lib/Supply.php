@@ -184,10 +184,10 @@ class Supply implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais\
     }
 
     /**
-     * Gets the production lines using this supply as an image marker.
-     * @return ProductionLine[] production lines referring to this supply via marker
+     * Gets the production lines referring to this supply via a marker on the link picture.
+     * @return ProductionLine[] production lines referring to this supply
      */
-    public function getReferringProductionLinesByMarker()
+    public function getReferringProductionLines()
     {
         if (!\TobiasKrais\D2UMachinery\Extension::isActive('production_lines')) {
             return [];
