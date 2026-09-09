@@ -110,6 +110,7 @@ if ((!$invalidCsrf && 1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_
     $production_line = new ProductionLine($production_line_id, (int) rex_config::get('d2u_helper', 'default_lang'));
     $production_line->production_line_id = $production_line_id; // Ensure correct ID in case language has no object
     $production_line->delete(true);
+    echo rex_view::success(rex_i18n::msg('d2u_helper_deleted'));
 
     $func = '';
 }

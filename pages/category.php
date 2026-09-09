@@ -138,6 +138,7 @@ if ((!$invalidCsrf && 1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_
     // If not used, delete
     if (0 === count($uses_machines) && 0 === count($uses_used_machines) && 0 === count($uses_categories)) {
         $category->delete(true);
+        echo rex_view::success(rex_i18n::msg('d2u_helper_deleted'));
     } else {
         $message = '<ul>';
         foreach ($uses_categories as $uses_category) {

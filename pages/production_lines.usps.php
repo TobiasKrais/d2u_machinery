@@ -98,6 +98,7 @@ if ((!$invalidCsrf && 1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_
     // If not used, delete
     if (0 === count($referring_production_lines)) {
         $usp->delete(true);
+        echo rex_view::success(rex_i18n::msg('d2u_helper_deleted'));
     } else {
         $message = '<ul>';
         foreach ($referring_production_lines as $referring_production_line) {

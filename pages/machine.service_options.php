@@ -81,6 +81,7 @@ if ((!$invalidCsrf && 1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_
 
 	if (0 === count($referringMachines)) {
 		$serviceOption->delete(true);
+		echo rex_view::success(rex_i18n::msg('d2u_helper_deleted'));
 	} else {
 		$message = '<ul>';
 		foreach ($referringMachines as $referringMachine) {

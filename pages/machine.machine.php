@@ -355,6 +355,7 @@ if ((!$invalidCsrf && 1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_
 	// If not used, delete
 	if (0 === count($referring_machines) && 0 === count($referring_used_machines) && 0 === count($referring_marker_lines)) {
 		$machine->delete();
+		echo rex_view::success(rex_i18n::msg('d2u_helper_deleted'));
 	} else {
 		$message = '<ul>';
 		if (count($referring_machines) > 0) {
@@ -369,7 +370,7 @@ if ((!$invalidCsrf && 1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_
 		}
 		if (count($referring_marker_lines) > 0) {
 			foreach ($referring_marker_lines as $referring_marker_line) {
-				$message .= '<li><a href="index.php?page=d2u_machinery/production_line&func=edit&entry_id='. $referring_marker_line->production_line_id .'">'. $referring_marker_line->name.'</a></li>';
+				$message .= '<li><a href="index.php?page=d2u_machinery/production_lines&func=edit&entry_id='. $referring_marker_line->production_line_id .'">'. $referring_marker_line->name.'</a></li>';
 			}
 		}
 		$message .= '</ul>';

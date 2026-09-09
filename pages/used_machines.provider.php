@@ -82,6 +82,7 @@ if ((!$invalidCsrf && 1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_
     if ($provider_id > 0) {
         $provider = new Provider($provider_id);
         $provider->delete();
+        echo rex_view::success(rex_i18n::msg('d2u_helper_deleted'));
     }
     $func = '';
 }

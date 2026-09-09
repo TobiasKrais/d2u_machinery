@@ -75,17 +75,3 @@ if (rex_version::compare($this->getVersion(), '1.3.5', '<')) { /** @phpstan-igno
         $sql->setQuery('DELETE FROM '. \rex::getTablePrefix() ."sprog_wildcard WHERE `wildcard` = '". $wildcard ."';");
     }
 }
-
-// Production lines: the legacy machine / complementary machine / automation supply
-// lists were replaced by the marker-based assignment on the link picture. Drop the
-// now obsolete columns from existing installations.
-$sql->setQuery('SHOW TABLES LIKE "'. \rex::getTable('d2u_machinery_production_lines') .'"');
-if ($sql->getRows() > 0) {
-    $productionLinesTable = \rex_sql_table::get(\rex::getTable('d2u_machinery_production_lines'));
-    foreach (['machine_ids', 'complementary_machine_ids', 'automation_supply_ids'] as $legacyColumn) {
-        if ($productionLinesTable->hasColumn($legacyColumn)) {
-            $productionLinesTable->removeColumn($legacyColumn);
-        }
-    }
-    $productionLinesTable->alter();
-}
