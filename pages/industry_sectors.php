@@ -125,7 +125,7 @@ if ('edit' === $func || 'add' === $func) {
 				        $industry_sector = new IndustrySector($entry_id, $rex_clang->getId());
 				        $required = $rex_clang->getId() === (int) rex_config::get('d2u_helper', 'default_lang');
 				        $readonly_lang = true;
-				        if (rex::getUser() instanceof rex_user && (rex::getUser()->isAdmin() || (rex::getUser()->hasPerm('d2u_machinery[edit_lang]') && rex::getUser()->getComplexPerm('clang') instanceof rex_clang_perm && rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId())))) {
+				        if (rex::getUser() instanceof rex_user && (rex::getUser()->isAdmin() || (rex::getUser()->hasPerm('d2u_machinery[edit_lang]') && rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId())))) {
 				            $readonly_lang = false;
 				        }
 				?>

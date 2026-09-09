@@ -144,7 +144,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
     /** @var string Machine leaflet (PDF file) */
     public string $leaflet = '';
 
-    /** @var TobiasKrais\D2UVideos\Video[] Videomanager videos */
+    /** @var \TobiasKrais\D2UVideos\Video[] Videomanager videos */
     public array $videos = [];
 
     /** @var string Needs translation update? "no", "yes" or "delete" */
@@ -607,7 +607,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
         $references = [];
         foreach ($this->reference_ids as $reference_id) {
             $reference = new Reference($reference_id, $this->clang_id);
-            if ($reference instanceof Reference && $reference->reference_id > 0) {
+            if ($reference->reference_id > 0) {
                 $references[$reference->reference_id] = $reference;
             }
         }

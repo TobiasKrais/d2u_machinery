@@ -319,7 +319,7 @@ if (filter_input(INPUT_GET, 'used_rent_category_id', FILTER_VALIDATE_INT, ['opti
                 }
                 if ($has_permission) {
                     echo '<li>';
-                    if ('pdf' === $filetype) {
+                    if ('PDF' === $filetype) {
                         echo '<span class="icon pdf"></span> ';
                     } else {
                         echo '<span class="icon file"></span> ';

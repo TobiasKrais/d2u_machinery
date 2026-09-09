@@ -85,7 +85,7 @@ class UsedMachine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasK
     /** @var array<string> Download filenames */
     public array $downloads = [];
 
-    /** @var TobiasKrais\D2UVideos\Video[] Videomanager videos */
+    /** @var \TobiasKrais\D2UVideos\Video[] Videomanager videos */
     public array $videos = [];
 
     /** @var string Needs translation update? "no", "yes" or "delete" */

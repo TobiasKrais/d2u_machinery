@@ -409,7 +409,7 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper, \Tobi
         $references = [];
         foreach ($this->reference_ids as $reference_id) {
             $reference = new Reference($reference_id, $this->clang_id);
-            if ($reference instanceof Reference && $reference->reference_id > 0) {
+            if ($reference->reference_id > 0) {
                 $references[$reference->reference_id] = $reference;
             }
         }
