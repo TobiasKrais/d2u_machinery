@@ -12,7 +12,7 @@ Rules only. Short. Actionable.
 ## When Changing
 
 - Keep backend translation keys in sync across all files under `lang/`
-- Keep legacy directories under `plugins/` for backward compatibility only. Do not add new separate plugin libs, pages, or install/update logic.
+- Extensions are managed via `rex_config` state (`extension_*` keys) through `lib/Extension.php`, not as REDAXO plugins. There is no `plugins/` directory anymore (removed in 2.0.0). Extension install/uninstall runs the main `install.php`/`uninstall.php` with `$d2uMachineryAction` set to the extension key.
 - For changes under `modules/90/*`: check or update changelog in `pages/help.changelog.php`
 - Raise revision in `lib/Module.php` only once per release
 - If target version in changelog already has `-DEV`: do not raise again in same phase

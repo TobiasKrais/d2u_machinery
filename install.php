@@ -643,150 +643,6 @@ if (d2u_machinery_should_install($d2uMachineryAction, 'machine_options_extension
 
 }
 
-// Extension: steel processing
-if (d2u_machinery_should_install($d2uMachineryAction, 'machine_steel_processing_extension')) {
-    \rex_sql_table::get(\rex::getTable('d2u_machinery_steel_automation'))
-        ->ensureColumn(new rex_sql_column('automation_id', 'INT(11) unsigned', false, null, 'auto_increment'))
-        ->setPrimaryKey('automation_id')
-        ->ensureColumn(new \rex_sql_column('internal_name', 'VARCHAR(255)', true))
-        ->ensure();
-    \rex_sql_table::get(\rex::getTable('d2u_machinery_steel_automation_lang'))
-        ->ensureColumn(new rex_sql_column('automation_id', 'INT(11)'))
-        ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
-        ->setPrimaryKey(['automation_id', 'clang_id'])
-        ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
-        ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)'))
-        ->ensure();
-    \rex_sql_table::get(\rex::getTable('d2u_machinery_steel_material'))
-        ->ensureColumn(new rex_sql_column('material_id', 'INT(11) unsigned', false, null, 'auto_increment'))
-        ->setPrimaryKey('material_id')
-        ->ensureColumn(new \rex_sql_column('internal_name', 'VARCHAR(255)', true))
-        ->ensure();
-    \rex_sql_table::get(\rex::getTable('d2u_machinery_steel_material_lang'))
-        ->ensureColumn(new rex_sql_column('material_id', 'INT(11)'))
-        ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
-        ->setPrimaryKey(['material_id', 'clang_id'])
-        ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
-        ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)'))
-        ->ensure();
-    \rex_sql_table::get(\rex::getTable('d2u_machinery_steel_process'))
-        ->ensureColumn(new rex_sql_column('process_id', 'INT(11) unsigned', false, null, 'auto_increment'))
-        ->setPrimaryKey('process_id')
-        ->ensureColumn(new \rex_sql_column('internal_name', 'VARCHAR(255)', true))
-        ->ensure();
-    \rex_sql_table::get(\rex::getTable('d2u_machinery_steel_process_lang'))
-        ->ensureColumn(new rex_sql_column('process_id', 'INT(11)'))
-        ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
-        ->setPrimaryKey(['process_id', 'clang_id'])
-        ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
-        ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)'))
-        ->ensure();
-    \rex_sql_table::get(\rex::getTable('d2u_machinery_steel_procedure'))
-        ->ensureColumn(new rex_sql_column('procedure_id', 'INT(11) unsigned', false, null, 'auto_increment'))
-        ->setPrimaryKey('procedure_id')
-        ->ensureColumn(new \rex_sql_column('internal_name', 'VARCHAR(255)', true))
-        ->ensure();
-    \rex_sql_table::get(\rex::getTable('d2u_machinery_steel_procedure_lang'))
-        ->ensureColumn(new rex_sql_column('procedure_id', 'INT(11)'))
-        ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
-        ->setPrimaryKey(['procedure_id', 'clang_id'])
-        ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
-        ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)'))
-        ->ensure();
-    \rex_sql_table::get(\rex::getTable('d2u_machinery_steel_profile'))
-        ->ensureColumn(new rex_sql_column('profile_id', 'INT(11) unsigned', false, null, 'auto_increment'))
-        ->setPrimaryKey('profile_id')
-        ->ensureColumn(new \rex_sql_column('internal_name', 'VARCHAR(255)', true))
-        ->ensure();
-    \rex_sql_table::get(\rex::getTable('d2u_machinery_steel_profile_lang'))
-        ->ensureColumn(new rex_sql_column('profile_id', 'INT(11)'))
-        ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
-        ->setPrimaryKey(['profile_id', 'clang_id'])
-        ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
-        ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)'))
-        ->ensure();
-    \rex_sql_table::get(\rex::getTable('d2u_machinery_steel_tool'))
-        ->ensureColumn(new rex_sql_column('tool_id', 'INT(11) unsigned', false, null, 'auto_increment'))
-        ->setPrimaryKey('tool_id')
-        ->ensureColumn(new \rex_sql_column('internal_name', 'VARCHAR(255)', true))
-        ->ensure();
-    \rex_sql_table::get(\rex::getTable('d2u_machinery_steel_tool_lang'))
-        ->ensureColumn(new rex_sql_column('tool_id', 'INT(11)'))
-        ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
-        ->setPrimaryKey(['tool_id', 'clang_id'])
-        ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
-        ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)'))
-        ->ensure();
-    \rex_sql_table::get(\rex::getTable('d2u_machinery_steel_welding'))
-        ->ensureColumn(new rex_sql_column('welding_id', 'INT(11) unsigned', false, null, 'auto_increment'))
-        ->setPrimaryKey('welding_id')
-        ->ensureColumn(new \rex_sql_column('internal_name', 'VARCHAR(255)', true))
-        ->ensure();
-    \rex_sql_table::get(\rex::getTable('d2u_machinery_steel_welding_lang'))
-        ->ensureColumn(new rex_sql_column('welding_id', 'INT(11)'))
-        ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
-        ->setPrimaryKey(['welding_id', 'clang_id'])
-        ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
-        ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)'))
-        ->ensure();
-    \rex_sql_table::get(\rex::getTable('d2u_machinery_machines'))
-        ->ensureColumn(new \rex_sql_column('process_ids', 'TEXT'))
-        ->ensureColumn(new \rex_sql_column('procedure_ids', 'TEXT'))
-        ->ensureColumn(new \rex_sql_column('material_ids', 'TEXT'))
-        ->ensureColumn(new \rex_sql_column('tool_ids', 'TEXT'))
-        ->ensureColumn(new \rex_sql_column('automation_automationgrade_ids', 'TEXT'))
-        ->ensureColumn(new \rex_sql_column('workspace', 'VARCHAR(255)'))
-        ->ensureColumn(new \rex_sql_column('workspace_square', 'VARCHAR(50)'))
-        ->ensureColumn(new \rex_sql_column('workspace_flat', 'VARCHAR(50)'))
-        ->ensureColumn(new \rex_sql_column('workspace_plate', 'VARCHAR(50)'))
-        ->ensureColumn(new \rex_sql_column('workspace_profile', 'VARCHAR(50)'))
-        ->ensureColumn(new \rex_sql_column('workspace_angle_steel', 'VARCHAR(50)'))
-        ->ensureColumn(new \rex_sql_column('workspace_round', 'VARCHAR(50)'))
-        ->ensureColumn(new \rex_sql_column('workspace_min', 'VARCHAR(50)'))
-        ->ensureColumn(new \rex_sql_column('sheet_width', 'VARCHAR(50)'))
-        ->ensureColumn(new \rex_sql_column('sheet_length', 'VARCHAR(50)'))
-        ->ensureColumn(new \rex_sql_column('sheet_thickness', 'VARCHAR(50)'))
-        ->ensureColumn(new \rex_sql_column('tool_changer_locations', 'VARCHAR(255)'))
-        ->ensureColumn(new \rex_sql_column('drilling_unit_below', 'INT(10)'))
-        ->ensureColumn(new \rex_sql_column('drilling_unit_vertical', 'VARCHAR(50)'))
-        ->ensureColumn(new \rex_sql_column('drilling_unit_horizontal', 'VARCHAR(50)'))
-        ->ensureColumn(new \rex_sql_column('drilling_diameter', 'VARCHAR(255)'))
-        ->ensureColumn(new \rex_sql_column('drilling_tools_axis', 'VARCHAR(255)'))
-        ->ensureColumn(new \rex_sql_column('drilling_axis_drive_power', 'VARCHAR(255)'))
-        ->ensureColumn(new \rex_sql_column('drilling_rpm_speed', 'VARCHAR(255)'))
-        ->ensureColumn(new \rex_sql_column('saw_blade', 'VARCHAR(255)'))
-        ->ensureColumn(new \rex_sql_column('saw_band', 'VARCHAR(255)'))
-        ->ensureColumn(new \rex_sql_column('saw_band_tilt', 'VARCHAR(255)'))
-        ->ensureColumn(new \rex_sql_column('saw_cutting_speed', 'VARCHAR(255)'))
-        ->ensureColumn(new \rex_sql_column('saw_miter', 'VARCHAR(255)'))
-        ->ensureColumn(new \rex_sql_column('bevel_angle', 'INT(10)'))
-        ->ensureColumn(new \rex_sql_column('punching_diameter', 'VARCHAR(255)'))
-        ->ensureColumn(new \rex_sql_column('punching_power', 'INT(5)'))
-        ->ensureColumn(new \rex_sql_column('punching_tools', 'VARCHAR(255)'))
-        ->ensureColumn(new \rex_sql_column('shaving_unit_angle_steel_single_cut', 'INT(10)'))
-        ->ensureColumn(new \rex_sql_column('profile_ids', 'TEXT'))
-        ->ensureColumn(new \rex_sql_column('carrier_width', 'VARCHAR(255)'))
-        ->ensureColumn(new \rex_sql_column('carrier_height', 'VARCHAR(255)'))
-        ->ensureColumn(new \rex_sql_column('carrier_weight', 'INT(10)'))
-        ->ensureColumn(new \rex_sql_column('flange_thickness', 'VARCHAR(255)'))
-        ->ensureColumn(new \rex_sql_column('web_thickness', 'VARCHAR(255)'))
-        ->ensureColumn(new \rex_sql_column('component_length', 'VARCHAR(255)'))
-        ->ensureColumn(new \rex_sql_column('component_weight', 'INT(10)'))
-        ->ensureColumn(new \rex_sql_column('welding_process_ids', 'TEXT'))
-        ->ensureColumn(new \rex_sql_column('welding_thickness', 'INT(10)'))
-        ->ensureColumn(new \rex_sql_column('welding_wire_thickness', 'VARCHAR(255)'))
-        ->ensureColumn(new \rex_sql_column('beam_continuous_opening', 'VARCHAR(255)'))
-        ->ensureColumn(new \rex_sql_column('beam_turbines', 'INT(3)'))
-        ->ensureColumn(new \rex_sql_column('beam_turbine_power', 'VARCHAR(255)'))
-        ->ensureColumn(new \rex_sql_column('beam_color_guns', 'VARCHAR(255)'))
-        ->alter();
-    \rex_sql_table::get(\rex::getTable('d2u_machinery_categories_lang'))
-        ->removeColumn('steel_processing_saw_cutting_range_file')
-        ->removeColumn('steel_processing_saw_cutting_range_title')
-        ->alter();
-
-}
-
 // Extension: steel automation
 if (d2u_machinery_should_install($d2uMachineryAction, 'machine_steel_automation_extension')) {
     \rex_sql_table::get(\rex::getTable('d2u_machinery_steel_supply'))
@@ -809,11 +665,6 @@ if (d2u_machinery_should_install($d2uMachineryAction, 'machine_steel_automation_
         ->removeColumn('title')
         ->alter();
     \rex_sql_table::get(\rex::getTable('d2u_machinery_machines'))
-        ->ensureColumn(new \rex_sql_column('automation_supply_single_stroke', 'VARCHAR(25)'))
-        ->ensureColumn(new \rex_sql_column('automation_supply_multi_stroke', 'VARCHAR(25)'))
-        ->ensureColumn(new \rex_sql_column('automation_feedrate', 'VARCHAR(25)'))
-        ->ensureColumn(new \rex_sql_column('automation_feedrate_sawblade', 'VARCHAR(25)'))
-        ->ensureColumn(new \rex_sql_column('automation_rush_leader_flyback', 'VARCHAR(25)'))
         ->ensureColumn(new \rex_sql_column('automation_supply_ids', 'TEXT'))
         ->alter();
 
@@ -917,6 +768,75 @@ if ($sql->getRows() > 0) {
         }
     }
     $productionLinesTable->alter();
+}
+
+// Retired steel processing extension: drop the obsolete machine columns and the
+// entity tables (automation grades, materials, processes, procedures, profiles,
+// tools, weldings) from existing installations. Runs unconditionally so a reinstall
+// also converges. The supply extension (automation_supply_ids column and the
+// steel_supply tables) is intentionally kept.
+$sql->setQuery('SHOW TABLES LIKE "'. \rex::getTable('d2u_machinery_machines') .'"');
+if ($sql->getRows() > 0) {
+    $machinesTable = \rex_sql_table::get(\rex::getTable('d2u_machinery_machines'));
+    $retiredMachineColumns = [
+        'process_ids', 'procedure_ids', 'material_ids', 'tool_ids', 'automation_automationgrade_ids',
+        'workspace', 'workspace_square', 'workspace_flat', 'workspace_plate', 'workspace_profile',
+        'workspace_angle_steel', 'workspace_round', 'workspace_min',
+        'sheet_width', 'sheet_length', 'sheet_thickness', 'tool_changer_locations',
+        'drilling_unit_below', 'drilling_unit_vertical', 'drilling_unit_horizontal', 'drilling_diameter',
+        'drilling_tools_axis', 'drilling_axis_drive_power', 'drilling_rpm_speed',
+        'saw_blade', 'saw_band', 'saw_band_tilt', 'saw_cutting_speed', 'saw_miter', 'bevel_angle',
+        'punching_diameter', 'punching_power', 'punching_tools', 'shaving_unit_angle_steel_single_cut',
+        'profile_ids', 'carrier_width', 'carrier_height', 'carrier_weight',
+        'flange_thickness', 'web_thickness', 'component_length', 'component_weight',
+        'welding_process_ids', 'welding_thickness', 'welding_wire_thickness',
+        'beam_continuous_opening', 'beam_turbines', 'beam_turbine_power', 'beam_color_guns',
+        'automation_supply_single_stroke', 'automation_supply_multi_stroke',
+        'automation_feedrate', 'automation_feedrate_sawblade', 'automation_rush_leader_flyback',
+    ];
+    foreach ($retiredMachineColumns as $retiredColumn) {
+        if ($machinesTable->hasColumn($retiredColumn)) {
+            $machinesTable->removeColumn($retiredColumn);
+        }
+    }
+    $machinesTable->alter();
+}
+foreach ([
+    'd2u_machinery_steel_automation',
+    'd2u_machinery_steel_automation_lang',
+    'd2u_machinery_steel_material',
+    'd2u_machinery_steel_material_lang',
+    'd2u_machinery_steel_process',
+    'd2u_machinery_steel_process_lang',
+    'd2u_machinery_steel_procedure',
+    'd2u_machinery_steel_procedure_lang',
+    'd2u_machinery_steel_profile',
+    'd2u_machinery_steel_profile_lang',
+    'd2u_machinery_steel_tool',
+    'd2u_machinery_steel_tool_lang',
+    'd2u_machinery_steel_welding',
+    'd2u_machinery_steel_welding_lang',
+] as $retiredTable) {
+    $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . $retiredTable);
+}
+
+// The deprecated global compatibility classes (lib/deprecated_helper_classes.php)
+// were removed in 2.0.0. The autoexport cronjob previously stored an unqualified
+// call to the global Provider wrapper. Rewrite existing cronjob rows to the fully
+// qualified class name so the cronjob keeps working without the compatibility layer.
+if (\rex_addon::get('cronjob')->isAvailable()) {
+    $sql->setQuery('SHOW TABLES LIKE "'. \rex::getTable('cronjob') .'"');
+    if ($sql->getRows() > 0) {
+        $sql->setQuery(
+            'UPDATE `'. \rex::getTablePrefix() .'cronjob` SET `parameters` = :parameters '
+            .'WHERE `name` = :name AND `parameters` LIKE :legacy',
+            [
+                ':parameters' => (string) json_encode(['rex_cronjob_phpcode_code' => '<?php \TobiasKrais\D2UMachinery\Provider::autoexport(); ?>']),
+                ':name' => 'D2U Machinery Autoexport',
+                ':legacy' => '%Provider::autoexport%',
+            ]
+        );
+    }
 }
 
 

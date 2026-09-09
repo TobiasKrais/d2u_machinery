@@ -2,7 +2,6 @@
 
 use TobiasKrais\D2UMachinery\Agitator;
 use TobiasKrais\D2UMachinery\AgitatorType;
-use TobiasKrais\D2UMachinery\Automation;
 use TobiasKrais\D2UMachinery\Category;
 use TobiasKrais\D2UMachinery\Certificate;
 use TobiasKrais\D2UMachinery\Equipment;
@@ -11,19 +10,13 @@ use TobiasKrais\D2UMachinery\Extension;
 use TobiasKrais\D2UMachinery\Feature;
 use TobiasKrais\D2UMachinery\IndustrySector;
 use TobiasKrais\D2UMachinery\Machine;
-use TobiasKrais\D2UMachinery\Material;
 use TobiasKrais\D2UMachinery\Option;
-use TobiasKrais\D2UMachinery\Procedure;
-use TobiasKrais\D2UMachinery\Process;
 use TobiasKrais\D2UMachinery\ProductionLine;
-use TobiasKrais\D2UMachinery\Profile;
 use TobiasKrais\D2UMachinery\Provider;
 use TobiasKrais\D2UMachinery\ServiceOption;
 use TobiasKrais\D2UMachinery\Supply;
-use TobiasKrais\D2UMachinery\Tool;
 use TobiasKrais\D2UMachinery\UsageArea;
 use TobiasKrais\D2UMachinery\UsedMachine;
-use TobiasKrais\D2UMachinery\Welding;
 
 if (\rex::isBackend() && is_object(\rex::getUser())) {
     Extension::ensureConfigInitialized();
@@ -88,9 +81,9 @@ if (\rex::isBackend()) {
         rex_extension::register('CLANG_DELETED', rex_d2u_machinery_options_clang_deleted(...));
         rex_extension::register('MEDIA_IS_IN_USE', rex_d2u_machinery_options_media_is_in_use(...));
     }
-    if (Extension::isActive('machine_steel_processing_extension')) {
-        rex_extension::register('CLANG_DELETED', rex_d2u_machinery_steel_processing_clang_deleted(...));
-        rex_extension::register('MEDIA_IS_IN_USE', rex_d2u_machinery_steel_processing_media_is_in_use(...));
+    if (Extension::isActive('machine_steel_automation_extension')) {
+        rex_extension::register('CLANG_DELETED', rex_d2u_machinery_supply_clang_deleted(...));
+        rex_extension::register('MEDIA_IS_IN_USE', rex_d2u_machinery_supply_media_is_in_use(...));
     }
     if (Extension::isActive('machine_usage_area_extension')) {
         rex_extension::register('CLANG_DELETED', rex_d2u_machinery_usage_area_clang_deleted(...));
@@ -761,58 +754,30 @@ function rex_d2u_machinery_options_media_is_in_use(rex_extension_point $ep)
 }
 
 /**
- * Deletes language specific steel-processing objects.
+ * Deletes language specific supply objects.
  * @param rex_extension_point<array<string>> $ep Redaxo extension point
  * @return array<string> Warning message as array
  */
-function rex_d2u_machinery_steel_processing_clang_deleted(rex_extension_point $ep)
+function rex_d2u_machinery_supply_clang_deleted(rex_extension_point $ep)
 {
     $warning = $ep->getSubject();
     $params = $ep->getParams();
     $clang_id = $params['id'];
 
-    $automations = Automation::getAll($clang_id);
-    foreach ($automations as $automation) {
-        $automation->delete(false);
-    }
-    $materials = Material::getAll($clang_id);
-    foreach ($materials as $material) {
-        $material->delete(false);
-    }
-    $procedures = Procedure::getAll($clang_id);
-    foreach ($procedures as $procedure) {
-        $procedure->delete(false);
-    }
-    $processes = Process::getAll($clang_id);
-    foreach ($processes as $process) {
-        $process->delete(false);
-    }
-    $profiles = Profile::getAll($clang_id);
-    foreach ($profiles as $profile) {
-        $profile->delete(false);
-    }
     $supplies = Supply::getAll($clang_id);
     foreach ($supplies as $supply) {
         $supply->delete(false);
-    }
-    $tools = Tool::getAll($clang_id);
-    foreach ($tools as $tool) {
-        $tool->delete(false);
-    }
-    $weldings = Welding::getAll($clang_id);
-    foreach ($weldings as $welding) {
-        $welding->delete(false);
     }
 
     return $warning;
 }
 
 /**
- * Checks if media is used by steel processing objects.
+ * Checks if media is used by supply objects.
  * @param rex_extension_point<array<string>> $ep Redaxo extension point
  * @return array<string> Warning message as array
  */
-function rex_d2u_machinery_steel_processing_media_is_in_use(rex_extension_point $ep)
+function rex_d2u_machinery_supply_media_is_in_use(rex_extension_point $ep)
 {
     $warning = $ep->getSubject();
     $params = $ep->getParams();
@@ -1099,48 +1064,6 @@ function rex_d2u_machinery_translate_object(rex_extension_point $ep) {
             $object = $o->option_id > 0 ? $o : null;
             $name = null !== $object ? $o->name : '';
             break;
-        case 'automation':
-            $o = new Automation($id, $target_clang_id);
-            if ($o->automation_id <= 0) { $o = new Automation($id, $source_clang_id); $o->clang_id = $target_clang_id; }
-            $object = $o->automation_id > 0 ? $o : null;
-            $name = null !== $object ? $o->name : '';
-            break;
-        case 'material':
-            $o = new Material($id, $target_clang_id);
-            if ($o->material_id <= 0) { $o = new Material($id, $source_clang_id); $o->clang_id = $target_clang_id; }
-            $object = $o->material_id > 0 ? $o : null;
-            $name = null !== $object ? $o->name : '';
-            break;
-        case 'procedure':
-            $o = new Procedure($id, $target_clang_id);
-            if ($o->procedure_id <= 0) { $o = new Procedure($id, $source_clang_id); $o->clang_id = $target_clang_id; }
-            $object = $o->procedure_id > 0 ? $o : null;
-            $name = null !== $object ? $o->name : '';
-            break;
-        case 'process':
-            $o = new Process($id, $target_clang_id);
-            if ($o->process_id <= 0) { $o = new Process($id, $source_clang_id); $o->clang_id = $target_clang_id; }
-            $object = $o->process_id > 0 ? $o : null;
-            $name = null !== $object ? $o->name : '';
-            break;
-        case 'profile':
-            $o = new Profile($id, $target_clang_id);
-            if ($o->profile_id <= 0) { $o = new Profile($id, $source_clang_id); $o->clang_id = $target_clang_id; }
-            $object = $o->profile_id > 0 ? $o : null;
-            $name = null !== $object ? $o->name : '';
-            break;
-        case 'tool':
-            $o = new Tool($id, $target_clang_id);
-            if ($o->tool_id <= 0) { $o = new Tool($id, $source_clang_id); $o->clang_id = $target_clang_id; }
-            $object = $o->tool_id > 0 ? $o : null;
-            $name = null !== $object ? $o->name : '';
-            break;
-        case 'welding':
-            $o = new Welding($id, $target_clang_id);
-            if ($o->welding_id <= 0) { $o = new Welding($id, $source_clang_id); $o->clang_id = $target_clang_id; }
-            $object = $o->welding_id > 0 ? $o : null;
-            $name = null !== $object ? $o->name : '';
-            break;
         case 'supply':
             $o = new Supply($id, $target_clang_id);
             if ($o->supply_id <= 0) { $o = new Supply($id, $source_clang_id); $o->clang_id = $target_clang_id; }
@@ -1357,120 +1280,6 @@ function rex_d2u_machinery_translation_list(rex_extension_point $ep) {
         }
     }
 
-    if (Extension::isActive('machine_steel_processing_extension')) {
-        $automations = Automation::getTranslationHelperObjects($target_clang_id, $filter_type);
-        if (count($automations) > 0) {
-            $html_automations = '<ul>';
-            foreach ($automations as $automation) {
-                if ('' === $automation->name) {
-                    $automation = new Automation($automation->automation_id, $source_clang_id);
-                }
-                $html_automations .= \TobiasKrais\D2UHelper\BackendHelper::getTranslationItem('d2u_machinery', 'automation', $automation->automation_id, $automation->name, rex_url::backendPage('d2u_machinery/machine/steel_processing', ['steel_processing_subpage' => 'automation', 'entry_id' => $automation->automation_id, 'func' => 'edit']));
-            }
-            $html_automations .= '</ul>';
-            $list_entry['pages'][] = [
-                'title' => rex_i18n::msg('d2u_machinery_machine_steel_extension') .' - '. rex_i18n::msg('d2u_machinery_steel_automation_degrees'),
-                'icon' => 'rex-icon fa-exchange',
-                'html' => $html_automations
-            ];
-        }
-        $materials = Material::getTranslationHelperObjects($target_clang_id, $filter_type);
-        if (count($materials) > 0) {
-            $html_materials = '<ul>';
-            foreach ($materials as $material) {
-                if ('' === $material->name) {
-                    $material = new Material($material->material_id, $source_clang_id);
-                }
-                $html_materials .= \TobiasKrais\D2UHelper\BackendHelper::getTranslationItem('d2u_machinery', 'material', $material->material_id, $material->name, rex_url::backendPage('d2u_machinery/machine/steel_processing', ['steel_processing_subpage' => 'material', 'entry_id' => $material->material_id, 'func' => 'edit']));
-            }
-            $html_materials .= '</ul>';
-            $list_entry['pages'][] = [
-                'title' => rex_i18n::msg('d2u_machinery_machine_steel_extension') .' - '. rex_i18n::msg('d2u_machinery_steel_material_class'),
-                'icon' => 'rex-icon fa-flask',
-                'html' => $html_materials
-            ];
-        }
-        $procedures = Procedure::getTranslationHelperObjects($target_clang_id, $filter_type);
-        if (count($procedures) > 0) {
-            $html_procedures = '<ul>';
-            foreach ($procedures as $procedure) {
-                if ('' === $procedure->name) {
-                    $procedure = new Procedure($procedure->procedure_id, $source_clang_id);
-                }
-                $html_procedures .= \TobiasKrais\D2UHelper\BackendHelper::getTranslationItem('d2u_machinery', 'procedure', $procedure->procedure_id, $procedure->name, rex_url::backendPage('d2u_machinery/machine/steel_processing', ['steel_processing_subpage' => 'procedure', 'entry_id' => $procedure->procedure_id, 'func' => 'edit']));
-            }
-            $html_procedures .= '</ul>';
-            $list_entry['pages'][] = [
-                'title' => rex_i18n::msg('d2u_machinery_machine_steel_extension') .' - '. rex_i18n::msg('d2u_machinery_steel_procedures'),
-                'icon' => 'rex-icon fa-tasks',
-                'html' => $html_procedures
-            ];
-        }
-        $processes = Process::getTranslationHelperObjects($target_clang_id, $filter_type);
-        if (count($processes) > 0) {
-            $html_processes = '<ul>';
-            foreach ($processes as $process) {
-                if ('' === $process->name) {
-                    $process = new Process($process->process_id, $source_clang_id);
-                }
-                $html_processes .= \TobiasKrais\D2UHelper\BackendHelper::getTranslationItem('d2u_machinery', 'process', $process->process_id, $process->name, rex_url::backendPage('d2u_machinery/machine/steel_processing', ['steel_processing_subpage' => 'process', 'entry_id' => $process->process_id, 'func' => 'edit']));
-            }
-            $html_processes .= '</ul>';
-            $list_entry['pages'][] = [
-                'title' => rex_i18n::msg('d2u_machinery_machine_steel_extension') .' - '. rex_i18n::msg('d2u_machinery_steel_processes'),
-                'icon' => 'rex-icon fa-sort-numeric-asc',
-                'html' => $html_processes
-            ];
-        }
-        $profiles = Profile::getTranslationHelperObjects($target_clang_id, $filter_type);
-        if (count($profiles) > 0) {
-            $html_profiles = '<ul>';
-            foreach ($profiles as $profile) {
-                if ('' === $profile->name) {
-                    $profile = new Profile($profile->profile_id, $source_clang_id);
-                }
-                $html_profiles .= \TobiasKrais\D2UHelper\BackendHelper::getTranslationItem('d2u_machinery', 'profile', $profile->profile_id, $profile->name, rex_url::backendPage('d2u_machinery/machine/steel_processing', ['steel_processing_subpage' => 'profile', 'entry_id' => $profile->profile_id, 'func' => 'edit']));
-            }
-            $html_profiles .= '</ul>';
-            $list_entry['pages'][] = [
-                'title' => rex_i18n::msg('d2u_machinery_machine_steel_extension') .' - '. rex_i18n::msg('d2u_machinery_steel_profiles'),
-                'icon' => 'rex-icon fa-i-cursor',
-                'html' => $html_profiles
-            ];
-        }
-        $tools = Tool::getTranslationHelperObjects($target_clang_id, $filter_type);
-        if (count($tools) > 0) {
-            $html_tools = '<ul>';
-            foreach ($tools as $tool) {
-                if ('' === $tool->name) {
-                    $tool = new Tool($tool->tool_id, $source_clang_id);
-                }
-                $html_tools .= \TobiasKrais\D2UHelper\BackendHelper::getTranslationItem('d2u_machinery', 'tool', $tool->tool_id, $tool->name, rex_url::backendPage('d2u_machinery/machine/steel_processing', ['steel_processing_subpage' => 'tool', 'entry_id' => $tool->tool_id, 'func' => 'edit']));
-            }
-            $html_tools .= '</ul>';
-            $list_entry['pages'][] = [
-                'title' => rex_i18n::msg('d2u_machinery_machine_steel_extension') .' - '. rex_i18n::msg('d2u_machinery_steel_tools'),
-                'icon' => 'rex-icon fa-magnet',
-                'html' => $html_tools
-            ];
-        }
-        $weldings = Welding::getTranslationHelperObjects($target_clang_id, $filter_type);
-        if (count($weldings) > 0) {
-            $html_weldings = '<ul>';
-            foreach ($weldings as $welding) {
-                if ('' === $welding->name) {
-                    $welding = new Welding($welding->welding_id, $source_clang_id);
-                }
-                $html_weldings .= \TobiasKrais\D2UHelper\BackendHelper::getTranslationItem('d2u_machinery', 'welding', $welding->welding_id, $welding->name, rex_url::backendPage('d2u_machinery/machine/steel_processing', ['steel_processing_subpage' => 'welding', 'entry_id' => $welding->welding_id, 'func' => 'edit']));
-            }
-            $html_weldings .= '</ul>';
-            $list_entry['pages'][] = [
-                'title' => rex_i18n::msg('d2u_machinery_machine_steel_extension') .' - '. rex_i18n::msg('d2u_machinery_steel_welding'),
-                'icon' => 'rex-icon fa-magic',
-                'html' => $html_weldings
-            ];
-        }
-    }
     if (Extension::isActive('machine_steel_automation_extension')) {
         $supplies = Supply::getTranslationHelperObjects($target_clang_id, $filter_type);
         if (count($supplies) > 0) {

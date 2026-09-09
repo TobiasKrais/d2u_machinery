@@ -24,7 +24,7 @@ class ExportCronjob extends \TobiasKrais\D2UHelper\ACronJob
     public function install(): void
     {
         $description = 'Exports used machines automatically to FTP based export providers';
-        $php_code = '<?php Provider::autoexport(); ?>';
+        $php_code = '<?php \TobiasKrais\D2UMachinery\Provider::autoexport(); ?>';
         $interval = '{\"minutes\":[0],\"hours\":[21],\"days\":\"all\",\"weekdays\":\"all\",\"months\":\"all\"}';
         self::save($description, $php_code, $interval);
     }

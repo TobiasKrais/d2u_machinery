@@ -92,10 +92,6 @@ Diese Erweiterung fügt den Maschinen hervorhebenswerte Features hinzu. Nach der
 
 Wie Features, fügt diese Erweiterung den Maschinen zusätzliche Optionen hinzu. Im Unterschied zu den Features sind Optionen nicht fest in der Maschine eingebaut, sondern können optional gebucht werden. Nach der Installation kann eine Option erstellt werden. Diese kann dann in einer Maschine im Abschnitt "Optionen" zugeordnet werden. In den Hauptausgabe-Beispielmodulen werden Optionen derzeit noch nicht ausgegeben.
 
-### Stahlverarbeitung (machine_steel_processing_extension)
-
-Diese Erweiterung erweitert die Eingabefelder der Maschinen um Felder für technische Daten, die den Spezialbereichen Automatisierung, Blech- / Stahlverarbeitung, Bohren, Sägen, Stanz- / Ausklink- / Schweißmaschinen, Strahlanlagen zugeordnet sind. Einzelne Auswahlfelder dieser Bereiche können im Reiter "Stahlverarbeitung" definiert werden. In den Hauptausgabe-Beispielmodulen werden diese Felder nicht ausgegeben.
-
 ### Anwendungsgebiete (machine_usage_area_extension)
 
 Diese Erweiterung erweitert die Eingabefelder der Maschinen um Anwendungsgebiete. Der Übersichtlichkeit halber können Anwendungsgebiete auf bestimmte Kategorien beschränkt werden. In den Hauptausgabe-Beispielmodulen werden diese Felder in der Kategorieübersicht als Vergleich mit anderen Maschinen der Kategorie und einzeln in der Maschine im Reiter "Anwendungsgebiete" ausgegeben.

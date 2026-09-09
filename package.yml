@@ -1,5 +1,5 @@
 package: d2u_machinery
-version: '1.7.6'
+version: '2.0.0'
 author: Tobias Krais
 supportpage: http://github.com/tobiaskrais/d2u_machinery
 
@@ -27,7 +27,6 @@ page:
                     title: 'translate:d2u_machinery_agitator_extension'
                     icon: rex-icon fa-spoon
                     perm: 'd2u_machinery[machine]'
-                steel_processing: { title: 'translate:d2u_machinery_machine_steel_extension', icon: rex-icon fa-steam, perm: 'd2u_machinery[machine]' }
                 certificates: { title: 'translate:d2u_machinery_certificates', icon: rex-icon fa-certificate, perm: 'd2u_machinery[machine]' }
         contacts: { title: 'translate:d2u_machinery_contacts', icon: rex-icon fa-users, perm: 'd2u_machinery[machine]' }
         category: { title: 'translate:d2u_helper_categories', icon: rex-icon rex-icon-open-category, perm: 'd2u_machinery[category]' }
@@ -87,7 +86,6 @@ default_config:
     extension_machine_features_extension: 'inactive'
     extension_machine_options_extension: 'inactive'
     extension_machine_steel_automation_extension: 'inactive'
-    extension_machine_steel_processing_extension: 'inactive'
     extension_machine_usage_area_extension: 'inactive'
     extension_production_lines: 'inactive'
     extension_service_options: 'inactive'

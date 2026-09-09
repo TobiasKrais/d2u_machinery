@@ -4,8 +4,6 @@ namespace TobiasKrais\D2UMachinery;
 
 use rex_be_controller;
 use rex_config;
-use rex_plugin;
-use rex_plugin_manager;
 
 /**
  * Central management for former plugin-based addon extensions.
@@ -21,105 +19,84 @@ final class Extension
     private const DEFINITIONS = [
         'contacts' => [
             'config' => 'extension_contacts',
-            'legacy_plugin' => 'contacts',
             'title' => 'd2u_machinery_contacts',
             'pages' => ['d2u_machinery/contacts'],
             'dependencies' => [],
         ],
         'equipment' => [
             'config' => 'extension_equipment',
-            'legacy_plugin' => 'equipment',
             'title' => 'd2u_machinery_equipments',
             'pages' => ['d2u_machinery/machine/equipment'],
             'dependencies' => [],
         ],
         'industry_sectors' => [
             'config' => 'extension_industry_sectors',
-            'legacy_plugin' => 'industry_sectors',
             'title' => 'd2u_machinery_industry_sectors',
             'pages' => ['d2u_machinery/industry_sectors'],
             'dependencies' => [],
         ],
         'machine_agitator_extension' => [
             'config' => 'extension_machine_agitator_extension',
-            'legacy_plugin' => 'machine_agitator_extension',
             'title' => 'd2u_machinery_agitators',
             'pages' => ['d2u_machinery/machine/agitators'],
             'dependencies' => [],
         ],
         'machine_certificates_extension' => [
             'config' => 'extension_machine_certificates_extension',
-            'legacy_plugin' => 'machine_certificates_extension',
             'title' => 'd2u_machinery_certificates',
             'pages' => ['d2u_machinery/machine/certificates'],
             'dependencies' => [],
         ],
         'machine_construction_equipment_extension' => [
             'config' => 'extension_machine_construction_equipment_extension',
-            'legacy_plugin' => 'machine_construction_equipment_extension',
             'title' => 'd2u_machinery_construction_equipment',
             'pages' => [],
             'dependencies' => [],
         ],
         'machine_features_extension' => [
             'config' => 'extension_machine_features_extension',
-            'legacy_plugin' => 'machine_features_extension',
             'title' => 'd2u_machinery_features',
             'pages' => ['d2u_machinery/machine/features'],
             'dependencies' => [],
         ],
         'machine_options_extension' => [
             'config' => 'extension_machine_options_extension',
-            'legacy_plugin' => 'machine_options_extension',
             'title' => 'd2u_machinery_options',
             'pages' => ['d2u_machinery/machine/options'],
             'dependencies' => [],
         ],
         'machine_steel_automation_extension' => [
             'config' => 'extension_machine_steel_automation_extension',
-            'legacy_plugin' => null,
             'title' => 'd2u_machinery_supply_extension',
             'pages' => ['d2u_machinery/machine/supply'],
-            'dependencies' => ['machine_steel_processing_extension'],
-        ],
-        'machine_steel_processing_extension' => [
-            'config' => 'extension_machine_steel_processing_extension',
-            'legacy_plugin' => 'machine_steel_processing_extension',
-            'title' => 'd2u_machinery_machine_steel_extension',
-            'pages' => ['d2u_machinery/machine/steel_processing'],
             'dependencies' => [],
         ],
         'machine_usage_area_extension' => [
             'config' => 'extension_machine_usage_area_extension',
-            'legacy_plugin' => 'machine_usage_area_extension',
             'title' => 'd2u_machinery_usage_areas',
             'pages' => ['d2u_machinery/machine/usage_areas'],
             'dependencies' => [],
         ],
         'production_lines' => [
             'config' => 'extension_production_lines',
-            'legacy_plugin' => 'production_lines',
             'title' => 'd2u_machinery_production_lines',
             'pages' => ['d2u_machinery/production_lines'],
             'dependencies' => ['industry_sectors'],
         ],
         'service_options' => [
             'config' => 'extension_service_options',
-            'legacy_plugin' => 'service_options',
             'title' => 'd2u_machinery_service_options',
             'pages' => ['d2u_machinery/machine/service_options'],
             'dependencies' => [],
         ],
         'used_machines' => [
             'config' => 'extension_used_machines',
-            'legacy_plugin' => 'used_machines',
             'title' => 'd2u_machinery_used_machines',
             'pages' => ['d2u_machinery/used_machines', 'd2u_machinery/used_machines/used_machines'],
             'dependencies' => [],
         ],
         'export' => [
             'config' => 'extension_export',
-            'legacy_plugin' => 'export',
             'title' => 'd2u_machinery_export',
             'pages' => ['d2u_machinery/used_machines/export', 'd2u_machinery/used_machines/provider'],
             'dependencies' => ['used_machines'],
@@ -149,16 +126,6 @@ final class Extension
         return \rex_i18n::msg(self::getTitleKey($key));
     }
 
-    public static function getLegacyPluginName(string $key): ?string
-    {
-        $legacyPlugin = self::requireDefinition($key)['legacy_plugin'] ?? null;
-        if (!is_string($legacyPlugin) || '' === $legacyPlugin) {
-            return null;
-        }
-
-        return $legacyPlugin;
-    }
-
     public static function isActive(string $key): bool
     {
         $configKey = self::getConfigKey($key);
@@ -166,7 +133,7 @@ final class Extension
             return self::STATE_ACTIVE === (string) rex_config::get('d2u_machinery', $configKey);
         }
 
-        return self::isLegacyPluginInstalled($key);
+        return false;
     }
 
     /**
@@ -213,22 +180,14 @@ final class Extension
         foreach (array_keys(self::DEFINITIONS) as $key) {
             $configKey = self::getConfigKey($key);
             if (!rex_config::has('d2u_machinery', $configKey)) {
-                rex_config::set('d2u_machinery', $configKey, self::isLegacyPluginInstalled($key) ? self::STATE_ACTIVE : self::STATE_INACTIVE);
+                rex_config::set('d2u_machinery', $configKey, self::STATE_INACTIVE);
             }
         }
     }
 
     public static function migrateLegacyStates(?string $fromVersion = null): void
     {
-        $hadExtensionConfig = self::hasAnyExtensionConfig();
         self::ensureConfigInitialized();
-
-        if (
-            ((null !== $fromVersion && \rex_version::compare($fromVersion, '1.6.0', '<')) || !$hadExtensionConfig)
-            && self::isActive('machine_steel_processing_extension')
-        ) {
-            rex_config::set('d2u_machinery', self::getConfigKey('machine_steel_automation_extension'), self::STATE_ACTIVE);
-        }
     }
 
     public static function runLegacyVersionMigrations(string $fromVersion): void
@@ -259,12 +218,7 @@ final class Extension
                 continue;
             }
 
-            $legacyPlugin = self::getLegacyPluginName($key);
-            if (null !== $legacyPlugin && rex_plugin::exists('d2u_machinery', $legacyPlugin)) {
-                self::installLegacyPlugin($key);
-            } else {
-                self::runLegacyScript($key, 'install.php');
-            }
+            self::runLegacyScript($key, 'install.php');
             $activated[] = $key;
         }
 
@@ -273,17 +227,7 @@ final class Extension
                 continue;
             }
 
-            $legacyPlugin = self::getLegacyPluginName($key);
-            if (null !== $legacyPlugin && rex_plugin::exists('d2u_machinery', $legacyPlugin)) {
-                $plugin = rex_plugin::get('d2u_machinery', $legacyPlugin);
-                if ($plugin instanceof rex_plugin && $plugin->isInstalled()) {
-                    self::uninstallLegacyPlugin($key);
-                } else {
-                    self::runLegacyScript($key, 'uninstall.php');
-                }
-            } else {
-                self::runLegacyScript($key, 'uninstall.php');
-            }
+            self::runLegacyScript($key, 'uninstall.php');
             $deactivated[] = $key;
         }
 
@@ -307,50 +251,6 @@ final class Extension
             'deactivated' => $deactivated,
             'normalized' => $normalizedStates,
         ];
-    }
-
-    public static function installLegacyPlugin(string $key): void
-    {
-        $legacyPlugin = self::getLegacyPluginName($key);
-        if (null === $legacyPlugin || !rex_plugin::exists('d2u_machinery', $legacyPlugin)) {
-            return;
-        }
-
-        $plugin = rex_plugin::get('d2u_machinery', $legacyPlugin);
-        if (!$plugin instanceof rex_plugin) {
-            return;
-        }
-
-        $manager = rex_plugin_manager::factory($plugin);
-        if (!$plugin->isInstalled()) {
-            if (!$manager->install()) {
-                throw new \RuntimeException($manager->getMessage());
-            }
-
-            return;
-        }
-
-        if (!$plugin->isAvailable() && !$manager->activate()) {
-            throw new \RuntimeException($manager->getMessage());
-        }
-    }
-
-    public static function uninstallLegacyPlugin(string $key): void
-    {
-        $legacyPlugin = self::getLegacyPluginName($key);
-        if (null === $legacyPlugin || !rex_plugin::exists('d2u_machinery', $legacyPlugin)) {
-            return;
-        }
-
-        $plugin = rex_plugin::get('d2u_machinery', $legacyPlugin);
-        if (!$plugin instanceof rex_plugin || !$plugin->isInstalled()) {
-            return;
-        }
-
-        $manager = rex_plugin_manager::factory($plugin);
-        if (!$manager->uninstall()) {
-            throw new \RuntimeException($manager->getMessage());
-        }
     }
 
     public static function hideInactiveBackendPages(): void
@@ -386,7 +286,6 @@ final class Extension
         self::unsetSubpage($subpages, ['machine', 'subpages', 'features'], self::isActive('machine_features_extension'));
         self::unsetSubpage($subpages, ['machine', 'subpages', 'options'], self::isActive('machine_options_extension'));
         self::unsetSubpage($subpages, ['machine', 'subpages', 'supply'], self::isActive('machine_steel_automation_extension'));
-        self::unsetSubpage($subpages, ['machine', 'subpages', 'steel_processing'], self::isActive('machine_steel_processing_extension'));
         self::unsetSubpage($subpages, ['machine', 'subpages', 'service_options'], self::isActive('service_options'));
         self::unsetSubpage($subpages, ['machine', 'subpages', 'usage_areas'], self::isActive('machine_usage_area_extension'));
 
@@ -480,17 +379,6 @@ final class Extension
         return self::requireDefinition($key)['dependencies'];
     }
 
-    private static function hasAnyExtensionConfig(): bool
-    {
-        foreach (array_keys(self::DEFINITIONS) as $key) {
-            if (rex_config::has('d2u_machinery', self::getConfigKey($key))) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     /**
      * @param array<string,bool> $cascade
      */
@@ -523,17 +411,6 @@ final class Extension
         }
 
         $cascade[$key] = true;
-    }
-
-    private static function isLegacyPluginInstalled(string $key): bool
-    {
-        $legacyPlugin = self::getLegacyPluginName($key);
-        if (null === $legacyPlugin) {
-            return false;
-        }
-        $plugin = rex_plugin::get('d2u_machinery', $legacyPlugin);
-
-        return $plugin instanceof rex_plugin && $plugin->isAvailable();
     }
 
     private static function convertUnixTimestampColumn(string $table, string $column): void

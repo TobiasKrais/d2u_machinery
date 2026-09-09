@@ -14,9 +14,6 @@ class Agitator extends \TobiasKrais\D2UMachinery\Agitator {}
 /** @deprecated Since 1.6.0, to be removed in 2.0.0. Use \TobiasKrais\D2UMachinery\AgitatorType instead. */
 class AgitatorType extends \TobiasKrais\D2UMachinery\AgitatorType {}
 
-/** @deprecated Since 1.6.0, to be removed in 2.0.0. Use \TobiasKrais\D2UMachinery\Automation instead. */
-class Automation extends \TobiasKrais\D2UMachinery\Automation {}
-
 /** @deprecated Since 1.6.0, to be removed in 2.0.0. Use \TobiasKrais\D2UMachinery\Category instead. */
 class Category extends \TobiasKrais\D2UMachinery\Category {}
 
@@ -59,26 +56,14 @@ class MachineryPark extends \TobiasKrais\D2UMachinery\MachineryPark {}
 /** @deprecated Since 1.6.0, to be removed in 2.0.0. Use \TobiasKrais\D2UMachinery\Mascus instead. */
 class Mascus extends \TobiasKrais\D2UMachinery\Mascus {}
 
-/** @deprecated Since 1.6.0, to be removed in 2.0.0. Use \TobiasKrais\D2UMachinery\Material instead. */
-class Material extends \TobiasKrais\D2UMachinery\Material {}
-
 /** @deprecated Since 1.6.0, to be removed in 2.0.0. Use \TobiasKrais\D2UMachinery\Module instead. */
 class Module extends \TobiasKrais\D2UMachinery\Module {}
 
 /** @deprecated Since 1.6.0, to be removed in 2.0.0. Use \TobiasKrais\D2UMachinery\Option instead. */
 class Option extends \TobiasKrais\D2UMachinery\Option {}
 
-/** @deprecated Since 1.6.0, to be removed in 2.0.0. Use \TobiasKrais\D2UMachinery\Procedure instead. */
-class Procedure extends \TobiasKrais\D2UMachinery\Procedure {}
-
-/** @deprecated Since 1.6.0, to be removed in 2.0.0. Use \TobiasKrais\D2UMachinery\Process instead. */
-class Process extends \TobiasKrais\D2UMachinery\Process {}
-
 /** @deprecated Since 1.6.0, to be removed in 2.0.0. Use \TobiasKrais\D2UMachinery\ProductionLine instead. */
 class ProductionLine extends \TobiasKrais\D2UMachinery\ProductionLine {}
-
-/** @deprecated Since 1.6.0, to be removed in 2.0.0. Use \TobiasKrais\D2UMachinery\Profile instead. */
-class Profile extends \TobiasKrais\D2UMachinery\Profile {}
 
 /** @deprecated Since 1.6.0, to be removed in 2.0.0. Use \TobiasKrais\D2UMachinery\Provider instead. */
 class Provider extends \TobiasKrais\D2UMachinery\Provider {}
@@ -92,9 +77,6 @@ class SocialExportLinkedIn extends \TobiasKrais\D2UMachinery\SocialExportLinkedI
 /** @deprecated Since 1.6.0, to be removed in 2.0.0. Use \TobiasKrais\D2UMachinery\Supply instead. */
 class Supply extends \TobiasKrais\D2UMachinery\Supply {}
 
-/** @deprecated Since 1.6.0, to be removed in 2.0.0. Use \TobiasKrais\D2UMachinery\Tool instead. */
-class Tool extends \TobiasKrais\D2UMachinery\Tool {}
-
 /** @deprecated Since 1.6.0, to be removed in 2.0.0. Use \TobiasKrais\D2UMachinery\USP instead. */
 class USP extends \TobiasKrais\D2UMachinery\USP {}
 
@@ -103,9 +85,6 @@ class UsageArea extends \TobiasKrais\D2UMachinery\UsageArea {}
 
 /** @deprecated Since 1.6.0, to be removed in 2.0.0. Use \TobiasKrais\D2UMachinery\UsedMachine instead. */
 class UsedMachine extends \TobiasKrais\D2UMachinery\UsedMachine {}
-
-/** @deprecated Since 1.6.0, to be removed in 2.0.0. Use \TobiasKrais\D2UMachinery\Welding instead. */
-class Welding extends \TobiasKrais\D2UMachinery\Welding {}
 }
 
 namespace D2U_Machinery {

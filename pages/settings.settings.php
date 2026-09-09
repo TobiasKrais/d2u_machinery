@@ -201,7 +201,6 @@ if (\TobiasKrais\D2UMachinery\Extension::isActive('used_machines') && ((int) rex
                             'equipment',
                             'machine_usage_area_extension',
                             'machine_agitator_extension',
-                            'machine_steel_processing_extension',
                             'machine_certificates_extension',
                             'machine_construction_equipment_extension',
                         ];

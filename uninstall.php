@@ -2,7 +2,6 @@
 
 $d2uMachineryAction = $d2uMachineryAction ?? null;
 $d2uMachineryRequestedAction = $d2uMachineryRequestedAction ?? $d2uMachineryAction;
-$d2uMachineryTriggeredByLegacyPlugin = $d2uMachineryTriggeredByLegacyPlugin ?? false;
 $d2uMachineryCascadeDependencies = $d2uMachineryCascadeDependencies ?? false;
 $d2uMachineryDeactivatedActions = null;
 
@@ -364,15 +363,5 @@ if (null !== $d2uMachineryRequestedAction) {
             \TobiasKrais\D2UMachinery\Extension::getConfigKey($extensionKey),
             \TobiasKrais\D2UMachinery\Extension::STATE_INACTIVE
         );
-    }
-
-    if ($d2uMachineryTriggeredByLegacyPlugin) {
-        foreach ($deactivatedExtensions as $extensionKey) {
-            if ($extensionKey === $d2uMachineryRequestedAction) {
-                continue;
-            }
-
-            \TobiasKrais\D2UMachinery\Extension::uninstallLegacyPlugin($extensionKey);
-        }
     }
 }
