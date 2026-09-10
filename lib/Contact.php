@@ -96,9 +96,9 @@ class Contact
     public static function getByMail($email)
     {
         $query = 'SELECT contact_id FROM '. rex::getTablePrefix() .'d2u_machinery_contacts '
-                ."WHERE email = '". $email ."'";
+                .'WHERE email = :email';
         $result = rex_sql::factory();
-        $result->setQuery($query);
+        $result->setQuery($query, [':email' => $email]);
         $num_rows = $result->getRows();
 
         if ($num_rows > 0) {

@@ -1397,10 +1397,10 @@ function rex_d2u_machinery_url_shortener(rex_extension_point $ep)
 
         // First: delete forwarder, if exists - there should be no forwarder to an existing URL
         if ('false' === rex_config::get('d2u_machinery', 'short_urls_forward', 'false')) {
-            $query = 'DELETE FROM '. \rex::getTablePrefix() .'yrewrite_forward '
-                ."WHERE `url` = '". trim(str_replace($domain->getName(), '/', $url->__toString()), '/') ."'";
+            $forwardUrl = trim(str_replace($domain->getName(), '/', $url->__toString()), '/');
+            $query = 'DELETE FROM '. \rex::getTablePrefix() .'yrewrite_forward WHERE `url` = :url';
             $result = \rex_sql::factory();
-            $result->setQuery($query);
+            $result->setQuery($query, [':url' => $forwardUrl]);
 
             // Don't forget to regenerate YRewrite path file this way
             // rex_yrewrite_forward::init();
@@ -1431,18 +1431,25 @@ function rex_d2u_machinery_url_shortener(rex_extension_point $ep)
 
             // Add forwarders
             if ('true' === rex_config::get('d2u_machinery', 'short_urls_forward', 'false')) {
+                $externUrl = str_replace('///', '', $domain->getUrl() . str_replace($domain->getName(), '', urldecode($new_url->__toString()))); /** @phpstan-ignore-line */
+                $forwardUrl = trim(str_replace($domain->getName(), '/', urldecode($url->__toString())), '/');
                 $query = 'SELECT id FROM '. \rex::getTablePrefix() .'yrewrite_forward '
-                    ."WHERE extern = '". str_replace('///', '', $domain->getUrl() . str_replace($domain->getName(), '', urldecode($new_url->__toString()))) ."' " /** @phpstan-ignore-line */
-                    . "OR url = '". trim(str_replace($domain->getName(), '/', urldecode($url->__toString())), '/') ."'";
+                    .'WHERE extern = :extern OR url = :url';
                 $result = \rex_sql::factory();
-                $result->setQuery($query);
+                $result->setQuery($query, [':extern' => $externUrl, ':url' => $forwardUrl]);
 
                 // Add only if not already existing
                 if (0 === $result->getRows() && $domain->getId() > 0) {
                     $query_forward = 'INSERT INTO `'. \rex::getTablePrefix() .'yrewrite_forward` (`domain_id`, `status`, `url`, `type`, `article_id`, `clang`, `extern`, `movetype`, `expiry_date`) '
-                        .'VALUES ('. $domain->getId() .", 1, '". trim(str_replace($domain->getName(), '/', urldecode($url->__toString())), '/') ."', 'extern', ". $article_id .', '. $clang_id .", '". str_replace('///', '', $domain->getUrl() . str_replace($domain->getName(), '', urldecode($new_url->__toString()))) ."', '301', '0000-00-00');"; /** @phpstan-ignore-line */
+                        .'VALUES (:domain_id, 1, :url, \'extern\', :article_id, :clang, :extern, \'301\', \'0000-00-00\')';
                     $result_forward = \rex_sql::factory();
-                    $result_forward->setQuery($query_forward);
+                    $result_forward->setQuery($query_forward, [
+                        ':domain_id' => $domain->getId(),
+                        ':url' => $forwardUrl,
+                        ':article_id' => $article_id,
+                        ':clang' => $clang_id,
+                        ':extern' => $externUrl,
+                    ]);
 
                     // Don't forget to regenerate YRewrite path file this way
                     // rex_yrewrite_forward::init();

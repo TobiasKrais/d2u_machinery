@@ -43,7 +43,7 @@ if (!function_exists('d2u_machinery_delete_url_profile_by_namespace')) {
             $profile->deleteUrls();
         }
 
-        \rex_sql::factory()->setQuery('DELETE FROM '. \rex::getTablePrefix() ."url_generator_profile WHERE `namespace` = '". $namespace ."';");
+        \rex_sql::factory()->setQuery('DELETE FROM '. \rex::getTablePrefix() .'url_generator_profile WHERE `namespace` = :namespace', [':namespace' => $namespace]);
     }
 }
 

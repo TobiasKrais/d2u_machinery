@@ -76,9 +76,10 @@ class EquipmentGroup implements \TobiasKrais\D2UHelper\ITranslationHelper, \Tobi
     {
         $query_lang = 'DELETE FROM '. \rex::getTablePrefix() .'d2u_machinery_equipment_groups_lang '
             .'WHERE group_id = '. $this->group_id
-            . ($delete_all ? '' : ' AND clang_id = '. $this->clang_id);
+            . ($delete_all ? '' : ' AND clang_id = :clang_id');
+        $params_lang = $delete_all ? [] : [':clang_id' => $this->clang_id];
         $result_lang = \rex_sql::factory();
-        $result_lang->setQuery($query_lang);
+        $result_lang->setQuery($query_lang, $params_lang);
 
         // If no more lang objects are available, delete
         $query_main = 'SELECT * FROM '. \rex::getTablePrefix() .'d2u_machinery_equipment_groups_lang '
@@ -154,13 +155,13 @@ class EquipmentGroup implements \TobiasKrais\D2UHelper\ITranslationHelper, \Tobi
                     .'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_equipment_groups_lang AS target_lang '
                         .'ON main.group_id = target_lang.group_id AND target_lang.clang_id = '. $clang_id .' '
                     .'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_equipment_groups_lang AS default_lang '
-                        .'ON main.group_id = default_lang.group_id AND default_lang.clang_id = '. \rex_config::get('d2u_helper', 'default_lang') .' '
+                        .'ON main.group_id = default_lang.group_id AND default_lang.clang_id = :default_lang '
                     .'WHERE target_lang.group_id IS NULL '
                     .'ORDER BY default_lang.name';
             $clang_id = (int) \rex_config::get('d2u_helper', 'default_lang');
         }
         $result = \rex_sql::factory();
-        $result->setQuery($query);
+        $result->setQuery($query, 'missing' === $type ? [':default_lang' => \rex_config::get('d2u_helper', 'default_lang')] : []);
 
         $objects = [];
         for ($i = 0; $i < $result->getRows(); ++$i) {

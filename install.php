@@ -44,7 +44,7 @@ if (!function_exists('d2u_machinery_delete_url_profile_by_namespace')) {
             $profile->deleteUrls();
         }
 
-        \rex_sql::factory()->setQuery('DELETE FROM '. \rex::getTablePrefix() ."url_generator_profile WHERE `namespace` = '". $namespace ."';");
+        \rex_sql::factory()->setQuery('DELETE FROM '. \rex::getTablePrefix() .'url_generator_profile WHERE `namespace` = :namespace', [':namespace' => $namespace]);
     }
 }
 
@@ -185,7 +185,7 @@ if (null === $d2uMachineryAction) {
     // Insert url schemes
     if (\rex_addon::get('url')->isAvailable()) {
         $clang_id = 1 === count(rex_clang::getAllIds()) ? rex_clang::getStartId() : 0;
-        $article_id = rex_config::get('d2u_machinery', 'article_id', rex_article::getSiteStartArticleId());
+        $article_id = (int) rex_config::get('d2u_machinery', 'article_id', rex_article::getSiteStartArticleId());
 
         // Insert url schemes Version 2.x
         d2u_machinery_delete_url_profile_by_namespace('machine_id');
@@ -445,7 +445,7 @@ if (d2u_machinery_should_install($d2uMachineryAction, 'industry_sectors')) {
 
     if (\rex_addon::get('url')->isAvailable()) {
         $clang_id = 1 === count(rex_clang::getAllIds()) ? rex_clang::getStartId() : 0;
-        $article_id = rex_config::get('d2u_machinery', 'industry_sectors_article_id', rex_article::getSiteStartArticleId());
+        $article_id = (int) rex_config::get('d2u_machinery', 'industry_sectors_article_id', rex_article::getSiteStartArticleId());
         d2u_machinery_delete_url_profile_by_namespace('industry_sector_id');
         $sql->setQuery('INSERT INTO '. \rex::getTablePrefix() ."url_generator_profile (`namespace`, `article_id`, `clang_id`, `table_name`, `table_parameters`, `relation_1_table_name`, `relation_1_table_parameters`, `relation_2_table_name`, `relation_2_table_parameters`, `relation_3_table_name`, `relation_3_table_parameters`, `createdate`, `createuser`, `updatedate`, `updateuser`) VALUES
     		('industry_sector_id', "
@@ -743,7 +743,7 @@ if (d2u_machinery_should_install($d2uMachineryAction, 'production_lines')) {
 
     if (\rex_addon::get('url')->isAvailable()) {
         $clang_id = 1 === count(rex_clang::getAllIds()) ? rex_clang::getStartId() : 0;
-        $article_id = rex_config::get('d2u_machinery', 'production_lines_article_id', 0) > 0 ? rex_config::get('d2u_machinery', 'production_lines_article_id') : rex_article::getSiteStartArticleId();
+        $article_id = (int) (rex_config::get('d2u_machinery', 'production_lines_article_id', 0) > 0 ? rex_config::get('d2u_machinery', 'production_lines_article_id') : rex_article::getSiteStartArticleId());
         d2u_machinery_delete_url_profile_by_namespace('production_line_id');
         $sql->setQuery('INSERT INTO '. \rex::getTablePrefix() ."url_generator_profile (`namespace`, `article_id`, `clang_id`, `table_name`, `table_parameters`, `relation_1_table_name`, `relation_1_table_parameters`, `relation_2_table_name`, `relation_2_table_parameters`, `relation_3_table_name`, `relation_3_table_parameters`, `createdate`, `createuser`, `updatedate`, `updateuser`) VALUES
     		('production_line_id', "
@@ -946,8 +946,8 @@ if (d2u_machinery_should_install($d2uMachineryAction, 'used_machines')) {
 
     if (\rex_addon::get('url')->isAvailable()) {
         $clang_id = 1 === count(rex_clang::getAllIds()) ? rex_clang::getStartId() : 0;
-        $article_id_rent = rex_config::get('d2u_machinery', 'used_machine_article_id_rent', rex_article::getSiteStartArticleId());
-        $article_id_sale = rex_config::get('d2u_machinery', 'used_machine_article_id_sale', rex_article::getSiteStartArticleId());
+        $article_id_rent = (int) rex_config::get('d2u_machinery', 'used_machine_article_id_rent', rex_article::getSiteStartArticleId());
+        $article_id_sale = (int) rex_config::get('d2u_machinery', 'used_machine_article_id_sale', rex_article::getSiteStartArticleId());
         d2u_machinery_delete_url_profile_by_namespace('used_rent_machine_id');
         $sql->setQuery('INSERT INTO '. \rex::getTablePrefix() ."url_generator_profile (`namespace`, `article_id`, `clang_id`, `table_name`, `table_parameters`, `relation_1_table_name`, `relation_1_table_parameters`, `relation_2_table_name`, `relation_2_table_parameters`, `relation_3_table_name`, `relation_3_table_parameters`, `createdate`, `createuser`, `updatedate`, `updateuser`) VALUES
     		('used_rent_machine_id', "
