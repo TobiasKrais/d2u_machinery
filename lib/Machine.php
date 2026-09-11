@@ -320,16 +320,18 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
             $reference_ids = preg_grep('/^\s*$/s', explode(',', (string) $result->getValue('reference_ids')), PREG_GREP_INVERT);
             $this->reference_ids = is_array($reference_ids) ? array_map('intval', array_filter($reference_ids, 'is_numeric')) : [];
             $this->online_status = (string) $result->getValue('online_status');
-            $this->engine_power = (string) $result->getValue('engine_power');
-            $this->engine_power_frequency_controlled = 'true' === (string) $result->getValue('engine_power_frequency_controlled') ? true : false;
-            $this->length = (int) $result->getValue('length');
-            $this->width = (int) $result->getValue('width');
-            $this->height = (int) $result->getValue('height');
-            $this->depth = (int) $result->getValue('depth');
-            $this->weight = (string) $result->getValue('weight');
-            $this->operating_voltage_v = (string) $result->getValue('operating_voltage_v');
-            $this->operating_voltage_hz = (string) $result->getValue('operating_voltage_hz');
-            $this->operating_voltage_a = (string) $result->getValue('operating_voltage_a');
+            if (Extension::isActive('basic_tech_data')) {
+                $this->engine_power = (string) $result->getValue('engine_power');
+                $this->engine_power_frequency_controlled = 'true' === (string) $result->getValue('engine_power_frequency_controlled') ? true : false;
+                $this->length = (int) $result->getValue('length');
+                $this->width = (int) $result->getValue('width');
+                $this->height = (int) $result->getValue('height');
+                $this->depth = (int) $result->getValue('depth');
+                $this->weight = (string) $result->getValue('weight');
+                $this->operating_voltage_v = (string) $result->getValue('operating_voltage_v');
+                $this->operating_voltage_hz = (string) $result->getValue('operating_voltage_hz');
+                $this->operating_voltage_a = (string) $result->getValue('operating_voltage_a');
+            }
             $this->lang_name = stripslashes((string) $result->getValue('lang_name'));
             $this->teaser = stripslashes(htmlspecialchars_decode((string) $result->getValue('teaser')));
             $this->description = stripslashes(htmlspecialchars_decode((string) $result->getValue('description')));
@@ -1238,17 +1240,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
                     .'article_id_service = :article_id_service, '
                     .'article_ids_references = :article_ids_references, '
                     .'reference_ids = :reference_ids, '
-                    .'online_status = :online_status, '
-                    .'engine_power = :engine_power, '
-                    .'engine_power_frequency_controlled = :engine_power_frequency_controlled, '
-                    .'length = :length, '
-                    .'width = :width, '
-                    .'height = :height, '
-                    .'depth = :depth, '
-                    .'weight = :weight, '
-                    .'operating_voltage_v = :operating_voltage_v, '
-                    .'operating_voltage_hz = :operating_voltage_hz, '
-                    .'operating_voltage_a = :operating_voltage_a ';
+                    .'online_status = :online_status ';
             $main_params[':pics'] = implode(',', $this->pics);
             $main_params[':alternative_machine_ids'] = '|'. implode('|', $this->alternative_machine_ids) .'|';
             $main_params[':additional_machine_ids'] = '|'. implode('|', $this->additional_machine_ids) .'|';
@@ -1258,16 +1250,28 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
             $main_params[':article_ids_references'] = implode(',', $this->article_ids_references);
             $main_params[':reference_ids'] = implode(',', $this->reference_ids);
             $main_params[':online_status'] = $this->online_status;
-            $main_params[':engine_power'] = $this->engine_power;
-            $main_params[':engine_power_frequency_controlled'] = $this->engine_power_frequency_controlled ? 'true' : 'false';
-            $main_params[':length'] = $this->length;
-            $main_params[':width'] = $this->width;
-            $main_params[':height'] = $this->height;
-            $main_params[':depth'] = $this->depth;
-            $main_params[':weight'] = $this->weight;
-            $main_params[':operating_voltage_v'] = $this->operating_voltage_v;
-            $main_params[':operating_voltage_hz'] = $this->operating_voltage_hz;
-            $main_params[':operating_voltage_a'] = $this->operating_voltage_a;
+            if (Extension::isActive('basic_tech_data')) {
+                $query .= ', engine_power = :engine_power, '
+                    .'engine_power_frequency_controlled = :engine_power_frequency_controlled, '
+                    .'length = :length, '
+                    .'width = :width, '
+                    .'height = :height, '
+                    .'depth = :depth, '
+                    .'weight = :weight, '
+                    .'operating_voltage_v = :operating_voltage_v, '
+                    .'operating_voltage_hz = :operating_voltage_hz, '
+                    .'operating_voltage_a = :operating_voltage_a ';
+                $main_params[':engine_power'] = $this->engine_power;
+                $main_params[':engine_power_frequency_controlled'] = $this->engine_power_frequency_controlled ? 'true' : 'false';
+                $main_params[':length'] = $this->length;
+                $main_params[':width'] = $this->width;
+                $main_params[':height'] = $this->height;
+                $main_params[':depth'] = $this->depth;
+                $main_params[':weight'] = $this->weight;
+                $main_params[':operating_voltage_v'] = $this->operating_voltage_v;
+                $main_params[':operating_voltage_hz'] = $this->operating_voltage_hz;
+                $main_params[':operating_voltage_a'] = $this->operating_voltage_a;
+            }
             if (Extension::isActive('contacts')) {
                 $query .= ', contact_id = '. ($this->contact instanceof Contact ? (int) $this->contact->contact_id : 0) .' ';
             }

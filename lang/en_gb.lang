@@ -6,6 +6,8 @@ d2u_machinery_extensions_notice = Extensions can be activated and deactivated di
 d2u_machinery_extensions_machine_fields = The following extensions add fields to machines:
 d2u_machinery_extensions_additional_features = The following extensions add functionality besides machines:
 d2u_machinery_extensions_deactivate_warning = Note: Deactivating an extension removes its related database structures.
+d2u_machinery_basic_tech_data = Basic technical data
+d2u_machinery_help_chapter_api = REST API
 d2u_machinery_meta_machines = Machines
 d2u_machinery_meta_title = D2U Machinery
 

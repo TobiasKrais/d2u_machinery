@@ -18,6 +18,11 @@ use TobiasKrais\D2UMachinery\Supply;
 use TobiasKrais\D2UMachinery\UsageArea;
 use TobiasKrais\D2UMachinery\UsedMachine;
 
+// Register the REST API with the "api" addon (frontend + backend requests).
+if (\rex_addon::get('api')->isAvailable()) {
+    \FriendsOfRedaxo\Api\RouteCollection::registerRoutePackage(new \TobiasKrais\D2UMachinery\Api\MachineryApi());
+}
+
 if (\rex::isBackend() && is_object(\rex::getUser())) {
     Extension::ensureConfigInitialized();
 

@@ -80,16 +80,18 @@ if (!$invalidCsrf && (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === 
 			if (rex_addon::get('d2u_references')->isAvailable()) {
 				$machine->reference_ids = $form['reference_ids'] ?? [];
 			}
-			$machine->engine_power = $form['engine_power'];
-			$machine->engine_power_frequency_controlled = array_key_exists('engine_power_frequency_controlled', $form);
-			$machine->length = $form['length'];
-			$machine->width = $form['width'];
-			$machine->height = $form['height'];
-			$machine->depth = $form['depth'];
-			$machine->weight = $form['weight'];
-			$machine->operating_voltage_v = $form['operating_voltage_v'];
-			$machine->operating_voltage_hz = $form['operating_voltage_hz'];
-			$machine->operating_voltage_a = $form['operating_voltage_a'];
+			if (Extension::isActive('basic_tech_data')) {
+				$machine->engine_power = $form['engine_power'];
+				$machine->engine_power_frequency_controlled = array_key_exists('engine_power_frequency_controlled', $form);
+				$machine->length = $form['length'];
+				$machine->width = $form['width'];
+				$machine->height = $form['height'];
+				$machine->depth = $form['depth'];
+				$machine->weight = $form['weight'];
+				$machine->operating_voltage_v = $form['operating_voltage_v'];
+				$machine->operating_voltage_hz = $form['operating_voltage_hz'];
+				$machine->operating_voltage_a = $form['operating_voltage_a'];
+			}
 
 			if (Extension::isActive('contacts')) {
 				$machine->contact = $form['contact_id'] ? new \TobiasKrais\D2UMachinery\Contact($form['contact_id']) : false;
@@ -365,7 +367,14 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 								}
 								BackendHelper::form_select('d2u_machinery_category_videos', 'form[video_ids][]', $options, array_keys($machine->videos), 10, true, $readonly);
 							}
-
+						?>
+					</div>
+				</fieldset>
+				<?php if (Extension::isActive('basic_tech_data')) { ?>
+				<fieldset>
+					<legend><small><i class="rex-icon fa-wrench"></i></small> <?= rex_i18n::msg('d2u_machinery_basic_tech_data') ?></legend>
+					<div class="panel-body-wrapper slide">
+						<?php
 							BackendHelper::form_input('d2u_machinery_machine_engine_power', 'form[engine_power]', $machine->engine_power, false, $readonly, 'text');
 							BackendHelper::form_checkbox('d2u_machinery_machine_engine_power_frequency_controlled', 'form[engine_power_frequency_controlled]', 'true', $machine->engine_power_frequency_controlled, $readonly);
 							BackendHelper::form_input('d2u_machinery_machine_length', 'form[length]', $machine->length, false, $readonly, 'number');
@@ -379,6 +388,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 						?>
 					</div>
 				</fieldset>
+				<?php } ?>
 				<?php
 					if (Extension::isActive('equipment')) {
 						echo '<fieldset>';

@@ -194,6 +194,7 @@ if (\TobiasKrais\D2UMachinery\Extension::isActive('used_machines') && ((int) rex
                     <p><strong><?= rex_i18n::msg('d2u_machinery_extensions_machine_fields') ?></strong></p>
                     <?php
                         $machineFieldExtensions = [
+                            'basic_tech_data',
                             'machine_steel_automation_extension',
                             'machine_features_extension',
                             'machine_options_extension',

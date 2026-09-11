@@ -106,16 +106,6 @@ if (null === $d2uMachineryAction) {
         ->ensureColumn(new \rex_sql_column('article_ids_references', 'VARCHAR(255)', true))
         ->ensureColumn(new \rex_sql_column('reference_ids', 'TEXT', true))
         ->ensureColumn(new \rex_sql_column('online_status', 'VARCHAR(10)', true))
-        ->ensureColumn(new \rex_sql_column('engine_power', 'VARCHAR(50)', true))
-        ->ensureColumn(new \rex_sql_column('engine_power_frequency_controlled', 'VARCHAR(10)', true))
-        ->ensureColumn(new \rex_sql_column('length', 'INT(10)', true))
-        ->ensureColumn(new \rex_sql_column('width', 'INT(10)', true))
-        ->ensureColumn(new \rex_sql_column('height', 'INT(10)', true))
-        ->ensureColumn(new \rex_sql_column('depth', 'INT(10)', true))
-        ->ensureColumn(new \rex_sql_column('weight', 'VARCHAR(50)', true))
-        ->ensureColumn(new \rex_sql_column('operating_voltage_v', 'VARCHAR(10)', true))
-        ->ensureColumn(new \rex_sql_column('operating_voltage_hz', 'VARCHAR(10)', true))
-        ->ensureColumn(new \rex_sql_column('operating_voltage_a', 'VARCHAR(10)', true))
         ->ensureColumn(new \rex_sql_column('video_ids', 'VARCHAR(255)', true))
         ->ensure();
     \rex_sql_table::get(
@@ -298,6 +288,22 @@ if (null !== $d2uMachineryRequestedAction) {
     foreach ($activatedExtensions as $extensionKey) {
         \rex_config::set('d2u_machinery', Extension::getConfigKey($extensionKey), Extension::STATE_ACTIVE);
     }
+}
+
+// Extension: basic_tech_data
+if (d2u_machinery_should_install($d2uMachineryAction, 'basic_tech_data')) {
+    \rex_sql_table::get(\rex::getTable('d2u_machinery_machines'))
+        ->ensureColumn(new \rex_sql_column('engine_power', 'VARCHAR(50)', true))
+        ->ensureColumn(new \rex_sql_column('engine_power_frequency_controlled', 'VARCHAR(10)', true))
+        ->ensureColumn(new \rex_sql_column('length', 'INT(10)', true))
+        ->ensureColumn(new \rex_sql_column('width', 'INT(10)', true))
+        ->ensureColumn(new \rex_sql_column('height', 'INT(10)', true))
+        ->ensureColumn(new \rex_sql_column('depth', 'INT(10)', true))
+        ->ensureColumn(new \rex_sql_column('weight', 'VARCHAR(50)', true))
+        ->ensureColumn(new \rex_sql_column('operating_voltage_v', 'VARCHAR(10)', true))
+        ->ensureColumn(new \rex_sql_column('operating_voltage_hz', 'VARCHAR(10)', true))
+        ->ensureColumn(new \rex_sql_column('operating_voltage_a', 'VARCHAR(10)', true))
+        ->ensure();
 }
 
 // Extension: contacts

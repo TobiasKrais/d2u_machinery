@@ -6,6 +6,8 @@ d2u_machinery_extensions_notice = Erweiterungen können direkt im Haupt-Addon ak
 d2u_machinery_extensions_machine_fields = Folgende Erweiterungen fügen Felder zu den Maschinen hinzu:
 d2u_machinery_extensions_additional_features = Folgende Erweiterungen fügen neben den Maschinen Funktionalität hinzu:
 d2u_machinery_extensions_deactivate_warning = Hinweis: Beim Deaktivieren einer Erweiterung werden die zugehörigen Datenbankstrukturen entfernt.
+d2u_machinery_basic_tech_data = Technische Basisdaten
+d2u_machinery_help_chapter_api = REST API
 d2u_machinery_meta_machines = Maschinen
 d2u_machinery_meta_title = D2U Maschinen
 

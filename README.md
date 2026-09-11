@@ -2,6 +2,10 @@
 
 Mehrsprachig Maschinenverwaltung für Redaxo. Erweiterungen können gerne in Auftrag gegeben werden. Demoseite: <https://test.design-to-use.de/de/addontests/d2u-maschinen/>
 
+## REST API
+
+Das Addon stellt eine REST API bereit, mit der externe Werkzeuge (z. B. ein KI-gestütztes Content-Tool) Daten auslesen und einspielen können. Sie baut auf dem Addon `api` auf und bietet einen Discovery-Endpunkt, der je nach aktiven Erweiterungen meldet, welche Felder befüllbar sind. Details siehe [API.md](API.md) sowie im Backend unter **Hilfe › REST API**.
+
 ## Installation
 
 Nach der Installation in Redaxo sollten folgende Schritte ausgeführt werden:

@@ -6,6 +6,8 @@ d2u_machinery_extensions_notice = Extensies kunnen direct in de hoofd-addon word
 d2u_machinery_extensions_machine_fields = De volgende extensies voegen velden aan machines toe:
 d2u_machinery_extensions_additional_features = De volgende extensies voegen naast machines extra functionaliteit toe:
 d2u_machinery_extensions_deactivate_warning = Let op: het deactiveren van een extensie verwijdert de bijbehorende databasestructuren.
+d2u_machinery_basic_tech_data = Technische basisgegevens
+d2u_machinery_help_chapter_api = REST API
 d2u_machinery_meta_machines = Machines
 d2u_machinery_meta_title = D2U Machinery
 

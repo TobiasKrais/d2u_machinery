@@ -14,9 +14,23 @@ final class Extension
     public const STATE_INACTIVE = 'inactive';
 
     /**
+     * Extensions enabled by default on install and update so their machine fields
+     * (and database columns) are never dropped silently on existing installations.
+     *
+     * @var array<int,string>
+     */
+    private const DEFAULT_ACTIVE_EXTENSIONS = ['basic_tech_data'];
+
+    /**
      * @var array<string,array<string,mixed>>
      */
     private const DEFINITIONS = [
+        'basic_tech_data' => [
+            'config' => 'extension_basic_tech_data',
+            'title' => 'd2u_machinery_basic_tech_data',
+            'pages' => [],
+            'dependencies' => [],
+        ],
         'contacts' => [
             'config' => 'extension_contacts',
             'title' => 'd2u_machinery_contacts',
@@ -180,7 +194,10 @@ final class Extension
         foreach (array_keys(self::DEFINITIONS) as $key) {
             $configKey = self::getConfigKey($key);
             if (!rex_config::has('d2u_machinery', $configKey)) {
-                rex_config::set('d2u_machinery', $configKey, self::STATE_INACTIVE);
+                $defaultState = in_array($key, self::DEFAULT_ACTIVE_EXTENSIONS, true)
+                    ? self::STATE_ACTIVE
+                    : self::STATE_INACTIVE;
+                rex_config::set('d2u_machinery', $configKey, $defaultState);
             }
         }
     }

@@ -81,6 +81,22 @@ if (null === $d2uMachineryAction) {
     $sql->setQuery('DELETE FROM '. \rex::getTablePrefix() ."yform_email_template WHERE name LIKE 'd2u_machinery%'");
 }
 
+// Plugin: basic_tech_data
+if (d2u_machinery_should_uninstall($d2uMachineryAction, 'basic_tech_data')) {
+    rex_sql_table::get(rex::getTable('d2u_machinery_machines'))
+        ->removeColumn('engine_power')
+        ->removeColumn('engine_power_frequency_controlled')
+        ->removeColumn('length')
+        ->removeColumn('width')
+        ->removeColumn('height')
+        ->removeColumn('depth')
+        ->removeColumn('weight')
+        ->removeColumn('operating_voltage_v')
+        ->removeColumn('operating_voltage_hz')
+        ->removeColumn('operating_voltage_a')
+        ->alter();
+}
+
 // Plugin: contacts
 if (d2u_machinery_should_uninstall($d2uMachineryAction, 'contacts')) {
     rex_sql_table::get(rex::getTable('d2u_machinery_machines'))
