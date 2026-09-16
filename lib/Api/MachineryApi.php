@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Route;
 use TobiasKrais\D2UMachinery\Category;
+use TobiasKrais\D2UMachinery\Contact;
 
 use function is_array;
 
@@ -417,6 +418,10 @@ final class MachineryApi extends RoutePackage
             $object->parent_category = (int) $value > 0 ? new Category((int) $value, $clangId) : false;
             return;
         }
+        if ('machines' === $resource && 'contact_id' === $field) {
+            $object->contact = (int) $value > 0 ? new Contact((int) $value) : false;
+            return;
+        }
 
         if ('bool' === $type) {
             $object->{$field} = (bool) $value;
@@ -487,6 +492,9 @@ final class MachineryApi extends RoutePackage
         }
         if ('categories' === $resource && 'parent_category_id' === $field) {
             return $object->parent_category instanceof Category ? (int) $object->parent_category->category_id : 0;
+        }
+        if ('machines' === $resource && 'contact_id' === $field) {
+            return $object->contact instanceof Contact ? (int) $object->contact->contact_id : 0;
         }
 
         $value = $object->{$field} ?? null;

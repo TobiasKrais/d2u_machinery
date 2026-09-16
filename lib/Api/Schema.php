@@ -67,6 +67,7 @@ final class Schema
             'online_status' => ['type' => 'enum:online,offline'],
             'pics' => ['type' => 'media[]'],
             'category_id' => ['type' => 'int', 'relation' => 'categories'],
+            'alternative_machine_ids' => ['type' => 'int[]', 'relation' => 'machines'],
             'lang_name' => ['type' => 'string', 'language' => true, 'required' => true],
             'teaser' => ['type' => 'string', 'language' => true],
             'description' => ['type' => 'html', 'language' => true],
@@ -87,6 +88,8 @@ final class Schema
             'feature_ids' => ['type' => 'int[]', 'extension' => 'machine_features_extension', 'relation' => 'features'],
             'option_ids' => ['type' => 'int[]', 'extension' => 'machine_options_extension', 'relation' => 'options'],
             'certificate_ids' => ['type' => 'int[]', 'extension' => 'machine_certificates_extension', 'relation' => 'certificates'],
+            'contact_id' => ['type' => 'int', 'extension' => 'contacts', 'relation' => 'contacts'],
+            'automation_supply_ids' => ['type' => 'int[]', 'extension' => 'machine_steel_automation_extension'],
         ],
         'categories' => [
             'parent_category_id' => ['type' => 'int', 'relation' => 'categories'],
@@ -99,6 +102,7 @@ final class Schema
             'description' => ['type' => 'html', 'language' => true],
             'usage_area' => ['type' => 'string', 'language' => true],
             'pic_lang' => ['type' => 'media', 'language' => true],
+            'pdfs' => ['type' => 'media[]', 'language' => true],
         ],
         'features' => [
             'pic' => ['type' => 'media'],
