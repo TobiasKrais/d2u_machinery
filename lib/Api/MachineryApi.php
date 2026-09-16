@@ -427,6 +427,12 @@ final class MachineryApi extends RoutePackage
             $object->videos = is_array($value) ? array_fill_keys(array_map('intval', $value), true) : [];
             return;
         }
+        if ('supplies' === $resource && 'video_id' === $field) {
+            // Supply stores a related d2u_videos Video object (or false).
+            $videoClass = '\\TobiasKrais\\D2UVideos\\Video';
+            $object->video = ((int) $value > 0 && class_exists($videoClass)) ? new $videoClass((int) $value, $clangId) : false;
+            return;
+        }
 
         if ('bool' === $type) {
             $object->{$field} = (bool) $value;
@@ -503,6 +509,9 @@ final class MachineryApi extends RoutePackage
         }
         if ('machines' === $resource && 'video_ids' === $field) {
             return array_map('intval', array_keys($object->videos));
+        }
+        if ('supplies' === $resource && 'video_id' === $field) {
+            return is_object($object->video ?? null) ? (int) $object->video->video_id : 0;
         }
 
         $value = $object->{$field} ?? null;

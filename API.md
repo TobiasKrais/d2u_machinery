@@ -75,6 +75,7 @@ Jede Ressource ist an eine Erweiterung gekoppelt und nur verfügbar, wenn diese 
 | `industry_sectors` | `industry_sector_id` | `industry_sectors` |
 | `used_machines` | `used_machine_id` | `used_machines` |
 | `production_lines` | `production_line_id` | `production_lines` |
+| `supplies` | `supply_id` | `machine_steel_automation_extension` |
 
 ## Endpunkte
 

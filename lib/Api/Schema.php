@@ -17,6 +17,7 @@ use TobiasKrais\D2UMachinery\Machine;
 use TobiasKrais\D2UMachinery\Option;
 use TobiasKrais\D2UMachinery\ProductionLine;
 use TobiasKrais\D2UMachinery\ServiceOption;
+use TobiasKrais\D2UMachinery\Supply;
 use TobiasKrais\D2UMachinery\UsedMachine;
 
 /**
@@ -49,6 +50,7 @@ final class Schema
         'service_options' => ['class' => ServiceOption::class, 'id' => 'service_option_id', 'extension' => 'service_options'],
         'industry_sectors' => ['class' => IndustrySector::class, 'id' => 'industry_sector_id', 'extension' => 'industry_sectors'],
         'production_lines' => ['class' => ProductionLine::class, 'id' => 'production_line_id', 'extension' => 'production_lines'],
+        'supplies' => ['class' => Supply::class, 'id' => 'supply_id', 'extension' => 'machine_steel_automation_extension'],
     ];
 
     /**
@@ -92,7 +94,7 @@ final class Schema
             'option_ids' => ['type' => 'int[]', 'extension' => 'machine_options_extension', 'relation' => 'options'],
             'certificate_ids' => ['type' => 'int[]', 'extension' => 'machine_certificates_extension', 'relation' => 'certificates'],
             'contact_id' => ['type' => 'int', 'extension' => 'contacts', 'relation' => 'contacts'],
-            'automation_supply_ids' => ['type' => 'int[]', 'extension' => 'machine_steel_automation_extension'],
+            'automation_supply_ids' => ['type' => 'int[]', 'extension' => 'machine_steel_automation_extension', 'relation' => 'supplies'],
         ],
         'categories' => [
             'parent_category_id' => ['type' => 'int', 'relation' => 'categories'],
@@ -191,6 +193,14 @@ final class Schema
             'teaser' => ['type' => 'string', 'language' => true, 'seo' => 'description'],
             'description_short' => ['type' => 'html', 'language' => true],
             'description_long' => ['type' => 'html', 'language' => true],
+        ],
+        'supplies' => [
+            'priority' => ['type' => 'int'],
+            'pic' => ['type' => 'media'],
+            'online_status' => ['type' => 'enum:online,offline'],
+            'video_id' => ['type' => 'int', 'relation' => 'videos'],
+            'name' => ['type' => 'string', 'language' => true, 'required' => true],
+            'description' => ['type' => 'html', 'language' => true],
         ],
     ];
 
