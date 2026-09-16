@@ -112,9 +112,10 @@ class FaqField
      * @param array<int,array{q:string,a:string,tags:array<int,string>}> $items Decoded FAQ items
      * @param string $idPrefix Unique id prefix for the item anchors (e.g. faq-machine-12)
      * @param string $heading Optional heading shown above the FAQ list
+     * @param string $extraInnerHtml Optional extra HTML rendered inside .faq-inner after the list (e.g. a CTA block)
      * @return string HTML (empty string when there are no items)
      */
-    public static function renderFrontend(array $items, string $idPrefix, string $heading = ''): string
+    public static function renderFrontend(array $items, string $idPrefix, string $heading = '', string $extraInnerHtml = ''): string
     {
         $items = array_values(array_filter($items, static function ($item): bool {
             return is_array($item) && '' !== trim((string) ($item['q'] ?? ''));
@@ -165,6 +166,7 @@ class FaqField
             $out .= '</details>';
         }
         $out .= '</div>'; // .faq-list
+        $out .= $extraInnerHtml;
         $out .= '</div>'; // .faq-inner
         $out .= '</div>'; // .faq-module
 
