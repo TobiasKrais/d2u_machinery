@@ -275,6 +275,10 @@ d2u_machinery_faq_tags = Tags
 d2u_machinery_faq_move_up = Naar boven
 d2u_machinery_faq_move_down = Naar beneden
 d2u_machinery_faq_remove = Item verwijderen
+d2u_machinery_seo_hint_meta_title = Wordt gebruikt als meta-titel (paginatitel) voor zoekmachines.
+d2u_machinery_seo_hint_meta_description = Wordt gebruikt als meta-omschrijving voor zoekmachines.
+d2u_machinery_seo_hint_first_image = De eerste afbeelding wordt gebruikt voor de SEO-/socialmediavoorbeeld (og:image).
+d2u_machinery_seo_hint_image = Deze afbeelding wordt gebruikt voor de SEO-/socialmediavoorbeeld (og:image).
 
 d2u_machinery_service_options = Service
 d2u_machinery_service_option = Serviceoptie

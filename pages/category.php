@@ -224,7 +224,9 @@ if ('edit' === $func || 'add' === $func) {
 							<div id="details_clang_<?= $rex_clang->getId() ?>">
 								<?php
                                     BackendHelper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $category->name, $required, $readonly_lang, 'text');
+                                    echo '<p class="rex-note">'. rex_i18n::msg('d2u_machinery_seo_hint_meta_title') .'</p>';
                                     BackendHelper::form_input('d2u_machinery_machine_teaser', 'form[lang]['. $rex_clang->getId() .'][teaser]', $category->teaser, false, $readonly_lang, 'text');
+                                    echo '<p class="rex-note">'. rex_i18n::msg('d2u_machinery_seo_hint_meta_description') .'</p>';
                                     BackendHelper::form_textarea('d2u_helper_description', 'form[lang]['. $rex_clang->getId() .'][description]', $category->description, 5, false, $readonly_lang, true);
                                     BackendHelper::form_input('d2u_machinery_category_usage_area', 'form[lang]['. $rex_clang->getId() .'][usage_area]', $category->usage_area, false, $readonly_lang, 'text');
                                     echo '<div class="row"><div class="col-xs-12"><label><b>'. rex_i18n::msg('d2u_machinery_faq') .'</b></label>'. FaqField::render('form[lang]['. $rex_clang->getId() .'][faq]', $category->faq, $readonly_lang) .'</div></div>';
@@ -258,6 +260,7 @@ if ('edit' === $func || 'add' === $func) {
                             BackendHelper::form_select('d2u_machinery_category_parent', 'form[parent_category_id]', $options, $category->parent_category instanceof Category ? [(string) $category->parent_category->category_id] : [], 1, false, $readonly);
                             BackendHelper::form_input('header_priority', 'form[priority]', (string) $category->priority, true, $readonly, 'number');
                             BackendHelper::form_mediafield('d2u_helper_picture', '1', $category->pic, $readonly);
+                            echo '<p class="rex-note">'. rex_i18n::msg('d2u_machinery_seo_hint_image') .'</p>';
                             BackendHelper::form_mediafield('d2u_machinery_category_pic_usage', '2', $category->pic_usage, $readonly);
 
                             if (\rex_addon::get('d2u_videos')->isAvailable()) {
