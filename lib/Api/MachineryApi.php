@@ -422,6 +422,11 @@ final class MachineryApi extends RoutePackage
             $object->contact = (int) $value > 0 ? new Contact((int) $value) : false;
             return;
         }
+        if ('machines' === $resource && 'video_ids' === $field) {
+            // Machine stores videos as an array keyed by video id; save() only uses the keys.
+            $object->videos = is_array($value) ? array_fill_keys(array_map('intval', $value), true) : [];
+            return;
+        }
 
         if ('bool' === $type) {
             $object->{$field} = (bool) $value;
@@ -495,6 +500,9 @@ final class MachineryApi extends RoutePackage
         }
         if ('machines' === $resource && 'contact_id' === $field) {
             return $object->contact instanceof Contact ? (int) $object->contact->contact_id : 0;
+        }
+        if ('machines' === $resource && 'video_ids' === $field) {
+            return array_map('intval', array_keys($object->videos));
         }
 
         $value = $object->{$field} ?? null;

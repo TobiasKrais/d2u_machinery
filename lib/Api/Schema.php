@@ -57,20 +57,22 @@ final class Schema
      * Each field: type, required (on create), language (per clang), extension
      * (null = core), relation (target resource for id references).
      *
-     * @var array<string,array<string,array{type:string,required?:bool,language?:bool,extension?:?string,relation?:string}>>
+     * @var array<string,array<string,array{type:string,required?:bool,language?:bool,extension?:?string,relation?:string,seo?:string}>>
      */
     private const FIELDS = [
         'machines' => [
-            'name' => ['type' => 'string', 'required' => true],
+            'name' => ['type' => 'string', 'required' => true, 'seo' => 'title'],
             'product_number' => ['type' => 'string'],
             'priority' => ['type' => 'int'],
             'online_status' => ['type' => 'enum:online,offline'],
-            'pics' => ['type' => 'media[]'],
+            'pics' => ['type' => 'media[]', 'seo' => 'image'],
             'category_id' => ['type' => 'int', 'relation' => 'categories'],
             'alternative_machine_ids' => ['type' => 'int[]', 'relation' => 'machines'],
             'additional_machine_ids' => ['type' => 'int[]', 'relation' => 'machines'],
-            'lang_name' => ['type' => 'string', 'language' => true, 'required' => true],
-            'teaser' => ['type' => 'string', 'language' => true],
+            'reference_ids' => ['type' => 'int[]', 'relation' => 'references'],
+            'video_ids' => ['type' => 'int[]', 'relation' => 'videos'],
+            'lang_name' => ['type' => 'string', 'language' => true, 'required' => true, 'seo' => 'title'],
+            'teaser' => ['type' => 'string', 'language' => true, 'seo' => 'description'],
             'description' => ['type' => 'html', 'language' => true],
             'benefits_short' => ['type' => 'html', 'language' => true],
             'benefits_long' => ['type' => 'html', 'language' => true],
@@ -94,15 +96,15 @@ final class Schema
         ],
         'categories' => [
             'parent_category_id' => ['type' => 'int', 'relation' => 'categories'],
-            'pic' => ['type' => 'media'],
+            'pic' => ['type' => 'media', 'seo' => 'image'],
             'pic_usage' => ['type' => 'media'],
             'priority' => ['type' => 'int'],
             'reference_ids' => ['type' => 'int[]'],
-            'name' => ['type' => 'string', 'language' => true, 'required' => true],
-            'teaser' => ['type' => 'string', 'language' => true],
+            'name' => ['type' => 'string', 'language' => true, 'required' => true, 'seo' => 'title'],
+            'teaser' => ['type' => 'string', 'language' => true, 'seo' => 'description'],
             'description' => ['type' => 'html', 'language' => true],
             'usage_area' => ['type' => 'string', 'language' => true],
-            'pic_lang' => ['type' => 'media', 'language' => true],
+            'pic_lang' => ['type' => 'media', 'language' => true, 'seo' => 'image'],
             'pdfs' => ['type' => 'media[]', 'language' => true],
         ],
         'features' => [
@@ -180,13 +182,13 @@ final class Schema
         'production_lines' => [
             'line_code' => ['type' => 'string'],
             'industry_sector_ids' => ['type' => 'int[]', 'relation' => 'industry_sectors'],
-            'pictures' => ['type' => 'media[]'],
+            'pictures' => ['type' => 'media[]', 'seo' => 'image'],
             'link_picture' => ['type' => 'media'],
             'reference_ids' => ['type' => 'int[]'],
             'video_ids' => ['type' => 'int[]'],
             'online_status' => ['type' => 'enum:online,offline'],
-            'name' => ['type' => 'string', 'language' => true, 'required' => true],
-            'teaser' => ['type' => 'string', 'language' => true],
+            'name' => ['type' => 'string', 'language' => true, 'required' => true, 'seo' => 'title'],
+            'teaser' => ['type' => 'string', 'language' => true, 'seo' => 'description'],
             'description_short' => ['type' => 'html', 'language' => true],
             'description_long' => ['type' => 'html', 'language' => true],
         ],
@@ -223,7 +225,7 @@ final class Schema
     /**
      * Fields available for a resource, honouring the current extension state.
      *
-     * @return array<string,array{type:string,required?:bool,language?:bool,extension?:?string,relation?:string}>
+     * @return array<string,array{type:string,required?:bool,language?:bool,extension?:?string,relation?:string,seo?:string}>
      */
     public static function getFields(string $resource, bool $onlyActive = true): array
     {
@@ -269,6 +271,7 @@ final class Schema
                     'required' => (bool) ($definition['required'] ?? false),
                     'language' => (bool) ($definition['language'] ?? false),
                     'relation' => $definition['relation'] ?? null,
+                    'seo' => $definition['seo'] ?? null,
                 ];
             }
 
@@ -293,6 +296,7 @@ final class Schema
             'notes' => [
                 'Language specific fields are provided per clang inside "translations".',
                 'Upload images via the api addon endpoint POST /api/media first, then reference the returned file name.',
+                'The "seo" attribute marks how a field is used for the frontend SEO meta data: "title" = meta/page title, "description" = meta description, "image" = source of the og:image (for media[] fields the first image is used).',
                 'Only fields listed here may be written; unknown or inactive fields are rejected with HTTP 400.',
             ],
             'resources' => $resources,
