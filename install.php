@@ -838,8 +838,22 @@ if (\rex_addon::get('cronjob')->isAvailable()) {
                 ':legacy' => '%Provider::autoexport%',
             ]
         );
+
+        // The typed export cronjob was registered under the removed global class
+        // name. Rewrite existing rows to the fully qualified class name so the
+        // cronjob keeps running without the compatibility layer.
+        $sql->setQuery(
+            'UPDATE `'. \rex::getTablePrefix() .'cronjob` SET `type` = :new WHERE `type` = :old',
+            [
+                ':new' => \TobiasKrais\D2UMachinery\ExportCronjob::class,
+                ':old' => 'd2u_machinery_export_cronjob',
+            ]
+        );
     }
 }
+
+// Remove the leftover deprecated compatibility class file from existing installs.
+\rex_file::delete(\rex_addon::get('d2u_machinery')->getPath('lib/deprecated_helper_classes.php'));
 
 
 // Extension: service options
