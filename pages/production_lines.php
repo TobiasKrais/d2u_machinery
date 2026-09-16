@@ -146,7 +146,7 @@ if ('edit' === $func || 'add' === $func) {
 
                             BackendHelper::form_input('d2u_machinery_production_lines_line_code', 'form[line_code]', $production_line->line_code, false, $readonly, 'text');
                             BackendHelper::form_mediafield('d2u_helper_pictures', '2', $production_line->pictures[0] ?? '', $readonly);
-                            echo '<p class="rex-note">'. rex_i18n::msg('d2u_machinery_seo_hint_image') .'</p>';
+                            echo '<p class="rex-note">'. rex_i18n::msg('d2u_helper_seo_hint_image') .'</p>';
 
                             // Marker editor for the main picture
                             $marker_machines = [];
@@ -247,9 +247,9 @@ if ('edit' === $func || 'add' === $func) {
 							<div id="details_clang_<?= $rex_clang->getId() ?>">
 								<?php
                                     BackendHelper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $production_line->name, $required, $readonly_lang, 'text');
-                                    echo '<p class="rex-note">'. rex_i18n::msg('d2u_machinery_seo_hint_meta_title') .'</p>';
+                                    echo '<p class="rex-note">'. rex_i18n::msg('d2u_helper_seo_hint_meta_title') .'</p>';
                                     BackendHelper::form_input('d2u_machinery_machine_teaser', 'form[lang]['. $rex_clang->getId() .'][teaser]', $production_line->teaser, false, $readonly_lang, 'text');
-                                    echo '<p class="rex-note">'. rex_i18n::msg('d2u_machinery_seo_hint_meta_description') .'</p>';
+                                    echo '<p class="rex-note">'. rex_i18n::msg('d2u_helper_seo_hint_meta_description') .'</p>';
                                     BackendHelper::form_textarea('d2u_helper_description', 'form[lang]['. $rex_clang->getId() .'][description_short]', $production_line->description_short, 5, false, $readonly_lang, true);
                                     BackendHelper::form_textarea('d2u_helper_description_long', 'form[lang]['. $rex_clang->getId() .'][description_long]', $production_line->description_long, 5, false, $readonly_lang, true);
                                     echo '<div class="row"><div class="col-xs-12"><label><b>'. rex_i18n::msg('d2u_machinery_faq') .'</b></label>'. FaqField::render('form[lang]['. $rex_clang->getId() .'][faq]', $production_line->faq, $readonly_lang) .'</div></div>';
