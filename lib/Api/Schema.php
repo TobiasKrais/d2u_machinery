@@ -68,6 +68,7 @@ final class Schema
             'pics' => ['type' => 'media[]'],
             'category_id' => ['type' => 'int', 'relation' => 'categories'],
             'alternative_machine_ids' => ['type' => 'int[]', 'relation' => 'machines'],
+            'additional_machine_ids' => ['type' => 'int[]', 'relation' => 'machines'],
             'lang_name' => ['type' => 'string', 'language' => true, 'required' => true],
             'teaser' => ['type' => 'string', 'language' => true],
             'description' => ['type' => 'html', 'language' => true],
