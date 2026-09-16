@@ -266,6 +266,15 @@ d2u_machinery_production_lines_marker_machine = Maschine
 d2u_machinery_production_lines_marker_supply = Zulieferung
 d2u_machinery_production_lines_marker_hint = Auf das Bild klicken, um einen Marker zu setzen. Marker zum Verschieben ziehen.
 d2u_machinery_production_lines_marker_no_image = Bitte zuerst ein Bild wählen und speichern, danach können Marker gesetzt werden.
+d2u_machinery_faq = FAQ
+d2u_machinery_faq_add = + FAQ-Eintrag hinzufügen
+d2u_machinery_faq_entry = FAQ-Eintrag
+d2u_machinery_faq_question = Frage
+d2u_machinery_faq_answer = Antwort
+d2u_machinery_faq_tags = Tags
+d2u_machinery_faq_move_up = Nach oben verschieben
+d2u_machinery_faq_move_down = Nach unten verschieben
+d2u_machinery_faq_remove = Eintrag entfernen
 
 d2u_machinery_service_options = Service
 d2u_machinery_service_option = Service-Option

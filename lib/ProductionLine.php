@@ -66,6 +66,9 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper, \Tobi
     /** @var string Long description */
     public string $description_long = '';
 
+    /** @var string FAQ entries as base64(JSON [{q,a,tags[]}]) */
+    public string $faq = '';
+
     /** @var string "yes" if translation needs update */
     public string $translation_needs_update = 'delete';
 
@@ -105,6 +108,7 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper, \Tobi
             $this->link_picture = (string) $result->getValue('link_picture');
             $this->markers = (string) $result->getValue('markers');
             $this->teaser = stripslashes((string) $result->getValue('teaser'));
+            $this->faq = (string) $result->getValue('faq');
             if ('' !== $result->getValue('translation_needs_update') && null !== $result->getValue('translation_needs_update')) {
                 $this->translation_needs_update = (string) $result->getValue('translation_needs_update');
             }
@@ -517,6 +521,15 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper, \Tobi
     }
 
     /**
+     * Get the decoded FAQ entries (question required) for the frontend.
+     * @return array<int,array{q:string,a:string,tags:array<int,string>}> FAQ items
+     */
+    public function getFaqItems(): array
+    {
+        return FaqField::decode($this->faq);
+    }
+
+    /**
      * Updates or inserts the object into database.
      * @return bool true if successful
      */
@@ -577,6 +590,7 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper, \Tobi
                         .'description_short = :description_short, '
                         .'name = :name, '
                         .'teaser = :teaser, '
+                        .'faq = :faq, '
                         .'translation_needs_update = :tnu, '
                         .'updatedate = CURRENT_TIMESTAMP, '
                         .'updateuser = :updateuser ';
@@ -589,6 +603,7 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper, \Tobi
                     ':description_short' => $this->description_short,
                     ':name' => $this->name,
                     ':teaser' => $this->teaser,
+                    ':faq' => $this->faq,
                     ':tnu' => $this->translation_needs_update,
                     ':updateuser' => \rex::getUser() instanceof rex_user ? \rex::getUser()->getLogin() : '',
                 ]);

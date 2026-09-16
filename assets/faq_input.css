@@ -1,0 +1,43 @@
+/* d2u_machinery FAQ backend widget. Neutral, semi-transparent greys so it fits
+   both light and dark backend themes; text colours are left to the theme. */
+.d2u-faq-widget .d2u-faq-row {
+	border: 1px solid rgba(128, 128, 128, .35);
+	border-radius: 4px;
+	padding: 12px;
+	margin-bottom: 12px;
+	background: rgba(128, 128, 128, .06);
+}
+.d2u-faq-widget .d2u-faq-row .row {
+	margin-bottom: 8px;
+}
+.d2u-faq-widget .d2u-faq-row .row:last-child {
+	margin-bottom: 0;
+}
+.d2u-faq-widget .d2u-faq-row-head {
+	padding-bottom: 6px;
+	margin-bottom: 8px;
+	border-bottom: 1px solid rgba(128, 128, 128, .25);
+}
+
+/* Tagify: align with the same neutral grey scheme. */
+.d2u-faq-widget tags.tagify {
+	--tags-border-color: rgba(128, 128, 128, .35);
+	--tags-hover-border-color: rgba(128, 128, 128, .5);
+	--tags-focus-border-color: rgba(128, 128, 128, .6);
+	--tag-bg: rgba(128, 128, 128, .18);
+	--tag-hover: rgba(128, 128, 128, .28);
+	--tag-text-color: inherit;
+	--tag-text-color--edit: inherit;
+	--tag-remove-btn-color: inherit;
+	--tag-remove-btn-bg--hover: rgba(200, 60, 60, .3);
+	--placeholder-color: rgba(128, 128, 128, .8);
+	--tag-pad: 0.3em 0.6em;
+	background: transparent;
+}
+/* Tagify appends its dropdown to <body>, so it is not scoped to the widget. */
+.tagify__dropdown.d2u-faq-tags-dropdown {
+	--dropdown-menu-bg-color: rgba(128, 128, 128, .96);
+}
+.tagify__dropdown.d2u-faq-tags-dropdown .tagify__dropdown__item {
+	color: inherit;
+}

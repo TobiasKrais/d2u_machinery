@@ -266,6 +266,15 @@ d2u_machinery_production_lines_marker_machine = Machine
 d2u_machinery_production_lines_marker_supply = Toelevering
 d2u_machinery_production_lines_marker_hint = Klik op de afbeelding om een markering te plaatsen. Sleep een markering om deze te verplaatsen.
 d2u_machinery_production_lines_marker_no_image = Kies en bewaar eerst een afbeelding, daarna kunt u markeringen plaatsen.
+d2u_machinery_faq = FAQ
+d2u_machinery_faq_add = + FAQ-item toevoegen
+d2u_machinery_faq_entry = FAQ-item
+d2u_machinery_faq_question = Vraag
+d2u_machinery_faq_answer = Antwoord
+d2u_machinery_faq_tags = Tags
+d2u_machinery_faq_move_up = Naar boven
+d2u_machinery_faq_move_down = Naar beneden
+d2u_machinery_faq_remove = Item verwijderen
 
 d2u_machinery_service_options = Service
 d2u_machinery_service_option = Serviceoptie

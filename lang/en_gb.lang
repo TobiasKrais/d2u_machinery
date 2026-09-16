@@ -266,6 +266,15 @@ d2u_machinery_production_lines_marker_machine = Machine
 d2u_machinery_production_lines_marker_supply = Supply
 d2u_machinery_production_lines_marker_hint = Click on the picture to add a marker. Drag a marker to move it.
 d2u_machinery_production_lines_marker_no_image = Please choose and save a picture first, then you can place markers.
+d2u_machinery_faq = FAQ
+d2u_machinery_faq_add = + Add FAQ entry
+d2u_machinery_faq_entry = FAQ entry
+d2u_machinery_faq_question = Question
+d2u_machinery_faq_answer = Answer
+d2u_machinery_faq_tags = Tags
+d2u_machinery_faq_move_up = Move up
+d2u_machinery_faq_move_down = Move down
+d2u_machinery_faq_remove = Remove entry
 
 d2u_machinery_service_options = Service
 d2u_machinery_service_option = Service option

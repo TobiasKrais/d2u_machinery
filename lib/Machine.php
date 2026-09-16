@@ -141,6 +141,9 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
     /** @var array<string> File names of PDF files for the machine */
     public array $pdfs = [];
 
+    /** @var string FAQ entries as base64(JSON [{q,a,tags[]}]) */
+    public string $faq = '';
+
     /** @var string Machine leaflet (PDF file) */
     public string $leaflet = '';
 
@@ -337,6 +340,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
             $this->description = stripslashes(htmlspecialchars_decode((string) $result->getValue('description')));
             $this->benefits_long = stripslashes(htmlspecialchars_decode((string) $result->getValue('benefits_long')));
             $this->benefits_short = stripslashes(htmlspecialchars_decode((string) $result->getValue('benefits_short')));
+            $this->faq = (string) $result->getValue('faq');
             $pdfs = preg_grep('/^\s*$/s', explode(',', (string) $result->getValue('pdfs')), PREG_GREP_INVERT);
             $this->pdfs = is_array($pdfs) ? $pdfs : [];
             $this->leaflet = (string) $result->getValue('leaflet');
@@ -1216,6 +1220,15 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
     }
 
     /**
+     * Get the decoded FAQ entries (question required) for the frontend.
+     * @return array<int,array{q:string,a:string,tags:array<int,string>}> FAQ items
+     */
+    public function getFaqItems(): array
+    {
+        return FaqField::decode($this->faq);
+    }
+
+    /**
      * Updates or inserts the object into database.
      * @return bool true if successful
      */
@@ -1408,6 +1421,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
                         .'benefits_short = :benefits_short, '
                         .'leaflet = :leaflet, '
                         .'pdfs = :pdfs, '
+                        .'faq = :faq, '
                         .'translation_needs_update = :translation_needs_update, '
                         .'updatedate = CURRENT_TIMESTAMP, '
                         .'updateuser = :updateuser ';
@@ -1421,6 +1435,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
                     ':benefits_short' => htmlspecialchars($this->benefits_short),
                     ':leaflet' => $this->leaflet,
                     ':pdfs' => implode(',', $this->pdfs),
+                    ':faq' => $this->faq,
                     ':translation_needs_update' => $this->translation_needs_update,
                     ':updateuser' => \rex::getUser() instanceof rex_user ? \rex::getUser()->getLogin() : '',
                 ];

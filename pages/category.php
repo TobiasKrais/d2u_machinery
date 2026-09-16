@@ -3,6 +3,7 @@
 use TobiasKrais\D2UHelper\BackendHelper;
 
 use TobiasKrais\D2UMachinery\Category;
+use TobiasKrais\D2UMachinery\FaqField;
 use TobiasKrais\D2UReferences\Reference;
 
 $func = rex_request('func', 'string');
@@ -88,6 +89,7 @@ if (!$invalidCsrf && (1 === (int) filter_input(INPUT_POST, 'btn_save', FILTER_VA
         $category->pdfs = is_array($pdfs) ? $pdfs : [];
         $category->pic_lang = $input_media['pic_lang_'. $rex_clang->getId()];
         $category->usage_area = $form['lang'][$rex_clang->getId()]['usage_area'];
+        $category->faq = $form['lang'][$rex_clang->getId()]['faq'] ?? '';
         if (\TobiasKrais\D2UMachinery\Extension::isActive('machine_agitator_extension')) {
             // Checkbox also need special treatment if empty
             $category->show_agitators = array_key_exists('show_agitators', $form) ? 'show' : 'hide';
@@ -225,6 +227,7 @@ if ('edit' === $func || 'add' === $func) {
                                     BackendHelper::form_input('d2u_machinery_machine_teaser', 'form[lang]['. $rex_clang->getId() .'][teaser]', $category->teaser, false, $readonly_lang, 'text');
                                     BackendHelper::form_textarea('d2u_helper_description', 'form[lang]['. $rex_clang->getId() .'][description]', $category->description, 5, false, $readonly_lang, true);
                                     BackendHelper::form_input('d2u_machinery_category_usage_area', 'form[lang]['. $rex_clang->getId() .'][usage_area]', $category->usage_area, false, $readonly_lang, 'text');
+                                    echo '<div class="row"><div class="col-xs-12"><label><b>'. rex_i18n::msg('d2u_machinery_faq') .'</b></label>'. FaqField::render('form[lang]['. $rex_clang->getId() .'][faq]', $category->faq, $readonly_lang) .'</div></div>';
                                     BackendHelper::form_mediafield('d2u_machinery_category_pic_lang', 'pic_lang_'. $rex_clang->getId(), $category->pic_lang, $readonly_lang);
                                     BackendHelper::form_medialistfield('d2u_machinery_category_pdfs', (int) ('1'. $rex_clang->getId()), $category->pdfs, $readonly_lang);
                                 ?>

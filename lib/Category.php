@@ -84,6 +84,9 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrai
     /** @var array<string> array with PDF file names */
     public $pdfs = [];
 
+    /** @var string FAQ entries as base64(JSON [{q,a,tags[]}]) */
+    public string $faq = '';
+
     /** @var \TobiasKrais\D2UVideos\Video[] Videomanager videos */
     public $videos = [];
 
@@ -125,6 +128,7 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrai
             $this->teaser = stripslashes(htmlspecialchars_decode((string) $result->getValue('teaser')));
             $this->description = stripslashes(htmlspecialchars_decode((string) $result->getValue('description')));
             $this->usage_area = stripslashes(htmlspecialchars_decode((string) $result->getValue('usage_area')));
+            $this->faq = (string) $result->getValue('faq');
             $this->pic = (string) $result->getValue('pic');
             $this->pic_lang = (string) $result->getValue('pic_lang');
             $this->pic_usage = (string) $result->getValue('pic_usage');
@@ -677,6 +681,15 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrai
     }
 
     /**
+     * Get the decoded FAQ entries (question required) for the frontend.
+     * @return array<int,array{q:string,a:string,tags:array<int,string>}> FAQ items
+     */
+    public function getFaqItems(): array
+    {
+        return FaqField::decode($this->faq);
+    }
+
+    /**
      * Updates or inserts the object into database.
      * @return bool true if successful
      */
@@ -754,6 +767,7 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrai
                         .'usage_area = :usage_area, '
                         .'pic_lang = :pic_lang, '
                         .'pdfs = :pdfs, '
+                        .'faq = :faq, '
                         .'translation_needs_update = :tnu, '
                         .'updatedate = CURRENT_TIMESTAMP, '
                         .'updateuser = :updateuser ';
@@ -768,6 +782,7 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrai
                     ':usage_area' => htmlspecialchars($this->usage_area),
                     ':pic_lang' => $this->pic_lang,
                     ':pdfs' => implode(',', $this->pdfs),
+                    ':faq' => $this->faq,
                     ':tnu' => $this->translation_needs_update,
                     ':updateuser' => \rex::getUser() instanceof rex_user ? \rex::getUser()->getLogin() : '',
                 ]);
