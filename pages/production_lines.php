@@ -29,7 +29,6 @@ if ((
         $func = '';
     }
 }
-$productionLinesPageParams = isset($productionLinesPageParams) && is_array($productionLinesPageParams) ? $productionLinesPageParams : ['production_lines_subpage' => 'production_lines'];
 
 // messages
 if ('' !== $message) {
@@ -94,9 +93,9 @@ if (!$invalidCsrf && (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === 
 
     // Redirect to make reload and thus double save impossible
     if (1 === (int) filter_input(INPUT_POST, 'btn_apply', FILTER_VALIDATE_INT) && false !== $production_line) {
-        header('Location: '. rex_url::currentBackendPage(array_merge($productionLinesPageParams, ['entry_id' => $production_line->production_line_id, 'func' => 'edit', 'message' => $message]), false));
+        header('Location: '. rex_url::currentBackendPage(['entry_id' => $production_line->production_line_id, 'func' => 'edit', 'message' => $message], false));
     } else {
-        header('Location: '. rex_url::currentBackendPage(array_merge($productionLinesPageParams, ['message' => $message]), false));
+        header('Location: '. rex_url::currentBackendPage(['message' => $message], false));
     }
     exit;
 }
@@ -120,14 +119,14 @@ elseif ('changestatus' === $func) {
     $production_line->production_line_id = $entry_id;
     $production_line->changeStatus();
 
-    header('Location: '. rex_url::currentBackendPage($productionLinesPageParams));
+    header('Location: '. rex_url::currentBackendPage());
     exit;
 }
 
 // Eingabeformular
 if ('edit' === $func || 'add' === $func) {
 ?>
-    <form action="<?= rex_url::currentBackendPage($productionLinesPageParams) ?>" method="post">
+    <form action="<?= rex_url::currentBackendPage() ?>" method="post">
 		<?= $csrfToken->getHiddenField() ?>
 		<div class="panel panel-edit">
 			<header class="panel-heading"><div class="panel-title"><?= rex_i18n::msg('d2u_machinery_production_lines') ?></div></header>
@@ -459,7 +458,7 @@ if ('' === $func) {
 
     $list->removeColumn('online_status');
     if (\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
-        $list->addColumn(rex_i18n::msg('status_online'), '<a class="rex-###online_status###" href="' . rex_url::currentBackendPage(array_merge($productionLinesPageParams, ['func' => 'changestatus'])) . '&entry_id=###production_line_id###"><i class="rex-icon rex-icon-###online_status###"></i> ###online_status###</a>');
+        $list->addColumn(rex_i18n::msg('status_online'), '<a class="rex-###online_status###" href="' . rex_url::currentBackendPage(['func' => 'changestatus']) . '&entry_id=###production_line_id###"><i class="rex-icon rex-icon-###online_status###"></i> ###online_status###</a>');
         $list->setColumnLayout(rex_i18n::msg('status_online'), ['', '<td class="rex-table-action">###VALUE###</td>']);
 
         $list->addColumn(rex_i18n::msg('delete_module'), '<i class="rex-icon rex-icon-delete"></i> ' . rex_i18n::msg('delete'));

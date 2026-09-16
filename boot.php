@@ -365,7 +365,7 @@ function rex_d2u_machinery_video_is_in_use(rex_extension_point $ep): array
         $sql_production_lines->setQuery('SELECT lang.production_line_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_production_lines_lang` AS lang '
             .'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_production_lines` AS production_lines ON lang.production_line_id = production_lines.production_line_id '
             .'WHERE production_lines.video_ids LIKE :video_id_pipe GROUP BY lang.production_line_id', [':video_id_pipe' => $video_id_pipe]);
-        $warning = rex_d2u_machinery_add_video_usage_warnings($warning, $sql_production_lines, 'production_line_id', 'name', 'index.php?page=d2u_machinery/production_lines/lines&func=edit&entry_id=', rex_i18n::msg('d2u_machinery_production_lines'));
+        $warning = rex_d2u_machinery_add_video_usage_warnings($warning, $sql_production_lines, 'production_line_id', 'name', 'index.php?page=d2u_machinery/production_lines&func=edit&entry_id=', rex_i18n::msg('d2u_machinery_production_lines'));
     }
 
     if (Extension::isActive('used_machines')) {
