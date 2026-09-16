@@ -1,0 +1,9 @@
+{
+  "name": "d2u-machinery-assets",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Vendored frontend assets for the d2u_machinery addon (Dependabot tracking only, copies are updated manually)",
+  "dependencies": {
+    "@yaireo/tagify": "^4.38.0"
+  }
+}

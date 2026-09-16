@@ -1,1 +1,3 @@
 .github/copilot-instructions.md
+node_modules/
+assets/node_modules/
