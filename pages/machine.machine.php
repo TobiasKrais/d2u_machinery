@@ -321,6 +321,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 							$readonly = (\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) ? false : true;
 
 							BackendHelper::form_input('d2u_helper_name', 'form[name]', $machine->name, true, $readonly, 'text');
+							echo '<p class="rex-note">'. rex_i18n::msg('d2u_machinery_seo_hint_meta_title') .'</p>';
 							BackendHelper::form_input('d2u_machinery_machine_product_number', 'form[product_number]', $machine->product_number, false, $readonly, 'text');
 							BackendHelper::form_input('header_priority', 'form[priority]', (string) $machine->priority, true, $readonly, 'number');
 							BackendHelper::form_imagelistfield('d2u_helper_picture', 1, $machine->pics, $readonly);
@@ -621,7 +622,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 							<div id="details_clang_<?= $rex_clang->getId() ?>">
 								<?php
 									BackendHelper::form_input('d2u_machinery_lang_name', 'form[lang]['. $rex_clang->getId() .'][lang_name]', $machine_lang->lang_name, false, $readonly_lang, 'text');
-									echo '<p class="rex-note">'. rex_i18n::msg('d2u_machinery_seo_hint_meta_title') .'</p>';
+									echo '<p class="rex-note">'. rex_i18n::msg('d2u_machinery_seo_hint_meta_title_lang') .'</p>';
 									BackendHelper::form_textarea('d2u_machinery_machine_teaser', 'form[lang]['. $rex_clang->getId() .'][teaser]', $machine_lang->teaser, 3, false, $readonly_lang, false);
 									echo '<p class="rex-note">'. rex_i18n::msg('d2u_machinery_seo_hint_meta_description') .'</p>';
 									BackendHelper::form_textarea('d2u_helper_description', 'form[lang]['. $rex_clang->getId() .'][description]', $machine_lang->description, 5, false, $readonly_lang, true);

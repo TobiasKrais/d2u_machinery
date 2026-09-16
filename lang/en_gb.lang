@@ -276,6 +276,7 @@ d2u_machinery_faq_move_up = Move up
 d2u_machinery_faq_move_down = Move down
 d2u_machinery_faq_remove = Remove entry
 d2u_machinery_seo_hint_meta_title = Used as the meta title (page title) for search engines.
+d2u_machinery_seo_hint_meta_title_lang = Overrides the cross-language name and is then used as the meta title (page title) for search engines.
 d2u_machinery_seo_hint_meta_description = Used as the meta description for search engines.
 d2u_machinery_seo_hint_first_image = The first image is used for the SEO / social media preview (og:image).
 d2u_machinery_seo_hint_image = This image is used for the SEO / social media preview (og:image).
