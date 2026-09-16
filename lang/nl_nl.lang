@@ -266,8 +266,6 @@ d2u_machinery_production_lines_marker_machine = Machine
 d2u_machinery_production_lines_marker_supply = Toelevering
 d2u_machinery_production_lines_marker_hint = Klik op de afbeelding om een markering te plaatsen. Sleep een markering om deze te verplaatsen.
 d2u_machinery_production_lines_marker_no_image = Kies en bewaar eerst een afbeelding, daarna kunt u markeringen plaatsen.
-d2u_machinery_production_lines_usp = Unieke verkoopargumenten
-d2u_machinery_production_lines_usps_no_usps_found = Geen unieke verkoopargumenten gevonden.
 
 d2u_machinery_service_options = Service
 d2u_machinery_service_option = Serviceoptie

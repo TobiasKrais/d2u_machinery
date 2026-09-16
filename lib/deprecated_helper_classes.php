@@ -77,9 +77,6 @@ class SocialExportLinkedIn extends \TobiasKrais\D2UMachinery\SocialExportLinkedI
 /** @deprecated Since 1.6.0, to be removed in 2.0.0. Use \TobiasKrais\D2UMachinery\Supply instead. */
 class Supply extends \TobiasKrais\D2UMachinery\Supply {}
 
-/** @deprecated Since 1.6.0, to be removed in 2.0.0. Use \TobiasKrais\D2UMachinery\USP instead. */
-class USP extends \TobiasKrais\D2UMachinery\USP {}
-
 /** @deprecated Since 1.6.0, to be removed in 2.0.0. Use \TobiasKrais\D2UMachinery\UsageArea instead. */
 class UsageArea extends \TobiasKrais\D2UMachinery\UsageArea {}
 

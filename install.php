@@ -707,7 +707,6 @@ if (d2u_machinery_should_install($d2uMachineryAction, 'production_lines')) {
         ->ensureColumn(new \rex_sql_column('pictures', 'TEXT', true))
         ->ensureColumn(new \rex_sql_column('link_picture', 'TEXT', true))
         ->ensureColumn(new \rex_sql_column('markers', 'TEXT', true))
-        ->ensureColumn(new \rex_sql_column('usp_ids', 'VARCHAR(255)', true))
         ->ensureColumn(new \rex_sql_column('reference_ids', 'TEXT', true))
         ->ensureColumn(new \rex_sql_column('video_ids', 'VARCHAR(255)', true))
         ->ensureColumn(new \rex_sql_column('online_status', 'VARCHAR(10)'))
@@ -724,21 +723,15 @@ if (d2u_machinery_should_install($d2uMachineryAction, 'production_lines')) {
         ->ensureColumn(new \rex_sql_column('updatedate', 'DATETIME'))
         ->ensureColumn(new \rex_sql_column('updateuser', 'VARCHAR(255)'))
         ->ensure();
-    \rex_sql_table::get(\rex::getTable('d2u_machinery_production_lines_usps'))
-        ->ensureColumn(new rex_sql_column('usp_id', 'int(10) unsigned', false, null, 'auto_increment'))
-        ->setPrimaryKey('usp_id')
-        ->ensureColumn(new \rex_sql_column('picture', 'VARCHAR(100)', true))
-        ->ensure();
-    \rex_sql_table::get(\rex::getTable('d2u_machinery_production_lines_usps_lang'))
-        ->ensureColumn(new rex_sql_column('usp_id', 'int(10) unsigned', false, null, 'auto_increment'))
-        ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
-        ->setPrimaryKey(['usp_id', 'clang_id'])
-        ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
-        ->ensureColumn(new \rex_sql_column('teaser', 'VARCHAR(255)'))
-        ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)'))
-        ->ensureColumn(new \rex_sql_column('updatedate', 'DATETIME'))
-        ->ensureColumn(new \rex_sql_column('updateuser', 'VARCHAR(255)'))
-        ->ensure();
+
+    // The USP (unique selling points) feature was removed. Drop the legacy column and tables
+    // on existing installations so nothing is left behind.
+    $d2uMachineryProductionLinesTable = \rex_sql_table::get(\rex::getTable('d2u_machinery_production_lines'));
+    if ($d2uMachineryProductionLinesTable->hasColumn('usp_ids')) {
+        $d2uMachineryProductionLinesTable->removeColumn('usp_ids')->alter();
+    }
+    $sql->setQuery('DROP TABLE IF EXISTS '. \rex::getTablePrefix() .'d2u_machinery_production_lines_usps');
+    $sql->setQuery('DROP TABLE IF EXISTS '. \rex::getTablePrefix() .'d2u_machinery_production_lines_usps_lang');
 
     $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_machinery_url_production_lines AS
     	SELECT lang.production_line_id, lang.clang_id, lang.name, lang.name AS seo_title, lang.teaser AS seo_description, SUBSTRING_INDEX(production_lines.pictures, ",", 1) as picture, lang.updatedate

@@ -266,8 +266,6 @@ d2u_machinery_production_lines_marker_machine = Machine
 d2u_machinery_production_lines_marker_supply = Supply
 d2u_machinery_production_lines_marker_hint = Click on the picture to add a marker. Drag a marker to move it.
 d2u_machinery_production_lines_marker_no_image = Please choose and save a picture first, then you can place markers.
-d2u_machinery_production_lines_usp = Unique selling points
-d2u_machinery_production_lines_usps_no_usps_found = No unique selling points found.
 
 d2u_machinery_service_options = Service
 d2u_machinery_service_option = Service option

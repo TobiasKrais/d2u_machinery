@@ -66,9 +66,6 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper, \Tobi
     /** @var string Long description */
     public string $description_long = '';
 
-    /** @var int[] Unique selling proposition */
-    public array $usp_ids = [];
-
     /** @var string "yes" if translation needs update */
     public string $translation_needs_update = 'delete';
 
@@ -111,8 +108,6 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper, \Tobi
             if ('' !== $result->getValue('translation_needs_update') && null !== $result->getValue('translation_needs_update')) {
                 $this->translation_needs_update = (string) $result->getValue('translation_needs_update');
             }
-            $usp_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('usp_ids')), PREG_GREP_INVERT);
-            $this->usp_ids = is_array($usp_ids) ? array_map('intval', $usp_ids) : [];
             if (rex_addon::get('d2u_videos')->isAvailable()) {
                 $video_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('video_ids')), PREG_GREP_INVERT);
                 $this->video_ids = is_array($video_ids) ? array_map('intval', $video_ids) : [];
@@ -540,7 +535,6 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper, \Tobi
                     .'pictures = :pictures, '
                     .'link_picture = :link_picture, '
                     .'markers = :markers, '
-                    .'usp_ids = :usp_ids, '
                     .'video_ids = :video_ids, '
                     .'reference_ids = :reference_ids ';
             $params = [
@@ -549,7 +543,6 @@ class ProductionLine implements \TobiasKrais\D2UHelper\ITranslationHelper, \Tobi
                 ':pictures' => implode(',', $this->pictures),
                 ':link_picture' => $this->link_picture,
                 ':markers' => self::normalizeMarkersJson($this->markers),
-                ':usp_ids' => '|' . implode('|', $this->usp_ids) . '|',
                 ':video_ids' => '|' . implode('|', $this->video_ids) . '|',
                 ':reference_ids' => implode(',', $this->reference_ids),
             ];

@@ -6,7 +6,6 @@ use TobiasKrais\D2UMachinery\IndustrySector;
 use TobiasKrais\D2UMachinery\Machine;
 use TobiasKrais\D2UMachinery\ProductionLine;
 use TobiasKrais\D2UMachinery\Supply;
-use TobiasKrais\D2UMachinery\USP;
 use TobiasKrais\D2UReferences\Reference;
 
 $func = rex_request('func', 'string');
@@ -61,7 +60,6 @@ if (!$invalidCsrf && (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === 
             $production_line->pictures = '' !== ($input_media[2] ?? '') ? [$input_media[2]] : [];
             $production_line->link_picture = $input_media[1] ?? '';
             $production_line->markers = $form['markers'] ?? '';
-            $production_line->usp_ids = $form['usp_ids'] ?? [];
             $production_line->video_ids = $form['video_ids'] ?? [];
             if (rex_addon::get('d2u_references')->isAvailable()) {
                 $production_line->reference_ids = $form['reference_ids'] ?? [];
@@ -204,11 +202,6 @@ if ('edit' === $func || 'add' === $func) {
                                 }
                                 BackendHelper::form_select('d2u_machinery_industry_sectors', 'form[industry_sector_ids][]', $options_industry_sectors, $production_line->industry_sector_ids, 10, true, $readonly);
                             }
-                            $option_usps = [];
-                            foreach (USP::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $usp) {
-                                $option_usps[$usp->usp_id] = $usp->name;
-                            }
-                            BackendHelper::form_select('d2u_machinery_production_lines_usp', 'form[usp_ids][]', $option_usps, $production_line->usp_ids, 10, true, $readonly);
                             BackendHelper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', 'online' === $production_line->online_status, $readonly);
                         ?>
 					</div>
