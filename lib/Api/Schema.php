@@ -78,6 +78,8 @@ final class Schema
             'description' => ['type' => 'html', 'language' => true],
             'benefits_short' => ['type' => 'html', 'language' => true],
             'benefits_long' => ['type' => 'html', 'language' => true],
+            'faq' => ['type' => 'faq[]', 'language' => true],
+            'leaflet' => ['type' => 'media', 'language' => true],
             'engine_power' => ['type' => 'string', 'extension' => 'basic_tech_data'],
             'engine_power_frequency_controlled' => ['type' => 'bool', 'extension' => 'basic_tech_data'],
             'length' => ['type' => 'int', 'extension' => 'basic_tech_data'],
@@ -108,6 +110,7 @@ final class Schema
             'usage_area' => ['type' => 'string', 'language' => true],
             'pic_lang' => ['type' => 'media', 'language' => true, 'seo' => 'image'],
             'pdfs' => ['type' => 'media[]', 'language' => true],
+            'faq' => ['type' => 'faq[]', 'language' => true],
         ],
         'features' => [
             'pic' => ['type' => 'media'],
@@ -193,6 +196,7 @@ final class Schema
             'teaser' => ['type' => 'string', 'language' => true, 'seo' => 'description'],
             'description_short' => ['type' => 'html', 'language' => true],
             'description_long' => ['type' => 'html', 'language' => true],
+            'faq' => ['type' => 'faq[]', 'language' => true],
         ],
         'supplies' => [
             'priority' => ['type' => 'int'],

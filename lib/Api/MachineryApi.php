@@ -434,6 +434,10 @@ final class MachineryApi extends RoutePackage
             return;
         }
 
+        if ('faq' === $field) {
+            $object->{$field} = \TobiasKrais\D2UMachinery\FaqField::encode(is_array($value) ? $value : []);
+            return;
+        }
         if ('bool' === $type) {
             $object->{$field} = (bool) $value;
             return;
@@ -512,6 +516,10 @@ final class MachineryApi extends RoutePackage
         }
         if ('supplies' === $resource && 'video_id' === $field) {
             return is_object($object->video ?? null) ? (int) $object->video->video_id : 0;
+        }
+
+        if ('faq' === $field) {
+            return \TobiasKrais\D2UMachinery\FaqField::decode((string) ($object->{$field} ?? ''));
         }
 
         $value = $object->{$field} ?? null;

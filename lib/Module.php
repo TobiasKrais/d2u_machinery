@@ -22,11 +22,11 @@ class Module
         if (Extension::isActive('industry_sectors')) {
             $modules[] = new \TobiasKrais\D2UHelper\Module('90-2',
                 'D2U Machinery Addon - Branchen (BS4, deprecated)',
-                2);
+                3);
         }
         $modules[] = new \TobiasKrais\D2UHelper\Module('90-3',
             'D2U Machinery Addon - Kategorien (BS4, deprecated)',
-            6);
+            7);
         if (Extension::isActive('used_machines')) {
             $modules[] = new \TobiasKrais\D2UHelper\Module('90-4',
                 'D2U Machinery Addon - Gebrauchtmaschinen (BS4, deprecated)',
@@ -46,11 +46,11 @@ class Module
         if (Extension::isActive('industry_sectors')) {
             $modules[] = new \TobiasKrais\D2UHelper\Module('90-8',
                 'D2U Machinery Addon - Branchen (BS5)',
-                1);
+                2);
         }
         $modules[] = new \TobiasKrais\D2UHelper\Module('90-9',
             'D2U Machinery Addon - Kategorien (BS5)',
-            1);
+            2);
         if (Extension::isActive('used_machines')) {
             $modules[] = new \TobiasKrais\D2UHelper\Module('90-10',
                 'D2U Machinery Addon - Gebrauchtmaschinen (BS5)',

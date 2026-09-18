@@ -106,6 +106,45 @@ class FaqField
     }
 
     /**
+     * Encode a list of FAQ items into the stored value format (base64 JSON).
+     * Mirrors {@see decode()}: only entries with a question survive, tags are
+     * trimmed and de-duplicated. An empty list yields an empty string.
+     * @param array<int,array{q?:string,a?:string,tags?:array<int,string>}> $items FAQ items
+     * @return string Stored value (base64-encoded JSON), or '' when empty
+     */
+    public static function encode(array $items): string
+    {
+        $normalized = [];
+        foreach ($items as $item) {
+            if (!is_array($item)) {
+                continue;
+            }
+            $question = trim((string) ($item['q'] ?? ''));
+            if ('' === $question) {
+                continue;
+            }
+            $tags = [];
+            foreach ((array) ($item['tags'] ?? []) as $tag) {
+                $tag = trim((string) $tag);
+                if ('' !== $tag && !in_array($tag, $tags, true)) {
+                    $tags[] = $tag;
+                }
+            }
+            $normalized[] = [
+                'q' => $question,
+                'a' => trim((string) ($item['a'] ?? '')),
+                'tags' => $tags,
+            ];
+        }
+
+        if ([] === $normalized) {
+            return '';
+        }
+
+        return base64_encode((string) json_encode($normalized, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+    }
+
+    /**
      * Render the frontend FAQ block (accordion + tag filter + schema.org FAQPage).
      * Uses the same markup/classes as the Kaltenbach FAQ module so the existing
      * theme CSS and tag-filter JS apply automatically.

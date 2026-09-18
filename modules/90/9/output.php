@@ -1,4 +1,5 @@
 <?php
+/* d2u_translate: 1:text, 2:html */
 
 use TobiasKrais\D2UMachinery\Category;
 
