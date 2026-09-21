@@ -1128,6 +1128,9 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
                 .'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_machines AS main '
                     .'ON lang.machine_id = main.machine_id '
                 .'WHERE clang_id = '. $clang_id ." AND translation_needs_update = 'yes' "
+                // Skip orphan language rows whose main machine no longer exists
+                // (or an invalid machine_id = 0), which would list as an empty entry.
+                .'AND main.machine_id IS NOT NULL AND lang.machine_id > 0 '
                 .'ORDER BY name';
         if ('missing' === $type) {
             $query = 'SELECT main.machine_id FROM '. \rex::getTablePrefix() .'d2u_machinery_machines AS main '
@@ -1144,8 +1147,16 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
 
         $objects = [];
         for ($i = 0; $i < $result->getRows(); ++$i) {
-            $objects[] = new self((int) $result->getValue('machine_id'), $clang_id);
+            $id = (int) $result->getValue('machine_id');
             $result->next();
+            if ($id <= 0) {
+                continue;
+            }
+            $machine = new self($id, $clang_id);
+            // Guard against orphan rows: only keep machines that actually exist.
+            if ($machine->machine_id > 0) {
+                $objects[] = $machine;
+            }
         }
 
         return $objects;

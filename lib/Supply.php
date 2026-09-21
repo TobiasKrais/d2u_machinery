@@ -232,8 +232,16 @@ class Supply implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais\
 
         $objects = [];
         for ($i = 0; $i < $result->getRows(); ++$i) {
-            $objects[] = new self((int) $result->getValue('supply_id'), $clang_id);
+            $id = (int) $result->getValue('supply_id');
             $result->next();
+            if ($id <= 0) {
+                continue;
+            }
+            $object = new self($id, $clang_id);
+            // Skip orphan language rows whose main record no longer exists.
+            if ($object->supply_id > 0) {
+                $objects[] = $object;
+            }
         }
 
         return $objects;
