@@ -7,6 +7,7 @@ use FriendsOfRedaxo\Api\RouteCollection;
 use FriendsOfRedaxo\Api\RoutePackage;
 use rex;
 use rex_clang;
+use rex_sql;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Route;
@@ -377,17 +378,41 @@ final class MachineryApi extends RoutePackage
         }
         $primaryClang = in_array(rex_clang::getStartId(), $clangIds, true) ? rex_clang::getStartId() : (int) $clangIds[0];
 
+        // A create/update touches the main table plus one _lang row per language.
+        // Wrap every write in a single transaction so a failure mid-loop rolls the
+        // whole entry back instead of leaving the main row and some languages saved
+        // while others failed. All writes are DML, so a real transaction is possible.
+        $sql = rex_sql::factory();
+        $ownTransaction = !$sql->inTransaction();
+        if ($ownTransaction) {
+            $sql->beginTransaction();
+        }
+
         $entryId = $id;
         // Primary language first so a create yields the id used by the remaining languages.
         $order = array_merge([$primaryClang], array_values(array_filter($clangIds, static fn ($c) => $c !== $primaryClang)));
-        foreach ($order as $clangId) {
-            $object = new $class($entryId, $clangId);
-            self::applyFields($object, $resource, $fields, $clangId);
-            self::applyFields($object, $resource, $translations[$clangId] ?? [], $clangId);
-            if (true !== $object->save()) {
-                return 0;
+        try {
+            foreach ($order as $clangId) {
+                $object = new $class($entryId, $clangId);
+                self::applyFields($object, $resource, $fields, $clangId);
+                self::applyFields($object, $resource, $translations[$clangId] ?? [], $clangId);
+                if (true !== $object->save()) {
+                    if ($ownTransaction) {
+                        $sql->rollBack();
+                    }
+                    return 0;
+                }
+                $entryId = (int) $object->{$idField};
             }
-            $entryId = (int) $object->{$idField};
+        } catch (\Throwable $e) {
+            if ($ownTransaction && $sql->inTransaction()) {
+                $sql->rollBack();
+            }
+            throw $e;
+        }
+
+        if ($ownTransaction) {
+            $sql->commit();
         }
 
         return $entryId;

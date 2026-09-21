@@ -18,6 +18,7 @@ use TobiasKrais\D2UMachinery\Option;
 use TobiasKrais\D2UMachinery\ProductionLine;
 use TobiasKrais\D2UMachinery\ServiceOption;
 use TobiasKrais\D2UMachinery\Supply;
+use TobiasKrais\D2UMachinery\UsageArea;
 use TobiasKrais\D2UMachinery\UsedMachine;
 
 /**
@@ -51,6 +52,7 @@ final class Schema
         'industry_sectors' => ['class' => IndustrySector::class, 'id' => 'industry_sector_id', 'extension' => 'industry_sectors'],
         'production_lines' => ['class' => ProductionLine::class, 'id' => 'production_line_id', 'extension' => 'production_lines'],
         'supplies' => ['class' => Supply::class, 'id' => 'supply_id', 'extension' => 'machine_steel_automation_extension'],
+        'usage_areas' => ['class' => UsageArea::class, 'id' => 'usage_area_id', 'extension' => 'machine_usage_area_extension'],
     ];
 
     /**
@@ -80,6 +82,7 @@ final class Schema
             'benefits_long' => ['type' => 'html', 'language' => true],
             'faq' => ['type' => 'faq[]', 'language' => true],
             'leaflet' => ['type' => 'media', 'language' => true],
+            'pdfs' => ['type' => 'media[]', 'language' => true],
             'engine_power' => ['type' => 'string', 'extension' => 'basic_tech_data'],
             'engine_power_frequency_controlled' => ['type' => 'bool', 'extension' => 'basic_tech_data'],
             'length' => ['type' => 'int', 'extension' => 'basic_tech_data'],
@@ -97,6 +100,50 @@ final class Schema
             'certificate_ids' => ['type' => 'int[]', 'extension' => 'machine_certificates_extension', 'relation' => 'certificates'],
             'contact_id' => ['type' => 'int', 'extension' => 'contacts', 'relation' => 'contacts'],
             'automation_supply_ids' => ['type' => 'int[]', 'extension' => 'machine_steel_automation_extension', 'relation' => 'supplies'],
+            'usage_area_ids' => ['type' => 'int[]', 'extension' => 'machine_usage_area_extension', 'relation' => 'usage_areas'],
+            'service_option_ids' => ['type' => 'int[]', 'extension' => 'service_options', 'relation' => 'service_options'],
+            'agitator_type_id' => ['type' => 'int', 'extension' => 'machine_agitator_extension', 'relation' => 'agitators'],
+            'viscosity' => ['type' => 'int', 'extension' => 'machine_agitator_extension'],
+            'airless_hose_connection' => ['type' => 'string', 'extension' => 'machine_construction_equipment_extension'],
+            'airless_hose_diameter' => ['type' => 'int', 'extension' => 'machine_construction_equipment_extension'],
+            'airless_hose_length' => ['type' => 'int', 'extension' => 'machine_construction_equipment_extension'],
+            'airless_nozzle_size' => ['type' => 'string', 'extension' => 'machine_construction_equipment_extension'],
+            'container_capacity' => ['type' => 'string', 'extension' => 'machine_construction_equipment_extension'],
+            'container_capacity_unit' => ['type' => 'string', 'extension' => 'machine_construction_equipment_extension'],
+            'container_mixing_performance' => ['type' => 'string', 'extension' => 'machine_construction_equipment_extension'],
+            'container_waterconnect_pressure' => ['type' => 'int', 'extension' => 'machine_construction_equipment_extension'],
+            'container_waterconnect_diameter' => ['type' => 'string', 'extension' => 'machine_construction_equipment_extension'],
+            'container_weight_empty' => ['type' => 'int', 'extension' => 'machine_construction_equipment_extension'],
+            'cutters_cutting_depth' => ['type' => 'string', 'extension' => 'machine_construction_equipment_extension'],
+            'cutters_cutting_length' => ['type' => 'int', 'extension' => 'machine_construction_equipment_extension'],
+            'cutters_rod_length' => ['type' => 'string', 'extension' => 'machine_construction_equipment_extension'],
+            'floor_beam_power_on_concrete' => ['type' => 'int', 'extension' => 'machine_construction_equipment_extension'],
+            'floor_dust_extraction_connection' => ['type' => 'int', 'extension' => 'machine_construction_equipment_extension'],
+            'floor_feedrate' => ['type' => 'string', 'extension' => 'machine_construction_equipment_extension'],
+            'floor_filter_connection' => ['type' => 'string', 'extension' => 'machine_construction_equipment_extension'],
+            'floor_rotations' => ['type' => 'string', 'extension' => 'machine_construction_equipment_extension'],
+            'floor_working_pressure' => ['type' => 'string', 'extension' => 'machine_construction_equipment_extension'],
+            'floor_working_width' => ['type' => 'int', 'extension' => 'machine_construction_equipment_extension'],
+            'grinder_grinding_plate' => ['type' => 'int', 'extension' => 'machine_construction_equipment_extension'],
+            'grinder_grinding_wheel' => ['type' => 'int', 'extension' => 'machine_construction_equipment_extension'],
+            'grinder_rotational_frequency' => ['type' => 'string', 'extension' => 'machine_construction_equipment_extension'],
+            'grinder_sanding' => ['type' => 'string', 'extension' => 'machine_construction_equipment_extension'],
+            'grinder_vacuum_connection' => ['type' => 'int', 'extension' => 'machine_construction_equipment_extension'],
+            'operating_pressure' => ['type' => 'string', 'extension' => 'machine_construction_equipment_extension'],
+            'pump_conveying_distance' => ['type' => 'int', 'extension' => 'machine_construction_equipment_extension'],
+            'pump_filling' => ['type' => 'int', 'extension' => 'machine_construction_equipment_extension'],
+            'pump_flow_volume' => ['type' => 'string', 'extension' => 'machine_construction_equipment_extension'],
+            'pump_grain_size' => ['type' => 'string', 'extension' => 'machine_construction_equipment_extension'],
+            'pump_material_container' => ['type' => 'string', 'extension' => 'machine_construction_equipment_extension'],
+            'pump_pressure_height' => ['type' => 'int', 'extension' => 'machine_construction_equipment_extension'],
+            'waste_water_capacity' => ['type' => 'int', 'extension' => 'machine_construction_equipment_extension'],
+            'pictures_delivery_set' => ['type' => 'media[]', 'extension' => 'machine_construction_equipment_extension'],
+            'container_connection_port' => ['type' => 'string', 'language' => true, 'extension' => 'machine_construction_equipment_extension'],
+            'container_conveying_wave' => ['type' => 'string', 'language' => true, 'extension' => 'machine_construction_equipment_extension'],
+            'description_technical' => ['type' => 'html', 'language' => true, 'extension' => 'machine_construction_equipment_extension'],
+            'delivery_set_basic' => ['type' => 'html', 'language' => true, 'extension' => 'machine_construction_equipment_extension'],
+            'delivery_set_conversion' => ['type' => 'html', 'language' => true, 'extension' => 'machine_construction_equipment_extension'],
+            'delivery_set_full' => ['type' => 'html', 'language' => true, 'extension' => 'machine_construction_equipment_extension'],
         ],
         'categories' => [
             'parent_category_id' => ['type' => 'int', 'relation' => 'categories'],
@@ -205,6 +252,11 @@ final class Schema
             'video_id' => ['type' => 'int', 'relation' => 'videos'],
             'name' => ['type' => 'string', 'language' => true, 'required' => true],
             'description' => ['type' => 'html', 'language' => true],
+        ],
+        'usage_areas' => [
+            'priority' => ['type' => 'int'],
+            'category_ids' => ['type' => 'int[]', 'relation' => 'categories'],
+            'name' => ['type' => 'string', 'language' => true, 'required' => true],
         ],
     ];
 

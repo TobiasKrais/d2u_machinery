@@ -355,27 +355,27 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
                 }
             }
 
-            if (Extension::isActive('contacts') && Extension::isActive('equipment')) {
+            if (Extension::isActive('equipment')) {
                 $equipment_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('equipment_ids')), PREG_GREP_INVERT);
                 $this->equipment_ids = is_array($equipment_ids) ? array_map('intval', $equipment_ids) : [];
             }
 
-            if (Extension::isActive('contacts') && Extension::isActive('industry_sectors')) {
+            if (Extension::isActive('industry_sectors')) {
                 $industry_sector_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('industry_sector_ids')), PREG_GREP_INVERT);
                 $this->industry_sector_ids = is_array($industry_sector_ids) ? array_map('intval', $industry_sector_ids) : [];
             }
 
-            if (Extension::isActive('contacts') && Extension::isActive('machine_agitator_extension')) {
+            if (Extension::isActive('machine_agitator_extension')) {
                 $this->agitator_type_id = (int) $result->getValue('agitator_type_id');
                 $this->viscosity = (int) $result->getValue('viscosity');
             }
 
-            if (Extension::isActive('contacts') && Extension::isActive('machine_certificates_extension')) {
+            if (Extension::isActive('machine_certificates_extension')) {
                 $certificate_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('certificate_ids')), PREG_GREP_INVERT);
                 $this->certificate_ids = is_array($certificate_ids) ? array_map('intval', $certificate_ids) : [];
             }
 
-            if (Extension::isActive('contacts') && Extension::isActive('machine_construction_equipment_extension')) {
+            if (Extension::isActive('machine_construction_equipment_extension')) {
                 $this->airless_hose_connection = (string) $result->getValue('airless_hose_connection');
                 $this->airless_hose_diameter = (int) $result->getValue('airless_hose_diameter');
                 $this->airless_hose_length = (int) $result->getValue('airless_hose_length');
@@ -419,17 +419,17 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
                 $this->delivery_set_full = stripslashes(htmlspecialchars_decode((string) $result->getValue('delivery_set_full')));
             }
 
-            if (Extension::isActive('contacts') && Extension::isActive('service_options')) {
+            if (Extension::isActive('service_options')) {
                 $service_option_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('service_option_ids')), PREG_GREP_INVERT);
                 $this->service_option_ids = is_array($service_option_ids) ? array_map('intval', $service_option_ids) : [];
             }
 
-            if (Extension::isActive('contacts') && Extension::isActive('machine_features_extension')) {
+            if (Extension::isActive('machine_features_extension')) {
                 $feature_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('feature_ids')), PREG_GREP_INVERT);
                 $this->feature_ids = is_array($feature_ids) ? array_map('intval', $feature_ids) : [];
             }
 
-            if (Extension::isActive('contacts') && Extension::isActive('machine_options_extension')) {
+            if (Extension::isActive('machine_options_extension')) {
                 $option_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('option_ids')), PREG_GREP_INVERT);
                 $this->option_ids = is_array($option_ids) ? array_map('intval', $option_ids) : [];
             }
@@ -439,7 +439,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
                 $this->automation_supply_ids = is_array($automation_supply_ids) ? array_map('intval', $automation_supply_ids) : [];
             }
 
-            if (Extension::isActive('contacts') && Extension::isActive('machine_usage_area_extension')) {
+            if (Extension::isActive('machine_usage_area_extension')) {
                 $usage_area_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('usage_area_ids')), PREG_GREP_INVERT);
                 $this->usage_area_ids = is_array($usage_area_ids) ? array_map('intval', $usage_area_ids) : [];
             }
