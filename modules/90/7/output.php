@@ -497,17 +497,6 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '</div>';
     }
 
-    // Software
-    if ($machine->article_id_software > 0) {
-        echo '<div class="col-12 col-md-6">';
-        echo '<h3>'. \Sprog\Wildcard::get('d2u_machinery_software') .'</h3>';
-        $article = rex_article::get($machine->article_id_software, $machine->clang_id);
-        if ($article instanceof rex_article) {
-            echo '<a href="'. rex_escape(rex_getUrl($machine->article_id_software, $machine->clang_id)).'"><div class="downloads">'. rex_escape((string) $article->getValue('name')) .'</div></a>';
-        }
-        echo '</div>';
-    }
-
     // Service
     if ($machine->article_id_service > 0) {
         echo '<div class="col-12 col-md-6">';

@@ -101,7 +101,6 @@ if (null === $d2uMachineryAction) {
         ->ensureColumn(new \rex_sql_column('alternative_machine_ids', 'TEXT', true))
         ->ensureColumn(new \rex_sql_column('additional_machine_ids', 'TEXT', true))
         ->ensureColumn(new \rex_sql_column('product_number', 'VARCHAR(50)', true))
-        ->ensureColumn(new \rex_sql_column('article_id_software', 'INT(11)', true))
         ->ensureColumn(new \rex_sql_column('article_id_service', 'INT(11)', true))
         ->ensureColumn(new \rex_sql_column('article_ids_references', 'VARCHAR(255)', true))
         ->ensureColumn(new \rex_sql_column('reference_ids', 'TEXT', true))
@@ -781,6 +780,7 @@ $sql->setQuery('SHOW TABLES LIKE "'. \rex::getTable('d2u_machinery_machines') .'
 if ($sql->getRows() > 0) {
     $machinesTable = \rex_sql_table::get(\rex::getTable('d2u_machinery_machines'));
     $retiredMachineColumns = [
+        'article_id_software',
         'process_ids', 'procedure_ids', 'material_ids', 'tool_ids', 'automation_automationgrade_ids',
         'workspace', 'workspace_square', 'workspace_flat', 'workspace_plate', 'workspace_profile',
         'workspace_angle_steel', 'workspace_round', 'workspace_min',

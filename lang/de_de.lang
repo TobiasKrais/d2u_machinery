@@ -64,7 +64,6 @@ d2u_machinery_machine_pdfs = PDFs
 d2u_machinery_machine_product_number = Produktnummer
 d2u_machinery_machine_references = Artikel mit Referenzen
 d2u_machinery_machine_service = Artikel zum Service
-d2u_machinery_machine_software = Artikel über Software
 d2u_machinery_machine_teaser = Kurze Beschreibung
 d2u_machinery_machine_voltage_a = Betriebsspannung (A)
 d2u_machinery_machine_voltage_hz = Betriebsspannung (Hz)

@@ -63,9 +63,6 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
     /** @var int[] machine business ids */
     public array $industry_sector_ids = [];
 
-    /** @var int Redaxo article id for additional software information */
-    public int $article_id_software = 0;
-
     /** @var int Redaxo article id for additional service information */
     public int $article_id_service = 0;
 
@@ -316,7 +313,6 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
             $additional_machine_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('additional_machine_ids')), PREG_GREP_INVERT);
             $this->additional_machine_ids = is_array($additional_machine_ids) ? array_map('intval', $additional_machine_ids) : [];
             $this->product_number = (string) $result->getValue('product_number');
-            $this->article_id_software = (int) $result->getValue('article_id_software');
             $this->article_id_service = (int) $result->getValue('article_id_service');
             $article_ids_references = preg_grep('/^\s*$/s', explode(',', (string) $result->getValue('article_ids_references')), PREG_GREP_INVERT);
             $this->article_ids_references = is_array($article_ids_references) ? $article_ids_references : [];
@@ -1260,7 +1256,6 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
                     .'alternative_machine_ids = :alternative_machine_ids, '
                     .'additional_machine_ids = :additional_machine_ids, '
                     .'product_number = :product_number, '
-                    .'article_id_software = :article_id_software, '
                     .'article_id_service = :article_id_service, '
                     .'article_ids_references = :article_ids_references, '
                     .'reference_ids = :reference_ids, '
@@ -1269,7 +1264,6 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
             $main_params[':alternative_machine_ids'] = '|'. implode('|', $this->alternative_machine_ids) .'|';
             $main_params[':additional_machine_ids'] = '|'. implode('|', $this->additional_machine_ids) .'|';
             $main_params[':product_number'] = $this->product_number;
-            $main_params[':article_id_software'] = $this->article_id_software;
             $main_params[':article_id_service'] = $this->article_id_service;
             $main_params[':article_ids_references'] = implode(',', $this->article_ids_references);
             $main_params[':reference_ids'] = implode(',', $this->reference_ids);

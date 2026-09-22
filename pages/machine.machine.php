@@ -75,7 +75,6 @@ if (!$invalidCsrf && (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === 
 			$machine->additional_machine_ids = $form['additional_machine_ids'] ?? [];
 			$machine->online_status = array_key_exists('online_status', $form) ? 'online' : 'offline';
 			$machine->article_id_service = (int) $input_link['article_id_service'];
-			$machine->article_id_software = (int) $input_link['article_id_software'];
 			$article_ids_references = preg_grep('/^\s*$/s', explode(',', $input_link_list[1]), PREG_GREP_INVERT);
 			$machine->article_ids_references = is_array($article_ids_references) ? $article_ids_references : [];
 			if (rex_addon::get('d2u_references')->isAvailable()) {
@@ -354,7 +353,6 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 							BackendHelper::form_select('d2u_machinery_machine_alternatives', 'form[alternative_machine_ids][]', $options_alt_machines, $machine->alternative_machine_ids, 10, true, $readonly);
 							BackendHelper::form_select('d2u_machinery_machine_additional_machines', 'form[additional_machine_ids][]', $options_alt_machines, $machine->additional_machine_ids, 10, true, $readonly);
 							BackendHelper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', 'online' === $machine->online_status, $readonly);
-							BackendHelper::form_linkfield('d2u_machinery_machine_software', 'article_id_software', $machine->article_id_software, (int) rex_config::get('d2u_helper', 'default_lang'), $readonly);
 							BackendHelper::form_linkfield('d2u_machinery_machine_service', 'article_id_service', $machine->article_id_service, (int) rex_config::get('d2u_helper', 'default_lang'), $readonly);
 							BackendHelper::form_linklistfield('d2u_machinery_machine_references', 1, $machine->article_ids_references, (int) rex_config::get('d2u_helper', 'default_lang'), $readonly);
 							if (\rex_addon::get('d2u_references')->isAvailable()) {
