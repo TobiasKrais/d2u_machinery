@@ -363,6 +363,7 @@ final class Schema
                 'Language specific fields are provided per clang inside "translations".',
                 'Upload images via the api addon endpoint POST /api/media first, then reference the returned file name.',
                 'The "seo" attribute marks how a field is used for the frontend SEO meta data: "title" = meta/page title, "description" = meta description, "image" = source of the og:image (for media[] fields the first image is used).',
+                'A "faq[]" field is a list of items; each item accepts "q"/"a" (or the aliases "question"/"answer") plus an optional "tags" list. Items without a question are ignored.',
                 'Only fields listed here may be written; unknown or inactive fields are rejected with HTTP 400.',
             ],
             'resources' => $resources,

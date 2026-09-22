@@ -316,6 +316,10 @@ final class MachineryApi extends RoutePackage
             if (!isset($plainFields[$field])) {
                 return 'Unknown or inactive field: ' . $field;
             }
+            $error = self::validateFieldValue((string) $plainFields[$field]['type'], $field, $fieldsInput[$field]);
+            if (null !== $error) {
+                return $error;
+            }
         }
 
         $validClangIds = array_map('intval', rex_clang::getAllIds());
@@ -331,6 +335,10 @@ final class MachineryApi extends RoutePackage
             foreach (array_keys($values) as $field) {
                 if (!isset($languageFields[$field])) {
                     return 'Unknown or inactive language field: ' . $field;
+                }
+                $error = self::validateFieldValue((string) $languageFields[$field]['type'], $field, $values[$field]);
+                if (null !== $error) {
+                    return $error;
                 }
             }
             $translations[$clangId] = $values;
@@ -356,6 +364,73 @@ final class MachineryApi extends RoutePackage
         }
 
         return [$fieldsInput, $translations];
+    }
+
+    /**
+     * Validates a single value against its declared field type. Returns an error
+     * message (-> HTTP 400) when the value cannot be stored, so a caller never
+     * receives a success response for data that was silently dropped.
+     */
+    private static function validateFieldValue(string $type, string $field, mixed $value): ?string
+    {
+        if (null === $value) {
+            return null;
+        }
+        if (str_starts_with($type, 'enum:')) {
+            $allowed = explode(',', substr($type, 5));
+            if (!is_scalar($value) || !in_array((string) $value, $allowed, true)) {
+                return 'Field "' . $field . '" must be one of: ' . implode(', ', $allowed) . '.';
+            }
+            return null;
+        }
+
+        switch ($type) {
+            case 'string':
+            case 'html':
+            case 'media':
+                if (!is_scalar($value)) {
+                    return 'Field "' . $field . '" must be a string.';
+                }
+                return null;
+            case 'int':
+                if (!is_int($value) && !(is_string($value) && is_numeric($value))) {
+                    return 'Field "' . $field . '" must be an integer.';
+                }
+                return null;
+            case 'bool':
+                if (!is_bool($value) && !in_array($value, [0, 1, '0', '1'], true)) {
+                    return 'Field "' . $field . '" must be a boolean.';
+                }
+                return null;
+            case 'int[]':
+                if (!is_array($value) || [] !== array_filter($value, static fn ($v): bool => !is_numeric($v))) {
+                    return 'Field "' . $field . '" must be an array of integers.';
+                }
+                return null;
+            case 'media[]':
+                if (!is_array($value) || [] !== array_filter($value, static fn ($v): bool => !is_scalar($v))) {
+                    return 'Field "' . $field . '" must be an array of file names.';
+                }
+                return null;
+            case 'faq[]':
+                if (!is_array($value)) {
+                    return 'Field "' . $field . '" must be an array of FAQ items.';
+                }
+                foreach ($value as $item) {
+                    if (!is_array($item)) {
+                        return 'Field "' . $field . '": each FAQ item must be an object with a question and an answer.';
+                    }
+                    if ('' === trim((string) ($item['q'] ?? $item['question'] ?? ''))) {
+                        return 'Field "' . $field . '": each FAQ item needs a non-empty "q"/"question".';
+                    }
+                    if (isset($item['tags']) && !is_array($item['tags'])) {
+                        return 'Field "' . $field . '": FAQ "tags" must be an array.';
+                    }
+                }
+                return null;
+            default:
+                return null;
+        }
     }
 
     /**
@@ -460,7 +535,22 @@ final class MachineryApi extends RoutePackage
         }
 
         if ('faq' === $field) {
-            $object->{$field} = \TobiasKrais\D2UMachinery\FaqField::encode(is_array($value) ? $value : []);
+            // Accept both the canonical q/a/tags keys and the more descriptive
+            // question/answer aliases, so a caller's FAQ items are stored instead of
+            // being silently dropped (FaqField::encode() keeps only entries with a
+            // non-empty question).
+            $faqItems = [];
+            foreach (is_array($value) ? $value : [] as $faqItem) {
+                if (!is_array($faqItem)) {
+                    continue;
+                }
+                $faqItems[] = [
+                    'q' => (string) ($faqItem['q'] ?? $faqItem['question'] ?? ''),
+                    'a' => (string) ($faqItem['a'] ?? $faqItem['answer'] ?? ''),
+                    'tags' => (array) ($faqItem['tags'] ?? []),
+                ];
+            }
+            $object->{$field} = \TobiasKrais\D2UMachinery\FaqField::encode($faqItems);
             return;
         }
         if ('bool' === $type) {
