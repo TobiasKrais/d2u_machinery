@@ -152,7 +152,8 @@ d2u_machinery_export_settings_email = E-mailadres voor foutrapporten
 d2u_machinery_used_machines_year_built = Bouwjaar
 
 d2u_machinery_industry_sectors = Branches
-d2u_machinery_industry_sectors_article = Branches-artikeld2u_machinery_industry_sectors_generate_urls = Detailpagina-URL's voor branches genereren
+d2u_machinery_industry_sectors_article = Branches-artikel
+d2u_machinery_industry_sectors_generate_urls = Detailpagina-URL's voor branches genereren
 d2u_machinery_industry_sectors_no_industry_sectors_found = Geen branches gevonden.
 
 d2u_machinery_agitator_extension = Roerwerken
