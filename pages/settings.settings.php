@@ -143,7 +143,7 @@ if (!$invalidCsrf && 'save' === filter_input(INPUT_POST, 'btn_save')) {
             BackendHelper::update_url_scheme(\rex::getTablePrefix() .'d2u_machinery_url_machines', $settings['article_id']);
             if (\TobiasKrais\D2UMachinery\Extension::isActive('industry_sectors')) {
                 if ('false' === (string) rex_config::get('d2u_machinery', 'industry_sectors_generate_urls', 'true')) {
-                    \TobiasKrais\D2UMachinery\UrlProfile::deleteByNamespace('industry_sector_id');
+                    \TobiasKrais\D2UMachinery\UrlProfile::removeIndustrySector();
                 } elseif (0 === count(\Url\Profile::getByNamespace('industry_sector_id'))) {
                     \TobiasKrais\D2UMachinery\UrlProfile::createIndustrySector();
                 } else {

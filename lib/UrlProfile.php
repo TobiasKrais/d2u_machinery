@@ -36,14 +36,24 @@ class UrlProfile
     }
 
     /**
-     * (Re)creates the industry sector url profile and rebuilds its URL cache.
-     * Reads article and language from config. No-op when the url addon is missing.
+     * (Re)creates the industry sector url profile and its database view, then
+     * rebuilds the URL cache. Reads article and language from config.
+     * No-op when the url addon is missing.
      */
     public static function createIndustrySector(): void
     {
         if (!rex_addon::get('url')->isAvailable()) {
             return;
         }
+
+        $prefix = rex::getTablePrefix();
+
+        rex_sql::factory()->setQuery('CREATE OR REPLACE VIEW '. $prefix .'d2u_machinery_url_industry_sectors AS
+    		SELECT lang.industry_sector_id, lang.clang_id, lang.name, lang.name AS seo_title, lang.teaser AS seo_description, industries.pic AS picture, lang.updatedate
+    		FROM '. $prefix .'d2u_machinery_industry_sectors_lang AS lang
+    		LEFT JOIN '. $prefix .'d2u_machinery_industry_sectors AS industries ON lang.industry_sector_id = industries.industry_sector_id
+    		LEFT JOIN '. $prefix .'clang AS clang ON lang.clang_id = clang.id
+    		WHERE clang.`status` = 1');
 
         $clang_id = 1 === count(rex_clang::getAllIds()) ? rex_clang::getStartId() : 0;
         $article_id = (int) rex_config::get('d2u_machinery', 'industry_sectors_article_id', rex_article::getSiteStartArticleId());
@@ -60,5 +70,19 @@ class UrlProfile
             . "'', '[]', '', '[]', '', '[]', CURRENT_TIMESTAMP, '". $login ."', CURRENT_TIMESTAMP, '". $login ."');");
 
         \TobiasKrais\D2UHelper\BackendHelper::generateUrlCache(self::INDUSTRY_SECTOR_NAMESPACE);
+    }
+
+    /**
+     * Removes the industry sector url profile and its database view.
+     * No-op when the url addon is missing.
+     */
+    public static function removeIndustrySector(): void
+    {
+        if (!rex_addon::get('url')->isAvailable()) {
+            return;
+        }
+
+        self::deleteByNamespace(self::INDUSTRY_SECTOR_NAMESPACE);
+        rex_sql::factory()->setQuery('DROP VIEW IF EXISTS '. rex::getTablePrefix() .'d2u_machinery_url_industry_sectors');
     }
 }

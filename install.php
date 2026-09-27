@@ -443,17 +443,11 @@ if (d2u_machinery_should_install($d2uMachineryAction, 'industry_sectors')) {
         ->ensureColumn(new \rex_sql_column('industry_sector_ids', 'TEXT'))
         ->alter();
 
-    $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_machinery_url_industry_sectors AS
-    	SELECT lang.industry_sector_id, lang.clang_id, lang.name, lang.name AS seo_title, lang.teaser AS seo_description, industries.pic AS picture, lang.updatedate
-    	FROM '. \rex::getTablePrefix() .'d2u_machinery_industry_sectors_lang AS lang
-    	LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_industry_sectors AS industries ON lang.industry_sector_id = industries.industry_sector_id
-    	LEFT JOIN '. \rex::getTablePrefix() .'clang AS clang ON lang.clang_id = clang.id
-    	WHERE clang.`status` = 1');
-
     if (\rex_addon::get('url')->isAvailable()) {
         // URL generation for industry sectors is optional (default: on).
+        // The database view exists only while URLs are generated.
         if ('false' === (string) rex_config::get('d2u_machinery', 'industry_sectors_generate_urls', 'true')) {
-            \TobiasKrais\D2UMachinery\UrlProfile::deleteByNamespace('industry_sector_id');
+            \TobiasKrais\D2UMachinery\UrlProfile::removeIndustrySector();
         } else {
             \TobiasKrais\D2UMachinery\UrlProfile::createIndustrySector();
         }
