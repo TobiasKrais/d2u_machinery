@@ -90,9 +90,15 @@ if (!$invalidCsrf && 'save' === filter_input(INPUT_POST, 'btn_save')) {
         unset($settings['used_machine_article_id_rent'], $settings['used_machine_article_id_sale'], $settings['used_machines_pic_type'], $settings['used_machines_rent_generate_urls']);
     }
     if ($requestedExtensionStates['industry_sectors'] ?? false) {
-        $settings['industry_sectors_article_id'] = is_array($link_ids['REX_INPUT_LINK']) ? $link_ids['REX_INPUT_LINK'][5] : 0;
         if (rex_addon::get('url')->isAvailable()) {
             $settings['industry_sectors_generate_urls'] = array_key_exists('industry_sectors_generate_urls', $settings) ? 'true' : 'false';
+        }
+        // Markets article is only relevant while URL generation is on. When off,
+        // leave the stored value untouched (still used for the parameter URL fallback).
+        if (rex_addon::get('url')->isAvailable() && 'false' === ($settings['industry_sectors_generate_urls'] ?? 'true')) {
+            unset($settings['industry_sectors_article_id']);
+        } else {
+            $settings['industry_sectors_article_id'] = is_array($link_ids['REX_INPUT_LINK']) ? $link_ids['REX_INPUT_LINK'][5] : 0;
         }
     } else {
         unset($settings['industry_sectors_article_id'], $settings['industry_sectors_generate_urls']);
