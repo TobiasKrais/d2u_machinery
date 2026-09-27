@@ -74,11 +74,17 @@ if (!$invalidCsrf && 'save' === filter_input(INPUT_POST, 'btn_save')) {
         $settings[\TobiasKrais\D2UMachinery\Extension::getConfigKey('export')] = \TobiasKrais\D2UMachinery\Extension::STATE_INACTIVE;
     }
     if ($requestedExtensionStates['used_machines'] ?? false) {
-        $settings['used_machine_article_id_rent'] = is_array($link_ids['REX_INPUT_LINK']) ? $link_ids['REX_INPUT_LINK'][3] : 0;
         $settings['used_machine_article_id_sale'] = is_array($link_ids['REX_INPUT_LINK']) ? $link_ids['REX_INPUT_LINK'][4] : 0;
         $settings['used_machines_pic_type'] = $settings['used_machines_pic_type'] ?? (string) rex_config::get('d2u_machinery', 'used_machines_pic_type');
         if (rex_addon::get('url')->isAvailable()) {
             $settings['used_machines_rent_generate_urls'] = array_key_exists('used_machines_rent_generate_urls', $settings) ? 'true' : 'false';
+        }
+        // Rent article is only relevant while rent URL generation is on. When off,
+        // leave the stored value untouched (still used for the parameter URL fallback).
+        if (rex_addon::get('url')->isAvailable() && 'false' === ($settings['used_machines_rent_generate_urls'] ?? 'true')) {
+            unset($settings['used_machine_article_id_rent']);
+        } else {
+            $settings['used_machine_article_id_rent'] = is_array($link_ids['REX_INPUT_LINK']) ? $link_ids['REX_INPUT_LINK'][3] : 0;
         }
     } else {
         unset($settings['used_machine_article_id_rent'], $settings['used_machine_article_id_sale'], $settings['used_machines_pic_type'], $settings['used_machines_rent_generate_urls']);
@@ -194,10 +200,15 @@ if (!$invalidCsrf && 'save' === filter_input(INPUT_POST, 'btn_save')) {
     }
 }
 
-if (\TobiasKrais\D2UMachinery\Extension::isActive('used_machines') && ((int) rex_config::get('d2u_machinery', 'article_id') === (int) rex_config::get('d2u_machinery', 'used_machine_article_id_rent')
-        || (int) rex_config::get('d2u_machinery', 'article_id') === (int) rex_config::get('d2u_machinery', 'used_machine_article_id_rent')
-        || (int) rex_config::get('d2u_machinery', 'used_machine_article_id_rent') === (int) rex_config::get('d2u_machinery', 'used_machine_article_id_rent'))) {
-    echo rex_view::warning(rex_i18n::msg('d2u_machinery_used_machines_settings_duplicate_article_id'));
+// Warn about a real article-id collision between machines, sale and rent overviews.
+// Skipped while rent URL generation is off (rent has no own overview then).
+if (\TobiasKrais\D2UMachinery\Extension::isActive('used_machines') && 'false' !== (string) rex_config::get('d2u_machinery', 'used_machines_rent_generate_urls', 'true')) {
+    $machinesArticleId = (int) rex_config::get('d2u_machinery', 'article_id');
+    $saleArticleId = (int) rex_config::get('d2u_machinery', 'used_machine_article_id_sale');
+    $rentArticleId = (int) rex_config::get('d2u_machinery', 'used_machine_article_id_rent');
+    if ($machinesArticleId === $rentArticleId || $machinesArticleId === $saleArticleId || $rentArticleId === $saleArticleId) {
+        echo rex_view::warning(rex_i18n::msg('d2u_machinery_used_machines_settings_duplicate_article_id'));
+    }
 }
 ?>
 <form action="<?= BackendHelper::getCurrentBackendPage([], ['message', 'message_type']) ?>" method="post">
