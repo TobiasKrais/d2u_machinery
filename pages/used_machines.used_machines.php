@@ -182,9 +182,15 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                 }
                                 BackendHelper::form_select('d2u_machinery_contacts_contact', 'form[contact_id]', $options_contacts, [$used_machine->contact instanceof \TobiasKrais\D2UMachinery\Contact ? $used_machine->contact->contact_id : 0], 1, false, $readonly);
                             }
-                            $options_offer_type = ['sale' => rex_i18n::msg('d2u_machinery_used_machines_offer_type_sale'),
-                                'rent' => rex_i18n::msg('d2u_machinery_used_machines_offer_type_rent')];
-                            BackendHelper::form_select('d2u_machinery_used_machines_offer_type', 'form[offer_type]', $options_offer_type, [$used_machine->offer_type], 1, false, $readonly);
+                            // Angebotsart automatisch setzen und ausblenden, wenn Miet-URLs deaktiviert sind.
+                            if ('false' === (string) rex_config::get('d2u_machinery', 'used_machines_rent_generate_urls', 'true')) {
+                                $autoOfferType = 'rent' === $used_machine->offer_type ? 'rent' : 'sale';
+                                echo '<input type="hidden" name="form[offer_type]" value="'. rex_escape($autoOfferType, 'html_attr') .'">';
+                            } else {
+                                $options_offer_type = ['sale' => rex_i18n::msg('d2u_machinery_used_machines_offer_type_sale'),
+                                    'rent' => rex_i18n::msg('d2u_machinery_used_machines_offer_type_rent')];
+                                BackendHelper::form_select('d2u_machinery_used_machines_offer_type', 'form[offer_type]', $options_offer_type, [$used_machine->offer_type], 1, false, $readonly);
+                            }
                             BackendHelper::form_input('d2u_machinery_used_machines_availability', 'form[availability]', $used_machine->availability, false, $readonly, 'date');
                             BackendHelper::form_input('d2u_machinery_used_machines_product_number', 'form[product_number]', $used_machine->product_number, false, $readonly, 'text');
                             BackendHelper::form_input('d2u_machinery_used_machines_year_built', 'form[year_built]', $used_machine->year_built, false, $readonly, 'number');
