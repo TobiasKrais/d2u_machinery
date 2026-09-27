@@ -284,6 +284,7 @@ d2u_machinery_service_options_no_service_options_found = Es wurden noch keine Se
 d2u_machinery_used_machines = Gebrauchtmaschinen
 d2u_machinery_used_machines_rights = D2U Maschinen Addon: Gebrauchtmaschinen
 d2u_machinery_used_machines_article_rent = Gebrauchtmaschinen Artikel Miete
+d2u_machinery_used_machines_rent_generate_urls = Detailseiten-URLs für Vermietung generieren
 d2u_machinery_used_machines_article_sale = Gebrauchtmaschinen Artikel Verkauf
 d2u_machinery_used_machines_availability = Verfügbar ab
 d2u_machinery_used_machines_currency_code = Währungscode

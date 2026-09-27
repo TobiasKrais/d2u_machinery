@@ -77,8 +77,11 @@ if (!$invalidCsrf && 'save' === filter_input(INPUT_POST, 'btn_save')) {
         $settings['used_machine_article_id_rent'] = is_array($link_ids['REX_INPUT_LINK']) ? $link_ids['REX_INPUT_LINK'][3] : 0;
         $settings['used_machine_article_id_sale'] = is_array($link_ids['REX_INPUT_LINK']) ? $link_ids['REX_INPUT_LINK'][4] : 0;
         $settings['used_machines_pic_type'] = $settings['used_machines_pic_type'] ?? (string) rex_config::get('d2u_machinery', 'used_machines_pic_type');
+        if (rex_addon::get('url')->isAvailable()) {
+            $settings['used_machines_rent_generate_urls'] = array_key_exists('used_machines_rent_generate_urls', $settings) ? 'true' : 'false';
+        }
     } else {
-        unset($settings['used_machine_article_id_rent'], $settings['used_machine_article_id_sale'], $settings['used_machines_pic_type']);
+        unset($settings['used_machine_article_id_rent'], $settings['used_machine_article_id_sale'], $settings['used_machines_pic_type'], $settings['used_machines_rent_generate_urls']);
     }
     if ($requestedExtensionStates['industry_sectors'] ?? false) {
         $settings['industry_sectors_article_id'] = is_array($link_ids['REX_INPUT_LINK']) ? $link_ids['REX_INPUT_LINK'][5] : 0;
@@ -154,8 +157,14 @@ if (!$invalidCsrf && 'save' === filter_input(INPUT_POST, 'btn_save')) {
                 BackendHelper::update_url_scheme(\rex::getTablePrefix() .'d2u_machinery_url_production_lines', $settings['production_lines_article_id']);
             }
             if (\TobiasKrais\D2UMachinery\Extension::isActive('used_machines')) {
-                BackendHelper::update_url_scheme(\rex::getTablePrefix() .'d2u_machinery_url_used_machines_rent', $settings['used_machine_article_id_rent']);
-                BackendHelper::update_url_scheme(\rex::getTablePrefix() .'d2u_machinery_url_used_machine_categories_rent', $settings['used_machine_article_id_rent']);
+                if ('false' === (string) rex_config::get('d2u_machinery', 'used_machines_rent_generate_urls', 'true')) {
+                    \TobiasKrais\D2UMachinery\UrlProfile::removeUsedMachinesRent();
+                } elseif (0 === count(\Url\Profile::getByNamespace('used_rent_machine_id'))) {
+                    \TobiasKrais\D2UMachinery\UrlProfile::createUsedMachinesRent();
+                } else {
+                    BackendHelper::update_url_scheme(\rex::getTablePrefix() .'d2u_machinery_url_used_machines_rent', $settings['used_machine_article_id_rent']);
+                    BackendHelper::update_url_scheme(\rex::getTablePrefix() .'d2u_machinery_url_used_machine_categories_rent', $settings['used_machine_article_id_rent']);
+                }
                 BackendHelper::update_url_scheme(\rex::getTablePrefix() .'d2u_machinery_url_used_machines_sale', $settings['used_machine_article_id_sale']);
                 BackendHelper::update_url_scheme(\rex::getTablePrefix() .'d2u_machinery_url_used_machine_categories_sale', $settings['used_machine_article_id_sale']);
             }
@@ -253,7 +262,17 @@ if (\TobiasKrais\D2UMachinery\Extension::isActive('used_machines') && ((int) rex
                                 } elseif ('production_lines' === $extensionKey) {
                                     BackendHelper::form_linkfield('d2u_machinery_production_lines_article', '6', (int) rex_config::get('d2u_machinery', 'production_lines_article_id'), (int) rex_config::get('d2u_helper', 'default_lang', rex_clang::getStartId()));
                                 } elseif ('used_machines' === $extensionKey) {
+                                    $usedMachinesUrlAddon = rex_addon::get('url')->isAvailable();
+                                    if ($usedMachinesUrlAddon) {
+                                        BackendHelper::form_checkbox('d2u_machinery_used_machines_rent_generate_urls', 'settings[used_machines_rent_generate_urls]', 'true', 'true' === rex_config::get('d2u_machinery', 'used_machines_rent_generate_urls', 'true'));
+                                    }
+                                    echo '<div id="d2u-machinery-used-machines-rent-article-wrapper">';
                                     BackendHelper::form_linkfield('d2u_machinery_used_machines_article_rent', '3', (int) rex_config::get('d2u_machinery', 'used_machine_article_id_rent'), (int) rex_config::get('d2u_helper', 'default_lang', rex_clang::getStartId()));
+                                    echo '</div>';
+                                    if ($usedMachinesUrlAddon) {
+                                        // Hide the rent article field while rent URL generation is switched off.
+                                        echo '<script>(function(){var s=\'input[name="settings\\\\[used_machines_rent_generate_urls\\\\]"]\';function t(){$("#d2u-machinery-used-machines-rent-article-wrapper").toggle($(s).is(":checked"));}t();$(document).on("change",s,t);})();</script>';
+                                    }
                                     BackendHelper::form_linkfield('d2u_machinery_used_machines_article_sale', '4', (int) rex_config::get('d2u_machinery', 'used_machine_article_id_sale'), (int) rex_config::get('d2u_helper', 'default_lang', rex_clang::getStartId()));
                                     $options_used_machines_show_pics = ['slider' => rex_i18n::msg('d2u_machinery_used_machines_pic_type_slider'), 'lightbox' => rex_i18n::msg('d2u_machinery_used_machines_pic_type_lightbox')];
                                     BackendHelper::form_select('d2u_machinery_used_machines_pic_type', 'settings[used_machines_pic_type]', $options_used_machines_show_pics, [(string) rex_config::get('d2u_machinery', 'used_machines_pic_type')]);

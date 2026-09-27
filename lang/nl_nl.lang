@@ -283,6 +283,7 @@ d2u_machinery_service_options_no_service_options_found = Geen serviceopties gevo
 d2u_machinery_used_machines = Gebruikte machines
 d2u_machinery_used_machines_rights = D2U Machinery-addon: gebruikte machines
 d2u_machinery_used_machines_article_rent = Artikel gebruikte machines huur
+d2u_machinery_used_machines_rent_generate_urls = Detailpagina-URL's voor verhuur genereren
 d2u_machinery_used_machines_article_sale = Artikel gebruikte machines verkoop
 d2u_machinery_used_machines_availability = Beschikbaar vanaf
 d2u_machinery_used_machines_currency_code = Valutacode

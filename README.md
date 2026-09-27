@@ -72,9 +72,9 @@ Der Linkedin App muss im Reiter "Auth" im Bereich "OAuth 2.0 settings" unter "Au
 
 Auch an der Redaxo Konfiguration muss eine Anpassung vorgenommen werden. In der config.yml muss unter "session:", "backend:", dann "cookie:" der Wert für "samesite:" auf "Lax" eingestellt werden. Wird diese Anpassung nicht vorgenommen, zeigt Redaxo nach der Rückkehr von Linkedin den Redaxo Anmeldebildschirm anstatt die Export-Seite des Addons. Würde man diese Seite einfach nochmals neu laden, erfolgt die Anzeige der gewünschten Seite.
 
-### Branchen (industry_sectors)
+### Märkte (industry_sectors)
 
-Diese Erweiterung ermöglicht Branchen zu erstellen, in denen Maschinen eingesetzt werden. Eine Maschine kann Branchen zugeordnet werden. Für jede Branche wird eine eigene URL generiert. Nach der Installation sollten zuerst die Einstellungen festegelegt, danach die Branchen eingegeben und zuletzt die Maschinen den Branchen zugeordnet werden. Die Erweiterung stellt das Beispielmodul "90-2 D2U Machinery Addon - Branchen" zur Verfügung.
+Diese Erweiterung ermöglicht Märkte zu erstellen, in denen Maschinen eingesetzt werden. Eine Maschine kann Märkten zugeordnet werden. Für jeden Markt wird standardmäßig eine eigene URL generiert; die URL-Generierung lässt sich in den Einstellungen abschalten (dann greift die Parameter-URL). Nach der Installation sollten zuerst die Einstellungen festegelegt, danach die Märkte eingegeben und zuletzt die Maschinen den Märkten zugeordnet werden. Die Erweiterung stellt das Beispielmodul "90-2 D2U Machinery Addon - Märkte" zur Verfügung.
 
 ### Rührwerke (machine_agitator_extension)
 
@@ -110,18 +110,18 @@ Diese Erweiterung erweitert die Eingabefelder der Maschinen um Serviceoptionen. 
 
 ### Gebrauchtmaschinen (used_machines)
 
-Diese Erweiterung bietet die Möglichkeit zusätzlich zu Maschinen auch Gebrauchtmaschinen anzubieten. Diese können als Miet- oder Verkaufsangebot definiert werden. Als Beispielmodule stehen die Gebrauchtmaschinen-Varianten für Bootstrap 5 und das veraltete Bootstrap 4 zur Verfügung. Wenn die Erweiterung Export aktiviert ist, können Gebrauchtmaschinen auch auf Onlineportalen eingestellt werden.
+Diese Erweiterung bietet die Möglichkeit zusätzlich zu Maschinen auch Gebrauchtmaschinen anzubieten. Diese können als Miet- oder Verkaufsangebot definiert werden. Für Mietangebote lässt sich die URL-Generierung in den Einstellungen abschalten (Standard: an). Als Beispielmodule stehen die Gebrauchtmaschinen-Varianten für Bootstrap 5 und das veraltete Bootstrap 4 zur Verfügung. Wenn die Erweiterung Export aktiviert ist, können Gebrauchtmaschinen auch auf Onlineportalen eingestellt werden.
 
 ## Beispielmodule
 
 - 90-1 D2U Machinery Addon - Hauptausgabe (BS4, deprecated)
-- 90-2 D2U Machinery Addon - Branchen (BS4, deprecated)
+- 90-2 D2U Machinery Addon - Märkte (BS4, deprecated)
 - 90-3 D2U Machinery Addon - Kategorien (BS4, deprecated)
 - 90-4 D2U Machinery Addon - Gebrauchtmaschinen (BS4, deprecated)
 - 90-5 D2U Machinery Addon - Box Beratungshinweis (BS4, deprecated)
 - 90-6 D2U Machinery Addon - Gebrauchtmaschinen Topangebote (BS4, deprecated)
 - 90-7 D2U Machinery Addon - Hauptausgabe (BS5)
-- 90-8 D2U Machinery Addon - Branchen (BS5)
+- 90-8 D2U Machinery Addon - Märkte (BS5)
 - 90-9 D2U Machinery Addon - Kategorien (BS5)
 - 90-10 D2U Machinery Addon - Gebrauchtmaschinen (BS5)
 - 90-11 D2U Machinery Addon - Box Beratungshinweis (BS5)
