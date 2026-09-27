@@ -82,8 +82,11 @@ if (!$invalidCsrf && 'save' === filter_input(INPUT_POST, 'btn_save')) {
     }
     if ($requestedExtensionStates['industry_sectors'] ?? false) {
         $settings['industry_sectors_article_id'] = is_array($link_ids['REX_INPUT_LINK']) ? $link_ids['REX_INPUT_LINK'][5] : 0;
+        if (rex_addon::get('url')->isAvailable()) {
+            $settings['industry_sectors_generate_urls'] = array_key_exists('industry_sectors_generate_urls', $settings) ? 'true' : 'false';
+        }
     } else {
-        unset($settings['industry_sectors_article_id']);
+        unset($settings['industry_sectors_article_id'], $settings['industry_sectors_generate_urls']);
     }
     if ($requestedExtensionStates['production_lines'] ?? false) {
         $settings['production_lines_article_id'] = is_array($link_ids['REX_INPUT_LINK']) ? $link_ids['REX_INPUT_LINK'][6] : 0;
@@ -139,7 +142,13 @@ if (!$invalidCsrf && 'save' === filter_input(INPUT_POST, 'btn_save')) {
             BackendHelper::update_url_scheme(\rex::getTablePrefix() .'d2u_machinery_url_machine_categories', $settings['article_id']);
             BackendHelper::update_url_scheme(\rex::getTablePrefix() .'d2u_machinery_url_machines', $settings['article_id']);
             if (\TobiasKrais\D2UMachinery\Extension::isActive('industry_sectors')) {
-                BackendHelper::update_url_scheme(\rex::getTablePrefix() .'d2u_machinery_url_industry_sectors', $settings['industry_sectors_article_id']);
+                if ('false' === (string) rex_config::get('d2u_machinery', 'industry_sectors_generate_urls', 'true')) {
+                    \TobiasKrais\D2UMachinery\UrlProfile::deleteByNamespace('industry_sector_id');
+                } elseif (0 === count(\Url\Profile::getByNamespace('industry_sector_id'))) {
+                    \TobiasKrais\D2UMachinery\UrlProfile::createIndustrySector();
+                } else {
+                    BackendHelper::update_url_scheme(\rex::getTablePrefix() .'d2u_machinery_url_industry_sectors', $settings['industry_sectors_article_id']);
+                }
             }
             if (\TobiasKrais\D2UMachinery\Extension::isActive('production_lines')) {
                 BackendHelper::update_url_scheme(\rex::getTablePrefix() .'d2u_machinery_url_production_lines', $settings['production_lines_article_id']);
@@ -230,7 +239,17 @@ if (\TobiasKrais\D2UMachinery\Extension::isActive('used_machines') && ((int) rex
                                     BackendHelper::form_checkbox('d2u_machinery_export_settings_autoexport', 'settings[export_autoexport]', 'active', 'active' === rex_config::get('d2u_machinery', 'export_autoexport'));
                                     BackendHelper::form_input('d2u_machinery_export_settings_email', 'settings[export_failure_email]', (string) rex_config::get('d2u_machinery', 'export_failure_email'), $exportSettingsEnabled, false, 'email');
                                 } elseif ('industry_sectors' === $extensionKey) {
+                                    $industrySectorsUrlAddon = rex_addon::get('url')->isAvailable();
+                                    if ($industrySectorsUrlAddon) {
+                                        BackendHelper::form_checkbox('d2u_machinery_industry_sectors_generate_urls', 'settings[industry_sectors_generate_urls]', 'true', 'true' === rex_config::get('d2u_machinery', 'industry_sectors_generate_urls', 'true'));
+                                    }
+                                    echo '<div id="d2u-machinery-industry-sectors-article-wrapper">';
                                     BackendHelper::form_linkfield('d2u_machinery_industry_sectors_article', '5', (int) rex_config::get('d2u_machinery', 'industry_sectors_article_id'), (int) rex_config::get('d2u_helper', 'default_lang', rex_clang::getStartId()));
+                                    echo '</div>';
+                                    if ($industrySectorsUrlAddon) {
+                                        // Hide the article field while URL generation is switched off.
+                                        echo '<script>(function(){var s=\'input[name="settings\\\\[industry_sectors_generate_urls\\\\]"]\';function t(){$("#d2u-machinery-industry-sectors-article-wrapper").toggle($(s).is(":checked"));}t();$(document).on("change",s,t);})();</script>';
+                                    }
                                 } elseif ('production_lines' === $extensionKey) {
                                     BackendHelper::form_linkfield('d2u_machinery_production_lines_article', '6', (int) rex_config::get('d2u_machinery', 'production_lines_article_id'), (int) rex_config::get('d2u_helper', 'default_lang', rex_clang::getStartId()));
                                 } elseif ('used_machines' === $extensionKey) {

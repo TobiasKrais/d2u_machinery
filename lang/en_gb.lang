@@ -153,6 +153,7 @@ d2u_machinery_used_machines_year_built = Year of construction
 
 d2u_machinery_industry_sectors = Industry sectors
 d2u_machinery_industry_sectors_article = Industry sectors article
+d2u_machinery_industry_sectors_generate_urls = Generate detail page URLs for industry sectors
 
 d2u_machinery_industry_sectors_no_industry_sectors_found = No industry sectors found.
 
