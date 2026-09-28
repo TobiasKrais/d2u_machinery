@@ -158,8 +158,8 @@ function rex_d2u_machinery_article_is_in_use(rex_extension_point $ep)
     // Prepare warnings
     // Machines
     for ($i = 0; $i < $sql_machine->getRows(); ++$i) {
-        $message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/machine/machine&func=edit&entry_id='.
-            $sql_machine->getValue('machine_id') .'\')">'. rex_i18n::msg('d2u_machinery_rights_all') .' - '. rex_i18n::msg('d2u_machinery_meta_machines') .': '. $sql_machine->getValue('name') .'</a>';
+        $message = '<a href="index.php?page=d2u_machinery/machine/machine&func=edit&entry_id='.
+            $sql_machine->getValue('machine_id') .'">'. rex_i18n::msg('d2u_machinery_rights_all') .' - '. rex_i18n::msg('d2u_machinery_meta_machines') .': '. $sql_machine->getValue('name') .'</a>';
         if (!in_array($message, $warning, true)) {
             $warning[] = $message;
         }
@@ -280,8 +280,8 @@ function rex_d2u_machinery_media_is_in_use(rex_extension_point $ep)
     // Prepare warnings
     // Machines
     for ($i = 0; $i < $sql_machine->getRows(); ++$i) {
-        $message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/machine/machine&func=edit&entry_id='.
-            $sql_machine->getValue('machine_id') .'\')">'. rex_i18n::msg('d2u_machinery_rights_all') .' - '. rex_i18n::msg('d2u_machinery_meta_machines') .': '. $sql_machine->getValue('name') .'</a>';
+        $message = '<a href="index.php?page=d2u_machinery/machine/machine&func=edit&entry_id='.
+            $sql_machine->getValue('machine_id') .'">'. rex_i18n::msg('d2u_machinery_rights_all') .' - '. rex_i18n::msg('d2u_machinery_meta_machines') .': '. $sql_machine->getValue('name') .'</a>';
         if (!in_array($message, $warning, true)) {
             $warning[] = $message;
         }
@@ -290,7 +290,7 @@ function rex_d2u_machinery_media_is_in_use(rex_extension_point $ep)
 
     // Categories
     for ($i = 0; $i < $sql_categories->getRows(); ++$i) {
-        $message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/category&func=edit&entry_id='. $sql_categories->getValue('category_id') .'\')">'.
+        $message = '<a href="index.php?page=d2u_machinery/category&func=edit&entry_id='. $sql_categories->getValue('category_id') .'">'.
              rex_i18n::msg('d2u_machinery_rights_all') .' - '. rex_i18n::msg('d2u_helper_categories') .': '. $sql_categories->getValue('name') . '</a>';
         if (!in_array($message, $warning, true)) {
             $warning[] = $message;
@@ -302,7 +302,7 @@ function rex_d2u_machinery_media_is_in_use(rex_extension_point $ep)
     $addon = rex_addon::get('d2u_machinery');
     if (($addon->hasConfig('consultation_pic') && $addon->getConfig('consultation_pic') === $filename)
         || ($addon->hasConfig('consultation_pics') && str_contains((string) $addon->getConfig('consultation_pics'), $filename))) {
-        $message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/settings\')">'.
+        $message = '<a href="index.php?page=d2u_machinery/settings">'.
              rex_i18n::msg('d2u_machinery_rights_all') .' - '. rex_i18n::msg('d2u_helper_settings') . '</a>';
         if (!in_array($message, $warning, true)) {
             $warning[] = $message;
@@ -373,8 +373,8 @@ function rex_d2u_machinery_video_is_in_use(rex_extension_point $ep): array
         $sql_used_machines->setQuery('SELECT used_machine_id, manufacturer, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_used_machines` '
             .'WHERE video_ids LIKE :video_id_pipe', [':video_id_pipe' => $video_id_pipe]);
         for ($i = 0; $i < $sql_used_machines->getRows(); ++$i) {
-            $message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/used_machines/used_machines&func=edit&entry_id='.
-                $sql_used_machines->getValue('used_machine_id') .'\')">'. rex_i18n::msg('d2u_machinery_rights_all') .' - '. rex_i18n::msg('d2u_machinery_used_machines') .': '. $sql_used_machines->getValue('manufacturer') .' '. $sql_used_machines->getValue('name') .'</a>';
+            $message = '<a href="index.php?page=d2u_machinery/used_machines/used_machines&func=edit&entry_id='.
+                $sql_used_machines->getValue('used_machine_id') .'">'. rex_i18n::msg('d2u_machinery_rights_all') .' - '. rex_i18n::msg('d2u_machinery_used_machines') .': '. $sql_used_machines->getValue('manufacturer') .' '. $sql_used_machines->getValue('name') .'</a>';
             if (!in_array($message, $warning, true)) {
                 $warning[] = $message;
             }
@@ -421,8 +421,8 @@ function rex_d2u_machinery_contacts_media_is_in_use(rex_extension_point $ep)
         .'WHERE picture = :filename', [':filename' => $filename]);
 
     for ($i = 0; $i < $sql_contacts->getRows(); ++$i) {
-        $message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/contacts&func=edit&entry_id='.
-            $sql_contacts->getValue('contact_id') .'\')">'.
+        $message = '<a href="index.php?page=d2u_machinery/contacts&func=edit&entry_id='.
+            $sql_contacts->getValue('contact_id') .'">'.
              rex_i18n::msg('d2u_machinery_meta_title') .' - '. rex_i18n::msg('d2u_machinery_contacts') .': '. $sql_contacts->getValue('name') . '</a>';
         if (!in_array($message, $warning, true)) {
             $warning[] = $message;
@@ -473,8 +473,8 @@ function rex_d2u_machinery_equipment_media_is_in_use(rex_extension_point $ep)
         .'WHERE picture = :filename AND clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang'), [':filename' => $filename]);
 
     for ($i = 0; $i < $sql->getRows(); ++$i) {
-        $message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/machine/equipment&equipment_subpage=equipment_group&func=edit&entry_id='.
-            $sql->getValue('group_id') .'\')">'. rex_i18n::msg('d2u_machinery_rights_all') .' - '. rex_i18n::msg('d2u_machinery_equipment_groups') .': '. $sql->getValue('name') .'</a>';
+        $message = '<a href="index.php?page=d2u_machinery/machine/equipment&equipment_subpage=equipment_group&func=edit&entry_id='.
+            $sql->getValue('group_id') .'">'. rex_i18n::msg('d2u_machinery_rights_all') .' - '. rex_i18n::msg('d2u_machinery_equipment_groups') .': '. $sql->getValue('name') .'</a>';
         if (!in_array($message, $warning, true)) {
             $warning[] = $message;
         }
@@ -542,8 +542,8 @@ function rex_d2u_machinery_industry_sectors_media_is_in_use(rex_extension_point 
         .'WHERE (pic = :filename OR icon = :filename) AND clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang'), [':filename' => $filename]);
 
     for ($i = 0; $i < $sql->getRows(); ++$i) {
-        $message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/industry_sectors&func=edit&entry_id='.
-            $sql->getValue('industry_sector_id') .'\')">'. rex_i18n::msg('d2u_machinery_rights_all') .' - '. rex_i18n::msg('d2u_machinery_industry_sectors') .': '. $sql->getValue('name') .'</a>';
+        $message = '<a href="index.php?page=d2u_machinery/industry_sectors&func=edit&entry_id='.
+            $sql->getValue('industry_sector_id') .'">'. rex_i18n::msg('d2u_machinery_rights_all') .' - '. rex_i18n::msg('d2u_machinery_industry_sectors') .': '. $sql->getValue('name') .'</a>';
         if (!in_array($message, $warning, true)) {
             $warning[] = $message;
         }
@@ -598,16 +598,16 @@ function rex_d2u_machinery_agitators_media_is_in_use(rex_extension_point $ep)
         .'WHERE pic = :filename AND clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang'), [':filename' => $filename]);
 
     for ($i = 0; $i < $sql_agitator_types->getRows(); ++$i) {
-        $message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/machine/agitators&agitator_subpage=agitator_type&func=edit&entry_id='.
-            $sql_agitator_types->getValue('agitator_type_id') .'\')">'. rex_i18n::msg('d2u_machinery_rights_all') .' - '. rex_i18n::msg('d2u_machinery_agitator_types') .': '. $sql_agitator_types->getValue('name') .'</a>';
+        $message = '<a href="index.php?page=d2u_machinery/machine/agitators&agitator_subpage=agitator_type&func=edit&entry_id='.
+            $sql_agitator_types->getValue('agitator_type_id') .'">'. rex_i18n::msg('d2u_machinery_rights_all') .' - '. rex_i18n::msg('d2u_machinery_agitator_types') .': '. $sql_agitator_types->getValue('name') .'</a>';
         if (!in_array($message, $warning, true)) {
             $warning[] = $message;
         }
         $sql_agitator_types->next();
     }
     for ($i = 0; $i < $sql_agitators->getRows(); ++$i) {
-        $message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/machine/agitators&agitator_subpage=agitator&func=edit&entry_id='.
-            $sql_agitators->getValue('agitator_id') .'\')">'. rex_i18n::msg('d2u_machinery_rights_all') .' - '. rex_i18n::msg('d2u_machinery_agitators') .': '. $sql_agitators->getValue('name') .'</a>';
+        $message = '<a href="index.php?page=d2u_machinery/machine/agitators&agitator_subpage=agitator&func=edit&entry_id='.
+            $sql_agitators->getValue('agitator_id') .'">'. rex_i18n::msg('d2u_machinery_rights_all') .' - '. rex_i18n::msg('d2u_machinery_agitators') .': '. $sql_agitators->getValue('name') .'</a>';
         if (!in_array($message, $warning, true)) {
             $warning[] = $message;
         }
@@ -653,8 +653,8 @@ function rex_d2u_machinery_certificates_media_is_in_use(rex_extension_point $ep)
         .'WHERE pic = :filename AND clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang'), [':filename' => $filename]);
 
     for ($i = 0; $i < $sql->getRows(); ++$i) {
-        $message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/machine/certificates&func=edit&entry_id='.
-            $sql->getValue('certificate_id') .'\')">'. rex_i18n::msg('d2u_machinery_rights_all') .' - '. rex_i18n::msg('d2u_machinery_certificates') .': '. $sql->getValue('name') .'</a>';
+        $message = '<a href="index.php?page=d2u_machinery/machine/certificates&func=edit&entry_id='.
+            $sql->getValue('certificate_id') .'">'. rex_i18n::msg('d2u_machinery_rights_all') .' - '. rex_i18n::msg('d2u_machinery_certificates') .': '. $sql->getValue('name') .'</a>';
         if (!in_array($message, $warning, true)) {
             $warning[] = $message;
         }
@@ -700,8 +700,8 @@ function rex_d2u_machinery_features_media_is_in_use(rex_extension_point $ep)
         .'WHERE pic = :filename AND clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang'), [':filename' => $filename]);
 
     for ($i = 0; $i < $sql->getRows(); ++$i) {
-        $message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/machine/features&func=edit&entry_id='.
-            $sql->getValue('feature_id') .'\')">'. rex_i18n::msg('d2u_machinery_rights_all') .' - '. rex_i18n::msg('d2u_machinery_features') .': '. $sql->getValue('name') .'</a>';
+        $message = '<a href="index.php?page=d2u_machinery/machine/features&func=edit&entry_id='.
+            $sql->getValue('feature_id') .'">'. rex_i18n::msg('d2u_machinery_rights_all') .' - '. rex_i18n::msg('d2u_machinery_features') .': '. $sql->getValue('name') .'</a>';
         if (!in_array($message, $warning, true)) {
             $warning[] = $message;
         }
@@ -747,8 +747,8 @@ function rex_d2u_machinery_options_media_is_in_use(rex_extension_point $ep)
         .'WHERE pic = :filename AND clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang'), [':filename' => $filename]);
 
     for ($i = 0; $i < $sql->getRows(); ++$i) {
-        $message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/machine/options&func=edit&entry_id='.
-            $sql->getValue('option_id') .'\')">'. rex_i18n::msg('d2u_machinery_rights_all') .' - '. rex_i18n::msg('d2u_machinery_options') .': '. $sql->getValue('name') .'</a>';
+        $message = '<a href="index.php?page=d2u_machinery/machine/options&func=edit&entry_id='.
+            $sql->getValue('option_id') .'">'. rex_i18n::msg('d2u_machinery_rights_all') .' - '. rex_i18n::msg('d2u_machinery_options') .': '. $sql->getValue('name') .'</a>';
         if (!in_array($message, $warning, true)) {
             $warning[] = $message;
         }
@@ -795,8 +795,8 @@ function rex_d2u_machinery_supply_media_is_in_use(rex_extension_point $ep)
         .'GROUP BY supply_id', [':filename' => $filename]);
 
     for ($i = 0; $i < $sql_machine->getRows(); ++$i) {
-        $message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/machine/supply&func=edit&entry_id='.
-            $sql_machine->getValue('supply_id') .'\')">'.rex_i18n::msg('d2u_machinery_meta_title') .' '. rex_i18n::msg('d2u_machinery_supply_extension') .' - '. rex_i18n::msg('d2u_machinery_steel_supply') .': '. $sql_machine->getValue('name') .'</a>';
+        $message = '<a href="index.php?page=d2u_machinery/machine/supply&func=edit&entry_id='.
+            $sql_machine->getValue('supply_id') .'">'.rex_i18n::msg('d2u_machinery_meta_title') .' '. rex_i18n::msg('d2u_machinery_supply_extension') .' - '. rex_i18n::msg('d2u_machinery_steel_supply') .': '. $sql_machine->getValue('name') .'</a>';
         if (!in_array($message, $warning, true)) {
             $warning[] = $message;
         }
@@ -863,8 +863,8 @@ function rex_d2u_machinery_production_lines_media_is_in_use(rex_extension_point 
         .'GROUP BY production_line_id', [':filename' => $filename, ':filenameLike' => $filenameLike]);
 
     for ($i = 0; $i < $sql->getRows(); ++$i) {
-        $message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/production_lines&func=edit&entry_id='.
-            $sql->getValue('production_line_id') .'\')">'. rex_i18n::msg('d2u_machinery_rights_all') .' - '. rex_i18n::msg('d2u_machinery_production_lines') .': '. $sql->getValue('name') .'</a>';
+        $message = '<a href="index.php?page=d2u_machinery/production_lines&func=edit&entry_id='.
+            $sql->getValue('production_line_id') .'">'. rex_i18n::msg('d2u_machinery_rights_all') .' - '. rex_i18n::msg('d2u_machinery_production_lines') .': '. $sql->getValue('name') .'</a>';
         if (!in_array($message, $warning, true)) {
             $warning[] = $message;
         }
@@ -910,8 +910,8 @@ function rex_d2u_machinery_service_options_media_is_in_use(rex_extension_point $
         .'WHERE picture = :filename AND clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang'), [':filename' => $filename]);
 
     for ($i = 0; $i < $sql->getRows(); ++$i) {
-        $message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/machine/service_options&func=edit&entry_id='.
-            $sql->getValue('service_option_id') .'\')">'. rex_i18n::msg('d2u_machinery_rights_all') .' - '. rex_i18n::msg('d2u_machinery_service_option') .': '. $sql->getValue('name') .'</a>';
+        $message = '<a href="index.php?page=d2u_machinery/machine/service_options&func=edit&entry_id='.
+            $sql->getValue('service_option_id') .'">'. rex_i18n::msg('d2u_machinery_rights_all') .' - '. rex_i18n::msg('d2u_machinery_service_option') .': '. $sql->getValue('name') .'</a>';
         if (!in_array($message, $warning, true)) {
             $warning[] = $message;
         }
@@ -936,7 +936,7 @@ function rex_d2u_machinery_used_machines_article_is_in_use(rex_extension_point $
     $addon = rex_addon::get('d2u_machinery');
     if ($addon->hasConfig('used_machine_article_id_rent') && (int) $addon->getConfig('used_machine_article_id_rent') === $article_id ||
             $addon->hasConfig('used_machine_article_id_sale') && (int) $addon->getConfig('used_machine_article_id_sale') === $article_id) {
-        $warning[] = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/settings\')">'.
+        $warning[] = '<a href="index.php?page=d2u_machinery/settings">'.
              rex_i18n::msg('d2u_machinery_used_machines') .' - '. rex_i18n::msg('d2u_helper_settings') . '</a>';
     }
 
@@ -983,8 +983,8 @@ function rex_d2u_machinery_used_machines_media_is_in_use(rex_extension_point $ep
         .'WHERE FIND_IN_SET(:filename, pics) AND clang_id = '. (int) \rex_config::get('d2u_helper', 'default_lang', \rex_clang::getStartId()), [':filename' => $filename]);
 
     for ($i = 0; $i < $sql->getRows(); ++$i) {
-        $message = '<a href="javascript:openPage(\'index.php?page=d2u_machinery/used_machines/used_machines&func=edit&entry_id='.
-            $sql->getValue('used_machine_id') .'\')">'. rex_i18n::msg('d2u_machinery_used_machines') .' - '. rex_i18n::msg('d2u_machinery_used_machines') .': '. $sql->getValue('manufacturer') .' '. $sql->getValue('name') .'</a>';
+        $message = '<a href="index.php?page=d2u_machinery/used_machines/used_machines&func=edit&entry_id='.
+            $sql->getValue('used_machine_id') .'">'. rex_i18n::msg('d2u_machinery_used_machines') .' - '. rex_i18n::msg('d2u_machinery_used_machines') .': '. $sql->getValue('manufacturer') .' '. $sql->getValue('name') .'</a>';
         if (!in_array($message, $warning, true)) {
             $warning[] = $message;
         }
