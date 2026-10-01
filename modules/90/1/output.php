@@ -461,20 +461,6 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '</div>';
     }
 
-    // References
-    if (count($machine->article_ids_references) > 0) {
-        echo '<div class="col-12 col-md-6">';
-        echo '<h3>'. \Sprog\Wildcard::get('d2u_machinery_references') .'</h3>';
-        foreach ($machine->article_ids_references as $article_id_reference) {
-            $article = rex_article::get($article_id_reference, $machine->clang_id);
-            if ($article instanceof rex_article) {
-                echo '<a href="'. rex_escape(rex_getUrl($article_id_reference, $machine->clang_id)) .'"><div class="downloads">'. rex_escape((string) $article->getValue('name')) .'</div></a>';
-            }
-        }
-        echo '</ul>';
-        echo '<p>&nbsp;</p>';
-        echo '</div>';
-    }
     echo '</div>'; // END class="row"
     echo '</div>'; // END tab overview
 

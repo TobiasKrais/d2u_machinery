@@ -66,9 +66,6 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
     /** @var int Redaxo article id for additional service information */
     public int $article_id_service = 0;
 
-    /** @var int[] Array with Redaxo article ids with customer success stories */
-    public array $article_ids_references = [];
-
     /** @var int[] Array with IDs from d2u_references addon */
     public array $reference_ids = [];
 
@@ -134,6 +131,15 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
 
     /** @var string Intro text shown above the automation supplies (machine_steel_automation_extension) */
     public string $automation_intro = '';
+
+    /** @var int Automation article id (machine_steel_automation_extension) */
+    public int $automation_article_id = 0;
+
+    /** @var string Automation image file name (machine_steel_automation_extension) */
+    public string $automation_pic = '';
+
+    /** @var string Automation free text, per language (machine_steel_automation_extension) */
+    public string $automation_text = '';
 
     /** @var string Intro text shown above the alternative machines list */
     public string $alternative_machines_intro = '';
@@ -317,8 +323,6 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
             $this->additional_machine_ids = is_array($additional_machine_ids) ? array_map('intval', $additional_machine_ids) : [];
             $this->product_number = (string) $result->getValue('product_number');
             $this->article_id_service = (int) $result->getValue('article_id_service');
-            $article_ids_references = preg_grep('/^\s*$/s', explode(',', (string) $result->getValue('article_ids_references')), PREG_GREP_INVERT);
-            $this->article_ids_references = is_array($article_ids_references) ? $article_ids_references : [];
             $reference_ids = preg_grep('/^\s*$/s', explode(',', (string) $result->getValue('reference_ids')), PREG_GREP_INVERT);
             $this->reference_ids = is_array($reference_ids) ? array_map('intval', array_filter($reference_ids, 'is_numeric')) : [];
             $this->online_status = (string) $result->getValue('online_status');
@@ -344,6 +348,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
             $this->additional_machines_intro = stripslashes(htmlspecialchars_decode((string) $result->getValue('additional_machines_intro')));
             if (Extension::isActive('machine_steel_automation_extension')) {
                 $this->automation_intro = stripslashes(htmlspecialchars_decode((string) $result->getValue('automation_intro')));
+                $this->automation_text = stripslashes(htmlspecialchars_decode((string) $result->getValue('automation_text')));
             }
             $pdfs = preg_grep('/^\s*$/s', explode(',', (string) $result->getValue('pdfs')), PREG_GREP_INVERT);
             $this->pdfs = is_array($pdfs) ? $pdfs : [];
@@ -441,6 +446,8 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
             if (Extension::isActive('machine_steel_automation_extension')) {
                 $automation_supply_ids = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('automation_supply_ids')), PREG_GREP_INVERT);
                 $this->automation_supply_ids = is_array($automation_supply_ids) ? array_map('intval', $automation_supply_ids) : [];
+                $this->automation_article_id = (int) $result->getValue('automation_article_id');
+                $this->automation_pic = (string) $result->getValue('automation_pic');
             }
 
             if (Extension::isActive('machine_usage_area_extension')) {
@@ -1223,6 +1230,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
             }
             if (Extension::isActive('machine_steel_automation_extension')) {
                 $fieldsToTranslate['automation_intro'] = ['value' => $source->automation_intro, 'html' => true];
+                $fieldsToTranslate['automation_text'] = ['value' => $source->automation_text, 'html' => true];
             }
             $translated = \TobiasKrais\D2UHelper\AiTranslationHelper::translateFields($fieldsToTranslate, $sourceClangId, $this->clang_id);
         } catch (\Throwable $e) {
@@ -1240,6 +1248,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
         }
         if (Extension::isActive('machine_steel_automation_extension')) {
             $this->automation_intro = $translated['automation_intro'];
+            $this->automation_text = $translated['automation_text'];
         }
         $this->translation_needs_update = 'no';
 
@@ -1269,7 +1278,6 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
                     .'additional_machine_ids = :additional_machine_ids, '
                     .'product_number = :product_number, '
                     .'article_id_service = :article_id_service, '
-                    .'article_ids_references = :article_ids_references, '
                     .'reference_ids = :reference_ids, '
                     .'online_status = :online_status ';
             $main_params[':pics'] = implode(',', $this->pics);
@@ -1277,7 +1285,6 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
             $main_params[':additional_machine_ids'] = '|'. implode('|', $this->additional_machine_ids) .'|';
             $main_params[':product_number'] = $this->product_number;
             $main_params[':article_id_service'] = $this->article_id_service;
-            $main_params[':article_ids_references'] = implode(',', $this->article_ids_references);
             $main_params[':reference_ids'] = implode(',', $this->reference_ids);
             $main_params[':online_status'] = $this->online_status;
             if (Extension::isActive('basic_tech_data')) {
@@ -1389,8 +1396,10 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
                 $main_params[':option_ids'] = '|'. implode('|', $this->option_ids) .'|';
             }
             if (Extension::isActive('machine_steel_automation_extension')) {
-                $query .= ', automation_supply_ids = :automation_supply_ids ';
+                $query .= ', automation_supply_ids = :automation_supply_ids, automation_article_id = :automation_article_id, automation_pic = :automation_pic ';
                 $main_params[':automation_supply_ids'] = '|'. implode('|', $this->automation_supply_ids) .'|';
+                $main_params[':automation_article_id'] = $this->automation_article_id;
+                $main_params[':automation_pic'] = $this->automation_pic;
             }
             if (Extension::isActive('machine_usage_area_extension')) {
                 $query .= ', usage_area_ids = :usage_area_ids ';
@@ -1459,8 +1468,9 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
                     $lang_params[':features_intro'] = htmlspecialchars($this->features_intro);
                 }
                 if (Extension::isActive('machine_steel_automation_extension')) {
-                    $query .= ', automation_intro = :automation_intro ';
+                    $query .= ', automation_intro = :automation_intro, automation_text = :automation_text ';
                     $lang_params[':automation_intro'] = htmlspecialchars($this->automation_intro);
+                    $lang_params[':automation_text'] = htmlspecialchars($this->automation_text);
                 }
                 if (Extension::isActive('machine_construction_equipment_extension')) {
                     $query .= ', container_connection_port = :container_connection_port '

@@ -102,7 +102,6 @@ if (null === $d2uMachineryAction) {
         ->ensureColumn(new \rex_sql_column('additional_machine_ids', 'TEXT', true))
         ->ensureColumn(new \rex_sql_column('product_number', 'VARCHAR(50)', true))
         ->ensureColumn(new \rex_sql_column('article_id_service', 'INT(11)', true))
-        ->ensureColumn(new \rex_sql_column('article_ids_references', 'VARCHAR(255)', true))
         ->ensureColumn(new \rex_sql_column('reference_ids', 'TEXT', true))
         ->ensureColumn(new \rex_sql_column('online_status', 'VARCHAR(10)', true))
         ->ensureColumn(new \rex_sql_column('video_ids', 'VARCHAR(255)', true))
@@ -688,9 +687,12 @@ if (d2u_machinery_should_install($d2uMachineryAction, 'machine_steel_automation_
         ->alter();
     \rex_sql_table::get(\rex::getTable('d2u_machinery_machines'))
         ->ensureColumn(new \rex_sql_column('automation_supply_ids', 'TEXT'))
+        ->ensureColumn(new \rex_sql_column('automation_article_id', 'INT(11)', true))
+        ->ensureColumn(new \rex_sql_column('automation_pic', 'VARCHAR(255)', true))
         ->alter();
     \rex_sql_table::get(\rex::getTable('d2u_machinery_machines_lang'))
         ->ensureColumn(new \rex_sql_column('automation_intro', 'TEXT', true))
+        ->ensureColumn(new \rex_sql_column('automation_text', 'TEXT', true))
         ->alter();
 
 }
@@ -798,6 +800,7 @@ if ($sql->getRows() > 0) {
     $machinesTable = \rex_sql_table::get(\rex::getTable('d2u_machinery_machines'));
     $retiredMachineColumns = [
         'article_id_software',
+        'article_ids_references',
         'process_ids', 'procedure_ids', 'material_ids', 'tool_ids', 'automation_automationgrade_ids',
         'workspace', 'workspace_square', 'workspace_flat', 'workspace_plate', 'workspace_profile',
         'workspace_angle_steel', 'workspace_round', 'workspace_min',
