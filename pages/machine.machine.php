@@ -7,7 +7,6 @@ use TobiasKrais\D2UMachinery\Category;
 use TobiasKrais\D2UMachinery\Certificate;
 use TobiasKrais\D2UMachinery\Equipment;
 use TobiasKrais\D2UMachinery\Extension;
-use TobiasKrais\D2UMachinery\FaqField;
 use TobiasKrais\D2UMachinery\Feature;
 use TobiasKrais\D2UMachinery\IndustrySector;
 use TobiasKrais\D2UMachinery\Machine;
@@ -184,9 +183,14 @@ if (!$invalidCsrf && (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === 
 		$machine->lang_name = $form['lang'][$rex_clang->getId()]['lang_name'];
 		$machine->teaser = $form['lang'][$rex_clang->getId()]['teaser'];
 		$machine->description = $form['lang'][$rex_clang->getId()]['description'];
-		$machine->benefits_long = $form['lang'][$rex_clang->getId()]['benefits_long'];
-		$machine->benefits_short = $form['lang'][$rex_clang->getId()]['benefits_short'];
-		$machine->faq = $form['lang'][$rex_clang->getId()]['faq'] ?? '';
+		if (Extension::isActive('machine_features_extension')) {
+			$machine->features_intro = $form['lang'][$rex_clang->getId()]['features_intro'] ?? '';
+		}
+		if (Extension::isActive('machine_steel_automation_extension')) {
+			$machine->automation_intro = $form['lang'][$rex_clang->getId()]['automation_intro'] ?? '';
+		}
+		$machine->alternative_machines_intro = $form['lang'][$rex_clang->getId()]['alternative_machines_intro'] ?? '';
+		$machine->additional_machines_intro = $form['lang'][$rex_clang->getId()]['additional_machines_intro'] ?? '';
 		$machine->leaflet = $input_media['1'. $rex_clang->getId()];
 		$pdfs = preg_grep('/^\s*$/s', explode(',', $input_media_list['1'. $rex_clang->getId()]), PREG_GREP_INVERT);
 		$machine->pdfs = is_array($pdfs) ? $pdfs : [];
@@ -624,9 +628,14 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 									BackendHelper::form_textarea('d2u_machinery_machine_teaser', 'form[lang]['. $rex_clang->getId() .'][teaser]', $machine_lang->teaser, 3, false, $readonly_lang, false);
 									echo '<p class="rex-note">'. rex_i18n::msg('d2u_helper_seo_hint_meta_description') .'</p>';
 									BackendHelper::form_textarea('d2u_helper_description', 'form[lang]['. $rex_clang->getId() .'][description]', $machine_lang->description, 5, false, $readonly_lang, true);
-									BackendHelper::form_textarea('d2u_machinery_benefits_long', 'form[lang]['. $rex_clang->getId() .'][benefits_long]', $machine_lang->benefits_long, 5, false, $readonly_lang, true);
-									BackendHelper::form_textarea('d2u_machinery_benefits_short', 'form[lang]['. $rex_clang->getId() .'][benefits_short]', $machine_lang->benefits_short, 5, false, $readonly_lang, true);
-									echo '<div class="row"><div class="col-xs-12"><label><b>'. rex_i18n::msg('d2u_machinery_faq') .'</b></label>'. FaqField::render('form[lang]['. $rex_clang->getId() .'][faq]', $machine_lang->faq, $readonly_lang) .'</div></div>';
+									if (Extension::isActive('machine_features_extension')) {
+										BackendHelper::form_textarea('d2u_machinery_features_intro', 'form[lang]['. $rex_clang->getId() .'][features_intro]', $machine_lang->features_intro, 5, false, $readonly_lang, true);
+									}
+									if (Extension::isActive('machine_steel_automation_extension')) {
+										BackendHelper::form_textarea('d2u_machinery_automation_intro', 'form[lang]['. $rex_clang->getId() .'][automation_intro]', $machine_lang->automation_intro, 5, false, $readonly_lang, true);
+									}
+									BackendHelper::form_textarea('d2u_machinery_alternative_machines_intro', 'form[lang]['. $rex_clang->getId() .'][alternative_machines_intro]', $machine_lang->alternative_machines_intro, 5, false, $readonly_lang, true);
+									BackendHelper::form_textarea('d2u_machinery_additional_machines_intro', 'form[lang]['. $rex_clang->getId() .'][additional_machines_intro]', $machine_lang->additional_machines_intro, 5, false, $readonly_lang, true);
 									BackendHelper::form_medialistfield('d2u_machinery_machine_pdfs', (int) ('1'. $rex_clang->getId()), $machine_lang->pdfs, $readonly_lang);
 									BackendHelper::form_mediafield('d2u_machinery_machine_leaflet', '1'. $rex_clang->getId(), $machine_lang->leaflet, $readonly_lang);
 									if (Extension::isActive('machine_construction_equipment_extension')) {

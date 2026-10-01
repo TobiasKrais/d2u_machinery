@@ -87,6 +87,9 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrai
     /** @var string FAQ entries as base64(JSON [{q,a,tags[]}]) */
     public string $faq = '';
 
+    /** @var string General USP heading (per language, machine_usps_extension) */
+    public string $usps_heading = '';
+
     /** @var \TobiasKrais\D2UVideos\Video[] Videomanager videos */
     public $videos = [];
 
@@ -129,6 +132,9 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrai
             $this->description = stripslashes(htmlspecialchars_decode((string) $result->getValue('description')));
             $this->usage_area = stripslashes(htmlspecialchars_decode((string) $result->getValue('usage_area')));
             $this->faq = (string) $result->getValue('faq');
+            if (Extension::isActive('machine_usps_extension')) {
+                $this->usps_heading = stripslashes(htmlspecialchars_decode((string) $result->getValue('usps_heading')));
+            }
             $this->pic = (string) $result->getValue('pic');
             $this->pic_lang = (string) $result->getValue('pic_lang');
             $this->pic_usage = (string) $result->getValue('pic_usage');
@@ -781,7 +787,7 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrai
                         .'updateuser = :updateuser ';
 
                 $result = \rex_sql::factory();
-                $result->setQuery($query, [
+                $lang_params = [
                     ':category_id' => $this->category_id,
                     ':clang_id' => $this->clang_id,
                     ':name' => htmlspecialchars($this->name),
@@ -793,7 +799,12 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrai
                     ':faq' => $this->faq,
                     ':tnu' => $this->translation_needs_update,
                     ':updateuser' => \rex::getUser() instanceof rex_user ? \rex::getUser()->getLogin() : '',
-                ]);
+                ];
+                if (Extension::isActive('machine_usps_extension')) {
+                    $query .= ', usps_heading = :usps_heading ';
+                    $lang_params[':usps_heading'] = htmlspecialchars($this->usps_heading);
+                }
+                $result->setQuery($query, $lang_params);
                 $error = $result->hasError();
 
                 if (!$error && $pre_save_object->name !== $this->name) {

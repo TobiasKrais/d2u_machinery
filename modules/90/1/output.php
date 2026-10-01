@@ -521,6 +521,9 @@ if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['
     // Features
     if (count($machine->feature_ids) > 0) {
         echo '<div id="tab_features" class="tab-pane fade machine-tab">';
+        if ('' !== trim($machine->features_intro)) {
+            echo TobiasKrais\D2UHelper\FrontendHelper::prepareEditorField($machine->features_intro);
+        }
         $features = $machine->getFeatures();
         foreach ($features as $feature) {
             echo '<div class="row">';

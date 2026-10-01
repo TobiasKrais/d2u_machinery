@@ -90,6 +90,9 @@ if (!$invalidCsrf && (1 === (int) filter_input(INPUT_POST, 'btn_save', FILTER_VA
         $category->pic_lang = $input_media['pic_lang_'. $rex_clang->getId()];
         $category->usage_area = $form['lang'][$rex_clang->getId()]['usage_area'];
         $category->faq = $form['lang'][$rex_clang->getId()]['faq'] ?? '';
+        if (\TobiasKrais\D2UMachinery\Extension::isActive('machine_usps_extension')) {
+            $category->usps_heading = $form['lang'][$rex_clang->getId()]['usps_heading'] ?? '';
+        }
         if (\TobiasKrais\D2UMachinery\Extension::isActive('machine_agitator_extension')) {
             // Checkbox also need special treatment if empty
             $category->show_agitators = array_key_exists('show_agitators', $form) ? 'show' : 'hide';
@@ -144,7 +147,7 @@ if ((!$invalidCsrf && 1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_
     } else {
         $message = '<ul>';
         foreach ($uses_categories as $uses_category) {
-            $message .= '<li><a href="index.php?page=d2u_machinery/category&func=edit&entry_id='. $uses_category->category_id .'">'. $uses_category->name .'</a></li>';
+            $message .= '<li><a href="index.php?page=d2u_machinery/category/category&func=edit&entry_id='. $uses_category->category_id .'">'. $uses_category->name .'</a></li>';
         }
         foreach ($uses_machines as $uses_machine) {
             $message .= '<li><a href="index.php?page=d2u_machinery/machine/machine&func=edit&entry_id='. $uses_machine->machine_id .'">'. $uses_machine->name .'</a></li>';
@@ -230,6 +233,9 @@ if ('edit' === $func || 'add' === $func) {
                                     BackendHelper::form_textarea('d2u_helper_description', 'form[lang]['. $rex_clang->getId() .'][description]', $category->description, 5, false, $readonly_lang, true);
                                     BackendHelper::form_input('d2u_machinery_category_usage_area', 'form[lang]['. $rex_clang->getId() .'][usage_area]', $category->usage_area, false, $readonly_lang, 'text');
                                     echo '<div class="row"><div class="col-xs-12"><label><b>'. rex_i18n::msg('d2u_machinery_faq') .'</b></label>'. FaqField::render('form[lang]['. $rex_clang->getId() .'][faq]', $category->faq, $readonly_lang) .'</div></div>';
+                                    if (\TobiasKrais\D2UMachinery\Extension::isActive('machine_usps_extension')) {
+                                        BackendHelper::form_input('d2u_machinery_usps_heading', 'form[lang]['. $rex_clang->getId() .'][usps_heading]', $category->usps_heading, false, $readonly_lang, 'text');
+                                    }
                                     BackendHelper::form_mediafield('d2u_machinery_category_pic_lang', 'pic_lang_'. $rex_clang->getId(), $category->pic_lang, $readonly_lang);
                                     BackendHelper::form_medialistfield('d2u_machinery_category_pdfs', (int) ('1'. $rex_clang->getId()), $category->pdfs, $readonly_lang);
                                 ?>

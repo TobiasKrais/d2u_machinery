@@ -229,6 +229,18 @@ if (d2u_machinery_should_uninstall($d2uMachineryAction, 'machine_features_extens
     \rex_sql_table::get(\rex::getTable('d2u_machinery_machines'))
         ->removeColumn('feature_ids')
         ->ensure();
+    \rex_sql_table::get(\rex::getTable('d2u_machinery_machines_lang'))
+        ->removeColumn('features_intro')
+        ->ensure();
+}
+
+// Plugin: usps
+if (d2u_machinery_should_uninstall($d2uMachineryAction, 'machine_usps_extension')) {
+    $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_category_usps');
+    $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_category_usps_lang');
+    \rex_sql_table::get(\rex::getTable('d2u_machinery_categories_lang'))
+        ->removeColumn('usps_heading')
+        ->ensure();
 }
 
 // Plugin: options
@@ -316,6 +328,9 @@ if (d2u_machinery_should_uninstall($d2uMachineryAction, 'machine_steel_automatio
         ->removeColumn('automation_feedrate_sawblade')
         ->removeColumn('automation_rush_leader_flyback')
         ->removeColumn('automation_supply_ids')
+        ->ensure();
+    \rex_sql_table::get(\rex::getTable('d2u_machinery_machines_lang'))
+        ->removeColumn('automation_intro')
         ->ensure();
     $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_steel_supply');
     $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_steel_supply_lang');

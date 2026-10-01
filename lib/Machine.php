@@ -129,17 +129,20 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
     /** @var string Machine description */
     public string $description = '';
 
-    /** @var string Machine benefits (long version) */
-    public string $benefits_long = '';
+    /** @var string Intro text shown above the features (machine_features_extension) */
+    public string $features_intro = '';
 
-    /** @var string Machine benefits */
-    public string $benefits_short = '';
+    /** @var string Intro text shown above the automation supplies (machine_steel_automation_extension) */
+    public string $automation_intro = '';
+
+    /** @var string Intro text shown above the alternative machines list */
+    public string $alternative_machines_intro = '';
+
+    /** @var string Intro text shown above the complementary (additional) machines list */
+    public string $additional_machines_intro = '';
 
     /** @var array<string> File names of PDF files for the machine */
     public array $pdfs = [];
-
-    /** @var string FAQ entries as base64(JSON [{q,a,tags[]}]) */
-    public string $faq = '';
 
     /** @var string Machine leaflet (PDF file) */
     public string $leaflet = '';
@@ -334,9 +337,14 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
             $this->lang_name = stripslashes((string) $result->getValue('lang_name'));
             $this->teaser = stripslashes(htmlspecialchars_decode((string) $result->getValue('teaser')));
             $this->description = stripslashes(htmlspecialchars_decode((string) $result->getValue('description')));
-            $this->benefits_long = stripslashes(htmlspecialchars_decode((string) $result->getValue('benefits_long')));
-            $this->benefits_short = stripslashes(htmlspecialchars_decode((string) $result->getValue('benefits_short')));
-            $this->faq = (string) $result->getValue('faq');
+            if (Extension::isActive('machine_features_extension')) {
+                $this->features_intro = stripslashes(htmlspecialchars_decode((string) $result->getValue('features_intro')));
+            }
+            $this->alternative_machines_intro = stripslashes(htmlspecialchars_decode((string) $result->getValue('alternative_machines_intro')));
+            $this->additional_machines_intro = stripslashes(htmlspecialchars_decode((string) $result->getValue('additional_machines_intro')));
+            if (Extension::isActive('machine_steel_automation_extension')) {
+                $this->automation_intro = stripslashes(htmlspecialchars_decode((string) $result->getValue('automation_intro')));
+            }
             $pdfs = preg_grep('/^\s*$/s', explode(',', (string) $result->getValue('pdfs')), PREG_GREP_INVERT);
             $this->pdfs = is_array($pdfs) ? $pdfs : [];
             $this->leaflet = (string) $result->getValue('leaflet');
@@ -1203,13 +1211,20 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
         }
 
         try {
-            $translated = \TobiasKrais\D2UHelper\AiTranslationHelper::translateFields([
+            $fieldsToTranslate = [
                 'lang_name' => ['value' => $source->lang_name, 'html' => false],
                 'teaser' => ['value' => $source->teaser, 'html' => true],
                 'description' => ['value' => $source->description, 'html' => true],
-                'benefits_long' => ['value' => $source->benefits_long, 'html' => true],
-                'benefits_short' => ['value' => $source->benefits_short, 'html' => true],
-            ], $sourceClangId, $this->clang_id);
+                'alternative_machines_intro' => ['value' => $source->alternative_machines_intro, 'html' => true],
+                'additional_machines_intro' => ['value' => $source->additional_machines_intro, 'html' => true],
+            ];
+            if (Extension::isActive('machine_features_extension')) {
+                $fieldsToTranslate['features_intro'] = ['value' => $source->features_intro, 'html' => true];
+            }
+            if (Extension::isActive('machine_steel_automation_extension')) {
+                $fieldsToTranslate['automation_intro'] = ['value' => $source->automation_intro, 'html' => true];
+            }
+            $translated = \TobiasKrais\D2UHelper\AiTranslationHelper::translateFields($fieldsToTranslate, $sourceClangId, $this->clang_id);
         } catch (\Throwable $e) {
             \rex_logger::logException($e);
             return false;
@@ -1218,21 +1233,18 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
         $this->lang_name = $translated['lang_name'];
         $this->teaser = $translated['teaser'];
         $this->description = $translated['description'];
-        $this->benefits_long = $translated['benefits_long'];
-        $this->benefits_short = $translated['benefits_short'];
+        $this->alternative_machines_intro = $translated['alternative_machines_intro'];
+        $this->additional_machines_intro = $translated['additional_machines_intro'];
+        if (Extension::isActive('machine_features_extension')) {
+            $this->features_intro = $translated['features_intro'];
+        }
+        if (Extension::isActive('machine_steel_automation_extension')) {
+            $this->automation_intro = $translated['automation_intro'];
+        }
         $this->translation_needs_update = 'no';
 
         // save() returns true on success.
         return $this->save();
-    }
-
-    /**
-     * Get the decoded FAQ entries (question required) for the frontend.
-     * @return array<int,array{q:string,a:string,tags:array<int,string>}> FAQ items
-     */
-    public function getFaqItems(): array
-    {
-        return FaqField::decode($this->faq);
     }
 
     /**
@@ -1422,11 +1434,10 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
                         .'lang_name = :lang_name, '
                         .'teaser = :teaser, '
                         .'description = :description, '
-                        .'benefits_long = :benefits_long, '
-                        .'benefits_short = :benefits_short, '
+                        .'alternative_machines_intro = :alternative_machines_intro, '
+                        .'additional_machines_intro = :additional_machines_intro, '
                         .'leaflet = :leaflet, '
                         .'pdfs = :pdfs, '
-                        .'faq = :faq, '
                         .'translation_needs_update = :translation_needs_update, '
                         .'updatedate = CURRENT_TIMESTAMP, '
                         .'updateuser = :updateuser ';
@@ -1436,14 +1447,21 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
                     ':lang_name' => $this->lang_name,
                     ':teaser' => htmlspecialchars($this->teaser),
                     ':description' => htmlspecialchars($this->description),
-                    ':benefits_long' => htmlspecialchars($this->benefits_long),
-                    ':benefits_short' => htmlspecialchars($this->benefits_short),
+                    ':alternative_machines_intro' => htmlspecialchars($this->alternative_machines_intro),
+                    ':additional_machines_intro' => htmlspecialchars($this->additional_machines_intro),
                     ':leaflet' => $this->leaflet,
                     ':pdfs' => implode(',', $this->pdfs),
-                    ':faq' => $this->faq,
                     ':translation_needs_update' => $this->translation_needs_update,
                     ':updateuser' => \rex::getUser() instanceof rex_user ? \rex::getUser()->getLogin() : '',
                 ];
+                if (Extension::isActive('machine_features_extension')) {
+                    $query .= ', features_intro = :features_intro ';
+                    $lang_params[':features_intro'] = htmlspecialchars($this->features_intro);
+                }
+                if (Extension::isActive('machine_steel_automation_extension')) {
+                    $query .= ', automation_intro = :automation_intro ';
+                    $lang_params[':automation_intro'] = htmlspecialchars($this->automation_intro);
+                }
                 if (Extension::isActive('machine_construction_equipment_extension')) {
                     $query .= ', container_connection_port = :container_connection_port '
                         .', container_conveying_wave = :container_conveying_wave '

@@ -118,11 +118,10 @@ if (null === $d2uMachineryAction) {
         ->ensureColumn(new \rex_sql_column('lang_name', 'VARCHAR(255)'))
         ->ensureColumn(new \rex_sql_column('teaser', 'VARCHAR(255)', true))
         ->ensureColumn(new \rex_sql_column('description', 'TEXT', true))
-        ->ensureColumn(new \rex_sql_column('benefits_short', 'TEXT', true))
-        ->ensureColumn(new \rex_sql_column('benefits_long', 'TEXT', true))
+        ->ensureColumn(new \rex_sql_column('alternative_machines_intro', 'TEXT', true))
+        ->ensureColumn(new \rex_sql_column('additional_machines_intro', 'TEXT', true))
         ->ensureColumn(new \rex_sql_column('leaflet', 'VARCHAR(255)', true))
         ->ensureColumn(new \rex_sql_column('pdfs', 'TEXT', true))
-        ->ensureColumn(new \rex_sql_column('faq', 'TEXT', true))
         ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)', true))
         ->ensureColumn(new \rex_sql_column('updatedate', 'DATETIME', true))
         ->ensureColumn(new \rex_sql_column('updateuser', 'VARCHAR(255)', true))
@@ -610,7 +609,34 @@ if (d2u_machinery_should_install($d2uMachineryAction, 'machine_features_extensio
     \rex_sql_table::get(\rex::getTable('d2u_machinery_machines'))
         ->ensureColumn(new \rex_sql_column('feature_ids', 'TEXT'))
         ->alter();
+    \rex_sql_table::get(\rex::getTable('d2u_machinery_machines_lang'))
+        ->ensureColumn(new \rex_sql_column('features_intro', 'TEXT', true))
+        ->alter();
 
+}
+
+if (d2u_machinery_should_install($d2uMachineryAction, 'machine_usps_extension')) {
+    \rex_sql_table::get(\rex::getTable('d2u_machinery_category_usps'))
+        ->ensureColumn(new rex_sql_column('usp_id', 'INT(11) unsigned', false, null, 'auto_increment'))
+        ->setPrimaryKey('usp_id')
+        ->ensureColumn(new \rex_sql_column('category_id', 'INT(11)', true))
+        ->ensureColumn(new \rex_sql_column('priority', 'INT(11)', true))
+        ->ensureColumn(new \rex_sql_column('icon_light', 'VARCHAR(255)', true))
+        ->ensureColumn(new \rex_sql_column('icon_dark', 'VARCHAR(255)', true))
+        ->ensure();
+    \rex_sql_table::get(\rex::getTable('d2u_machinery_category_usps_lang'))
+        ->ensureColumn(new rex_sql_column('usp_id', 'INT(11)', false))
+        ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
+        ->setPrimaryKey(['usp_id', 'clang_id'])
+        ->ensureColumn(new \rex_sql_column('heading', 'VARCHAR(255)', true))
+        ->ensureColumn(new \rex_sql_column('text', 'TEXT', true))
+        ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)', true))
+        ->ensureColumn(new \rex_sql_column('updatedate', 'DATETIME', true))
+        ->ensureColumn(new \rex_sql_column('updateuser', 'VARCHAR(255)', true))
+        ->ensure();
+    \rex_sql_table::get(\rex::getTable('d2u_machinery_categories_lang'))
+        ->ensureColumn(new \rex_sql_column('usps_heading', 'TEXT', true))
+        ->alter();
 }
 
 // Extension: options
@@ -663,6 +689,9 @@ if (d2u_machinery_should_install($d2uMachineryAction, 'machine_steel_automation_
     \rex_sql_table::get(\rex::getTable('d2u_machinery_machines'))
         ->ensureColumn(new \rex_sql_column('automation_supply_ids', 'TEXT'))
         ->alter();
+    \rex_sql_table::get(\rex::getTable('d2u_machinery_machines_lang'))
+        ->ensureColumn(new \rex_sql_column('automation_intro', 'TEXT', true))
+        ->alter();
 
 }
 
@@ -709,7 +738,6 @@ if (d2u_machinery_should_install($d2uMachineryAction, 'production_lines')) {
         ->ensureColumn(new \rex_sql_column('teaser', 'VARCHAR(255)'))
         ->ensureColumn(new \rex_sql_column('description_long', 'TEXT', true))
         ->ensureColumn(new \rex_sql_column('description_short', 'TEXT', true))
-        ->ensureColumn(new \rex_sql_column('faq', 'TEXT', true))
         ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)'))
         ->ensureColumn(new \rex_sql_column('updatedate', 'DATETIME'))
         ->ensureColumn(new \rex_sql_column('updateuser', 'VARCHAR(255)'))
@@ -791,6 +819,27 @@ if ($sql->getRows() > 0) {
         }
     }
     $machinesTable->alter();
+}
+
+// The FAQ feature was removed from machines and production lines, and the "benefits
+// at a glance" (short/long) fields were removed from machines. Drop the obsolete
+// language columns on existing installations. Category FAQ is intentionally kept.
+$sql->setQuery('SHOW TABLES LIKE "'. \rex::getTable('d2u_machinery_machines_lang') .'"');
+if ($sql->getRows() > 0) {
+    $machinesLangTable = \rex_sql_table::get(\rex::getTable('d2u_machinery_machines_lang'));
+    foreach (['benefits_short', 'benefits_long', 'faq'] as $obsoleteColumn) {
+        if ($machinesLangTable->hasColumn($obsoleteColumn)) {
+            $machinesLangTable->removeColumn($obsoleteColumn);
+        }
+    }
+    $machinesLangTable->alter();
+}
+$sql->setQuery('SHOW TABLES LIKE "'. \rex::getTable('d2u_machinery_production_lines_lang') .'"');
+if ($sql->getRows() > 0) {
+    $productionLinesLangTable = \rex_sql_table::get(\rex::getTable('d2u_machinery_production_lines_lang'));
+    if ($productionLinesLangTable->hasColumn('faq')) {
+        $productionLinesLangTable->removeColumn('faq')->alter();
+    }
 }
 foreach ([
     'd2u_machinery_steel_automation',

@@ -250,8 +250,6 @@ function rex_d2u_machinery_media_is_in_use(rex_extension_point $ep)
         ':filenamePdfs' => $filename,
         ':filenamePics' => $filename,
         ':filenameDescriptionLike' => $filenameLike,
-        ':filenameBenefitsShortLike' => $filenameLike,
-        ':filenameBenefitsLongLike' => $filenameLike,
         ':filenameLeaflet' => $filename,
     ];
     if (Extension::isActive('machine_construction_equipment_extension')) {
@@ -260,7 +258,7 @@ function rex_d2u_machinery_media_is_in_use(rex_extension_point $ep)
     $sql_machine = \rex_sql::factory();
     $sql_machine->setQuery('SELECT lang.machine_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_machines_lang` AS lang '
         .'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_machines` AS machines ON lang.machine_id = machines.machine_id '
-        .'WHERE FIND_IN_SET(:filenamePdfs, pdfs) OR FIND_IN_SET(:filenamePics, pics) OR description LIKE :filenameDescriptionLike OR benefits_short LIKE :filenameBenefitsShortLike OR benefits_long LIKE :filenameBenefitsLongLike OR leaflet = :filenameLeaflet'
+        .'WHERE FIND_IN_SET(:filenamePdfs, pdfs) OR FIND_IN_SET(:filenamePics, pics) OR description LIKE :filenameDescriptionLike OR leaflet = :filenameLeaflet'
         . (Extension::isActive('machine_construction_equipment_extension') ? ' OR FIND_IN_SET(:filenamePicturesDeliverySet, pictures_delivery_set)' : '')
         .' GROUP BY machine_id', $machineQueryParams);
 
@@ -290,7 +288,7 @@ function rex_d2u_machinery_media_is_in_use(rex_extension_point $ep)
 
     // Categories
     for ($i = 0; $i < $sql_categories->getRows(); ++$i) {
-        $message = '<a href="index.php?page=d2u_machinery/category&func=edit&entry_id='. $sql_categories->getValue('category_id') .'">'.
+        $message = '<a href="index.php?page=d2u_machinery/category/category&func=edit&entry_id='. $sql_categories->getValue('category_id') .'">'.
              rex_i18n::msg('d2u_machinery_rights_all') .' - '. rex_i18n::msg('d2u_helper_categories') .': '. $sql_categories->getValue('name') . '</a>';
         if (!in_array($message, $warning, true)) {
             $warning[] = $message;
@@ -334,7 +332,7 @@ function rex_d2u_machinery_video_is_in_use(rex_extension_point $ep): array
     $sql_categories->setQuery('SELECT lang.category_id, name FROM `' . \rex::getTablePrefix() . 'd2u_machinery_categories_lang` AS lang '
         .'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_categories` AS categories ON lang.category_id = categories.category_id '
         .'WHERE categories.video_ids LIKE :video_id_pipe GROUP BY lang.category_id', [':video_id_pipe' => $video_id_pipe]);
-    $warning = rex_d2u_machinery_add_video_usage_warnings($warning, $sql_categories, 'category_id', 'name', 'index.php?page=d2u_machinery/category&func=edit&entry_id=', rex_i18n::msg('d2u_helper_categories'));
+    $warning = rex_d2u_machinery_add_video_usage_warnings($warning, $sql_categories, 'category_id', 'name', 'index.php?page=d2u_machinery/category/category&func=edit&entry_id=', rex_i18n::msg('d2u_helper_categories'));
 
     if (Extension::isActive('machine_features_extension')) {
         $sql_features = \rex_sql::factory();
@@ -1024,6 +1022,12 @@ function rex_d2u_machinery_translate_object(rex_extension_point $ep) {
             $object = $category->category_id > 0 ? $category : null;
             $name = null !== $object ? $category->name : '';
             break;
+        case 'category_usp':
+            $o = new \TobiasKrais\D2UMachinery\CategoryUsp($id, $target_clang_id);
+            if ($o->usp_id <= 0) { $o = new \TobiasKrais\D2UMachinery\CategoryUsp($id, $source_clang_id); $o->clang_id = $target_clang_id; }
+            $object = $o->usp_id > 0 ? $o : null;
+            $name = null !== $object ? $o->heading : '';
+            break;
         case 'machine':
             $machine = new Machine($id, $target_clang_id);
             if ($machine->machine_id <= 0) {
@@ -1140,7 +1144,7 @@ function rex_d2u_machinery_translation_list(rex_extension_point $ep) {
             if ('' === $category->name) {
                 $category = new Category($category->category_id, $source_clang_id);
             }
-            $html_categories .= \TobiasKrais\D2UHelper\BackendHelper::getTranslationItem('d2u_machinery', 'category', $category->category_id, $category->name, rex_url::backendPage('d2u_machinery/category', ['entry_id' => $category->category_id, 'func' => 'edit']));
+            $html_categories .= \TobiasKrais\D2UHelper\BackendHelper::getTranslationItem('d2u_machinery', 'category', $category->category_id, $category->name, rex_url::backendPage('d2u_machinery/category/category', ['entry_id' => $category->category_id, 'func' => 'edit']));
         }
         $html_categories .= '</ul>';
         
@@ -1149,6 +1153,25 @@ function rex_d2u_machinery_translation_list(rex_extension_point $ep) {
             'icon' => 'rex-icon-open-category',
             'html' => $html_categories
         ];
+    }
+
+    if (\TobiasKrais\D2UMachinery\Extension::isActive('machine_usps_extension')) {
+        $category_usps = \TobiasKrais\D2UMachinery\CategoryUsp::getTranslationHelperObjects($target_clang_id, $filter_type);
+        if (count($category_usps) > 0) {
+            $html_usps = '<ul>';
+            foreach ($category_usps as $usp) {
+                if ('' === $usp->heading) {
+                    $usp = new \TobiasKrais\D2UMachinery\CategoryUsp($usp->usp_id, $source_clang_id);
+                }
+                $html_usps .= \TobiasKrais\D2UHelper\BackendHelper::getTranslationItem('d2u_machinery', 'category_usp', $usp->usp_id, $usp->heading, rex_url::backendPage('d2u_machinery/category/usps', ['entry_id' => $usp->usp_id, 'func' => 'edit']));
+            }
+            $html_usps .= '</ul>';
+            $list_entry['pages'][] = [
+                'title' => rex_i18n::msg('d2u_machinery_usps'),
+                'icon' => 'rex-icon fa-star',
+                'html' => $html_usps
+            ];
+        }
     }
 
     $machines = Machine::getTranslationHelperObjects($target_clang_id, $filter_type);

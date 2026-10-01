@@ -2,7 +2,6 @@
 
 use TobiasKrais\D2UHelper\BackendHelper;
 
-use TobiasKrais\D2UMachinery\FaqField;
 use TobiasKrais\D2UMachinery\IndustrySector;
 use TobiasKrais\D2UMachinery\Machine;
 use TobiasKrais\D2UMachinery\ProductionLine;
@@ -72,7 +71,6 @@ if (!$invalidCsrf && (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === 
         $production_line->description_short = $form['lang'][$rex_clang->getId()]['description_short'];
         $production_line->name = $form['lang'][$rex_clang->getId()]['name'];
         $production_line->teaser = $form['lang'][$rex_clang->getId()]['teaser'];
-        $production_line->faq = $form['lang'][$rex_clang->getId()]['faq'] ?? '';
         $production_line->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 
         if ('delete' === $production_line->translation_needs_update) {
@@ -251,7 +249,6 @@ if ('edit' === $func || 'add' === $func) {
                                     echo '<p class="rex-note">'. rex_i18n::msg('d2u_helper_seo_hint_meta_description') .'</p>';
                                     BackendHelper::form_textarea('d2u_helper_description', 'form[lang]['. $rex_clang->getId() .'][description_short]', $production_line->description_short, 5, false, $readonly_lang, true);
                                     BackendHelper::form_textarea('d2u_helper_description_long', 'form[lang]['. $rex_clang->getId() .'][description_long]', $production_line->description_long, 5, false, $readonly_lang, true);
-                                    echo '<div class="row"><div class="col-xs-12"><label><b>'. rex_i18n::msg('d2u_machinery_faq') .'</b></label>'. FaqField::render('form[lang]['. $rex_clang->getId() .'][faq]', $production_line->faq, $readonly_lang) .'</div></div>';
                                 ?>
 							</div>
 						</div>

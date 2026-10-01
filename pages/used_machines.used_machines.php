@@ -325,8 +325,13 @@ if ('' === $func) {
     $list->setColumnLabel('categoryname', rex_i18n::msg('d2u_helper_category'));
     $list->setColumnSortable('categoryname');
 
-    $list->setColumnLabel('offer_type', rex_i18n::msg('d2u_machinery_used_machines_offer_type'));
-    $list->setColumnSortable('offer_type');
+    // Offer type only matters when renting is enabled; otherwise every machine is a sale.
+    if ('false' === (string) rex_config::get('d2u_machinery', 'used_machines_rent_generate_urls', 'true')) {
+        $list->removeColumn('offer_type');
+    } else {
+        $list->setColumnLabel('offer_type', rex_i18n::msg('d2u_machinery_used_machines_offer_type'));
+        $list->setColumnSortable('offer_type');
+    }
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
