@@ -141,6 +141,15 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
     /** @var string Automation free text, per language (machine_steel_automation_extension) */
     public string $automation_text = '';
 
+    /** @var string Applications intro text, per language (machine_applications_extension) */
+    public string $applications_intro = '';
+
+    /** @var string Applications main text, per language (machine_applications_extension) */
+    public string $applications_text = '';
+
+    /** @var string Help free text, per language (machine_applications_extension) */
+    public string $help_text = '';
+
     /** @var string Intro text shown above the alternative machines list */
     public string $alternative_machines_intro = '';
 
@@ -349,6 +358,11 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
             if (Extension::isActive('machine_steel_automation_extension')) {
                 $this->automation_intro = stripslashes(htmlspecialchars_decode((string) $result->getValue('automation_intro')));
                 $this->automation_text = stripslashes(htmlspecialchars_decode((string) $result->getValue('automation_text')));
+            }
+            if (Extension::isActive('machine_applications_extension')) {
+                $this->applications_intro = stripslashes(htmlspecialchars_decode((string) $result->getValue('applications_intro')));
+                $this->applications_text = stripslashes(htmlspecialchars_decode((string) $result->getValue('applications_text')));
+                $this->help_text = stripslashes(htmlspecialchars_decode((string) $result->getValue('help_text')));
             }
             $pdfs = preg_grep('/^\s*$/s', explode(',', (string) $result->getValue('pdfs')), PREG_GREP_INVERT);
             $this->pdfs = is_array($pdfs) ? $pdfs : [];
@@ -1232,6 +1246,11 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
                 $fieldsToTranslate['automation_intro'] = ['value' => $source->automation_intro, 'html' => true];
                 $fieldsToTranslate['automation_text'] = ['value' => $source->automation_text, 'html' => true];
             }
+            if (Extension::isActive('machine_applications_extension')) {
+                $fieldsToTranslate['applications_intro'] = ['value' => $source->applications_intro, 'html' => true];
+                $fieldsToTranslate['applications_text'] = ['value' => $source->applications_text, 'html' => true];
+                $fieldsToTranslate['help_text'] = ['value' => $source->help_text, 'html' => true];
+            }
             $translated = \TobiasKrais\D2UHelper\AiTranslationHelper::translateFields($fieldsToTranslate, $sourceClangId, $this->clang_id);
         } catch (\Throwable $e) {
             \rex_logger::logException($e);
@@ -1249,6 +1268,11 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
         if (Extension::isActive('machine_steel_automation_extension')) {
             $this->automation_intro = $translated['automation_intro'];
             $this->automation_text = $translated['automation_text'];
+        }
+        if (Extension::isActive('machine_applications_extension')) {
+            $this->applications_intro = $translated['applications_intro'];
+            $this->applications_text = $translated['applications_text'];
+            $this->help_text = $translated['help_text'];
         }
         $this->translation_needs_update = 'no';
 
@@ -1471,6 +1495,12 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
                     $query .= ', automation_intro = :automation_intro, automation_text = :automation_text ';
                     $lang_params[':automation_intro'] = htmlspecialchars($this->automation_intro);
                     $lang_params[':automation_text'] = htmlspecialchars($this->automation_text);
+                }
+                if (Extension::isActive('machine_applications_extension')) {
+                    $query .= ', applications_intro = :applications_intro, applications_text = :applications_text, help_text = :help_text ';
+                    $lang_params[':applications_intro'] = htmlspecialchars($this->applications_intro);
+                    $lang_params[':applications_text'] = htmlspecialchars($this->applications_text);
+                    $lang_params[':help_text'] = htmlspecialchars($this->help_text);
                 }
                 if (Extension::isActive('machine_construction_equipment_extension')) {
                     $query .= ', container_connection_port = :container_connection_port '

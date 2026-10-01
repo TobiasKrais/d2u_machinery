@@ -697,6 +697,15 @@ if (d2u_machinery_should_install($d2uMachineryAction, 'machine_steel_automation_
 
 }
 
+// Extension: applications + help
+if (d2u_machinery_should_install($d2uMachineryAction, 'machine_applications_extension')) {
+    \rex_sql_table::get(\rex::getTable('d2u_machinery_machines_lang'))
+        ->ensureColumn(new \rex_sql_column('applications_intro', 'TEXT', true))
+        ->ensureColumn(new \rex_sql_column('applications_text', 'TEXT', true))
+        ->ensureColumn(new \rex_sql_column('help_text', 'TEXT', true))
+        ->alter();
+}
+
 // Extension: usage areas
 if (d2u_machinery_should_install($d2uMachineryAction, 'machine_usage_area_extension')) {
     \rex_sql_table::get(\rex::getTable('d2u_machinery_usage_areas'))

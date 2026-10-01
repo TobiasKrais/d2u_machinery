@@ -94,6 +94,7 @@ default_config:
     extension_machine_options_extension: 'inactive'
     extension_machine_steel_automation_extension: 'inactive'
     extension_machine_usage_area_extension: 'inactive'
+    extension_machine_applications_extension: 'inactive'
     extension_machine_usps_extension: 'inactive'
     extension_production_lines: 'inactive'
     extension_service_options: 'inactive'

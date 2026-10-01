@@ -190,6 +190,11 @@ if (!$invalidCsrf && (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === 
 			$machine->automation_intro = $form['lang'][$rex_clang->getId()]['automation_intro'] ?? '';
 			$machine->automation_text = $form['lang'][$rex_clang->getId()]['automation_text'] ?? '';
 		}
+		if (Extension::isActive('machine_applications_extension')) {
+			$machine->applications_intro = $form['lang'][$rex_clang->getId()]['applications_intro'] ?? '';
+			$machine->applications_text = $form['lang'][$rex_clang->getId()]['applications_text'] ?? '';
+			$machine->help_text = $form['lang'][$rex_clang->getId()]['help_text'] ?? '';
+		}
 		$machine->alternative_machines_intro = $form['lang'][$rex_clang->getId()]['alternative_machines_intro'] ?? '';
 		$machine->additional_machines_intro = $form['lang'][$rex_clang->getId()]['additional_machines_intro'] ?? '';
 		$machine->leaflet = $input_media['1'. $rex_clang->getId()];
@@ -636,6 +641,11 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 									if (Extension::isActive('machine_steel_automation_extension')) {
 										BackendHelper::form_textarea('d2u_machinery_automation_intro', 'form[lang]['. $rex_clang->getId() .'][automation_intro]', $machine_lang->automation_intro, 5, false, $readonly_lang, true);
 										BackendHelper::form_textarea('d2u_machinery_automation_text', 'form[lang]['. $rex_clang->getId() .'][automation_text]', $machine_lang->automation_text, 5, false, $readonly_lang, true);
+									}
+									if (Extension::isActive('machine_applications_extension')) {
+										BackendHelper::form_textarea('d2u_machinery_applications_intro', 'form[lang]['. $rex_clang->getId() .'][applications_intro]', $machine_lang->applications_intro, 5, false, $readonly_lang, true);
+										BackendHelper::form_textarea('d2u_machinery_applications_text', 'form[lang]['. $rex_clang->getId() .'][applications_text]', $machine_lang->applications_text, 5, false, $readonly_lang, true);
+										BackendHelper::form_textarea('d2u_machinery_help_text', 'form[lang]['. $rex_clang->getId() .'][help_text]', $machine_lang->help_text, 5, false, $readonly_lang, true);
 									}
 									BackendHelper::form_textarea('d2u_machinery_alternative_machines_intro', 'form[lang]['. $rex_clang->getId() .'][alternative_machines_intro]', $machine_lang->alternative_machines_intro, 5, false, $readonly_lang, true);
 									BackendHelper::form_textarea('d2u_machinery_additional_machines_intro', 'form[lang]['. $rex_clang->getId() .'][additional_machines_intro]', $machine_lang->additional_machines_intro, 5, false, $readonly_lang, true);

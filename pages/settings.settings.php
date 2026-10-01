@@ -239,6 +239,7 @@ if (\TobiasKrais\D2UMachinery\Extension::isActive('used_machines') && 'false' !=
                             'machine_agitator_extension',
                             'machine_certificates_extension',
                             'machine_construction_equipment_extension',
+                            'machine_applications_extension',
                         ];
                         $additionalExtensions = [
                             'contacts',

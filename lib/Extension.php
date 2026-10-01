@@ -97,6 +97,12 @@ final class Extension
             'pages' => ['d2u_machinery/category/usps'],
             'dependencies' => [],
         ],
+        'machine_applications_extension' => [
+            'config' => 'extension_machine_applications_extension',
+            'title' => 'd2u_machinery_applications_extension',
+            'pages' => [],
+            'dependencies' => [],
+        ],
         'production_lines' => [
             'config' => 'extension_production_lines',
             'title' => 'd2u_machinery_production_lines',

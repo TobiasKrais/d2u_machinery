@@ -339,6 +339,15 @@ if (d2u_machinery_should_uninstall($d2uMachineryAction, 'machine_steel_automatio
     $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_steel_supply_lang');
 }
 
+// Extension: applications + help
+if (d2u_machinery_should_uninstall($d2uMachineryAction, 'machine_applications_extension')) {
+    \rex_sql_table::get(\rex::getTable('d2u_machinery_machines_lang'))
+        ->removeColumn('applications_intro')
+        ->removeColumn('applications_text')
+        ->removeColumn('help_text')
+        ->ensure();
+}
+
 // Plugin: usage areas
 if (d2u_machinery_should_uninstall($d2uMachineryAction, 'machine_usage_area_extension')) {
     $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_usage_areas');
