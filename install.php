@@ -638,6 +638,34 @@ if (d2u_machinery_should_install($d2uMachineryAction, 'machine_usps_extension'))
         ->alter();
 }
 
+// Extension: category consultation help
+if (d2u_machinery_should_install($d2uMachineryAction, 'category_consultation_extension')) {
+    \rex_sql_table::get(\rex::getTable('d2u_machinery_category_consultations'))
+        ->ensureColumn(new rex_sql_column('consultation_id', 'INT(11) unsigned', false, null, 'auto_increment'))
+        ->setPrimaryKey('consultation_id')
+        ->ensureColumn(new \rex_sql_column('category_id', 'INT(11)', true))
+        ->ensureColumn(new \rex_sql_column('priority', 'INT(11)', true))
+        ->ensureColumn(new \rex_sql_column('pic', 'VARCHAR(255)', true))
+        ->ensureColumn(new \rex_sql_column('link_type', 'VARCHAR(10)', true))
+        ->ensureColumn(new \rex_sql_column('article_id', 'INT(11)', true))
+        ->ensureColumn(new \rex_sql_column('target_category_id', 'INT(11)', true))
+        ->ensure();
+    \rex_sql_table::get(\rex::getTable('d2u_machinery_category_consultations_lang'))
+        ->ensureColumn(new rex_sql_column('consultation_id', 'INT(11)', false))
+        ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
+        ->setPrimaryKey(['consultation_id', 'clang_id'])
+        ->ensureColumn(new \rex_sql_column('heading', 'VARCHAR(255)', true))
+        ->ensureColumn(new \rex_sql_column('text', 'TEXT', true))
+        ->ensureColumn(new \rex_sql_column('link_label', 'VARCHAR(255)', true))
+        ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)', true))
+        ->ensureColumn(new \rex_sql_column('updatedate', 'DATETIME', true))
+        ->ensureColumn(new \rex_sql_column('updateuser', 'VARCHAR(255)', true))
+        ->ensure();
+    \rex_sql_table::get(\rex::getTable('d2u_machinery_categories_lang'))
+        ->ensureColumn(new \rex_sql_column('consultation_intro', 'TEXT', true))
+        ->alter();
+}
+
 // Extension: options
 if (d2u_machinery_should_install($d2uMachineryAction, 'machine_options_extension')) {
     \rex_sql_table::get(\rex::getTable('d2u_machinery_options'))
@@ -702,6 +730,9 @@ if (d2u_machinery_should_install($d2uMachineryAction, 'machine_applications_exte
     \rex_sql_table::get(\rex::getTable('d2u_machinery_machines_lang'))
         ->ensureColumn(new \rex_sql_column('applications_intro', 'TEXT', true))
         ->ensureColumn(new \rex_sql_column('applications_text', 'TEXT', true))
+        ->ensureColumn(new \rex_sql_column('help_text', 'TEXT', true))
+        ->alter();
+    \rex_sql_table::get(\rex::getTable('d2u_machinery_categories_lang'))
         ->ensureColumn(new \rex_sql_column('help_text', 'TEXT', true))
         ->alter();
 }

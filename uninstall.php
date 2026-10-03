@@ -243,6 +243,15 @@ if (d2u_machinery_should_uninstall($d2uMachineryAction, 'machine_usps_extension'
         ->ensure();
 }
 
+// Extension: category consultation help
+if (d2u_machinery_should_uninstall($d2uMachineryAction, 'category_consultation_extension')) {
+    $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_category_consultations');
+    $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_category_consultations_lang');
+    \rex_sql_table::get(\rex::getTable('d2u_machinery_categories_lang'))
+        ->removeColumn('consultation_intro')
+        ->ensure();
+}
+
 // Plugin: options
 if (d2u_machinery_should_uninstall($d2uMachineryAction, 'machine_options_extension')) {
     $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_options');
@@ -344,6 +353,9 @@ if (d2u_machinery_should_uninstall($d2uMachineryAction, 'machine_applications_ex
     \rex_sql_table::get(\rex::getTable('d2u_machinery_machines_lang'))
         ->removeColumn('applications_intro')
         ->removeColumn('applications_text')
+        ->removeColumn('help_text')
+        ->ensure();
+    \rex_sql_table::get(\rex::getTable('d2u_machinery_categories_lang'))
         ->removeColumn('help_text')
         ->ensure();
 }

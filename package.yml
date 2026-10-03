@@ -36,6 +36,7 @@ page:
             subpages:
                 category: { title: 'translate:d2u_helper_categories', icon: rex-icon rex-icon-open-category, perm: 'd2u_machinery[category]' }
                 usps: { title: 'translate:d2u_machinery_usps', icon: rex-icon fa-star, perm: 'd2u_machinery[category]' }
+                consultations: { title: 'translate:d2u_machinery_consultation_help', icon: rex-icon fa-life-ring, perm: 'd2u_machinery[category]' }
         industry_sectors: { title: 'translate:d2u_machinery_industry_sectors', icon: rex-icon fa-industry, perm: 'd2u_machinery[category]' }
         production_lines:
             title: 'translate:d2u_machinery_production_lines'
@@ -96,6 +97,7 @@ default_config:
     extension_machine_usage_area_extension: 'inactive'
     extension_machine_applications_extension: 'inactive'
     extension_machine_usps_extension: 'inactive'
+    extension_category_consultation_extension: 'inactive'
     extension_production_lines: 'inactive'
     extension_service_options: 'inactive'
     extension_used_machines: 'inactive'

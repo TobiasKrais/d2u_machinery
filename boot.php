@@ -1027,6 +1027,12 @@ function rex_d2u_machinery_translate_object(rex_extension_point $ep) {
             $object = $o->usp_id > 0 ? $o : null;
             $name = null !== $object ? $o->heading : '';
             break;
+        case 'category_consultation':
+            $o = new \TobiasKrais\D2UMachinery\CategoryConsultation($id, $target_clang_id);
+            if ($o->consultation_id <= 0) { $o = new \TobiasKrais\D2UMachinery\CategoryConsultation($id, $source_clang_id); $o->clang_id = $target_clang_id; }
+            $object = $o->consultation_id > 0 ? $o : null;
+            $name = null !== $object ? $o->heading : '';
+            break;
         case 'machine':
             $machine = new Machine($id, $target_clang_id);
             if ($machine->machine_id <= 0) {
@@ -1169,6 +1175,25 @@ function rex_d2u_machinery_translation_list(rex_extension_point $ep) {
                 'title' => rex_i18n::msg('d2u_machinery_usps'),
                 'icon' => 'rex-icon fa-star',
                 'html' => $html_usps
+            ];
+        }
+    }
+
+    if (\TobiasKrais\D2UMachinery\Extension::isActive('category_consultation_extension')) {
+        $category_consultations = \TobiasKrais\D2UMachinery\CategoryConsultation::getTranslationHelperObjects($target_clang_id, $filter_type);
+        if (count($category_consultations) > 0) {
+            $html_consultations = '<ul>';
+            foreach ($category_consultations as $consultation) {
+                if ('' === $consultation->heading) {
+                    $consultation = new \TobiasKrais\D2UMachinery\CategoryConsultation($consultation->consultation_id, $source_clang_id);
+                }
+                $html_consultations .= \TobiasKrais\D2UHelper\BackendHelper::getTranslationItem('d2u_machinery', 'category_consultation', $consultation->consultation_id, $consultation->heading, rex_url::backendPage('d2u_machinery/category/consultations', ['entry_id' => $consultation->consultation_id, 'func' => 'edit']));
+            }
+            $html_consultations .= '</ul>';
+            $list_entry['pages'][] = [
+                'title' => rex_i18n::msg('d2u_machinery_consultation_help'),
+                'icon' => 'rex-icon fa-life-ring',
+                'html' => $html_consultations
             ];
         }
     }

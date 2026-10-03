@@ -103,6 +103,12 @@ final class Extension
             'pages' => [],
             'dependencies' => [],
         ],
+        'category_consultation_extension' => [
+            'config' => 'extension_category_consultation_extension',
+            'title' => 'd2u_machinery_consultation_help',
+            'pages' => ['d2u_machinery/category/consultations'],
+            'dependencies' => [],
+        ],
         'production_lines' => [
             'config' => 'extension_production_lines',
             'title' => 'd2u_machinery_production_lines',
@@ -320,6 +326,7 @@ final class Extension
 
         self::unsetSubpage($subpages, ['contacts'], self::isActive('contacts'));
         self::unsetSubpage($subpages, ['category', 'subpages', 'usps'], self::isActive('machine_usps_extension'));
+        self::unsetSubpage($subpages, ['category', 'subpages', 'consultations'], self::isActive('category_consultation_extension'));
         self::unsetSubpage($subpages, ['industry_sectors'], self::isActive('industry_sectors'));
         self::unsetSubpage($subpages, ['production_lines'], self::isActive('production_lines'));
         self::unsetSubpage($subpages, ['used_machines'], self::isActive('used_machines'));

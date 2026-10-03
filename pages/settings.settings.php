@@ -244,6 +244,7 @@ if (\TobiasKrais\D2UMachinery\Extension::isActive('used_machines') && 'false' !=
                         $additionalExtensions = [
                             'contacts',
                             'machine_usps_extension',
+                            'category_consultation_extension',
                             'industry_sectors',
                             'production_lines',
                             'used_machines',

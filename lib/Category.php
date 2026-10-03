@@ -90,6 +90,12 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrai
     /** @var string General USP heading (per language, machine_usps_extension) */
     public string $usps_heading = '';
 
+    /** @var string Free help text (per language, machine_applications_extension) */
+    public string $help_text = '';
+
+    /** @var string Consultation help intro text (per language, category_consultation_extension) */
+    public string $consultation_intro = '';
+
     /** @var \TobiasKrais\D2UVideos\Video[] Videomanager videos */
     public $videos = [];
 
@@ -134,6 +140,12 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrai
             $this->faq = (string) $result->getValue('faq');
             if (Extension::isActive('machine_usps_extension')) {
                 $this->usps_heading = stripslashes(htmlspecialchars_decode((string) $result->getValue('usps_heading')));
+            }
+            if (Extension::isActive('machine_applications_extension')) {
+                $this->help_text = stripslashes(htmlspecialchars_decode((string) $result->getValue('help_text')));
+            }
+            if (Extension::isActive('category_consultation_extension')) {
+                $this->consultation_intro = stripslashes(htmlspecialchars_decode((string) $result->getValue('consultation_intro')));
             }
             $this->pic = (string) $result->getValue('pic');
             $this->pic_lang = (string) $result->getValue('pic_lang');
@@ -673,12 +685,19 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrai
         }
 
         try {
-            $translated = \TobiasKrais\D2UHelper\AiTranslationHelper::translateFields([
+            $fieldsToTranslate = [
                 'name' => ['value' => $source->name, 'html' => false],
                 'teaser' => ['value' => $source->teaser, 'html' => true],
                 'description' => ['value' => $source->description, 'html' => true],
                 'usage_area' => ['value' => $source->usage_area, 'html' => true],
-            ], $sourceClangId, $this->clang_id);
+            ];
+            if (Extension::isActive('machine_applications_extension')) {
+                $fieldsToTranslate['help_text'] = ['value' => $source->help_text, 'html' => true];
+            }
+            if (Extension::isActive('category_consultation_extension')) {
+                $fieldsToTranslate['consultation_intro'] = ['value' => $source->consultation_intro, 'html' => true];
+            }
+            $translated = \TobiasKrais\D2UHelper\AiTranslationHelper::translateFields($fieldsToTranslate, $sourceClangId, $this->clang_id);
         } catch (\Throwable $e) {
             \rex_logger::logException($e);
             return false;
@@ -688,6 +707,12 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrai
         $this->teaser = $translated['teaser'];
         $this->description = $translated['description'];
         $this->usage_area = $translated['usage_area'];
+        if (Extension::isActive('machine_applications_extension')) {
+            $this->help_text = $translated['help_text'];
+        }
+        if (Extension::isActive('category_consultation_extension')) {
+            $this->consultation_intro = $translated['consultation_intro'];
+        }
         $this->translation_needs_update = 'no';
 
         // save() returns true on success.
@@ -803,6 +828,14 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrai
                 if (Extension::isActive('machine_usps_extension')) {
                     $query .= ', usps_heading = :usps_heading ';
                     $lang_params[':usps_heading'] = htmlspecialchars($this->usps_heading);
+                }
+                if (Extension::isActive('machine_applications_extension')) {
+                    $query .= ', help_text = :help_text ';
+                    $lang_params[':help_text'] = htmlspecialchars($this->help_text);
+                }
+                if (Extension::isActive('category_consultation_extension')) {
+                    $query .= ', consultation_intro = :consultation_intro ';
+                    $lang_params[':consultation_intro'] = htmlspecialchars($this->consultation_intro);
                 }
                 $result->setQuery($query, $lang_params);
                 $error = $result->hasError();

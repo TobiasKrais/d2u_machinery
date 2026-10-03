@@ -162,6 +162,8 @@ final class Schema
             'teaser' => ['type' => 'string', 'language' => true, 'seo' => 'description'],
             'description' => ['type' => 'html', 'language' => true],
             'usage_area' => ['type' => 'string', 'language' => true],
+            'help_text' => ['type' => 'html', 'language' => true, 'extension' => 'machine_applications_extension'],
+            'consultation_intro' => ['type' => 'html', 'language' => true, 'extension' => 'category_consultation_extension'],
             'pic_lang' => ['type' => 'media', 'language' => true, 'seo' => 'image'],
             'pdfs' => ['type' => 'media[]', 'language' => true],
             'faq' => ['type' => 'faq[]', 'language' => true],
