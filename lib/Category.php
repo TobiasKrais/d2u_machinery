@@ -39,14 +39,14 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrai
     /** @var string Name */
     public string $name = '';
 
+    /** @var string SEO meta title override (per language). Empty = fall back to name - parent. */
+    public string $meta_title = '';
+
     /** @var string Teaser */
     public string $teaser = '';
 
     /** @var string Description */
     public string $description = '';
-
-    /** @var string Name of Usage area */
-    public string $usage_area = '';
 
     /** @var string Preview picture file name */
     public string $pic = '';
@@ -137,9 +137,9 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrai
                 $this->parent_category = new self((int) $result->getValue('parent_category_id'), $clang_id);
             }
             $this->name = stripslashes(htmlspecialchars_decode((string) $result->getValue('lang.name')));
+            $this->meta_title = stripslashes((string) $result->getValue('meta_title'));
             $this->teaser = stripslashes(htmlspecialchars_decode((string) $result->getValue('teaser')));
             $this->description = stripslashes(htmlspecialchars_decode((string) $result->getValue('description')));
-            $this->usage_area = stripslashes(htmlspecialchars_decode((string) $result->getValue('usage_area')));
             $this->faq = (string) $result->getValue('faq');
             if (Extension::isActive('machine_usps_extension')) {
                 $this->usps_heading = stripslashes(htmlspecialchars_decode((string) $result->getValue('usps_heading')));
@@ -691,9 +691,9 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrai
         try {
             $fieldsToTranslate = [
                 'name' => ['value' => $source->name, 'html' => false],
+                'meta_title' => ['value' => $source->meta_title, 'html' => false],
                 'teaser' => ['value' => $source->teaser, 'html' => true],
                 'description' => ['value' => $source->description, 'html' => true],
-                'usage_area' => ['value' => $source->usage_area, 'html' => true],
             ];
             if (Extension::isActive('machine_applications_extension')) {
                 $fieldsToTranslate['help_text'] = ['value' => $source->help_text, 'html' => true];
@@ -709,9 +709,9 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrai
         }
 
         $this->name = $translated['name'];
+        $this->meta_title = $translated['meta_title'];
         $this->teaser = $translated['teaser'];
         $this->description = $translated['description'];
-        $this->usage_area = $translated['usage_area'];
         if (Extension::isActive('machine_applications_extension')) {
             $this->help_text = $translated['help_text'];
         }
@@ -807,9 +807,9 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrai
                         .'category_id = :category_id, '
                         .'clang_id = :clang_id, '
                         .'name = :name, '
+                        .'meta_title = :meta_title, '
                         .'description = :description, '
                         .'teaser = :teaser, '
-                        .'usage_area = :usage_area, '
                         .'pic_lang = :pic_lang, '
                         .'pdfs = :pdfs, '
                         .'faq = :faq, '
@@ -822,9 +822,9 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrai
                     ':category_id' => $this->category_id,
                     ':clang_id' => $this->clang_id,
                     ':name' => htmlspecialchars($this->name),
+                    ':meta_title' => htmlspecialchars($this->meta_title),
                     ':description' => htmlspecialchars($this->description),
                     ':teaser' => htmlspecialchars($this->teaser),
-                    ':usage_area' => htmlspecialchars($this->usage_area),
                     ':pic_lang' => $this->pic_lang,
                     ':pdfs' => implode(',', $this->pdfs),
                     ':faq' => $this->faq,

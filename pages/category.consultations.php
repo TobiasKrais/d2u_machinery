@@ -18,7 +18,7 @@ if ((
     1 === (int) filter_input(INPUT_POST, 'btn_save', FILTER_VALIDATE_INT)
     || 1 === (int) filter_input(INPUT_POST, 'btn_apply', FILTER_VALIDATE_INT)
     || 1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_VALIDATE_INT)
-    || in_array($func, ['delete', 'clone'], true)
+    || in_array($func, ['delete'], true)
 ) && !$csrfToken->isValid()) {
     echo rex_view::error(rex_i18n::msg('csrf_token_invalid'));
     $invalidCsrf = true;
@@ -97,35 +97,9 @@ if ((!$invalidCsrf && 1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_
     exit;
 }
 
-// Clone
-if (!$invalidCsrf && 'clone' === $func) {
-    $default_lang = (int) rex_config::get('d2u_helper', 'default_lang');
-    $source_default = new CategoryConsultation($entry_id, $default_lang);
-    if ($source_default->consultation_id > 0) {
-        $new_id = 0;
-        foreach (rex_clang::getAll() as $rex_clang) {
-            $source = new CategoryConsultation($entry_id, $rex_clang->getId());
-            if ($rex_clang->getId() !== $default_lang && '' === trim($source->heading) && '' === trim($source->text)) {
-                continue; // no translation for this language
-            }
-            $clone = new CategoryConsultation($new_id, $rex_clang->getId());
-            $clone->consultation_id = $new_id;
-            $clone->category_id = $source_default->category_id;
-            $clone->pic = $source_default->pic;
-            $clone->link_type = $source_default->link_type;
-            $clone->article_id = $source_default->article_id;
-            $clone->target_category_id = $source_default->target_category_id;
-            $clone->heading = $source->heading;
-            $clone->text = $source->text;
-            $clone->link_label = $source->link_label;
-            $clone->translation_needs_update = 'no';
-            if ($clone->save()) {
-                $new_id = $clone->consultation_id;
-            }
-        }
-    }
-    header('Location: '. BackendHelper::getCurrentBackendPage(['message' => 'form_saved'], ['func', 'entry_id']));
-    exit;
+// Clone: opens the add form prefilled with the source data (consultation_id forced to 0 on save)
+if ('clone' === $func) {
+    $func = 'add';
 }
 
 // Priority up/down
@@ -158,7 +132,7 @@ if ('add' === $func || 'edit' === $func) {
     echo $csrfToken->getHiddenField();
 
     $consultation_default = new CategoryConsultation($entry_id, $default_lang);
-    echo '<input type="hidden" name="form[consultation_id]" value="'. (int) $consultation_default->consultation_id .'">';
+    echo '<input type="hidden" name="form[consultation_id]" value="'. ('edit' === $func ? (int) $consultation_default->consultation_id : 0) .'">';
 
     echo '<div class="panel panel-edit"><header class="panel-heading"><div class="panel-title">'. rex_i18n::msg('d2u_machinery_consultation_entry') .'</div></header><div class="panel-body">';
 
@@ -243,8 +217,10 @@ if ('' === $func) {
         .'(SELECT MAX(priority) FROM '. \rex::getTablePrefix() .'d2u_machinery_category_consultations) AS max_priority '
         .'FROM '. \rex::getTablePrefix() .'d2u_machinery_category_consultations AS consultations '
         .'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_category_consultations_lang AS lang ON consultations.consultation_id = lang.consultation_id AND lang.clang_id = '. $default_lang .' '
-        .'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_categories_lang AS cat_lang ON consultations.category_id = cat_lang.category_id AND cat_lang.clang_id = '. $default_lang .' '
-        .'ORDER BY categoryname, consultations.priority';
+        .'LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_categories_lang AS cat_lang ON consultations.category_id = cat_lang.category_id AND cat_lang.clang_id = '. $default_lang .' ';
+    if ('' === rex_request('sort', 'string', '')) {
+        $query .= 'ORDER BY consultations.priority';
+    }
 
     $list = rex_list::factory(query: $query, rowsPerPage: 1000);
     $list->addTableAttribute('class', 'table-striped table-hover');
@@ -268,6 +244,7 @@ if ('' === $func) {
     $list->setColumnSortable('heading');
 
     $list->setColumnLabel('priority', rex_i18n::msg('header_priority'));
+    $list->setColumnSortable('priority');
     $list->setColumnFormat('priority', 'custom', static function ($params) {
         $listParams = $params['list'];
         return BackendHelper::getPriorityButtons((int) $listParams->getValue('consultation_id'), (int) $listParams->getValue('priority'), (int) $listParams->getValue('max_priority'));
@@ -281,7 +258,7 @@ if ('' === $func) {
     if (\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
         $list->addColumn(rex_i18n::msg('d2u_machinery_consultation_clone'), '<i class="rex-icon fa-copy"></i> '. rex_i18n::msg('d2u_machinery_consultation_clone'));
         $list->setColumnLayout(rex_i18n::msg('d2u_machinery_consultation_clone'), ['', '<td class="rex-table-action">###VALUE###</td>']);
-        $list->setColumnParams(rex_i18n::msg('d2u_machinery_consultation_clone'), ['func' => 'clone', 'entry_id' => '###consultation_id###'] + $csrfToken->getUrlParams());
+        $list->setColumnParams(rex_i18n::msg('d2u_machinery_consultation_clone'), ['func' => 'clone', 'entry_id' => '###consultation_id###']);
 
         $list->addColumn(rex_i18n::msg('delete_module'), '<i class="rex-icon rex-icon-delete"></i> '. rex_i18n::msg('delete'));
         $list->setColumnLayout(rex_i18n::msg('delete_module'), ['', '<td class="rex-table-action">###VALUE###</td>']);

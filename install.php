@@ -142,9 +142,10 @@ if (null === $d2uMachineryAction) {
         ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
         ->setPrimaryKey(['category_id', 'clang_id'])
         ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(255)'))
+        ->ensureColumn(new \rex_sql_column('meta_title', 'VARCHAR(255)', true))
         ->ensureColumn(new \rex_sql_column('teaser', 'VARCHAR(255)', true))
         ->ensureColumn(new \rex_sql_column('description', 'TEXT', true))
-        ->ensureColumn(new \rex_sql_column('usage_area', 'VARCHAR(255)', true))
+        ->removeColumn('usage_area')
         ->ensureColumn(new \rex_sql_column('pic_lang', 'VARCHAR(255)', true))
         ->ensureColumn(new \rex_sql_column('pdfs', 'TEXT', true))
         ->ensureColumn(new \rex_sql_column('faq', 'TEXT', true))
@@ -162,7 +163,7 @@ if (null === $d2uMachineryAction) {
     	LEFT JOIN '. \rex::getTablePrefix() .'clang AS clang ON lang.clang_id = clang.id
     	WHERE clang.`status` = 1 AND machines.online_status = "online"');
     $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_machinery_url_machine_categories AS
-    	SELECT machines.category_id, categories_lang.clang_id, CONCAT_WS(" - ", parent_categories.name, categories_lang.name) AS name, CONCAT_WS(" - ", categories_lang.name, parent_categories.name) AS seo_title, categories_lang.teaser AS seo_description, IF(categories_lang.pic_lang IS NULL or categories_lang.pic_lang = "", categories.pic, categories_lang.pic_lang) as picture, categories_lang.updatedate
+    	SELECT machines.category_id, categories_lang.clang_id, CONCAT_WS(" - ", parent_categories.name, categories_lang.name) AS name, IF(categories_lang.meta_title IS NULL or categories_lang.meta_title = "", CONCAT_WS(" - ", categories_lang.name, parent_categories.name), categories_lang.meta_title) AS seo_title, categories_lang.teaser AS seo_description, IF(categories_lang.pic_lang IS NULL or categories_lang.pic_lang = "", categories.pic, categories_lang.pic_lang) as picture, categories_lang.updatedate
     	FROM '. \rex::getTablePrefix() .'d2u_machinery_machines_lang AS lang
     	LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_machines AS machines ON lang.machine_id = machines.machine_id
     	LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_categories_lang AS categories_lang ON machines.category_id = categories_lang.category_id AND lang.clang_id = categories_lang.clang_id
