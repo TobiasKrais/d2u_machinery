@@ -181,6 +181,7 @@ if (!$invalidCsrf && (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === 
 		}
 		$machine->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 		$machine->lang_name = $form['lang'][$rex_clang->getId()]['lang_name'];
+		$machine->meta_title = $form['lang'][$rex_clang->getId()]['meta_title'] ?? '';
 		$machine->teaser = $form['lang'][$rex_clang->getId()]['teaser'];
 		$machine->description = $form['lang'][$rex_clang->getId()]['description'];
 		if (Extension::isActive('machine_features_extension')) {
@@ -632,6 +633,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 								<?php
 									BackendHelper::form_input('d2u_machinery_lang_name', 'form[lang]['. $rex_clang->getId() .'][lang_name]', $machine_lang->lang_name, false, $readonly_lang, 'text');
 									echo '<p class="rex-note">'. rex_i18n::msg('d2u_machinery_seo_hint_meta_title_lang') .'</p>';
+									BackendHelper::form_input('d2u_machinery_machine_meta_title', 'form[lang]['. $rex_clang->getId() .'][meta_title]', $machine_lang->meta_title, false, $readonly_lang, 'text');
 									BackendHelper::form_textarea('d2u_machinery_machine_teaser', 'form[lang]['. $rex_clang->getId() .'][teaser]', $machine_lang->teaser, 3, false, $readonly_lang, false);
 									echo '<p class="rex-note">'. rex_i18n::msg('d2u_helper_seo_hint_meta_description') .'</p>';
 									BackendHelper::form_textarea('d2u_helper_description', 'form[lang]['. $rex_clang->getId() .'][description]', $machine_lang->description, 5, false, $readonly_lang, true);

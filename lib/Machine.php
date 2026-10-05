@@ -120,6 +120,9 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
     /** @var string Language specific name */
     public string $lang_name = '';
 
+    /** @var string SEO meta title override (per language). Empty = fall back to name - category. */
+    public string $meta_title = '';
+
     /** @var string Teaser */
     public string $teaser = '';
 
@@ -348,6 +351,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
                 $this->operating_voltage_a = (string) $result->getValue('operating_voltage_a');
             }
             $this->lang_name = stripslashes((string) $result->getValue('lang_name'));
+            $this->meta_title = stripslashes((string) $result->getValue('meta_title'));
             $this->teaser = stripslashes(htmlspecialchars_decode((string) $result->getValue('teaser')));
             $this->description = stripslashes(htmlspecialchars_decode((string) $result->getValue('description')));
             if (Extension::isActive('machine_features_extension')) {
@@ -1234,6 +1238,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
         try {
             $fieldsToTranslate = [
                 'lang_name' => ['value' => $source->lang_name, 'html' => false],
+                'meta_title' => ['value' => $source->meta_title, 'html' => false],
                 'teaser' => ['value' => $source->teaser, 'html' => true],
                 'description' => ['value' => $source->description, 'html' => true],
                 'alternative_machines_intro' => ['value' => $source->alternative_machines_intro, 'html' => true],
@@ -1258,6 +1263,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
         }
 
         $this->lang_name = $translated['lang_name'];
+        $this->meta_title = $translated['meta_title'];
         $this->teaser = $translated['teaser'];
         $this->description = $translated['description'];
         $this->alternative_machines_intro = $translated['alternative_machines_intro'];
@@ -1465,6 +1471,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
                         .'machine_id = :machine_id, '
                         .'clang_id = :clang_id, '
                         .'lang_name = :lang_name, '
+                        .'meta_title = :meta_title, '
                         .'teaser = :teaser, '
                         .'description = :description, '
                         .'alternative_machines_intro = :alternative_machines_intro, '
@@ -1478,6 +1485,7 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
                     ':machine_id' => $this->machine_id,
                     ':clang_id' => $this->clang_id,
                     ':lang_name' => $this->lang_name,
+                    ':meta_title' => $this->meta_title,
                     ':teaser' => htmlspecialchars($this->teaser),
                     ':description' => htmlspecialchars($this->description),
                     ':alternative_machines_intro' => htmlspecialchars($this->alternative_machines_intro),

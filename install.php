@@ -115,6 +115,7 @@ if (null === $d2uMachineryAction) {
         ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
         ->setPrimaryKey(['machine_id', 'clang_id'])
         ->ensureColumn(new \rex_sql_column('lang_name', 'VARCHAR(255)'))
+        ->ensureColumn(new \rex_sql_column('meta_title', 'VARCHAR(255)', true))
         ->ensureColumn(new \rex_sql_column('teaser', 'VARCHAR(255)', true))
         ->ensureColumn(new \rex_sql_column('description', 'TEXT', true))
         ->ensureColumn(new \rex_sql_column('alternative_machines_intro', 'TEXT', true))
@@ -154,7 +155,7 @@ if (null === $d2uMachineryAction) {
 
     // Create views for url addon
     $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_machinery_url_machines AS
-    	SELECT lang.machine_id, lang.clang_id, IF(lang.lang_name IS NULL or lang.lang_name = "", machines.name, lang.lang_name) as name, CONCAT(IF(lang.lang_name IS NULL or lang.lang_name = "", machines.name, lang.lang_name), " - ", categories.name) AS seo_title, lang.teaser AS seo_description, SUBSTRING_INDEX(machines.pics, ",", 1) as picture, machines.category_id, lang.updatedate
+    	SELECT lang.machine_id, lang.clang_id, IF(lang.lang_name IS NULL or lang.lang_name = "", machines.name, lang.lang_name) as name, IF(lang.meta_title IS NULL or lang.meta_title = "", CONCAT(IF(lang.lang_name IS NULL or lang.lang_name = "", machines.name, lang.lang_name), " - ", categories.name), lang.meta_title) AS seo_title, lang.teaser AS seo_description, SUBSTRING_INDEX(machines.pics, ",", 1) as picture, machines.category_id, lang.updatedate
     	FROM '. \rex::getTablePrefix() .'d2u_machinery_machines_lang AS lang
     	LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_machines AS machines ON lang.machine_id = machines.machine_id
     	LEFT JOIN '. \rex::getTablePrefix() .'d2u_machinery_categories_lang AS categories ON machines.category_id = categories.category_id AND lang.clang_id = categories.clang_id
@@ -663,6 +664,7 @@ if (d2u_machinery_should_install($d2uMachineryAction, 'category_consultation_ext
         ->ensure();
     \rex_sql_table::get(\rex::getTable('d2u_machinery_categories_lang'))
         ->ensureColumn(new \rex_sql_column('consultation_intro', 'TEXT', true))
+        ->ensureColumn(new \rex_sql_column('consultation_guide', 'TEXT', true))
         ->alter();
 }
 

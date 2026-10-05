@@ -6,6 +6,8 @@ use rex_addon;
 use rex_clang;
 use TobiasKrais\D2UMachinery\Agitator;
 use TobiasKrais\D2UMachinery\Category;
+use TobiasKrais\D2UMachinery\CategoryConsultation;
+use TobiasKrais\D2UMachinery\CategoryUsp;
 use TobiasKrais\D2UMachinery\Certificate;
 use TobiasKrais\D2UMachinery\Contact;
 use TobiasKrais\D2UMachinery\Equipment;
@@ -53,6 +55,8 @@ final class Schema
         'production_lines' => ['class' => ProductionLine::class, 'id' => 'production_line_id', 'extension' => 'production_lines'],
         'supplies' => ['class' => Supply::class, 'id' => 'supply_id', 'extension' => 'machine_steel_automation_extension'],
         'usage_areas' => ['class' => UsageArea::class, 'id' => 'usage_area_id', 'extension' => 'machine_usage_area_extension'],
+        'category_usps' => ['class' => CategoryUsp::class, 'id' => 'usp_id', 'extension' => 'machine_usps_extension'],
+        'category_consultations' => ['class' => CategoryConsultation::class, 'id' => 'consultation_id', 'extension' => 'category_consultation_extension'],
     ];
 
     /**
@@ -76,6 +80,7 @@ final class Schema
             'reference_ids' => ['type' => 'int[]', 'relation' => 'references'],
             'video_ids' => ['type' => 'int[]', 'relation' => 'videos'],
             'lang_name' => ['type' => 'string', 'language' => true, 'required' => true, 'seo' => 'title'],
+            'meta_title' => ['type' => 'string', 'language' => true],
             'teaser' => ['type' => 'string', 'language' => true, 'seo' => 'description'],
             'description' => ['type' => 'html', 'language' => true],
             'alternative_machines_intro' => ['type' => 'html', 'language' => true],
@@ -162,8 +167,10 @@ final class Schema
             'teaser' => ['type' => 'string', 'language' => true, 'seo' => 'description'],
             'description' => ['type' => 'html', 'language' => true],
             'usage_area' => ['type' => 'string', 'language' => true],
+            'usps_heading' => ['type' => 'string', 'language' => true, 'extension' => 'machine_usps_extension'],
             'help_text' => ['type' => 'html', 'language' => true, 'extension' => 'machine_applications_extension'],
             'consultation_intro' => ['type' => 'html', 'language' => true, 'extension' => 'category_consultation_extension'],
+            'consultation_guide' => ['type' => 'html', 'language' => true, 'extension' => 'category_consultation_extension'],
             'pic_lang' => ['type' => 'media', 'language' => true, 'seo' => 'image'],
             'pdfs' => ['type' => 'media[]', 'language' => true],
             'faq' => ['type' => 'faq[]', 'language' => true],
@@ -265,6 +272,25 @@ final class Schema
             'priority' => ['type' => 'int'],
             'category_ids' => ['type' => 'int[]', 'relation' => 'categories'],
             'name' => ['type' => 'string', 'language' => true, 'required' => true],
+        ],
+        'category_usps' => [
+            'category_id' => ['type' => 'int', 'relation' => 'categories'],
+            'priority' => ['type' => 'int'],
+            'icon_light' => ['type' => 'media'],
+            'icon_dark' => ['type' => 'media'],
+            'heading' => ['type' => 'string', 'language' => true, 'required' => true],
+            'text' => ['type' => 'string', 'language' => true],
+        ],
+        'category_consultations' => [
+            'category_id' => ['type' => 'int', 'relation' => 'categories'],
+            'priority' => ['type' => 'int'],
+            'pic' => ['type' => 'media'],
+            'link_type' => ['type' => 'enum:article,category'],
+            'article_id' => ['type' => 'int'],
+            'target_category_id' => ['type' => 'int', 'relation' => 'categories'],
+            'heading' => ['type' => 'string', 'language' => true, 'required' => true],
+            'text' => ['type' => 'html', 'language' => true],
+            'link_label' => ['type' => 'string', 'language' => true],
         ],
     ];
 

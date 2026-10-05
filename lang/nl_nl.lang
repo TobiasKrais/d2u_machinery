@@ -10,6 +10,7 @@ d2u_machinery_basic_tech_data = Technische basisgegevens
 d2u_machinery_help_chapter_api = REST API
 d2u_machinery_meta_machines = Machines
 d2u_machinery_meta_title = D2U Machinery
+d2u_machinery_machine_meta_title = SEO-titel
 
 d2u_machinery_internal_name = Interne naam
 d2u_machinery_lang_name = Taalspecifieke naam (optioneel)
@@ -62,6 +63,7 @@ d2u_machinery_applications_text = Toepassingen: hoofdtekst
 d2u_machinery_help_text = Help: tekst
 d2u_machinery_consultation_help = Advieshulp
 d2u_machinery_consultation_intro = Advieshulp: inleidende tekst
+d2u_machinery_consultation_guide = Advieshulp: gidstekst
 d2u_machinery_consultation_entry = Advieshulp-item
 d2u_machinery_consultation_pic = Advieshulp: afbeelding
 d2u_machinery_consultation_link_type = Linktype
