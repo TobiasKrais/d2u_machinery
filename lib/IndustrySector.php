@@ -328,14 +328,24 @@ class IndustrySector implements \TobiasKrais\D2UHelper\ITranslationHelper, \Tobi
 
     }
 
+    /** @var string|null Last AI translation error detail (for debugging the translation helper). */
+    public ?string $translateError = null;
+
+    /** @var string|null Machine-readable reason for the last failed translation ('invalid'|'no_source'|'ai'). */
+    public ?string $translateErrorCode = null;
+
     public function translateFrom(int $sourceClangId): bool
     {
         if ($this->industry_sector_id <= 0 || $sourceClangId === $this->clang_id) {
+            $this->translateErrorCode = 'invalid';
+            $this->translateError = 'invalid request: industry_sector_id='. $this->industry_sector_id .' sourceClang='. $sourceClangId .' targetClang='. $this->clang_id;
             return false;
         }
 
         $source = new self($this->industry_sector_id, $sourceClangId);
         if ($source->industry_sector_id <= 0) {
+            $this->translateErrorCode = 'no_source';
+            $this->translateError = 'no source content: industry_sector #'. $this->industry_sector_id .' has no data in the source language (clang '. $sourceClangId .')';
             return false;
         }
 
@@ -347,6 +357,8 @@ class IndustrySector implements \TobiasKrais\D2UHelper\ITranslationHelper, \Tobi
             ], $sourceClangId, $this->clang_id);
         } catch (\Throwable $e) {
             \rex_logger::logException($e);
+            $this->translateErrorCode = 'ai';
+            $this->translateError = get_class($e) . ': ' . $e->getMessage();
             return false;
         }
 
@@ -356,7 +368,12 @@ class IndustrySector implements \TobiasKrais\D2UHelper\ITranslationHelper, \Tobi
         $this->translation_needs_update = 'no';
 
         // save() returns true on success.
-        return $this->save();
+        $saved = $this->save();
+        if (!$saved) {
+            $this->translateErrorCode = 'ai';
+            $this->translateError = 'save() failed after translation';
+        }
+        return $saved;
     }
 
     /**

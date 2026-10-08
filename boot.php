@@ -1118,10 +1118,20 @@ function rex_d2u_machinery_translate_object(rex_extension_point $ep) {
 
     $success = $object->translateFrom($source_clang_id);
 
+    $code = (!$success && property_exists($object, 'translateErrorCode')) ? (string) $object->translateErrorCode : '';
+    $message = '';
+    if (!$success) {
+        $message = 'no_source' === $code
+            ? rex_i18n::msg('d2u_helper_translations_no_source')
+            : rex_i18n::msg('d2u_helper_translations_ai_error');
+    }
+    $debug = (!$success && '' !== $code && 'no_source' !== $code && property_exists($object, 'translateError')) ? (string) $object->translateError : '';
+
     return [
         'success' => $success,
         'name' => $name,
-        'message' => $success ? '' : rex_i18n::msg('d2u_helper_translations_ai_error'),
+        'message' => $message,
+        'debug' => $debug,
     ];
 }
 
