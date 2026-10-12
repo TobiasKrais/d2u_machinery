@@ -252,8 +252,13 @@ if (\TobiasKrais\D2UMachinery\Extension::isActive('used_machines') && 'false' !=
                         ];
                         $extensionsWithSettings = ['export', 'industry_sectors', 'production_lines', 'used_machines', 'machine_usage_area_extension'];
                         $exportSettingsEnabled = \TobiasKrais\D2UMachinery\Extension::isActive('used_machines') && \TobiasKrais\D2UMachinery\Extension::isActive('export');
-                        $renderExtensionToggle = static function (string $extensionKey) use ($extensionsWithSettings, $exportSettingsEnabled): void {
+                        $extensionDescription = static function (string $extensionKey): string {
+                            $key = 'd2u_machinery_ext_desc_' . $extensionKey;
+                            return rex_i18n::hasMsg($key) ? rex_i18n::msg($key) : '';
+                        };
+                        $renderExtensionToggle = static function (string $extensionKey) use ($extensionsWithSettings, $exportSettingsEnabled, $extensionDescription): void {
                             $configKey = \TobiasKrais\D2UMachinery\Extension::getConfigKey($extensionKey);
+                            $description = $extensionDescription($extensionKey);
 
                             if (in_array($extensionKey, $extensionsWithSettings, true)) {
                                 $rowId = 'settings['. $configKey .']';
@@ -263,6 +268,9 @@ if (\TobiasKrais\D2UMachinery\Extension::isActive('used_machines') && 'false' !=
                                 echo '<dl class="rex-form-group form-group" id="'. $rowId .'">';
                                 echo '<dt><input class="form-control d2u_helper_toggle" type="checkbox" name="settings['. $configKey .']" value="'. \TobiasKrais\D2UMachinery\Extension::STATE_ACTIVE .'"'. (\TobiasKrais\D2UMachinery\Extension::isActive($extensionKey) ? ' checked="checked"' : '') .' /></dt>';
                                 echo '<dd><label>'. rex_i18n::msg(\TobiasKrais\D2UMachinery\Extension::getTitleKey($extensionKey)) .'</label>';
+                                if ('' !== $description) {
+                                    echo '<p class="help-block" style="margin: 2px 0 0;">'. $description .'</p>';
+                                }
                                 echo '<div id="d2u-machinery-'. $extensionKey .'-settings" style="padding: 8px 0 0 28px;">';
                                 if ('export' === $extensionKey) {
                                     BackendHelper::form_checkbox('d2u_machinery_export_settings_autoexport', 'settings[export_autoexport]', 'active', 'active' === rex_config::get('d2u_machinery', 'export_autoexport'));
@@ -309,12 +317,14 @@ if (\TobiasKrais\D2UMachinery\Extension::isActive('used_machines') && 'false' !=
                                 return;
                             }
 
-                            BackendHelper::form_checkbox(
-                                \TobiasKrais\D2UMachinery\Extension::getTitleKey($extensionKey),
-                                'settings['. $configKey .']',
-                                \TobiasKrais\D2UMachinery\Extension::STATE_ACTIVE,
-                                \TobiasKrais\D2UMachinery\Extension::isActive($extensionKey)
-                            );
+                            echo '<dl class="rex-form-group form-group" id="settings['. $configKey .']">';
+                            echo '<dt><input class="form-control d2u_helper_toggle" type="checkbox" name="settings['. $configKey .']" value="'. \TobiasKrais\D2UMachinery\Extension::STATE_ACTIVE .'"'. (\TobiasKrais\D2UMachinery\Extension::isActive($extensionKey) ? ' checked="checked"' : '') .' /></dt>';
+                            echo '<dd><label>'. rex_i18n::msg(\TobiasKrais\D2UMachinery\Extension::getTitleKey($extensionKey)) .'</label>';
+                            if ('' !== $description) {
+                                echo '<p class="help-block" style="margin: 2px 0 0;">'. $description .'</p>';
+                            }
+                            echo '</dd>';
+                            echo '</dl>';
                         };
 
                         foreach ($machineFieldExtensions as $extensionKey) {
