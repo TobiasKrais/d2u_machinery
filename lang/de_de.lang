@@ -81,6 +81,7 @@ d2u_machinery_help_text = Hilfe: Text
 d2u_machinery_consultation_help = Beratungshilfe
 d2u_machinery_consultation_intro = Beratungshilfe: Einleitungstext
 d2u_machinery_consultation_guide = Beratungshilfe: Leitfaden-Text
+d2u_machinery_machine_list_intro = Maschinenliste Intro
 d2u_machinery_consultation_entry = Beratungshilfe-Eintrag
 d2u_machinery_consultation_pic = Beratungshilfe: Bild
 d2u_machinery_consultation_link_type = Linkart

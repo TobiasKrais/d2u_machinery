@@ -99,6 +99,9 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrai
     /** @var string Consultation help guide free text (per language, category_consultation_extension) */
     public string $consultation_guide = '';
 
+    /** @var string Machine list intro text with own heading (per language, category_consultation_extension) */
+    public string $machine_list_intro = '';
+
     /** @var \TobiasKrais\D2UVideos\Video[] Videomanager videos */
     public $videos = [];
 
@@ -150,6 +153,7 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrai
             if (Extension::isActive('category_consultation_extension')) {
                 $this->consultation_intro = stripslashes(htmlspecialchars_decode((string) $result->getValue('consultation_intro')));
                 $this->consultation_guide = stripslashes(htmlspecialchars_decode((string) $result->getValue('consultation_guide')));
+                $this->machine_list_intro = stripslashes(htmlspecialchars_decode((string) $result->getValue('machine_list_intro')));
             }
             $this->pic = (string) $result->getValue('pic');
             $this->pic_lang = (string) $result->getValue('pic_lang');
@@ -701,6 +705,7 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrai
             if (Extension::isActive('category_consultation_extension')) {
                 $fieldsToTranslate['consultation_intro'] = ['value' => $source->consultation_intro, 'html' => true];
                 $fieldsToTranslate['consultation_guide'] = ['value' => $source->consultation_guide, 'html' => true];
+                $fieldsToTranslate['machine_list_intro'] = ['value' => $source->machine_list_intro, 'html' => true];
             }
             $translated = \TobiasKrais\D2UHelper\AiTranslationHelper::translateFields($fieldsToTranslate, $sourceClangId, $this->clang_id);
         } catch (\Throwable $e) {
@@ -718,6 +723,7 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrai
         if (Extension::isActive('category_consultation_extension')) {
             $this->consultation_intro = $translated['consultation_intro'];
             $this->consultation_guide = $translated['consultation_guide'];
+            $this->machine_list_intro = $translated['machine_list_intro'];
         }
         $this->translation_needs_update = 'no';
 
@@ -844,6 +850,8 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrai
                     $lang_params[':consultation_intro'] = htmlspecialchars($this->consultation_intro);
                     $query .= ', consultation_guide = :consultation_guide ';
                     $lang_params[':consultation_guide'] = htmlspecialchars($this->consultation_guide);
+                    $query .= ', machine_list_intro = :machine_list_intro ';
+                    $lang_params[':machine_list_intro'] = htmlspecialchars($this->machine_list_intro);
                 }
                 $result->setQuery($query, $lang_params);
                 $error = $result->hasError();

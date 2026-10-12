@@ -99,6 +99,7 @@ if (!$invalidCsrf && (1 === (int) filter_input(INPUT_POST, 'btn_save', FILTER_VA
         if (\TobiasKrais\D2UMachinery\Extension::isActive('category_consultation_extension')) {
             $category->consultation_intro = $form['lang'][$rex_clang->getId()]['consultation_intro'] ?? '';
             $category->consultation_guide = $form['lang'][$rex_clang->getId()]['consultation_guide'] ?? '';
+            $category->machine_list_intro = $form['lang'][$rex_clang->getId()]['machine_list_intro'] ?? '';
         }
         if (\TobiasKrais\D2UMachinery\Extension::isActive('machine_agitator_extension')) {
             // Checkbox also need special treatment if empty
@@ -244,6 +245,7 @@ if ('edit' === $func || 'add' === $func) {
                                     }
                                     if (\TobiasKrais\D2UMachinery\Extension::isActive('category_consultation_extension')) {
                                         BackendHelper::form_textarea('d2u_machinery_consultation_guide', 'form[lang]['. $rex_clang->getId() .'][consultation_guide]', $category->consultation_guide, 5, false, $readonly_lang, true);
+                                        BackendHelper::form_textarea('d2u_machinery_machine_list_intro', 'form[lang]['. $rex_clang->getId() .'][machine_list_intro]', $category->machine_list_intro, 5, false, $readonly_lang, true);
                                         BackendHelper::form_textarea('d2u_machinery_consultation_intro', 'form[lang]['. $rex_clang->getId() .'][consultation_intro]', $category->consultation_intro, 5, false, $readonly_lang, true);
                                     }
                                     if (\TobiasKrais\D2UMachinery\Extension::isActive('machine_applications_extension')) {

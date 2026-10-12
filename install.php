@@ -666,6 +666,7 @@ if (d2u_machinery_should_install($d2uMachineryAction, 'category_consultation_ext
     \rex_sql_table::get(\rex::getTable('d2u_machinery_categories_lang'))
         ->ensureColumn(new \rex_sql_column('consultation_intro', 'TEXT', true))
         ->ensureColumn(new \rex_sql_column('consultation_guide', 'TEXT', true))
+        ->ensureColumn(new \rex_sql_column('machine_list_intro', 'TEXT', true))
         ->alter();
 }
 

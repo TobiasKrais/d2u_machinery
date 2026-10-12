@@ -81,6 +81,7 @@ d2u_machinery_help_text = Help: tekst
 d2u_machinery_consultation_help = Advieshulp
 d2u_machinery_consultation_intro = Advieshulp: inleidende tekst
 d2u_machinery_consultation_guide = Advieshulp: gidstekst
+d2u_machinery_machine_list_intro = Machinelijst intro
 d2u_machinery_consultation_entry = Advieshulp-item
 d2u_machinery_consultation_pic = Advieshulp: afbeelding
 d2u_machinery_consultation_link_type = Linktype

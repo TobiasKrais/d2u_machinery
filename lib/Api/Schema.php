@@ -171,6 +171,7 @@ final class Schema
             'help_text' => ['type' => 'html', 'language' => true, 'extension' => 'machine_applications_extension'],
             'consultation_intro' => ['type' => 'html', 'language' => true, 'extension' => 'category_consultation_extension'],
             'consultation_guide' => ['type' => 'html', 'language' => true, 'extension' => 'category_consultation_extension'],
+            'machine_list_intro' => ['type' => 'html', 'language' => true, 'extension' => 'category_consultation_extension'],
             'pic_lang' => ['type' => 'media', 'language' => true, 'seo' => 'image'],
             'pdfs' => ['type' => 'media[]', 'language' => true],
             'faq' => ['type' => 'faq[]', 'language' => true],

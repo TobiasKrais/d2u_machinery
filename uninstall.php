@@ -250,6 +250,7 @@ if (d2u_machinery_should_uninstall($d2uMachineryAction, 'category_consultation_e
     \rex_sql_table::get(\rex::getTable('d2u_machinery_categories_lang'))
         ->removeColumn('consultation_intro')
         ->removeColumn('consultation_guide')
+        ->removeColumn('machine_list_intro')
         ->ensure();
 }
 
