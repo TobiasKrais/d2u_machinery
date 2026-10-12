@@ -455,7 +455,7 @@ if ('' === $func) {
 
     $list->removeColumn('online_status');
     if (\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_machinery[edit_data]'))) {
-        $list->addColumn(rex_i18n::msg('status_online'), '<a class="rex-###online_status###" href="' . rex_url::currentBackendPage(['func' => 'changestatus']) . '&entry_id=###production_line_id###"><i class="rex-icon rex-icon-###online_status###"></i> ###online_status###</a>');
+        $list->addColumn(rex_i18n::msg('status_online'), '<a class="rex-###online_status###" href="' . rex_url::currentBackendPage(array_merge(['func' => 'changestatus'], $csrfToken->getUrlParams()), false) . '&entry_id=###production_line_id###"><i class="rex-icon rex-icon-###online_status###"></i> ###online_status###</a>');
         $list->setColumnLayout(rex_i18n::msg('status_online'), ['', '<td class="rex-table-action">###VALUE###</td>']);
 
         $list->addColumn(rex_i18n::msg('delete_module'), '<i class="rex-icon rex-icon-delete"></i> ' . rex_i18n::msg('delete'));

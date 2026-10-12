@@ -306,6 +306,38 @@ function rex_d2u_machinery_media_is_in_use(rex_extension_point $ep)
         }
     }
 
+    // Consultation help (Beratungshilfe) per category
+    if (Extension::isActive('category_consultation_extension')) {
+        $sql_consultations = \rex_sql::factory();
+        $sql_consultations->setQuery('SELECT lang.consultation_id, lang.heading FROM `' . \rex::getTablePrefix() . 'd2u_machinery_category_consultations_lang` AS lang '
+            .'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_category_consultations` AS consultations ON lang.consultation_id = consultations.consultation_id '
+            .'WHERE consultations.pic = :filenameConsultationPic AND lang.clang_id = ' . (int) rex_config::get('d2u_helper', 'default_lang'), [':filenameConsultationPic' => $filename]);
+        for ($i = 0; $i < $sql_consultations->getRows(); ++$i) {
+            $message = '<a href="index.php?page=d2u_machinery/category/consultations&func=edit&entry_id='. $sql_consultations->getValue('consultation_id') .'">'.
+                 rex_i18n::msg('d2u_machinery_rights_all') .' - '. rex_i18n::msg('d2u_machinery_consultation_help') .': '. $sql_consultations->getValue('heading') .'</a>';
+            if (!in_array($message, $warning, true)) {
+                $warning[] = $message;
+            }
+            $sql_consultations->next();
+        }
+    }
+
+    // USPs per category (shared icons across languages)
+    if (Extension::isActive('machine_usps_extension')) {
+        $sql_usps = \rex_sql::factory();
+        $sql_usps->setQuery('SELECT lang.usp_id, lang.heading FROM `' . \rex::getTablePrefix() . 'd2u_machinery_category_usps_lang` AS lang '
+            .'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_machinery_category_usps` AS usps ON lang.usp_id = usps.usp_id '
+            .'WHERE (usps.icon_light = :filenameUspLight OR usps.icon_dark = :filenameUspDark) AND lang.clang_id = ' . (int) rex_config::get('d2u_helper', 'default_lang'), [':filenameUspLight' => $filename, ':filenameUspDark' => $filename]);
+        for ($i = 0; $i < $sql_usps->getRows(); ++$i) {
+            $message = '<a href="index.php?page=d2u_machinery/category/usps&func=edit&entry_id='. $sql_usps->getValue('usp_id') .'">'.
+                 rex_i18n::msg('d2u_machinery_rights_all') .' - '. rex_i18n::msg('d2u_machinery_usps') .': '. $sql_usps->getValue('heading') .'</a>';
+            if (!in_array($message, $warning, true)) {
+                $warning[] = $message;
+            }
+            $sql_usps->next();
+        }
+    }
+
     return $warning;
 }
 
