@@ -708,6 +708,7 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrai
                 $fieldsToTranslate['machine_list_intro'] = ['value' => $source->machine_list_intro, 'html' => true];
             }
             $translated = \TobiasKrais\D2UHelper\AiTranslationHelper::translateFields($fieldsToTranslate, $sourceClangId, $this->clang_id);
+            $translatedFaq = FaqField::translate($source->faq, $sourceClangId, $this->clang_id);
         } catch (\Throwable $e) {
             \rex_logger::logException($e);
             return false;
@@ -717,6 +718,7 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrai
         $this->meta_title = $translated['meta_title'];
         $this->teaser = $translated['teaser'];
         $this->description = $translated['description'];
+        $this->faq = $translatedFaq;
         if (Extension::isActive('machine_applications_extension')) {
             $this->help_text = $translated['help_text'];
         }

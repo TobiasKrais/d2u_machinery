@@ -145,6 +145,41 @@ class FaqField
     }
 
     /**
+     * Translate the question and answer of every FAQ entry into another language via the
+     * d2u_helper AI translation helper, keeping tags and the stored structure intact.
+     * @param string $value Stored FAQ value (base64 JSON) in the source language
+     * @param int $sourceClangId Source language clang id
+     * @param int $targetClangId Target language clang id
+     * @return string Re-encoded stored value in the target language (unchanged when empty)
+     */
+    public static function translate(string $value, int $sourceClangId, int $targetClangId): string
+    {
+        $items = self::decode($value);
+        if ([] === $items) {
+            return $value;
+        }
+
+        $fields = [];
+        foreach ($items as $index => $item) {
+            $fields['q' . $index] = ['value' => $item['q'], 'html' => false];
+            $fields['a' . $index] = ['value' => $item['a'], 'html' => true];
+        }
+
+        $translated = \TobiasKrais\D2UHelper\AiTranslationHelper::translateFields($fields, $sourceClangId, $targetClangId);
+
+        foreach ($items as $index => $item) {
+            if (array_key_exists('q' . $index, $translated)) {
+                $items[$index]['q'] = $translated['q' . $index];
+            }
+            if (array_key_exists('a' . $index, $translated)) {
+                $items[$index]['a'] = $translated['a' . $index];
+            }
+        }
+
+        return self::encode($items);
+    }
+
+    /**
      * Render the frontend FAQ block (accordion + tag filter + schema.org FAQPage).
      * Uses the same markup/classes as the Kaltenbach FAQ module so the existing
      * theme CSS and tag-filter JS apply automatically.
