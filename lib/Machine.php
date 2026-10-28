@@ -132,6 +132,12 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
     /** @var string Intro text shown above the features (machine_features_extension) */
     public string $features_intro = '';
 
+    /** @var string Free-text specifications, per language (machine_specifications) */
+    public string $specifications = '';
+
+    /** @var string Specification image file name, shared across languages (machine_specifications) */
+    public string $specification_pic = '';
+
     /** @var string Intro text shown above the automation supplies (machine_steel_automation_extension) */
     public string $automation_intro = '';
 
@@ -357,6 +363,9 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
             if (Extension::isActive('machine_features_extension')) {
                 $this->features_intro = stripslashes(htmlspecialchars_decode((string) $result->getValue('features_intro')));
             }
+            if (Extension::isActive('machine_specifications')) {
+                $this->specifications = stripslashes(htmlspecialchars_decode((string) $result->getValue('specifications')));
+            }
             $this->alternative_machines_intro = stripslashes(htmlspecialchars_decode((string) $result->getValue('alternative_machines_intro')));
             $this->additional_machines_intro = stripslashes(htmlspecialchars_decode((string) $result->getValue('additional_machines_intro')));
             if (Extension::isActive('machine_steel_automation_extension')) {
@@ -466,6 +475,10 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
                 $this->automation_supply_ids = is_array($automation_supply_ids) ? array_map('intval', $automation_supply_ids) : [];
                 $this->automation_article_id = (int) $result->getValue('automation_article_id');
                 $this->automation_pic = (string) $result->getValue('automation_pic');
+            }
+
+            if (Extension::isActive('machine_specifications')) {
+                $this->specification_pic = (string) $result->getValue('specification_pic');
             }
 
             if (Extension::isActive('machine_usage_area_extension')) {
@@ -1247,6 +1260,9 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
             if (Extension::isActive('machine_features_extension')) {
                 $fieldsToTranslate['features_intro'] = ['value' => $source->features_intro, 'html' => true];
             }
+            if (Extension::isActive('machine_specifications')) {
+                $fieldsToTranslate['specifications'] = ['value' => $source->specifications, 'html' => true];
+            }
             if (Extension::isActive('machine_steel_automation_extension')) {
                 $fieldsToTranslate['automation_intro'] = ['value' => $source->automation_intro, 'html' => true];
                 $fieldsToTranslate['automation_text'] = ['value' => $source->automation_text, 'html' => true];
@@ -1270,6 +1286,9 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
         $this->additional_machines_intro = $translated['additional_machines_intro'];
         if (Extension::isActive('machine_features_extension')) {
             $this->features_intro = $translated['features_intro'];
+        }
+        if (Extension::isActive('machine_specifications')) {
+            $this->specifications = $translated['specifications'];
         }
         if (Extension::isActive('machine_steel_automation_extension')) {
             $this->automation_intro = $translated['automation_intro'];
@@ -1431,6 +1450,10 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
                 $main_params[':automation_article_id'] = $this->automation_article_id;
                 $main_params[':automation_pic'] = $this->automation_pic;
             }
+            if (Extension::isActive('machine_specifications')) {
+                $query .= ', specification_pic = :specification_pic ';
+                $main_params[':specification_pic'] = $this->specification_pic;
+            }
             if (Extension::isActive('machine_usage_area_extension')) {
                 $query .= ', usage_area_ids = :usage_area_ids ';
                 $main_params[':usage_area_ids'] = '|'. implode('|', $this->usage_area_ids) .'|';
@@ -1498,6 +1521,10 @@ class Machine implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais
                 if (Extension::isActive('machine_features_extension')) {
                     $query .= ', features_intro = :features_intro ';
                     $lang_params[':features_intro'] = htmlspecialchars($this->features_intro);
+                }
+                if (Extension::isActive('machine_specifications')) {
+                    $query .= ', specifications = :specifications ';
+                    $lang_params[':specifications'] = htmlspecialchars($this->specifications);
                 }
                 if (Extension::isActive('machine_steel_automation_extension')) {
                     $query .= ', automation_intro = :automation_intro, automation_text = :automation_text ';

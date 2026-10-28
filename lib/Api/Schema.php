@@ -101,6 +101,8 @@ final class Schema
             'industry_sector_ids' => ['type' => 'int[]', 'extension' => 'industry_sectors', 'relation' => 'industry_sectors'],
             'feature_ids' => ['type' => 'int[]', 'extension' => 'machine_features_extension', 'relation' => 'features'],
             'features_intro' => ['type' => 'html', 'language' => true, 'extension' => 'machine_features_extension'],
+            'specifications' => ['type' => 'html', 'language' => true, 'extension' => 'machine_specifications'],
+            'specification_pic' => ['type' => 'media', 'extension' => 'machine_specifications'],
             'option_ids' => ['type' => 'int[]', 'extension' => 'machine_options_extension', 'relation' => 'options'],
             'certificate_ids' => ['type' => 'int[]', 'extension' => 'machine_certificates_extension', 'relation' => 'certificates'],
             'contact_id' => ['type' => 'int', 'extension' => 'contacts', 'relation' => 'contacts'],

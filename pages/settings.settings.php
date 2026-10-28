@@ -232,6 +232,7 @@ if (\TobiasKrais\D2UMachinery\Extension::isActive('used_machines') && 'false' !=
                             'basic_tech_data',
                             'machine_steel_automation_extension',
                             'machine_features_extension',
+                            'machine_specifications',
                             'machine_options_extension',
                             'service_options',
                             'equipment',

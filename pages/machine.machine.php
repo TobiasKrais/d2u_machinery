@@ -163,6 +163,9 @@ if (!$invalidCsrf && (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === 
 				$machine->automation_article_id = (int) ($input_link['automation_article_id'] ?? 0);
 				$machine->automation_pic = $input_media['100'] ?? '';
 			}
+			if (Extension::isActive('machine_specifications')) {
+				$machine->specification_pic = $input_media['101'] ?? '';
+			}
 			if (Extension::isActive('machine_usage_area_extension')) {
 				$machine->usage_area_ids = $form['usage_area_ids'] ?? [];
 			}
@@ -186,6 +189,9 @@ if (!$invalidCsrf && (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === 
 		$machine->description = $form['lang'][$rex_clang->getId()]['description'];
 		if (Extension::isActive('machine_features_extension')) {
 			$machine->features_intro = $form['lang'][$rex_clang->getId()]['features_intro'] ?? '';
+		}
+		if (Extension::isActive('machine_specifications')) {
+			$machine->specifications = $form['lang'][$rex_clang->getId()]['specifications'] ?? '';
 		}
 		if (Extension::isActive('machine_steel_automation_extension')) {
 			$machine->automation_intro = $form['lang'][$rex_clang->getId()]['automation_intro'] ?? '';
@@ -595,6 +601,15 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 						echo '</fieldset>';
 					}
 
+					if (Extension::isActive('machine_specifications')) {
+						echo '<fieldset>';
+						echo '<legend><small><i class="rex-icon fa-file-text-o"></i></small> '. rex_i18n::msg('d2u_machinery_specifications') .'</legend>';
+						echo '<div class="panel-body-wrapper slide">';
+						BackendHelper::form_mediafield('d2u_machinery_specification_pic', '101', $machine->specification_pic, $readonly);
+						echo '</div>';
+						echo '</fieldset>';
+					}
+
 					foreach (rex_clang::getAll() as $rex_clang) {
 						$machine_lang = new Machine($entry_id, $rex_clang->getId());
 						$required = $rex_clang->getId() === (int) (rex_config::get('d2u_helper', 'default_lang')) ? true : false;
@@ -639,6 +654,9 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 									BackendHelper::form_textarea('d2u_helper_description', 'form[lang]['. $rex_clang->getId() .'][description]', $machine_lang->description, 5, false, $readonly_lang, true);
 									if (Extension::isActive('machine_features_extension')) {
 										BackendHelper::form_textarea('d2u_machinery_features_intro', 'form[lang]['. $rex_clang->getId() .'][features_intro]', $machine_lang->features_intro, 5, false, $readonly_lang, true);
+									}
+									if (Extension::isActive('machine_specifications')) {
+										BackendHelper::form_textarea('d2u_machinery_specifications_text', 'form[lang]['. $rex_clang->getId() .'][specifications]', $machine_lang->specifications, 5, false, $readonly_lang, true);
 									}
 									if (Extension::isActive('machine_steel_automation_extension')) {
 										BackendHelper::form_textarea('d2u_machinery_automation_intro', 'form[lang]['. $rex_clang->getId() .'][automation_intro]', $machine_lang->automation_intro, 5, false, $readonly_lang, true);

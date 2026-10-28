@@ -350,6 +350,16 @@ if (d2u_machinery_should_uninstall($d2uMachineryAction, 'machine_steel_automatio
     $sql->setQuery('DROP TABLE IF EXISTS ' . \rex::getTablePrefix() . 'd2u_machinery_steel_supply_lang');
 }
 
+// Plugin: specifications
+if (d2u_machinery_should_uninstall($d2uMachineryAction, 'machine_specifications')) {
+    \rex_sql_table::get(\rex::getTable('d2u_machinery_machines'))
+        ->removeColumn('specification_pic')
+        ->ensure();
+    \rex_sql_table::get(\rex::getTable('d2u_machinery_machines_lang'))
+        ->removeColumn('specifications')
+        ->ensure();
+}
+
 // Extension: applications + help
 if (d2u_machinery_should_uninstall($d2uMachineryAction, 'machine_applications_extension')) {
     \rex_sql_table::get(\rex::getTable('d2u_machinery_machines_lang'))

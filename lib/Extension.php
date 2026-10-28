@@ -73,6 +73,12 @@ final class Extension
             'pages' => ['d2u_machinery/machine/features'],
             'dependencies' => [],
         ],
+        'machine_specifications' => [
+            'config' => 'extension_machine_specifications',
+            'title' => 'd2u_machinery_specifications',
+            'pages' => [],
+            'dependencies' => [],
+        ],
         'machine_options_extension' => [
             'config' => 'extension_machine_options_extension',
             'title' => 'd2u_machinery_options',
