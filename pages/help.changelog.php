@@ -2,6 +2,9 @@
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_machinery" target="_blank">GitHub Repository</a> melden.</p>
 
 <h2>Changelog</h2>
+<p>2.0.1-DEV:</p>
+<ul>
+</ul>
 <p>2.0.0:</p>
 <ul>
 	<li>Neu: Erweiterung „Spezifikationen" (<code>machine_specifications</code>). Fügt einer Maschine zwei Felder hinzu: ein sprachspezifisches WYSIWYG-Feld „Freitext Spezifikationen" (<code>specifications</code> in <code>rex_d2u_machinery_machines_lang</code>) und ein sprachübergreifendes „Spezifikationsbild" (<code>specification_pic</code> in <code>rex_d2u_machinery_machines</code>). Standardmäßig inaktiv, in den Addon-Einstellungen aktivierbar; über die REST-API les-/schreibbar und von der KI-Übersetzung (nur Freitext) berücksichtigt. Die Spalten werden bei Aktivierung bzw. Reinstall/Update automatisch angelegt.</li>
