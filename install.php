@@ -444,6 +444,12 @@ if (d2u_machinery_should_install($d2uMachineryAction, 'industry_sectors')) {
         ->alter();
 
     if (\rex_addon::get('url')->isAvailable()) {
+        // class_exists WITHOUT autoload (second arg false): during an addon update the
+        // autoloader still resolves to the old addon path, so load the new class
+        // explicitly from the temp (.new.) folder.
+        if (!class_exists(\TobiasKrais\D2UMachinery\UrlProfile::class, false)) {
+            require_once __DIR__ . DIRECTORY_SEPARATOR .'lib'. DIRECTORY_SEPARATOR .'UrlProfile.php';
+        }
         // URL generation for industry sectors is optional (default: on).
         // The database view exists only while URLs are generated.
         if ('false' === (string) rex_config::get('d2u_machinery', 'industry_sectors_generate_urls', 'true')) {
@@ -1038,6 +1044,12 @@ if (d2u_machinery_should_install($d2uMachineryAction, 'used_machines')) {
     	GROUP BY category_id, clang_id, name, seo_title, seo_description, picture, updatedate;');
 
     if (\rex_addon::get('url')->isAvailable()) {
+        // class_exists WITHOUT autoload (second arg false): during an addon update the
+        // autoloader still resolves to the old addon path, so load the new class
+        // explicitly from the temp (.new.) folder.
+        if (!class_exists(\TobiasKrais\D2UMachinery\UrlProfile::class, false)) {
+            require_once __DIR__ . DIRECTORY_SEPARATOR .'lib'. DIRECTORY_SEPARATOR .'UrlProfile.php';
+        }
         $clang_id = 1 === count(rex_clang::getAllIds()) ? rex_clang::getStartId() : 0;
         $article_id_sale = (int) rex_config::get('d2u_machinery', 'used_machine_article_id_sale', rex_article::getSiteStartArticleId());
         // Used machines (rent) URL generation is optional (default: on).

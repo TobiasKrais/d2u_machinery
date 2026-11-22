@@ -4,6 +4,7 @@
 <h2>Changelog</h2>
 <p>2.0.1-DEV:</p>
 <ul>
+	<li>Bugfix: Das Update von 1.7.x auf 2.0.0 brach mit <code>Class "TobiasKrais\D2UMachinery\UrlProfile" not found</code> in der <code>install.php</code> ab. Die in 2.0.0 neue Klasse <code>UrlProfile</code> wurde beim Update nicht geladen, weil der Autoloader noch auf das alte Addon-Verzeichnis zeigt. Die beiden <code>UrlProfile</code>-Aufrufe (Märkte-/Branchen-URLs und Gebrauchtmaschinen-Miet-URLs) laden die Klasse jetzt – wie bereits bei <code>LangHelper</code> und <code>Module</code> – explizit per <code>class_exists(..., false)</code> und <code>require_once</code> aus dem temporären Update-Ordner.</li>
 </ul>
 <p>2.0.0:</p>
 <ul>
